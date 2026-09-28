@@ -107,9 +107,9 @@
     ]
   },
   "max_reaction_size": 20,
-  "metabolite_nodes": 3957,
-  "reaction_nodes": 6367,
-  "edges": 16332,
-  "cofactor_edges_kept": 153,
-  "cofactor_edges_removed_as_exchange": 6793
+  "metabolite_nodes": 3958,
+  "reaction_nodes": 6377,
+  "edges": 16356,
+  "cofactor_edges_kept": 168,
+  "cofactor_edges_removed_as_exchange": 6808
 }

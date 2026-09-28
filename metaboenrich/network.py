@@ -52,19 +52,22 @@ POOL_METABOLITES = [
     "vitamin E derivatives", "lipid droplet", "Gm4-Pool",
 ]
 
-# Cofactor families (Human-GEM names). `loaded`: any metabolite whose formula
-# contains this member's formula plus extra carbon is a loaded form of the
-# carrier (acyl-CoAs, UDP-sugars, CDP-alcohols, GDP-sugars, CMP-sialic acids)
-# and counts as a family member.
+# Cofactor families (Human-GEM names). `loaded` / `tokens`: a metabolite is a
+# loaded form of the carrier (acyl-CoAs, UDP-sugars, CDP-alcohols,
+# GDP-sugars, CMP-sialic acids) and counts as a family member if its name
+# contains one of the tokens as a word (UDP-glucose, acetyl-CoA; not dUDP)
+# and its formula contains the `loaded` member's formula plus extra carbon.
+# The name test stops other nucleotides (ATP contains every atom of CMP)
+# from passing as loaded carriers.
 COFACTOR_FAMILIES = {
     "adenine nucleotides": {"members": ["ATP", "ADP", "AMP"]},
-    "guanine nucleotides": {"members": ["GTP", "GDP", "GMP"], "loaded": "GDP"},
-    "uracil nucleotides": {"members": ["UTP", "UDP", "UMP"], "loaded": "UDP"},
-    "cytosine nucleotides": {"members": ["CTP", "CDP", "CMP"], "loaded": "CMP"},
+    "guanine nucleotides": {"members": ["GTP", "GDP", "GMP"], "loaded": "GDP", "tokens": ["GDP"]},
+    "uracil nucleotides": {"members": ["UTP", "UDP", "UMP"], "loaded": "UDP", "tokens": ["UDP"]},
+    "cytosine nucleotides": {"members": ["CTP", "CDP", "CMP"], "loaded": "CMP", "tokens": ["CDP", "CMP"]},
     "NAD": {"members": ["NAD+", "NADH"]},
     "NADP": {"members": ["NADP+", "NADPH"]},
     "FAD": {"members": ["FAD", "FADH2"]},
-    "CoA": {"members": ["CoA"], "loaded": "CoA"},
+    "CoA": {"members": ["CoA"], "loaded": "CoA", "tokens": ["CoA"]},
     "SAM": {"members": ["SAM", "SAH"]},
     "PAPS": {"members": ["PAPS", "PAP"]},
     "ubiquinone": {"members": ["ubiquinone", "ubiquinol"]},
@@ -117,23 +120,55 @@ class CurrencyRules:
     formulas: dict = field(default_factory=dict)   # met_id -> heavy-atom Counter
     pools: set = field(default_factory=set)        # met_ids whose reactions are dropped
     edits: dict = field(default_factory=dict)      # reaction id -> met_ids to remove from it
+    names: dict = field(default_factory=dict)      # met_id -> name
+    loaded_tokens: dict = field(default_factory=dict)  # family -> compiled name pattern
 
     def in_family(self, family, met):
         if met in self.members[family]:
             return True
-        core = self.loaded_core.get(family)
-        if core is None:
+        core, pattern = self.loaded_core.get(family), self.loaded_tokens.get(family)
+        if core is None or pattern is None or any(met in ms for ms in self.members.values()):
             return False
         f = self.formulas.get(met)
-        return bool(f) and all(f[el] >= n for el, n in core.items()) and f["C"] > core["C"]
+        return (bool(f) and bool(pattern.search(self.names.get(met, "")))
+                and all(f[el] >= n for el, n in core.items()) and f["C"] > core["C"])
 
-    def partner(self, met, opposite):
-        """A member of met's family on the other side of the reaction, if any."""
-        fam = self.family_of[met]
-        for other in sorted(opposite):
-            if other != met and self.in_family(fam, other):
-                return other
-        return None
+    def classify(self, subs, prods):
+        """{cofactor met_id: exchange partner or None} for the role-filtered
+        cofactors in a reaction.
+
+        Within each family, members on the two sides are paired, closest
+        formulas first (ATP pairs with ADP rather than AMP). A paired cofactor
+        is an exchanger; an unpaired one is made from, or turned into,
+        something outside its family, so it is kept. Cofactors pair
+        one-to-one. Loaded carriers (acyl-CoAs, UDP-sugars) may partner more
+        than one cofactor, because reactions are stored as sets and lose
+        stoichiometry (thiolase: acetoacetyl-CoA + CoA -> 2 acetyl-CoA). They
+        are ordinary metabolites, so their own edges are never removed.
+        """
+        present = (subs | prods) & self.family_of.keys()
+        result = {}
+        for fam in sorted({self.family_of[m] for m in present}):
+            left = sorted(m for m in subs if self.in_family(fam, m))
+            right = sorted(m for m in prods if self.in_family(fam, m))
+            pairs = sorted((self._distance(a, b), a, b) for a in left for b in right)
+            partner = {}
+            reusable = lambda m: m not in self.family_of
+            for _, a, b in pairs:
+                if (a in partner and not reusable(a)) or (b in partner and not reusable(b)):
+                    continue
+                if a in partner and b in partner:
+                    continue
+                partner.setdefault(a, b)
+                partner.setdefault(b, a)
+            for m in present:
+                if self.family_of[m] == fam:
+                    result[m] = partner.get(m)
+        return result
+
+    def _distance(self, a, b):
+        fa, fb = self.formulas.get(a, Counter()), self.formulas.get(b, Counter())
+        return sum(abs(fa[el] - fb[el]) for el in set(fa) | set(fb))
 
 
 def resolve_currency(model, mode="role", use_defaults=True, extra_ids=(), degree_cutoff=None,
@@ -151,8 +186,9 @@ def resolve_currency(model, mode="role", use_defaults=True, extra_ids=(), degree
         by_name.setdefault(s.name, s.met_id)
         formulas.setdefault(s.met_id, parse_formula(s.formula))
 
-    removed, family_of, members, loaded_core, missing = {}, {}, {}, {}, []
+    removed, family_of, members, loaded_core, loaded_tokens, missing = {}, {}, {}, {}, {}, []
     pools = set()
+    met_names = {s.met_id: s.name for s in model.species.values()}
     if use_defaults:
         for names, reason in ((INORGANIC_CURRENCY, "inorganic"), (CARRIER_CURRENCY, "generic carrier")):
             for name in names:
@@ -175,6 +211,9 @@ def resolve_currency(model, mode="role", use_defaults=True, extra_ids=(), degree
             members[fam] = set(ids)
             if "loaded" in spec and spec["loaded"] in by_name:
                 loaded_core[fam] = formulas[by_name[spec["loaded"]]]
+                loaded_tokens[fam] = re.compile(
+                    r"(?<![A-Za-z0-9])(?:" + "|".join(map(re.escape, spec["tokens"])) + r")(?![A-Za-z])",
+                    re.IGNORECASE)  # Human-GEM writes both "UDP-glucose" and "udp-ribose"
             for met in ids:
                 if mode == "remove":
                     removed[met] = f"cofactor ({fam})"
@@ -188,7 +227,8 @@ def resolve_currency(model, mode="role", use_defaults=True, extra_ids=(), degree
         for met, d in deg.items():
             if d > degree_cutoff and met not in removed and met not in family_of:
                 removed[met] = f"degree {d} > {degree_cutoff}"
-    return CurrencyRules(removed, family_of, members, loaded_core, formulas, pools), missing
+    return CurrencyRules(removed, family_of, members, loaded_core, formulas, pools,
+                         names=met_names, loaded_tokens=loaded_tokens), missing
 
 
 @dataclass
@@ -254,18 +294,19 @@ def metabolite_degrees(model, max_reaction_size):
     return deg, names
 
 
-def _usable_reactions(model, max_reaction_size, rules):
+def _usable_reactions(model, max_reaction_size, rules, drop_objective=True):
     """Yield (reaction, substrate met_ids, product met_ids, audit rows) after
     collapsing compartments and applying the currency rules.
 
     Dropped: the objective (biomass) reaction, blocked reactions, reactions
     containing a lumped pool metabolite (when rules are given), reactions
     with more than `max_reaction_size` metabolites (pool/biomass-like
-    pseudo-reactions), and reactions left with < 2 distinct metabolites
-    (transport, exchange, or reactions made only of currency metabolites).
+    pseudo-reactions; None disables the cap), and reactions left with < 2
+    distinct metabolites (transport, exchange, or reactions made only of
+    currency metabolites).
     """
     for rxn in model.reactions.values():
-        if rxn.is_objective or not (rxn.forward or rxn.backward):
+        if (drop_objective and rxn.is_objective) or not (rxn.forward or rxn.backward):
             continue
         subs = {model.species[s].met_id for s in rxn.substrates}
         prods = {model.species[s].met_id for s in rxn.products}
@@ -279,19 +320,18 @@ def _usable_reactions(model, max_reaction_size, rules):
         audit = []
         if rules is not None:
             drop = set(rules.removed)
-            for met in (subs | prods) & rules.family_of.keys():
-                partner = rules.partner(met, prods if met in subs else subs)
+            for met, partner in sorted(rules.classify(subs, prods).items()):
                 if partner:
                     drop.add(met)
                 audit.append((met, rxn.id, "exchange" if partner else "kept", partner or ""))
             subs, prods = subs - drop, prods - drop
         mets = subs | prods
-        if len(mets) < 2 or len(mets) > max_reaction_size:
+        if len(mets) < 2 or (max_reaction_size is not None and len(mets) > max_reaction_size):
             continue
         yield rxn, subs, prods, audit
 
 
-def build_graph(model, rules, max_reaction_size=20):
+def build_graph(model, rules, max_reaction_size=20, drop_objective=True):
     met_names = {s.met_id: s.name for s in model.species.values()}
     node_ids, node_names, is_rxn, index = [], [], [], {}
 
@@ -304,7 +344,7 @@ def build_graph(model, rules, max_reaction_size=20):
         return index[nid]
 
     edges, arcs, reaction_genes, audit_rows, sides, reversible = [], [], {}, [], [], {}
-    for rxn, subs, prods, audit in _usable_reactions(model, max_reaction_size, rules):
+    for rxn, subs, prods, audit in _usable_reactions(model, max_reaction_size, rules, drop_objective):
         audit_rows.extend(audit)
         r = node(rxn.id, rxn.name, True)
         reaction_genes[r] = rxn.genes

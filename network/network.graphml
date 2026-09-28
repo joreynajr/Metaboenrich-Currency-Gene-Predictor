@@ -4749,8 +4749,8 @@
     <node id="MAM02193"><data key="n0">metabolite</data><data key="n4">C10H11N4O14P3</data><data key="n5">HMDB0000189</data><data key="n6">C00081</data><data key="n7">CHEBI:16039</data><data key="n9">ITP</data></node>
     <node id="MAM03123"><data key="n0">metabolite</data><data key="n4">C9H12N2O6</data><data key="n5">HMDB0000296</data><data key="n6">C00299</data><data key="n7">CHEBI:16704</data><data key="n9">uridine</data></node>
     <node id="MAM02161"><data key="n0">metabolite</data><data key="n4">C10H11N4O11P2</data><data key="n6">C00104</data><data key="n7">CHEBI:17808</data><data key="n9">IDP</data></node>
-    <node id="R_MAR03970"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">NT5C2;NT5C1A;NT5C3A;NT5C;NT5E;NT5C3B;NT5C1B;NT5M</data><data key="n3">ENSG00000076685;ENSG00000116981;ENSG00000122643;ENSG00000125458;ENSG00000135318;ENSG00000141698;ENSG00000185013;ENSG00000205309</data><data key="n9">uridine 5'-monophosphate phosphohydrolase</data></node>
     <node id="MAM03114"><data key="n0">metabolite</data><data key="n4">C9H11N2O9P</data><data key="n5">HMDB0000288</data><data key="n6">C00105</data><data key="n7">CHEBI:16695</data><data key="n8">uracil nucleotides</data><data key="n9">UMP</data></node>
+    <node id="R_MAR03970"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">NT5C2;NT5C1A;NT5C3A;NT5C;NT5E;NT5C3B;NT5C1B;NT5M</data><data key="n3">ENSG00000076685;ENSG00000116981;ENSG00000122643;ENSG00000125458;ENSG00000135318;ENSG00000141698;ENSG00000185013;ENSG00000205309</data><data key="n9">uridine 5'-monophosphate phosphohydrolase</data></node>
     <node id="R_MAR03972"><data key="n0">reaction</data><data key="n1">false</data><data key="n9">formaldehyde to 5,10-methylene-THF conversion</data></node>
     <node id="R_MAR03973"><data key="n0">reaction</data><data key="n1">true</data><data key="n2">MGST1;MGST2;MGST3</data><data key="n3">ENSG00000008394;ENSG00000085871;ENSG00000143198</data><data key="n9">Glutathione Transferase</data></node>
     <node id="R_MAR03974"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">SDS;SDSL;SRR</data><data key="n3">ENSG00000135094;ENSG00000139410;ENSG00000167720</data><data key="n9">2-aminoacrylate aminohydrolase</data></node>
@@ -4787,6 +4787,7 @@
     <node id="R_MAR04010"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACP3;NT5C2;NT5C1A;NT5C;NT5E;RBAK;NT5C1B</data><data key="n3">ENSG00000014257;ENSG00000076685;ENSG00000116981;ENSG00000125458;ENSG00000135318;ENSG00000146587;ENSG00000185013</data><data key="n9">adenosine 5'-monophosphate phosphohydrolase</data></node>
     <node id="R_MAR04011"><data key="n0">reaction</data><data key="n1">false</data><data key="n9">Methionine Synthase</data></node>
     <node id="MAM02890"><data key="n0">metabolite</data><data key="n4">C4H9NO2Se</data><data key="n5">HMDB0004119</data><data key="n6">C05698</data><data key="n7">CHEBI:9068</data><data key="n9">selenohomocysteine</data></node>
+    <node id="R_MAR04012"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ADK;DCK</data><data key="n3">ENSG00000156110;ENSG00000156136</data><data key="n9">ATP:adenosine 5'-phosphotransferase</data></node>
     <node id="R_MAR04013"><data key="n0">reaction</data><data key="n1">false</data><data key="n9">Methionine Synthase</data></node>
     <node id="R_MAR04014"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">PDE4A;PDE8A;PDE6C;PDE4C;PDE10A;PDE8B;PDE4D;PDE1A;PDE1B;PDE11A;PDE6H;PDE3B;PDE1C;PDE7B;PDE3A;PDE4B;PDE6G;PDE2A;PDE7A</data><data key="n3">ENSG00000065989;ENSG00000073417;ENSG00000095464;ENSG00000105650;ENSG00000112541;ENSG00000113231;ENSG00000113448;ENSG00000115252;ENSG00000123360;ENSG00000128655;ENSG00000139053;ENSG00000152270;ENSG00000154678;ENSG00000171408;ENSG00000172572;ENSG00000184588;ENSG00000185527;ENSG00000186642;ENSG00000205268</data><data key="n9">adenosine 3',5'-phosphate 5'-nucleotidohydrolase</data></node>
     <node id="R_MAR04015"><data key="n0">reaction</data><data key="n1">false</data><data key="n9">Methionine Synthase</data></node>
@@ -4807,6 +4808,9 @@
     <node id="MAM03379"><data key="n0">metabolite</data><data key="n4">C20H12O2</data><data key="n6">C18279</data><data key="n7">CHEBI:81630</data><data key="n9">Benzo[A]Pyrene-4,5-Diol</data></node>
     <node id="R_MAR04029"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">EPHX1</data><data key="n3">ENSG00000143819</data><data key="n9">Microsomal Epoxide Hydrolase</data></node>
     <node id="R_MAR04031"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">EPHX2</data><data key="n3">ENSG00000120915</data><data key="n9">Microsomal Epoxide Hydrolase</data></node>
+    <node id="R_MAR04032"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">CTPS2;CTPS1</data><data key="n3">ENSG00000047230;ENSG00000171793</data><data key="n9">UTP:ammonia ligase (ADP-forming)</data></node>
+    <node id="MAM03130"><data key="n0">metabolite</data><data key="n4">C9H11N2O15P3</data><data key="n5">HMDB0000285</data><data key="n6">C00075</data><data key="n7">CHEBI:15713</data><data key="n8">uracil nucleotides</data><data key="n9">UTP</data></node>
+    <node id="MAM01623"><data key="n0">metabolite</data><data key="n4">C9H12N3O14P3</data><data key="n5">HMDB0000082</data><data key="n6">C00063</data><data key="n7">CHEBI:17677</data><data key="n8">cytosine nucleotides</data><data key="n9">CTP</data></node>
     <node id="R_MAR04033"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">EPHX2</data><data key="n3">ENSG00000120915</data><data key="n9">Microsomal Epoxide Hydrolase</data></node>
     <node id="MAM01379"><data key="n0">metabolite</data><data key="n4">C20H12O</data><data key="n5">HMDB0060090</data><data key="n6">C14849</data><data key="n7">CHEBI:34564</data><data key="n9">benzo[a]pyrene-9,10-oxide</data></node>
     <node id="MAM03380"><data key="n0">metabolite</data><data key="n4">C20H12O2</data><data key="n6">C18278</data><data key="n7">CHEBI:81629</data><data key="n9">Benzo[A]Pyrene-9,10-Diol</data></node>
@@ -4883,6 +4887,7 @@
     <node id="R_MAR04080"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">AMPD2;AMPD1;AMPD3</data><data key="n3">ENSG00000116337;ENSG00000116748;ENSG00000133805</data><data key="n9">AMP aminohydrolase</data></node>
     <node id="R_MAR04081"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACP3;NT5C2;NT5C1A;NT5C;NT5E;NT5C3B;RBAK;NT5C1B;NT5M</data><data key="n3">ENSG00000014257;ENSG00000076685;ENSG00000116981;ENSG00000125458;ENSG00000135318;ENSG00000141698;ENSG00000146587;ENSG00000185013;ENSG00000205309</data><data key="n9">adenosine 5'-monophosphate phosphohydrolase</data></node>
     <node id="R_MAR04082"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACP3;NT5C2;NT5C1A;NT5E;NT5C3B;RBAK;NT5C1B</data><data key="n3">ENSG00000014257;ENSG00000076685;ENSG00000116981;ENSG00000135318;ENSG00000141698;ENSG00000146587;ENSG00000185013</data><data key="n9">adenosine 5'-monophosphate phosphohydrolase</data></node>
+    <node id="R_MAR04083"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ADK;DCK</data><data key="n3">ENSG00000156110;ENSG00000156136</data><data key="n9">ATP:adenosine 5'-phosphotransferase</data></node>
     <node id="R_MAR04084"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">BPNT2;BPNT1</data><data key="n3">ENSG00000104331;ENSG00000162813</data><data key="n9">adenosine-3',5'-bisphosphate 3'-phosphohydrolase</data></node>
     <node id="MAM02681"><data key="n0">metabolite</data><data key="n4">C10H11N5O10P2</data><data key="n5">HMDB0000061</data><data key="n6">C00054</data><data key="n7">CHEBI:17985</data><data key="n8">PAPS</data><data key="n9">PAP</data></node>
     <node id="R_MAR04085"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">APRT</data><data key="n3">ENSG00000198931</data><data key="n9">AMP:diphosphate phospho-D-ribosyltransferase</data></node>
@@ -4959,6 +4964,8 @@
     <node id="MAM01590"><data key="n0">metabolite</data><data key="n4">C9H12N3O8P</data><data key="n5">HMDB0000095</data><data key="n6">C00055</data><data key="n7">CHEBI:17361</data><data key="n8">cytosine nucleotides</data><data key="n9">CMP</data></node>
     <node id="MAM01630"><data key="n0">metabolite</data><data key="n4">C9H13N3O5</data><data key="n5">HMDB0000089</data><data key="n6">C00475</data><data key="n7">CHEBI:17562</data><data key="n9">cytidine</data></node>
     <node id="R_MAR04179"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACP3;NT5C2;NT5C1A;NT5C3A;NT5E;NT5C3B;RBAK;NT5C1B</data><data key="n3">ENSG00000014257;ENSG00000076685;ENSG00000116981;ENSG00000122643;ENSG00000135318;ENSG00000141698;ENSG00000146587;ENSG00000185013</data><data key="n9">cytidine-5'-monophosphate phosphohydrolase</data></node>
+    <node id="R_MAR04180"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">UCK1;UCK2;UCKL1</data><data key="n3">ENSG00000130717;ENSG00000143179;ENSG00000198276</data><data key="n9">ATP:cytidine 5'-phosphotransferase</data></node>
+    <node id="R_MAR04182"><data key="n0">reaction</data><data key="n1">false</data><data key="n9">GTP:cytidine 5'-phosphotransferase</data></node>
     <node id="R_MAR04184"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">SUOX</data><data key="n3">ENSG00000139531</data><data key="n9">sulfite:ferricytochrome-c oxidoreductase</data></node>
     <node id="R_MAR04185"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">PAPSS1;PAPSS2</data><data key="n3">ENSG00000138801;ENSG00000198682</data><data key="n9">ATP:sulfate adenylyltransferase</data></node>
     <node id="MAM01283"><data key="n0">metabolite</data><data key="n4">C10H12N5O10PS</data><data key="n6">C00224</data><data key="n7">CHEBI:17709</data><data key="n9">adenylyl sulfate</data></node>
@@ -4970,7 +4977,6 @@
     <node id="MAM01303"><data key="n0">metabolite</data><data key="n4">C5H16N4</data><data key="n5">HMDB0001432</data><data key="n6">C00179</data><data key="n7">CHEBI:17431</data><data key="n9">agmatine</data></node>
     <node id="R_MAR04193"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">PKM;PKLR</data><data key="n3">ENSG00000067225;ENSG00000143627</data><data key="n9">CTP:pyruvate 2-O-phosphotransferase</data></node>
     <node id="R_MAR04194"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">CTPS2;CTPS1</data><data key="n3">ENSG00000047230;ENSG00000171793</data><data key="n9">UTP:L-glutamine amido-ligase (ADP-forming)</data></node>
-    <node id="MAM03130"><data key="n0">metabolite</data><data key="n4">C9H11N2O15P3</data><data key="n5">HMDB0000285</data><data key="n6">C00075</data><data key="n7">CHEBI:15713</data><data key="n8">uracil nucleotides</data><data key="n9">UTP</data></node>
     <node id="R_MAR04196"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">KYAT1</data><data key="n3">ENSG00000171097</data><data key="n9">L-Glutamine:pyruvate aminotransferase</data></node>
     <node id="R_MAR04197"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">AADAT;KYAT3</data><data key="n3">ENSG00000109576;ENSG00000137944</data><data key="n9">L-Glutamine:pyruvate aminotransferase</data></node>
     <node id="R_MAR04198"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">AGXT</data><data key="n3">ENSG00000172482</data><data key="n9">L-Serine:pyruvate aminotransferase</data></node>
@@ -5188,6 +5194,7 @@
     <node id="MAM02170"><data key="n0">metabolite</data><data key="n4">C10H12N4O5</data><data key="n5">HMDB0000195</data><data key="n6">C00294</data><data key="n7">CHEBI:17596</data><data key="n9">inosine</data></node>
     <node id="R_MAR04418"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">HPRT1</data><data key="n3">ENSG00000165704</data><data key="n9">IMP:diphosphate phospho-D-ribosyltransferase</data></node>
     <node id="MAM02159"><data key="n0">metabolite</data><data key="n4">C5H4N4O</data><data key="n5">HMDB0000157</data><data key="n6">C00262</data><data key="n7">CHEBI:17368</data><data key="n9">hypoxanthine</data></node>
+    <node id="R_MAR04419"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">GMPR2;GMPR</data><data key="n3">ENSG00000100938;ENSG00000137198</data><data key="n9">inosine-5'-phosphate:NADP+ oxidoreductase (aminating)</data></node>
     <node id="R_MAR04420"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">NME3;NME4;NME7;NME6;NME1;NME2</data><data key="n3">ENSG00000103024;ENSG00000103202;ENSG00000143156;ENSG00000172113;ENSG00000239672;ENSG00000243678</data><data key="n9">ATP:dADP phosphotransferase</data></node>
     <node id="R_MAR04421"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">PKM;PKLR</data><data key="n3">ENSG00000067225;ENSG00000143627</data><data key="n9">dATP:pyruvate 2-O-phosphotransferase</data></node>
     <node id="R_MAR04422"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ODC1</data><data key="n3">ENSG00000115758</data><data key="n9">L-ornithine carboxy-lyase (putrescine-forming)</data></node>
@@ -5449,7 +5456,6 @@
     <node id="R_MAR04614"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">RRM2B;TXN2;TXN;RRM1;RRM2</data><data key="n3">ENSG00000048392;ENSG00000100348;ENSG00000136810;ENSG00000167325;ENSG00000171848</data><data key="n9">2'-deoxyguanosine 5'-triphosphate:oxydized-thioredoxin 2'-oxidoreductase</data></node>
     <node id="R_MAR04615"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">RRM2B;TXN2;TXN;RRM1;RRM2</data><data key="n3">ENSG00000048392;ENSG00000100348;ENSG00000136810;ENSG00000167325;ENSG00000171848</data><data key="n9">2'-deoxyguanosine 5'-diphosphate:oxidized-thioredoxin 2'-oxidoreductase</data></node>
     <node id="R_MAR04617"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">RRM2B;TXN2;TXN;RRM1;RRM2</data><data key="n3">ENSG00000048392;ENSG00000100348;ENSG00000136810;ENSG00000167325;ENSG00000171848</data><data key="n9">2'-deoxyuridine 5'-triphosphate:oxydized-thioredoxin 2'-oxidoreductase</data></node>
-    <node id="MAM01623"><data key="n0">metabolite</data><data key="n4">C9H12N3O14P3</data><data key="n5">HMDB0000082</data><data key="n6">C00063</data><data key="n7">CHEBI:17677</data><data key="n8">cytosine nucleotides</data><data key="n9">CTP</data></node>
     <node id="MAM01645"><data key="n0">metabolite</data><data key="n4">C9H12N3O13P3</data><data key="n5">HMDB0000998</data><data key="n6">C00458</data><data key="n7">CHEBI:16311</data><data key="n9">dCTP</data></node>
     <node id="R_MAR04618"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">RRM2B;TXN2;TXN;RRM1;RRM2</data><data key="n3">ENSG00000048392;ENSG00000100348;ENSG00000136810;ENSG00000167325;ENSG00000171848</data><data key="n9">2'-deoxyuridine 5'-triphosphate:oxydized-thioredoxin 2'-oxidoreductase</data></node>
     <node id="MAM01756"><data key="n0">metabolite</data><data key="n4">C9H11N2O14P3</data><data key="n5">HMDB0001191</data><data key="n6">C00460</data><data key="n7">CHEBI:17625</data><data key="n9">dUTP</data></node>
@@ -5865,7 +5871,9 @@
     <node id="R_MAR05298"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACADVL</data><data key="n3">ENSG00000072778</data><data key="n9">Fatty Acid Beta Oxidation (C16:4-&gt;C16:5), Mitochondrial</data></node>
     <node id="MAM03273"><data key="n0">metabolite</data><data key="n4">C37H54N7O17P3S</data><data key="n7">CHEBI:233765</data><data key="n9">4,7,10,13-hexadecatetraenoyl-CoA</data></node>
     <node id="MAM03656"><data key="n0">metabolite</data><data key="n4">C37H52N7O17P3S</data><data key="n7">CHEBI:233790</data><data key="n9">2,4,7,10,13-hexadecapentaenoyl-CoA</data></node>
+    <node id="R_MAR05299"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">UCK1;UCK2;UCKL1</data><data key="n3">ENSG00000130717;ENSG00000143179;ENSG00000198276</data><data key="n9">ATP:uridine 5'-phosphotransferase</data></node>
     <node id="R_MAR05300"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ACOX1</data><data key="n3">ENSG00000161533</data><data key="n9">Fatty Acid Beta Oxidation (C16:4-&gt;C16:5), Peroxisomal</data></node>
+    <node id="R_MAR05301"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">UCK1;UCK2;UCKL1</data><data key="n3">ENSG00000130717;ENSG00000143179;ENSG00000198276</data><data key="n9">GTP:uridine 5'-phosphotransferase</data></node>
     <node id="R_MAR05306"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">ECI1</data><data key="n3">ENSG00000167969</data><data key="n9">Isomerization (C16:4), Mitochondrial</data></node>
     <node id="MAM03220"><data key="n0">metabolite</data><data key="n4">C37H54N7O17P3S</data><data key="n9">3,7,10,13-hexadecatetraenoyl-CoA</data></node>
     <node id="R_MAR05309"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">EHHADH;ECI2</data><data key="n3">ENSG00000113790;ENSG00000198721</data><data key="n9">Isomerization (C16:4), Peroxisomal</data></node>
@@ -8228,6 +8236,7 @@
     <node id="MAM01286"><data key="n0">metabolite</data><data key="n4">C16H23N5O15P2</data><data key="n5">HMDB0006557</data><data key="n6">C00498</data><data key="n7">CHEBI:15751</data><data key="n9">ADP-glucose</data></node>
     <node id="R_MAR08444"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">NUDT5;ADPRM</data><data key="n3">ENSG00000165609;ENSG00000170222</data><data key="n9">ADPmannose sugarphosphohydrolase</data></node>
     <node id="MAM01287"><data key="n0">metabolite</data><data key="n4">C16H23N5O15P2</data><data key="n5">HMDB0006369</data><data key="n6">C06192</data><data key="n7">CHEBI:28845</data><data key="n9">ADP-mannose</data></node>
+    <node id="R_MAR08445"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">UCK1;UCK2;UCKL1</data><data key="n3">ENSG00000130717;ENSG00000143179;ENSG00000198276</data><data key="n9">ATP:cytidine 5'-phosphotransferase</data></node>
     <node id="R_MAR08446"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">AICDA</data><data key="n3">ENSG00000111732</data><data key="n9">Cytidine aminohydrolase</data></node>
     <node id="R_MAR08448"><data key="n0">reaction</data><data key="n1">true</data><data key="n2">CMPK1</data><data key="n3">ENSG00000162368</data><data key="n9">cytidine/uridine monophosphate kinase (CDP)</data></node>
     <node id="R_MAR08449"><data key="n0">reaction</data><data key="n1">true</data><data key="n2">CMPK1</data><data key="n3">ENSG00000162368</data><data key="n9">cytidine/uridine monophosphate kinase (CDP)</data></node>
@@ -8618,6 +8627,8 @@
     <node id="R_MAR09483"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">TPSD1;TPSAB1;TPSB2</data><data key="n3">ENSG00000095917;ENSG00000172236;ENSG00000197253</data><data key="n9">tryptase (kinetensin)</data></node>
     <node id="MAM02314"><data key="n0">metabolite</data><data key="n4">C15H31N6O4</data><data key="n7">CHEBI:174809</data><data key="n9">kinetensin 1-3</data></node>
     <node id="MAM02317"><data key="n0">metabolite</data><data key="n4">C35H47N10O7</data><data key="n7">CHEBI:177829</data><data key="n9">kinetensin 4-8</data></node>
+    <node id="R_MAR09484"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">NUDT2</data><data key="n3">ENSG00000164978</data><data key="n9">P1,P4-bis(5'-guanosyl)-tetraphosphate guanylylhydrolase</data></node>
+    <node id="MAM02671"><data key="n0">metabolite</data><data key="n4">C20H24N10O21P4</data><data key="n5">HMDB0001340</data><data key="n6">C01261</data><data key="n7">CHEBI:15883</data><data key="n9">P1,P4-bis(5-guanosyl)-tetraphosphate</data></node>
     <node id="R_MAR09485"><data key="n0">reaction</data><data key="n1">false</data><data key="n2">MANSC1;CHIT1;CHIA</data><data key="n3">ENSG00000111261;ENSG00000133063;ENSG00000134216</data><data key="n9">[1,4-(N-Acetyl-beta-D-glucosaminyl)]n glycanohydrolase</data></node>
     <node id="MAM01437"><data key="n0">metabolite</data><data key="n4">C24H41N3O16</data><data key="n6">C00461</data><data key="n7">CHEBI:17029</data><data key="n9">chitin</data></node>
     <node id="MAM01436"><data key="n0">metabolite</data><data key="n4">C16H28N2O11</data><data key="n6">C00461</data><data key="n7">CHEBI:17029</data><data key="n9">chitin(n-1)</data></node>
@@ -17584,6 +17595,7 @@
     <edge source="MAM02193" target="R_MAR03969"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM03123" target="R_MAR03969"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR03969" target="MAM02161"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="R_MAR03969" target="MAM03114"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM03114" target="R_MAR03970"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR03970" target="MAM03123"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01831" target="R_MAR03972"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -17641,6 +17653,8 @@
     <edge source="MAM02890" target="R_MAR04011"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04011" target="MAM02891"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR04011" target="MAM02980"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM01280" target="R_MAR04012"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04012" target="MAM01334"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01115" target="R_MAR04013"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM02890" target="R_MAR04013"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04013" target="MAM02891"><data key="e0">product</data><data key="e1">false</data></edge>
@@ -17667,6 +17681,8 @@
     <edge source="R_MAR04029" target="MAM03379"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01375" target="R_MAR04031"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04031" target="MAM03379"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM03130" target="R_MAR04032"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04032" target="MAM01623"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01379" target="R_MAR04033"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04033" target="MAM03380"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01975" target="R_MAR04034"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -17765,6 +17781,8 @@
     <edge source="R_MAR04081" target="MAM01280"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01334" target="R_MAR04082"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04082" target="MAM01280"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM01280" target="R_MAR04083"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04083" target="MAM01334"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM02681" target="R_MAR04084"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04084" target="MAM01334"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01279" target="R_MAR04085"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -17896,6 +17914,10 @@
     <edge source="R_MAR04177" target="MAM01630"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01590" target="R_MAR04179"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04179" target="MAM01630"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM01630" target="R_MAR04180"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04180" target="MAM01590"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM01630" target="R_MAR04182"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04182" target="MAM01590"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01824" target="R_MAR04184"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM02949" target="R_MAR04184"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04184" target="MAM01826"><data key="e0">product</data><data key="e1">false</data></edge>
@@ -17913,6 +17935,7 @@
     <edge source="R_MAR04193" target="MAM02819"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01975" target="R_MAR04194"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM03130" target="R_MAR04194"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04194" target="MAM01623"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR04194" target="MAM01974"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01975" target="R_MAR04196"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM02819" target="R_MAR04196"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -18265,6 +18288,8 @@
     <edge source="MAM02159" target="R_MAR04418"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="MAM02806" target="R_MAR04418"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04418" target="MAM02167"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM02016" target="R_MAR04419"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR04419" target="MAM02167"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01642" target="R_MAR04420"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR04420" target="MAM01637"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01637" target="R_MAR04421"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -19494,8 +19519,12 @@
     <edge source="R_MAR05293" target="MAM03221"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM03273" target="R_MAR05298"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR05298" target="MAM03656"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM03123" target="R_MAR05299"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR05299" target="MAM03114"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM03273" target="R_MAR05300"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR05300" target="MAM03656"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM03123" target="R_MAR05301"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR05301" target="MAM03114"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM03220" target="R_MAR05306"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR05306" target="MAM03181"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM03220" target="R_MAR05309"><data key="e0">substrate</data><data key="e1">false</data></edge>
@@ -23370,6 +23399,8 @@
     <edge source="MAM01287" target="R_MAR08444"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR08444" target="MAM01334"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR08444" target="MAM02454"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM01630" target="R_MAR08445"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR08445" target="MAM01590"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01630" target="R_MAR08446"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR08446" target="MAM03123"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01680" target="R_MAR08448"><data key="e0">substrate</data><data key="e1">true</data></edge>
@@ -24087,6 +24118,9 @@
     <edge source="R_MAR09483" target="MAM02314"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR09483" target="MAM02317"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR09483" target="MAM02360"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="MAM02671" target="R_MAR09484"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="R_MAR09484" target="MAM02016"><data key="e0">product</data><data key="e1">false</data></edge>
+    <edge source="R_MAR09484" target="MAM02034"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01437" target="R_MAR09485"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR09485" target="MAM01436"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="R_MAR09485" target="MAM02527"><data key="e0">product</data><data key="e1">false</data></edge>
@@ -24148,6 +24182,7 @@
     <edge source="MAM01129" target="R_MAR09507"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR09507" target="MAM02755"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM00096" target="R_MAR09508"><data key="e0">substrate</data><data key="e1">false</data></edge>
+    <edge source="MAM02034" target="R_MAR09508"><data key="e0">substrate</data><data key="e1">false</data></edge>
     <edge source="R_MAR09508" target="MAM01864"><data key="e0">product</data><data key="e1">false</data></edge>
     <edge source="MAM01864" target="R_MAR09509"><data key="e0">substrate</data><data key="e1">true</data></edge>
     <edge source="R_MAR09509" target="MAM02438"><data key="e0">product</data><data key="e1">true</data></edge>

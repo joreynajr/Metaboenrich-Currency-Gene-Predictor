@@ -11,12 +11,19 @@ METS = {
     "adenylosuccinate": "C14H14N5O11P", "fumarate": "C4H2O4",
     "CoA": "C21H32N7O16P3S", "acetyl-CoA": "C23H34N7O17P3S", "acetate": "C2H3O2",
     "dephospho-CoA": "C21H33N7O13P2S",
+    "adenosine": "C10H13N5O4", "cytidine": "C9H13N3O5", "NH3": "H3N",
+    "UTP": "C9H11N2O15P3", "CTP": "C9H12N3O14P3", "CMP": "C9H12N3O8P",
+    "acetoacetyl-CoA": "C25H36N7O18P3S",
 }
 RXNS = {
     "HK": ({"ATP", "glucose"}, {"ADP", "glucose-6-phosphate", "H+"}),
     "ADSL": ({"adenylosuccinate"}, {"AMP", "fumarate"}),
     "ACS": ({"acetate", "CoA", "ATP"}, {"acetyl-CoA", "AMP", "Pi"}),
     "DPCK": ({"dephospho-CoA", "ATP"}, {"CoA", "ADP"}),
+    "ADK": ({"ATP", "adenosine"}, {"ADP", "AMP"}),                  # adenosine kinase
+    "CTPS": ({"UTP", "ATP", "NH3"}, {"CTP", "ADP", "Pi"}),          # CTP synthase
+    "UCK": ({"ATP", "cytidine"}, {"ADP", "CMP"}),                   # cytidine kinase
+    "THL": ({"acetoacetyl-CoA", "CoA"}, {"acetyl-CoA"}),            # thiolase (2 acetyl-CoA)
 }
 
 
@@ -56,6 +63,26 @@ class RoleRuleTest(unittest.TestCase):
         self.assertEqual(self.decisions[("ATP", "DPCK")], "exchange")        # ATP -> ADP still removed
         self.assertEqual(self.neighbours("DPCK"), {"dephospho-CoA", "CoA"})
         self.assertIn("AMP", self.neighbours("ADSL"))
+
+    def test_pairing_is_one_to_one(self):
+        # ATP pairs with ADP (closest formula); the AMP made from adenosine is synthesis.
+        self.assertEqual(self.decisions[("ATP", "ADK")], "exchange")
+        self.assertEqual(self.decisions[("ADP", "ADK")], "exchange")
+        self.assertEqual(self.decisions[("AMP", "ADK")], "kept")
+        self.assertEqual(self.neighbours("ADK"), {"adenosine", "AMP"})
+
+    def test_other_nucleotides_are_not_loaded_carriers(self):
+        # ATP's formula contains CMP's, but ATP is not a loaded cytosine carrier.
+        self.assertEqual(self.decisions[("CTP", "CTPS")], "kept")
+        self.assertEqual(self.decisions[("UTP", "CTPS")], "kept")
+        self.assertEqual(self.neighbours("CTPS"), {"UTP", "CTP"})
+        self.assertEqual(self.decisions[("CMP", "UCK")], "kept")
+        self.assertEqual(self.neighbours("UCK"), {"cytidine", "CMP"})
+
+    def test_loaded_carrier_can_partner_twice(self):
+        # Thiolase makes 2 acetyl-CoA; stored as a set, one acetyl-CoA must partner CoA.
+        self.assertEqual(self.decisions[("CoA", "THL")], "exchange")
+        self.assertEqual(self.neighbours("THL"), {"acetoacetyl-CoA", "acetyl-CoA"})
 
     def test_inorganic_removed_everywhere(self):
         self.assertNotIn("Pi", self.graph.node_names)

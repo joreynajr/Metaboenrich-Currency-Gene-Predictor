@@ -163,8 +163,8 @@ repository:
 | file | contents |
 |---|---|
 | `network_info.json` | provenance: model version, URL and SHA-256, and every currency, pool and reaction-edit setting |
-| `nodes.tsv` | 3,957 metabolites (with formula, HMDB/KEGG/ChEBI ids, cofactor family) and 6,367 reactions (with genes, reversibility) |
-| `edges.tsv` | 16,332 metabolite–reaction edges, marked substrate/product |
+| `nodes.tsv` | 3,958 metabolites (with formula, HMDB/KEGG/ChEBI ids, cofactor family) and 6,377 reactions (with genes, reversibility) |
+| `edges.tsv` | 16,356 metabolite–reaction edges, marked substrate/product |
 | `network.graphml` | the same network for Cytoscape, without scores |
 | `currency_edges.tsv` | every cofactor–reaction decision |
 
@@ -202,14 +202,24 @@ release URL and verified by hash.
      side of the reaction. The families (`COFACTOR_FAMILIES`) are
      ATP/ADP/AMP, GTP/GDP/GMP, UTP/UDP/UMP, CTP/CDP/CMP, NAD⁺/NADH,
      NADP⁺/NADPH, FAD/FADH₂, CoA, SAM/SAH, PAPS/PAP, ubiquinone/ubiquinol and
-     PLP/PMP. Loaded carriers also count as partners: any metabolite whose
-     formula contains the carrier's formula plus extra carbon, which covers
-     acyl-CoAs, UDP-sugars, CDP-alcohols, GDP-sugars and CMP-sialic acids.
+     PLP/PMP. **Loaded carriers** also count as partners. A metabolite
+     qualifies if its name contains the carrier as a word (UDP-glucose,
+     udp-ribose, CDP-choline, CMP-sialic acid, acetyl-CoA; not dUDP) and its
+     formula contains the carrier's formula plus extra carbon. Members of
+     other cofactor groups never qualify; ATP's formula contains every atom
+     of CMP, but ATP is not a loaded CMP.
+
+     Partners are **paired one-to-one** within each group, closest formulas
+     first, and a cofactor left unpaired is kept. In adenosine kinase
+     (ATP + adenosine → ADP + AMP), ATP pairs with ADP, so the AMP made from
+     adenosine stays in the network as AMP synthesis. Loaded carriers may
+     partner more than one cofactor, because reactions are stored as sets
+     and lose stoichiometry (thiolase makes 2 acetyl-CoA).
 
      Examples: hexokinase's ATP → ADP is removed, while
-     adenylosuccinate → AMP, dephospho-CoA → CoA and
-     NAD⁺ → nicotinamide + ADP-ribose are kept. In Human-GEM this keeps 153
-     cofactor–reaction links and removes 6,793.
+     adenylosuccinate → AMP, adenosine → AMP, UTP → CTP, dephospho-CoA → CoA
+     and NAD⁺ → nicotinamide + ADP-ribose are kept. In Human-GEM this keeps
+     168 cofactor–reaction links and removes 6,808.
    - Reactions feeding **lumped pools** (biomass pools, "cofactors and
      vitamins", "xenobiotics", "steroids", "vitamin A/D/E derivatives") are
      dropped entirely.
@@ -268,6 +278,17 @@ These are placeholders for the three of us to settle, not settled methodology:
 
 ## Known limitations
 
+- **Dead-end reactions are never scored.** A reaction left with one
+  metabolite after currency handling is dropped, because current that enters
+  it has no second edge to leave by: it would always carry zero current. In
+  Human-GEM, 26 reactions fall in this group, including carbamoyl-phosphate
+  synthetase (CPS1: ATP + CO₂ + NH₃ → carbamoyl-phosphate), superoxide
+  dismutase, the peroxidases, sulfite oxidase and formate dehydrogenase.
+  Their genes can never appear in `genes.tsv`, whatever the data. The other
+  dropped reactions are transport (4,129), exchange/sink/demand (1,656) and
+  reactions made only of currency (577, mostly ATPases, ATP-driven transport
+  and catalase).
+
 - **Forced routes shared by several metabolites.** Leave-one-out handles a
   route forced by one metabolite, but not a single-exit pocket holding two or
   more significant metabolites. The one case found so far (vitamin B6 via
@@ -299,5 +320,6 @@ These are placeholders for the three of us to settle, not settled methodology:
 | `metaboenrich/cytoscape.py` | GraphML writer |
 | `metaboenrich/__main__.py` | command-line entry point and scoring |
 | `metaboenrich/export_network.py` | writes `network/` |
+| `metaboenrich/structure.py` | data-free structural check across pruning stages: per-node degree, structural current (random sources/targets) and pocket size; `python -m metaboenrich.structure --out results/structure` |
 | `metaboenrich/reaction_edits.tsv` | model corrections |
 | `tests/` | toy-network checks of the solver, the leave-one-out scores (against brute force), the currency rule, and the network snapshot |
