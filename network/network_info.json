@@ -1,0 +1,115 @@
+{
+  "model": "HumanGEM 2.0.1",
+  "model_url": "https://raw.githubusercontent.com/SysBioChalmers/Human-GEM/v2.0.1/model/Human-GEM.xml",
+  "model_sha256": "6ce49b620391f0ad76be24fdbdfc884fa376ff534dd3813c95abbe9d8c66fa5e",
+  "currency_mode": "role",
+  "removed_everywhere": {
+    "CO2": "inorganic",
+    "Fe2+": "inorganic",
+    "Fe3+": "inorganic",
+    "H+": "inorganic",
+    "H2O": "inorganic",
+    "H2O2": "inorganic",
+    "HCO3-": "inorganic",
+    "K+": "inorganic",
+    "NH3": "inorganic",
+    "Na+": "inorganic",
+    "O2": "inorganic",
+    "PPi": "inorganic",
+    "Pi": "inorganic",
+    "[protein]": "generic carrier",
+    "chloride": "inorganic",
+    "ferricytochrome B5": "generic carrier",
+    "ferrocytochrome B5": "generic carrier",
+    "mitooxidized thioredoxin": "generic carrier",
+    "mitothioredoxin": "generic carrier",
+    "oxidized adrenal ferredoxin": "generic carrier",
+    "oxidized ferredoxin": "generic carrier",
+    "oxidized thioredoxin": "generic carrier",
+    "reduced adrenal ferredoxin": "generic carrier",
+    "reduced ferredoxin": "generic carrier",
+    "sulfate": "inorganic",
+    "thioredoxin": "generic carrier"
+  },
+  "cofactor_families": {
+    "adenine nucleotides": [
+      "ATP",
+      "ADP",
+      "AMP"
+    ],
+    "guanine nucleotides": [
+      "GTP",
+      "GDP",
+      "GMP"
+    ],
+    "uracil nucleotides": [
+      "UTP",
+      "UDP",
+      "UMP"
+    ],
+    "cytosine nucleotides": [
+      "CTP",
+      "CDP",
+      "CMP"
+    ],
+    "NAD": [
+      "NAD+",
+      "NADH"
+    ],
+    "NADP": [
+      "NADP+",
+      "NADPH"
+    ],
+    "FAD": [
+      "FAD",
+      "FADH2"
+    ],
+    "CoA": [
+      "CoA"
+    ],
+    "SAM": [
+      "SAM",
+      "SAH"
+    ],
+    "PAPS": [
+      "PAPS",
+      "PAP"
+    ],
+    "ubiquinone": [
+      "ubiquinone",
+      "ubiquinol"
+    ],
+    "PLP": [
+      "pyridoxal-phosphate",
+      "pyridoxamine-phosphate"
+    ]
+  },
+  "pool_metabolites_dropped_with_their_reactions": [
+    "Gm4-Pool",
+    "arachidonate derivatives",
+    "biomass",
+    "cofactor_pool_biomass",
+    "cofactors and vitamins",
+    "lipid droplet",
+    "lipid_pool_biomass",
+    "metabolite_pool_biomass",
+    "protein_pool_biomass",
+    "steroids",
+    "vitamin A derivatives",
+    "vitamin D derivatives",
+    "vitamin E derivatives",
+    "xenobiotics"
+  ],
+  "reaction_edits": {
+    "R_MAR07133": [
+      "pyridoxal-phosphate",
+      "pyridoxine-phosphate"
+    ]
+  },
+  "max_reaction_size": 20,
+  "metabolite_nodes": 3957,
+  "reaction_nodes": 6367,
+  "edges": 16332,
+  "cofactor_edges_kept": 153,
+  "cofactor_edges_removed_as_exchange": 6793
+}
