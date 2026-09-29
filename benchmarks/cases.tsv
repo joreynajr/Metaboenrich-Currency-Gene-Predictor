@@ -1,0 +1,27 @@
+case_id	disorder	dataset	cohort	causal_genes	category	status	note
+pku	Phenylketonuria	t2020	pku	PAH	amino acid	primary
+msud	Maple syrup urine disease	t2020	msud	BCKDHA;BCKDHB;DBT	amino acid	primary	BCKD complex subunits
+abat	GABA-transaminase deficiency	t2020	abat	ABAT	amino acid / neurotransmitter	primary
+aadc	Aromatic L-amino acid decarboxylase deficiency	t2020	aadc	DDC	amino acid / neurotransmitter	primary
+gamt	GAMT deficiency	t2020	gamt	GAMT	creatine synthesis	primary
+otc	Ornithine transcarbamylase deficiency	t2020	otc	OTC	urea cycle	primary
+cit	Citrullinemia type I	t2020	cit	ASS1	urea cycle	primary
+asld	Argininosuccinic aciduria	t2020	asld	ASL	urea cycle	primary
+arg	Argininemia	t2020	arg	ARG1	urea cycle	primary
+mma	Methylmalonic aciduria	t2020	mma	MMUT;MMAA;MMAB	organic acid	primary	isolated MMA: mutase or its cofactor-loading genes
+pa	Propionic aciduria	t2020	pa	PCCA;PCCB	organic acid	primary
+ga	Glutaric aciduria type I	t2020	ga	GCDH	organic acid	primary
+adsl	Adenylosuccinate lyase deficiency	t2020	adsl	ADSL	purine	primary
+mcc	3-Methylcrotonyl-CoA carboxylase deficiency	miller	3-methylcrotonyl CoA carboxylase	MCCC1;MCCC2	organic acid	primary	Miller2015 only
+tmlhe	TMLHE deficiency	miller	Trimethyllysine hydroxylase epsilon	TMLHE	carnitine synthesis	primary	Miller2015 only
+hmgcl	HMG-CoA lyase deficiency	miller	3-OH-3methylglutaryl (HMG) CoA lyase	HMGCL	organic acid	primary	Miller2015 only; 2 patients
+hcu	Homocystinuria	miller	Homocystinuria	CBS	amino acid	primary	Miller2015 only; 2 patients; classical (CBS) form assumed
+iva	Isovaleric aciduria	miller	Isovaleric aciduria	IVD	organic acid	primary	Miller2015 only; 2 patients
+tp	Thymidine phosphorylase deficiency	miller	Thymidine Phosphorylase	TYMP	pyrimidine	primary	Miller2015 only; 2 patients
+hlcs	Holocarboxylase synthetase deficiency	miller	Holocarboxylase	HLCS	organic acid	primary	Miller2015 only; 1 patient
+cob	Cobalamin biosynthesis defects	t2020	cob	MMACHC;MMADHC;MMAA;MMAB;MTR;MTRR;LMBRD1;ABCD4	organic acid	secondary	subtype not given; many possible genes
+zsd	Zellweger spectrum disorder	t2020	zsd	PEX1	peroxisomal	excluded	peroxisome biogenesis; mainly lipid signature (out of scope)
+rcdp	Rhizomelic chondrodysplasia punctata	t2020	rcdp	PEX7;GNPAT;AGPS	peroxisomal	excluded	plasmalogen (lipid) signature (out of scope)
+mcad	MCAD deficiency	miller	Medium chain acyl-CoA dehydrogenase	ACADM	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)
+vlcad	VLCAD deficiency	miller	Very-long chain acyl-CoA dehydrogenase	ACADVL	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)
+lpi	Lysinuric protein intolerance	miller	Lysinuric protein intolerance	SLC7A7	transport	excluded	transporter defect; the network drops transport reactions

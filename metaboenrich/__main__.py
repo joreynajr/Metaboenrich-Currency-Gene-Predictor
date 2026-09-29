@@ -14,6 +14,7 @@ from .cytoscape import write_graphml
 from .daa import load_daa
 from .flow import current_flow
 from .gem import download_human_gem, load_sbml
+from .scoring import gene_table, node_table, rank_score, reaction_table
 from .network import (DEFAULT_REACTION_EDITS, build_graph, load_reaction_edits, metabolite_degrees,
                       resolve_currency)
 
@@ -65,14 +66,6 @@ def parse_args(argv=None):
                    help="threshold for the bottleneck_frac column: fraction of pairs in which a node "
                         "carries >= tau of the current (default: %(default)s)")
     return p.parse_args(argv)
-
-
-def rank_score(df, cols):
-    """Final score = mean percentile rank of the given columns (placeholder for
-    the protocol's unspecified combination of conductivity and bottleneck)."""
-    if df.empty:
-        return pd.Series(dtype=float)
-    return sum(df[c].rank(pct=True) for c in cols) / len(cols)
 
 
 def write_cytoscape(out, graph, model, flow, rxn, inter, ep, on, sources, targets, min_current):
@@ -220,34 +213,12 @@ def main(argv=None):
           f"({args.mode})")
 
     # --- scoring (§1.5) -------------------------------------------------------
-    nodes = pd.DataFrame({
-        "node_id": graph.node_ids,
-        "name": graph.node_names,
-        "is_reaction": graph.is_reaction,
-        "accumulated_current": flow.accumulated,
-        "conductivity": flow.conductivity,
-        "bottleneck": flow.bottleneck,
-        "bottleneck_frac": flow.bottleneck_frac,
-        "conductivity_loo": flow.conductivity_loo,
-        "bottleneck_loo": flow.bottleneck_loo,
-    })
+    nodes = node_table(graph, flow)
     score_cols = (["conductivity", "bottleneck"] if args.no_leave_one_out
                   else ["conductivity_loo", "bottleneck_loo"])
     endpoints = set(sources) | set(targets)
 
-    rxn = nodes[nodes.is_reaction & (nodes.conductivity > 0)].copy()
-    rxn["genes"] = [";".join(model.genes.get(g) or g for g in graph.reaction_genes[i]) for i in rxn.index]
-    # A source/target in a single reaction sends all its current through it,
-    # so that reaction's bottleneck = 1 by construction; name such endpoints.
-    degree = np.bincount(graph.edges.ravel(), minlength=graph.n)
-    forced = {}
-    for v in endpoints:
-        if degree[v] == 1:
-            r = graph.edges[graph.edges[:, 0] == v, 1][0]
-            forced.setdefault(r, []).append(graph.node_names[v])
-    rxn["only_reaction_of"] = [";".join(forced.get(i, [])) for i in rxn.index]
-    rxn["final_score"] = rank_score(rxn, score_cols)
-    rxn = rxn.sort_values(["final_score", "conductivity"], ascending=False)
+    rxn = reaction_table(nodes, graph, model, endpoints, score_cols)
     rxn.drop(columns="is_reaction").rename(columns={"node_id": "reaction_id"}).to_csv(
         out / "reactions.tsv", sep="\t", index=False)
 
@@ -277,21 +248,7 @@ def main(argv=None):
         ep = ep.sort_values(["role", "final_score"], ascending=[True, False])
     ep.to_csv(out / "source_target_metabolites.tsv", sep="\t", index=False)
 
-    # Genes inherit the best score among the reactions they catalyse (GPR
-    # and/or logic is ignored in this prototype).
-    gene_rows = {}
-    for i, r in rxn.iterrows():
-        for g in graph.reaction_genes[i]:
-            row = gene_rows.setdefault(g, {"ensembl_id": g, "symbol": model.genes.get(g, ""),
-                                           "best_score": -1.0, "best_reaction": "", "n_reactions": 0,
-                                           "total_accumulated_current": 0.0})
-            row["n_reactions"] += 1
-            row["total_accumulated_current"] += r.accumulated_current
-            if r.final_score > row["best_score"]:
-                row["best_score"], row["best_reaction"] = r.final_score, f"{r.node_id} {r['name']}"
-    genes = pd.DataFrame(gene_rows.values())
-    if len(genes):
-        genes = genes.sort_values(["best_score", "total_accumulated_current"], ascending=False)
+    genes = gene_table(rxn, graph, model)
     genes.to_csv(out / "genes.tsv", sep="\t", index=False)
 
     daa.drop(columns="node").to_csv(out / "daa_mapping.tsv", sep="\t", index=False)

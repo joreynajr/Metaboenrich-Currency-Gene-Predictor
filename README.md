@@ -154,6 +154,27 @@ Node attributes: `label`, `type`, `role`, `log2fc`, `p`, `genes`, `rank`,
 `accumulated_current`, `only_reaction_of`. Edge attributes: `mean_current`,
 `max_current`, `side`, `reversible`.
 
+### Pruning-stage diagrams
+
+`python -m metaboenrich.stage_diagrams` (after `python -m metaboenrich.structure`)
+writes one Cytoscape file per pruning stage to `results/stage_diagrams/`,
+all on **the same layout**, so a node sits in the same place at every
+stage. It draws the nodes the structural check is about: nodes that alone cut
+off 5+ metabolites and their pockets, the busiest hubs, and islands of 4+
+metabolites (about 1,300 nodes). Regions: nodes removed by pruning on the left
+(grouped by the stage that removed them), the main network in the centre,
+islands on the right.
+
+To open: **File → Import → Network from File** and pick a `.cyjs` file (the
+layout comes with it; don't re-run a layout). Then **File → Import → Styles
+from File**, pick `metaboenrich_pruning_style.xml`, and choose the
+"Metaboenrich pruning" style in the Style panel. Encodings match the Pruning
+Atlas: fill = pocket size (grey 0, blues 1 → 20+), size = structural current,
+circle = metabolite, square = reaction, thick dark border = cuts off a pocket,
+dashed border = inside a pocket, dotted border = island, faint = removed by
+this stage. Every value is also a column in the node table (`role`, `pocket`,
+`pocket_of`, `structural_current`, `removed_at`, …).
+
 ## The locked network
 
 `network/` holds the exact network every analysis runs on, as built from
