@@ -331,6 +331,23 @@ def _usable_reactions(model, max_reaction_size, rules, drop_objective=True):
         yield rxn, subs, prods, audit
 
 
+def transport_genes(model, rules=None):
+    """{met_id: {Ensembl gene, ...}} for transporters. Transport reactions have
+    the same metabolite on both sides once compartments are merged, so they are
+    not in the graph; this keeps their genes linked to what they carry.
+    Currency metabolites removed everywhere (H+, Na+, ...) are skipped."""
+    removed = set(rules.removed) if rules else set()
+    out = {}
+    for rxn in model.reactions.values():
+        if not rxn.genes:
+            continue
+        subs = {model.species[s].met_id for s in rxn.substrates}
+        prods = {model.species[s].met_id for s in rxn.products}
+        for met in (subs & prods) - removed:
+            out.setdefault(met, set()).update(rxn.genes)
+    return out
+
+
 def build_graph(model, rules, max_reaction_size=20, drop_objective=True):
     met_names = {s.met_id: s.name for s in model.species.values()}
     node_ids, node_names, is_rxn, index = [], [], [], {}

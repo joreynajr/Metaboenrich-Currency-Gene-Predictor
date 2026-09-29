@@ -13,6 +13,48 @@ import xml.etree.ElementTree as ET
 HUMAN_GEM_VERSION = "v2.0.1"
 HUMAN_GEM_URL = f"https://raw.githubusercontent.com/SysBioChalmers/Human-GEM/{HUMAN_GEM_VERSION}/model/Human-GEM.xml"
 HUMAN_GEM_SHA256 = "6ce49b620391f0ad76be24fdbdfc884fa376ff534dd3813c95abbe9d8c66fa5e"
+# The SBML release carries no subsystem (pathway) assignments; the YAML of the
+# same release does.
+HUMAN_GEM_YML_URL = f"https://raw.githubusercontent.com/SysBioChalmers/Human-GEM/{HUMAN_GEM_VERSION}/model/Human-GEM.yml"
+HUMAN_GEM_YML_SHA256 = "3b944902a44f5f0e9dfcf23f8b9b4a54891bfb85ae711f8540e72ffbfcfa1f9a"
+
+
+def load_subsystems(path):
+    """{SBML reaction id (R_MAR...): [subsystem, ...]} from Human-GEM.yml.
+    Downloads the pinned release to `path` if it is missing."""
+    path = Path(path)
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        print(f"Downloading Human-GEM {HUMAN_GEM_VERSION} YAML (subsystems) to {path} ...")
+        tmp = path.with_suffix(".part")
+        urllib.request.urlretrieve(HUMAN_GEM_YML_URL, tmp)
+        if hashlib.sha256(tmp.read_bytes()).hexdigest() != HUMAN_GEM_YML_SHA256:
+            tmp.unlink()
+            raise SystemExit("Downloaded Human-GEM.yml has an unexpected SHA-256")
+        tmp.replace(path)
+    subsystems, rid, in_sub = {}, None, False
+    in_reactions = False
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("- reactions:"):
+            in_reactions = True
+            continue
+        if in_reactions and line.startswith("- ") and not line.startswith("- reactions"):
+            break                                     # next top-level section (genes, compartments)
+        if not in_reactions:
+            continue
+        s = line.strip()
+        if s.startswith("- id: "):
+            rid, in_sub = "R_" + s[6:].strip().strip('"'), False
+        elif s == "- subsystem:":
+            in_sub = True
+        elif s.startswith("- subsystem: "):          # single value on one line
+            subsystems.setdefault(rid, []).append(s[13:].strip().strip('"'))
+            in_sub = False
+        elif in_sub and line.startswith("      - "):
+            subsystems.setdefault(rid, []).append(s[2:].strip().strip('"'))
+        elif in_sub:
+            in_sub = False
+    return subsystems
 
 NS = {
     "sbml": "http://www.sbml.org/sbml/level3/version1/core",

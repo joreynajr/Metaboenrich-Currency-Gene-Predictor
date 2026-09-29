@@ -110,6 +110,7 @@
   "metabolite_nodes": 3958,
   "reaction_nodes": 6377,
   "edges": 16356,
+  "edges_sha256": "942cd8ac53e4a54f813342504947038281c4713d6ae91efcfb5fd56efee0261a",
   "cofactor_edges_kept": 168,
   "cofactor_edges_removed_as_exchange": 6808
 }

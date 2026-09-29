@@ -101,6 +101,10 @@ def main(argv=None):
         "metabolite_nodes": graph.n - n_rxn,
         "reaction_nodes": n_rxn,
         "edges": len(graph.edges),
+        # same fingerprint as each run's summary.json network_edges_sha256
+        "edges_sha256": hashlib.sha256("\n".join(sorted(
+            f"{graph.node_ids[m]}\t{graph.node_ids[r]}\t{s}" for (m, r), s in zip(graph.edges, graph.edge_side)
+        )).encode()).hexdigest(),
         "cofactor_edges_kept": int((audit.decision == "kept").sum()),
         "cofactor_edges_removed_as_exchange": int((audit.decision == "exchange").sum()),
     }

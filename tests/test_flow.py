@@ -85,6 +85,39 @@ class CurrentFlowTest(unittest.TestCase):
         np.testing.assert_allclose(res.conductivity_loo[rx], cond_min[rx], atol=1e-10)
         np.testing.assert_allclose(res.bottleneck_loo[rx], bott_min[rx], atol=1e-10)
 
+    def test_one_sided_ground_splits_withdrawal(self):
+        # m0 -r0- m1 -r1- m2; source m0, ground {m1, m2}: half the current is
+        # withdrawn at m1, so r0 carries 1 and r1 carries 0.5.
+        g = toy_graph(3, 2, [(0, 3), (1, 3), (1, 4), (2, 4)])
+        res = current_flow(g, [0], [], ground=[1, 2])
+        self.assertEqual(len(res.pairs), 1)
+        np.testing.assert_allclose(res.conductivity[[3, 4]], [1.0, 0.5])
+        np.testing.assert_allclose(res.conductivity[[1, 2]], 0.0)       # ground nodes are sinks
+
+    def test_one_sided_matches_pseudoinverse(self):
+        rng = np.random.default_rng(3)
+        mets, rxns = 9, 11
+        edges = {(int(rng.integers(mets)), mets + r) for r in range(rxns) for _ in range(3)}
+        edges |= {(m, mets + m % rxns) for m in range(mets)}
+        g = toy_graph(mets, rxns, sorted(edges))
+        if len(set(g.components())) > 1:
+            self.skipTest("random graph disconnected")
+        S, G = [0, 1], [5, 6, 7]
+        res = current_flow(g, S, [], ground=G)
+        B = g.incidence().toarray()
+        Lp = np.linalg.pinv(B.T @ B)
+        T_sum = np.zeros(g.n)
+        for s in S:
+            b = np.zeros(g.n); b[s] = 1.0; b[G] -= 1.0 / len(G)
+            x = Lp @ b
+            T = 0.5 * np.abs(B).T @ np.abs(B @ x)
+            T[s] = 0; T[G] = 0
+            T_sum += T
+        np.testing.assert_allclose(res.conductivity, T_sum / len(S), atol=1e-10)
+        # targets-only data: current drawn at the target, supplied by the ground
+        res_t = current_flow(g, [], [0], ground=G)
+        self.assertEqual(len(res_t.pairs), 1)
+
     def test_directed_mode_excludes_unreachable_pairs(self):
         # m0 -> r0 -> m1 only (irreversible); a pair m1 -> m0 has no directed path.
         g = toy_graph(2, 1, [(0, 2), (1, 2)], arcs=[(0, 2), (2, 1)])

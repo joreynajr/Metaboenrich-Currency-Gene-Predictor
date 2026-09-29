@@ -130,8 +130,12 @@ class Ranker:
 
         ranks = {"loo": None, "raw": None}
         genes = pd.DataFrame()
-        if sources and targets:
-            flow = current_flow(self.graph, sources, targets)
+        ground = None
+        if bool(sources) != bool(targets):          # one-sided: exchange current with unchanged metabolites
+            ground = on[on.role == ""].node.tolist()
+        info["one_sided"] = bool(ground)
+        if (sources and targets) or ground:
+            flow = current_flow(self.graph, sources, targets, ground=ground)
             info["pairs"] = len(flow.pairs)
             if flow.pairs:
                 nodes = node_table(self.graph, flow)

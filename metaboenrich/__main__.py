@@ -3,6 +3,7 @@
     python -m metaboenrich --daa examples/example_daa.csv --out results/example
 """
 import argparse
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -11,12 +12,14 @@ import numpy as np
 import pandas as pd
 
 from .cytoscape import write_graphml
-from .daa import load_daa
+from . import __version__
+from .daa import load_daa, load_name_bridge
+from .flow import GROUND
 from .flow import current_flow
-from .gem import download_human_gem, load_sbml
-from .scoring import gene_table, node_table, rank_score, reaction_table
+from .gem import download_human_gem, load_sbml, load_subsystems
+from .scoring import gene_table, node_table, pathway_table, rank_score, reaction_table, transporter_table
 from .network import (DEFAULT_REACTION_EDITS, build_graph, load_reaction_edits, metabolite_degrees,
-                      resolve_currency)
+                      resolve_currency, transport_genes)
 
 DEFAULT_MODEL = "data/Human-GEM.xml"
 
@@ -56,9 +59,21 @@ def parse_args(argv=None):
                         "annotation problems; 'none' to disable (default: the bundled reaction_edits.tsv)")
     p.add_argument("--max-reaction-size", type=int, default=20,
                    help="drop pseudo-reactions with more than N metabolites (default: %(default)s)")
-    p.add_argument("--no-leave-one-out", action="store_true",
-                   help="score on raw conductivity/bottleneck instead of the leave-one-out versions, "
-                        "which discount reactions whose score rests on a single source or target")
+    p.add_argument("--scoring", choices=["raw", "loo"], default="raw",
+                   help="rank on raw conductivity/bottleneck (default; best on the inborn-error benchmark) "
+                        "or on leave-one-out versions, which discount reactions whose score rests on a "
+                        "single source or target. Both are always written to reactions.tsv")
+    p.add_argument("--no-leave-one-out", action="store_true", help=argparse.SUPPRESS)  # old spelling of --scoring raw
+    p.add_argument("--one-sided", choices=["auto", "off"], default="auto",
+                   help="auto: if nothing significant goes down (or up), withdraw (or supply) current evenly "
+                        "through the measured, unchanged metabolites (default: %(default)s)")
+    p.add_argument("--id-translation", default=None, metavar="CSV",
+                   help="synonym table (KEGG, HMDB, NAME1..NAMEn) used to map metabolites given by name")
+    p.add_argument("--subsystems", default="data/Human-GEM.yml",
+                   help="Human-GEM YAML with reaction subsystems, for pathways.tsv (downloaded if missing)")
+    p.add_argument("--pathway-top", type=int, default=100,
+                   help="pathways.tsv tests subsystems for over-representation among the top N reactions "
+                        "(default: %(default)s)")
     p.add_argument("--cytoscape-min-current", type=float, default=0.1,
                    help="current_subnetwork.graphml keeps edges carrying at least this share of the "
                         "current for at least one source-target pair (default: %(default)s)")
@@ -153,9 +168,11 @@ def main(argv=None):
         if unknown:
             print(f"  warning: reaction edits not matching the model: {unknown}")
 
+    bridge = load_name_bridge(args.id_translation) if args.id_translation else None
     daa, unmapped, dupes = load_daa(args.daa, model, args.id_col, args.fc_col, args.p_col,
-                                    args.alpha, args.fc_linear, args.min_log2fc)
-    print(f"DAA: {len(daa) + len(unmapped)} rows, {len(daa)} mapped, {len(unmapped)} unmapped, "
+                                    args.alpha, args.fc_linear, args.min_log2fc, name_bridge=bridge)
+    via = daa.matched_on.str.contains("id_translation|loose").sum()
+    print(f"DAA: {len(daa) + len(unmapped)} rows, {len(daa)} mapped ({via} by name lookup), {len(unmapped)} unmapped, "
           f"{(daa.role == 'source').sum()} sources, {(daa.role == 'target').sum()} targets")
 
     lost = daa[daa.met_id.isin(rules.removed) & (daa.role != "")]
@@ -207,15 +224,26 @@ def main(argv=None):
     targets = on[on.role == "target"].node.tolist()
     phi = dict(zip(on.node, on.phi)) if args.pair_weight == "fc" else None
 
+    # One-sided data: nothing significant in one direction. The ground is the
+    # measured metabolites that did not change.
+    ground = None
+    if args.one_sided == "auto" and bool(sources) != bool(targets):
+        if args.mode == "directed":
+            print("  note: one-sided mode needs undirected flow; running without it")
+        else:
+            ground = on[on.role == ""].node.tolist()
+            side = "sources" if sources else "targets"
+            print(f"One-sided: only {side} are significant; current is exchanged with {len(ground)} "
+                  f"measured, unchanged metabolites (the ground)")
     flow = current_flow(graph, sources, targets, weights=phi,
-                        directed=args.mode == "directed", tau=args.bottleneck_tau)
+                        directed=args.mode == "directed", tau=args.bottleneck_tau, ground=ground)
     print(f"Current flow: {len(flow.pairs)} source-target pairs retained, {len(flow.excluded)} excluded "
-          f"({args.mode})")
+          f"({args.mode}{', one-sided' if ground else ''})")
 
     # --- scoring (§1.5) -------------------------------------------------------
     nodes = node_table(graph, flow)
-    score_cols = (["conductivity", "bottleneck"] if args.no_leave_one_out
-                  else ["conductivity_loo", "bottleneck_loo"])
+    use_loo = args.scoring == "loo" and not args.no_leave_one_out
+    score_cols = ["conductivity_loo", "bottleneck_loo"] if use_loo else ["conductivity", "bottleneck"]
     endpoints = set(sources) | set(targets)
 
     rxn = reaction_table(nodes, graph, model, endpoints, score_cols)
@@ -236,8 +264,7 @@ def main(argv=None):
                         # conductivity: mean effective conductance 1/R_eff to its partners
                         "conductivity": e["eff_conductance"],
                         # bottleneck: max share of current it relays between *other* pairs
-                        "bottleneck": (flow.bottleneck if args.no_leave_one_out
-                                       else flow.bottleneck_loo)[r.node],
+                        "bottleneck": (flow.bottleneck_loo if use_loo else flow.bottleneck)[r.node],
                         "conduit_current": flow.conductivity[r.node],
                         # mean share of its own current leaving through a single reaction
                         "exit_concentration": e["max_edge_share"]})
@@ -251,18 +278,43 @@ def main(argv=None):
     genes = gene_table(rxn, graph, model)
     genes.to_csv(out / "genes.tsv", sep="\t", index=False)
 
+    # Pathways (Human-GEM subsystems) over-represented among the top reactions.
+    subsystems = load_subsystems(args.subsystems)
+    pathways = pathway_table(rxn, graph, subsystems, args.pathway_top)
+    pathways.to_csv(out / "pathways.tsv", sep="\t", index=False)
+
+    # Transporters, scored by what they carry (kept apart from the enzyme ranking).
+    changed = on[on.role.isin(["source", "target"])]
+    met_scores = dict(zip(changed.met_id, zip(changed.log2fc.abs().rank(pct=True), ["measured change"] * len(changed))))
+    for i, r in inter.iterrows():
+        met_scores.setdefault(r.node_id, (float(r.final_score), "carries current"))
+    transporters = transporter_table(transport_genes(model, rules), met_scores, model)
+    if len(transporters):
+        transporters["best_metabolite"] = transporters.best_metabolite.map(lambda m: f"{m} {met_names.get(m, '')}")
+    transporters.to_csv(out / "transporters.tsv", sep="\t", index=False)
+
     daa.drop(columns="node").to_csv(out / "daa_mapping.tsv", sep="\t", index=False)
     if len(unmapped):
         unmapped.to_csv(out / "daa_unmapped.tsv", sep="\t", index=False)
     if flow.excluded:
-        pd.DataFrame([(graph.node_ids[s], graph.node_ids[t], why) for s, t, why in flow.excluded],
+        label = lambda v: "ground" if v == GROUND else graph.node_ids[v]
+        pd.DataFrame([(label(s), label(t), why) for s, t, why in flow.excluded],
                      columns=["source", "target", "reason"]).to_csv(out / "excluded_pairs.tsv", sep="\t", index=False)
 
     # --- Cytoscape ----------------------------------------------------------
     n_cyto = write_cytoscape(out, graph, model, flow, rxn, inter, ep, on, sources, targets,
                              args.cytoscape_min_current)
 
+    edge_list = "\n".join(sorted(f"{graph.node_ids[m]}\t{graph.node_ids[r]}\t{s}"
+                                 for (m, r), s in zip(graph.edges, graph.edge_side)))
     summary = {
+        "metaboenrich_version": __version__,
+        "network_edges": len(graph.edges),
+        # sha256 of the sorted edge list; equals network/network_info.json's
+        # edges_sha256 when the run used the locked network
+        "network_edges_sha256": hashlib.sha256(edge_list.encode()).hexdigest(),
+        "scoring": "leave-one-out" if use_loo else "raw", "one_sided": bool(ground),
+        "id_translation": str(args.id_translation or ""),
         "model": f"{model.id} {model.version}", "daa": str(args.daa), "mode": args.mode,
         "pair_weight": args.pair_weight, "alpha": args.alpha, "bottleneck_tau": args.bottleneck_tau,
         "currency_mode": args.currency_mode,

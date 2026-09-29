@@ -57,15 +57,25 @@ def _potentials(graph, laplacian, labels, nodes):
     return Y, col
 
 
-def select_pairs(graph, sources, targets, directed):
+GROUND = -1   # stands in for "withdraw evenly across the ground set" in one-sided mode
+
+
+def select_pairs(graph, sources, targets, directed, ground_comps=frozenset()):
     """All S x T pairs, minus those that cannot carry current: different
-    connected components, or (directed mode, §2.2) no directed s -> t path."""
+    connected components, or (directed mode, §2.2) no directed s -> t path.
+    A GROUND endpoint pairs with any node whose component holds ground nodes."""
     labels = graph.components()
     pairs, excluded = [], []
-    reach = {s: graph.reachable_from(s) for s in sources} if directed else {}
+    reach = {s: graph.reachable_from(s) for s in sources if s != GROUND} if directed else {}
     for s in sources:
         for t in targets:
-            if labels[s] != labels[t]:
+            if GROUND in (s, t):
+                real = t if s == GROUND else s
+                if labels[real] in ground_comps:
+                    pairs.append((s, t))
+                else:
+                    excluded.append((s, t, "no ground in component"))
+            elif labels[s] != labels[t]:
                 excluded.append((s, t, "disconnected"))
             elif directed and not reach[s][t]:
                 excluded.append((s, t, "no directed path"))
@@ -96,13 +106,29 @@ def _leave_one_out(acc, total_w, sums, w_by, maxes):
     return cond, bott
 
 
-def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5, chunk=128):
+def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5, chunk=128, ground=None):
     """Run current flow for all retained source-target pairs.
 
     weights: optional {node: phi}; a pair's weight is (phi_s + phi_t) / 2.
              None gives every pair weight 1 (unit injection, as in the protocol).
+    ground:  optional node list for one-sided data. With no targets, each
+             source injects one unit that is withdrawn evenly across the ground
+             nodes in its component (b = e_s - mean of e_g); with no sources,
+             each target draws one unit supplied evenly by the ground. Ground
+             nodes are sinks, so their own throughput is not scored.
     """
-    pairs, excluded, labels = select_pairs(graph, sources, targets, directed)
+    ground = [g for g in (ground or []) if g not in set(sources) | set(targets)]
+    if ground and directed:
+        raise ValueError("one-sided (ground) mode is only defined for undirected flow")
+    if ground and not targets and sources:
+        targets = [GROUND]
+    elif ground and not sources and targets:
+        sources = [GROUND]
+    else:
+        ground = []
+    labels_all = graph.components() if ground else None
+    ground_comps = frozenset(labels_all[ground]) if ground else frozenset()
+    pairs, excluded, labels = select_pairs(graph, sources, targets, directed, ground_comps)
     n = graph.n
     acc = np.zeros(n)
     bott = np.zeros(n)
@@ -121,24 +147,39 @@ def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5,
         B = graph.incidence()                 # m x n, unit conductance per edge
         L = (B.T @ B).tocsr()
         absB_T = abs(B).T.tocsr()
-        daa_nodes = sorted({v for p in pairs for v in p})
+        daa_nodes = sorted({v for p in pairs for v in p if v != GROUND} | set(ground))
         Y, col = _potentials(graph, L, labels, daa_nodes)
+        # Mean ground potential per component: the GROUND endpoint's "column".
+        gmean = {}
+        for comp in ground_comps:
+            gmean[comp] = Y[:, [col[g] for g in ground if labels[g] == comp]].mean(axis=1)
+
+        def pot(v, other):
+            return gmean[labels[other]] if v == GROUND else Y[:, col[v]]
 
         # Edges incident to each endpoint, to measure how concentrated the
         # injected current is on a single reaction.
         incident = {v: np.flatnonzero((graph.edges == v).any(axis=1)) for v in daa_nodes}
+        ground_idx = np.array(ground, dtype=int)
 
         for start in range(0, len(pairs), chunk):
             block = pairs[start:start + chunk]
             s_idx = np.array([s for s, _ in block])
             t_idx = np.array([t for _, t in block])
-            X = Y[:, [col[s] for s in s_idx]] - Y[:, [col[t] for t in t_idx]]
+            if ground:
+                X = np.column_stack([pot(s, t) - pot(t, s) for s, t in block])
+            else:
+                X = Y[:, [col[s] for s in s_idx]] - Y[:, [col[t] for t in t_idx]]
             I = np.asarray(B @ X)                         # edge currents (Ohm's law)
             T = 0.5 * np.asarray(absB_T @ np.abs(I))      # node throughput
             k = np.arange(len(block))
-            T[s_idx, k] = 0.0                             # endpoints trivially carry all current
-            T[t_idx, k] = 0.0
-            w = (np.array([(weights[s] + weights[t]) / 2 for s, t in block])
+            real_s, real_t = s_idx != GROUND, t_idx != GROUND
+            T[s_idx[real_s], k[real_s]] = 0.0             # endpoints trivially carry all current
+            T[t_idx[real_t], k[real_t]] = 0.0
+            if ground:
+                T[ground_idx, :] = 0.0                    # ground nodes are sinks
+            wt = lambda v: weights.get(v, 0.0) if v != GROUND else None
+            w = (np.array([np.nanmean([x for x in (wt(s), wt(t)) if x is not None]) for s, t in block])
                  if weights else np.ones(len(block)))
 
             acc += T @ w
@@ -158,9 +199,15 @@ def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5,
             np.add.at(w_s, si, w)
             np.add.at(w_t, ti, w)
 
-            r_eff = X[s_idx, k] - X[t_idx, k]
+            def xval(v, other, j):
+                if v != GROUND:
+                    return X[v, j]
+                return X[[g for g in ground if labels[g] == labels[other]], j].mean()
+            r_eff = np.array([xval(s, t, j) - xval(t, s, j) for j, (s, t) in enumerate(block)])
             for j, (s, t) in enumerate(block):
                 for v in (s, t):
+                    if v == GROUND:
+                        continue
                     e = endpoint.setdefault(v, {"pairs": 0, "eff_conductance": 0.0, "max_edge_share": 0.0})
                     e["pairs"] += 1
                     e["eff_conductance"] += 1.0 / r_eff[j] if r_eff[j] > 0 else 0.0
