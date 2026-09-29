@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+stearate	-1.74	0.0818590179576147	MAM02938	metabolite	1.74	False	
+palmitate	-1.13	0.2584762244800357	MAM02674	metabolite	1.13	False	
+pipecolate	0.7	0.483927304446146	MAM02413	metabolite via id_translation	0.7	False	

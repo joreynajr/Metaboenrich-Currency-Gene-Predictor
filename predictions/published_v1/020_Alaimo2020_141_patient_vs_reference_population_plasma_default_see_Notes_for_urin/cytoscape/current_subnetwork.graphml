@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="n0" for="node" attr.name="label" attr.type="string"/>
+  <key id="n1" for="node" attr.name="type" attr.type="string"/>
+  <key id="n2" for="node" attr.name="role" attr.type="string"/>
+  <key id="n3" for="node" attr.name="log2fc" attr.type="double"/>
+  <key id="n4" for="node" attr.name="p" attr.type="double"/>
+  <key id="n5" for="node" attr.name="final_score" attr.type="double"/>
+  <key id="n6" for="node" attr.name="rank" attr.type="int"/>
+  <key id="n7" for="node" attr.name="conductivity_loo" attr.type="double"/>
+  <key id="n8" for="node" attr.name="bottleneck_loo" attr.type="double"/>
+  <key id="n9" for="node" attr.name="conductivity" attr.type="double"/>
+  <key id="n10" for="node" attr.name="bottleneck" attr.type="double"/>
+  <key id="n11" for="node" attr.name="accumulated_current" attr.type="double"/>
+  <key id="n12" for="node" attr.name="genes" attr.type="string"/>
+  <key id="n13" for="node" attr.name="only_reaction_of" attr.type="string"/>
+  <key id="e0" for="edge" attr.name="mean_current" attr.type="double"/>
+  <key id="e1" for="edge" attr.name="max_current" attr.type="double"/>
+  <key id="e2" for="edge" attr.name="side" attr.type="string"/>
+  <key id="e3" for="edge" attr.name="reversible" attr.type="boolean"/>
+  <graph id="metaboenrich" edgedefault="directed">
+    <node id="MAM01986"><data key="n0">glycine</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9991922455573505</data><data key="n6">3</data><data key="n7">0.47240111563912496</data><data key="n8">0.47240111563912496</data><data key="n9">0.47240111563912496</data><data key="n10">0.47240111563912496</data><data key="n11">0.47240111563912496</data></node>
+    <node id="MAM02348"><data key="n0">L-carnitine</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9987883683360258</data><data key="n6">4</data><data key="n7">0.2674113110131674</data><data key="n8">0.2674113110131674</data><data key="n9">0.2674113110131674</data><data key="n10">0.2674113110131674</data><data key="n11">0.2674113110131674</data></node>
+    <node id="R_MAR03206"><data key="n0">acetyl-CoA:propanoyl-CoA 2-C-acetyltransferase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9991031390134529</data><data key="n6">6</data><data key="n7">0.1885425196821674</data><data key="n8">0.1885425196821674</data><data key="n9">0.1885425196821674</data><data key="n10">0.1885425196821674</data><data key="n11">0.1885425196821674</data><data key="n12">HADHA;HADHB;ACAA2</data></node>
+    <node id="MAM00662"><data key="n0">2-methylacetoacetyl-CoA</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9979806138933764</data><data key="n6">6</data><data key="n7">0.18854251968216829</data><data key="n8">0.18854251968216829</data><data key="n9">0.18854251968216829</data><data key="n10">0.18854251968216829</data><data key="n11">0.18854251968216829</data></node>
+    <node id="MAM02999"><data key="n0">tiglyl-CoA</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">1.0</data><data key="n6">1</data><data key="n7">0.544046169304685</data><data key="n8">0.544046169304685</data><data key="n9">0.544046169304685</data><data key="n10">0.544046169304685</data><data key="n11">0.544046169304685</data></node>
+    <node id="R_MAR03785"><data key="n0">(2S,3S)-3-Hydroxy-2-methylbutanoyl-CoA hydro-liase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9994618834080717</data><data key="n6">4</data><data key="n7">0.3114574803178317</data><data key="n8">0.3114574803178317</data><data key="n9">0.3114574803178317</data><data key="n10">0.3114574803178317</data><data key="n11">0.3114574803178317</data><data key="n12">ECHS1</data></node>
+    <node id="MAM00171"><data key="n0">(S)-3-hydroxy-2-methylbutyryl-CoA</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9995961227786753</data><data key="n6">2</data><data key="n7">0.4999999999999999</data><data key="n8">0.4999999999999999</data><data key="n9">0.4999999999999999</data><data key="n10">0.4999999999999999</data><data key="n11">0.4999999999999999</data></node>
+    <node id="R_MAR03823"><data key="n0">(2S,3S)-3-hydroxy-2-methylbutanoyl-CoA:NAD+ oxidoreductase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9992825112107623</data><data key="n6">5</data><data key="n7">0.1885425196821684</data><data key="n8">0.1885425196821684</data><data key="n9">0.1885425196821684</data><data key="n10">0.1885425196821684</data><data key="n11">0.1885425196821684</data><data key="n12">HSD17B10;HADH</data></node>
+    <node id="R_MAR04711"><data key="n0">Production of Tiglylcarnitine</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9998206278026905</data><data key="n6">2</data><data key="n7">0.5000000000000002</data><data key="n8">0.5000000000000002</data><data key="n9">0.5000000000000002</data><data key="n10">0.5000000000000002</data><data key="n11">0.5000000000000002</data><data key="n12">CPT1A;CPT1B</data></node>
+    <node id="MAM03496"><data key="n0">Tiglyl Carnitine</data><data key="n1">metabolite</data><data key="n2">metabolite</data><data key="n3">1.64</data><data key="n4">0.1010051669482074</data></node>
+    <node id="R_MAR11482"><data key="n0">Formation of 2-Methyl-3-Hydroxy-Butyrate</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9996412556053812</data><data key="n6">3</data><data key="n7">0.4999999999999999</data><data key="n8">0.4999999999999999</data><data key="n9">0.4999999999999999</data><data key="n10">0.4999999999999999</data><data key="n11">0.4999999999999999</data></node>
+    <node id="MAM03189"><data key="n0">2-Methyl-3-Hydroxy-Butyrate</data><data key="n1">metabolite</data><data key="n2">metabolite</data><data key="n3">-1.11</data><data key="n4">0.2669990264854944</data></node>
+    <node id="R_MAR11509"><data key="n0">Formation of Tiglylglycine</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">1.0</data><data key="n6">1</data><data key="n7">1.0000000000000004</data><data key="n8">1.0000000000000004</data><data key="n9">1.0000000000000004</data><data key="n10">1.0000000000000004</data><data key="n11">1.0000000000000004</data><data key="n12">GLYAT</data><data key="n13">Tiglyl Glycine</data></node>
+    <node id="MAM03997"><data key="n0">Tiglyl Glycine</data><data key="n1">metabolite</data><data key="n2">source</data><data key="n3">3.07</data><data key="n4">0.0021405877093578</data><data key="n5">1.0</data><data key="n9">0.3696378427423982</data><data key="n10">0.0</data></node>
+    <edge source="MAM00662" target="R_MAR03206"><data key="e0">0.18854251968216817</data><data key="e1">0.18854251968216817</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="MAM02999" target="R_MAR03785"><data key="e0">0.3114574803178318</data><data key="e1">0.3114574803178318</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="R_MAR03785" target="MAM00171"><data key="e0">0.3114574803178316</data><data key="e1">0.3114574803178316</data><data key="e2">product</data><data key="e3">false</data></edge>
+    <edge source="MAM00171" target="R_MAR03823"><data key="e0">0.1885425196821684</data><data key="e1">0.1885425196821684</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR03823" target="MAM00662"><data key="e0">0.1885425196821684</data><data key="e1">0.1885425196821684</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM02348" target="R_MAR04711"><data key="e0">0.26741131101314775</data><data key="e1">0.26741131101314775</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="MAM02999" target="R_MAR04711"><data key="e0">0.23258868898685292</data><data key="e1">0.23258868898685292</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR04711" target="MAM03496"><data key="e0">0.4999999999999998</data><data key="e1">0.4999999999999998</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM00171" target="R_MAR11482"><data key="e0">0.4999999999999998</data><data key="e1">0.4999999999999998</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="R_MAR11482" target="MAM03189"><data key="e0">0.5</data><data key="e1">0.5</data><data key="e2">product</data><data key="e3">false</data></edge>
+    <edge source="MAM01986" target="R_MAR11509"><data key="e0">0.47240111563913767</data><data key="e1">0.47240111563913767</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="MAM02999" target="R_MAR11509"><data key="e0">0.5275988843608628</data><data key="e1">0.5275988843608628</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR11509" target="MAM03997"><data key="e0">1.0000000000000002</data><data key="e1">1.0000000000000002</data><data key="e2">product</data><data key="e3">true</data></edge>
+  </graph>
+</graphml>

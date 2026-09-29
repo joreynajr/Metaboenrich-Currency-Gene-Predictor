@@ -1,0 +1,6 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+oleoylcarnitine	-0.76	0.4472545848751989	MAM02410	metabolite (loose name)	0.76	False	
+urate	0.72	0.4715249955585023	MAM03120	metabolite	0.72	False	
+glucose	0.53	0.5961119307897529	MAM01965	metabolite	0.53	False	
+palmitoylcarnitine	0.16	0.8728810742171343	MAM02411	metabolite via id_translation	0.16	False	
+phosphate	-0.13	0.8965664266908777	MAM02751	metabolite via id_translation	0.13	False	

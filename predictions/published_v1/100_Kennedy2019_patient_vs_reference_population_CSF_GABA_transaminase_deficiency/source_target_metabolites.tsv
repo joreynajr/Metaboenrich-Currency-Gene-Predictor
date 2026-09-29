@@ -1,0 +1,2 @@
+input_id	met_id	name	role	log2fc	p	pairs	conductivity	bottleneck	conduit_current	exit_concentration	final_score
+homocarnosine	MAM02132	homocarnosine	source	2.42	6.46425008685423e-05	1	1.2780334792487447	0.0	0.0	0.5000000000000007	1.0

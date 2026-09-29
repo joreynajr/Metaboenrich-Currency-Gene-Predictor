@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+ethylmalonate	6.39	1.6588575481804414e-10	MAM03575	metabolite (loose name)	6.39	True	source
+methylsuccinate	6.15	7.748294693351326e-10	MAM03765	metabolite (loose name)	6.15	True	source

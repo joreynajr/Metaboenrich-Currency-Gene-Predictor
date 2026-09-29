@@ -1,0 +1,8 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+leucine	1.34	0.1802453449289049	MAM02360	metabolite	1.34	False	
+threonine	1.32	0.1868350179869435	MAM02993	metabolite	1.32	False	
+histidine	1.24	0.2149753941491739	MAM02125	metabolite	1.24	False	
+phenylalanine	1.1	0.2713321218927653	MAM02724	metabolite	1.1	False	
+proline	1.05	0.2937181127517919	MAM02770	metabolite	1.05	False	
+serine	0.5	0.6170750774519739	MAM02896	metabolite	0.5	False	
+glycine	-0.13	0.8965664266908777	MAM01986	metabolite	0.13	False	

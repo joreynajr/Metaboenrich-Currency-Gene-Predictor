@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+phosphate	-3.95	7.815119319557512e-05	MAM02751	metabolite via id_translation	3.95	True	currency (removed)
+urate	-1.09	0.275713144064071	MAM03120	metabolite	1.09	False	
+glucose	-0.91	0.3628225097835945	MAM01965	metabolite	0.91	False	

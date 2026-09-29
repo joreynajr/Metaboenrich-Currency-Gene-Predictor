@@ -1,0 +1,14 @@
+ensembl_id	symbol	best_score	best_metabolite	basis	n_metabolites
+ENSG00000073734	ABCB11	1.0	MAM10027 glycohyocholic acid	measured change	2
+ENSG00000108846	ABCC3	1.0	MAM10027 glycohyocholic acid	measured change	2
+ENSG00000121270	ABCC11	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000141338	ABCA8	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000186198	SLC51B	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000100652	SLC10A1	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000101187	SLCO4A1	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000125257	ABCC4	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000111700	SLCO1B3	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000163959	SLC51A	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000125255	SLC10A2	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000134538	SLCO1B1	0.5	MAM02963 taurocholate	measured change	1
+ENSG00000084453	SLCO1A2	0.5	MAM02963 taurocholate	measured change	1

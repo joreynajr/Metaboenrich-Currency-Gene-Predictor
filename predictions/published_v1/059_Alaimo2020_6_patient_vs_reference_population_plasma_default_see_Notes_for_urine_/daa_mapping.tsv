@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+isoleucine	-1.11	0.2669990264854944	MAM02184	metabolite	1.11	False	
+leucine	-1.08	0.2801421801775381	MAM02360	metabolite	1.08	False	

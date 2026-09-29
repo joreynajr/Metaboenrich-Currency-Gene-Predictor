@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+glycine	-1.71	0.0872658730480638	MAM01986	metabolite	1.71	False	
+lactate	-0.85	0.3953250862453848	MAM02403	metabolite via id_translation	0.85	False	
+alanine	-0.67	0.5028577901906203	MAM01307	metabolite	0.67	False	

@@ -1,0 +1,2 @@
+input_id	met_id	name	role	log2fc	p	pairs	conductivity	bottleneck	conduit_current	exit_concentration	final_score
+tiglylglycine	MAM03997	Tiglyl Glycine	source	3.07	0.0021405877093578	1	0.3696378427423982	0.0	0.0	1.0000000000000002	1.0

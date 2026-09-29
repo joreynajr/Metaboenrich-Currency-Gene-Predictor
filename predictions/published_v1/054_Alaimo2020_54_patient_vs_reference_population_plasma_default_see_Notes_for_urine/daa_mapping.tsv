@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+2-methylcitrate	0.82	0.4122161071716262	MAM00665	metabolite	0.82	False	
+propionylcarnitine	-0.44	0.6599371073211873	MAM02657	metabolite via id_translation	0.44	False	
+methylmalonate	0.06	0.9521556346917864	MAM02479	metabolite	0.06	False	

@@ -1,0 +1,5 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+citrulline	-1.61	0.1073978562962394	MAM01588	metabolite	1.61	False	
+arginine	-0.44	0.6599371073211873	MAM01365	metabolite	0.44	False	
+N-acetylglutamate	-0.29	0.7718162376022454	MAM02536	metabolite via id_translation	0.29	False	
+glutamine	0.07	0.9441936596389576	MAM01975	metabolite	0.07	False	

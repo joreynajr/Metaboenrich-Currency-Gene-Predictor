@@ -1,0 +1,7 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+serine	1.17	0.2420009688420364	MAM02896	metabolite	1.17	False	
+glycerate	-1.06	0.2891445993278192	MAM01982	metabolite	1.06	False	
+glycine	0.69	0.4901941873486189	MAM01986	metabolite	0.69	False	
+pipecolate	-0.59	0.5551906495069299	MAM02413	metabolite via id_translation	0.59	False	
+ornithine	0.36	0.7188471335640176	MAM02658	metabolite	0.36	False	
+lysine	-0.23	0.8180917697159883	MAM02426	metabolite	0.23	False	

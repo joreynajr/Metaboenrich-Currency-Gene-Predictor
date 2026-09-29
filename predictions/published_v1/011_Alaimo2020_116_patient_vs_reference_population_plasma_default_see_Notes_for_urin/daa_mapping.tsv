@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+glycohyocholate	3.24	0.0011952969958688	MAM10027	metabolite (loose name)	3.24	True	source
+taurocholate	3.05	0.0022884136620454	MAM02963	metabolite	3.05	True	source

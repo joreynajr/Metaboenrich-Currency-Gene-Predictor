@@ -1,0 +1,2 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+methylmalonate	-2.43	0.0150988228326184	MAM02479	metabolite	2.43	True	target

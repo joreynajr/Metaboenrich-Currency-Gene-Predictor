@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="n0" for="node" attr.name="label" attr.type="string"/>
+  <key id="n1" for="node" attr.name="type" attr.type="string"/>
+  <key id="n2" for="node" attr.name="role" attr.type="string"/>
+  <key id="n3" for="node" attr.name="log2fc" attr.type="double"/>
+  <key id="n4" for="node" attr.name="p" attr.type="double"/>
+  <key id="n5" for="node" attr.name="final_score" attr.type="double"/>
+  <key id="n6" for="node" attr.name="rank" attr.type="int"/>
+  <key id="n7" for="node" attr.name="conductivity_loo" attr.type="double"/>
+  <key id="n8" for="node" attr.name="bottleneck_loo" attr.type="double"/>
+  <key id="n9" for="node" attr.name="conductivity" attr.type="double"/>
+  <key id="n10" for="node" attr.name="bottleneck" attr.type="double"/>
+  <key id="n11" for="node" attr.name="accumulated_current" attr.type="double"/>
+  <key id="n12" for="node" attr.name="genes" attr.type="string"/>
+  <key id="n13" for="node" attr.name="only_reaction_of" attr.type="string"/>
+  <key id="e0" for="edge" attr.name="mean_current" attr.type="double"/>
+  <key id="e1" for="edge" attr.name="max_current" attr.type="double"/>
+  <key id="e2" for="edge" attr.name="side" attr.type="string"/>
+  <key id="e3" for="edge" attr.name="reversible" attr.type="boolean"/>
+  <graph id="metaboenrich" edgedefault="directed">
+    <node id="R_MAR02023"><data key="n0">L-Arginine, NADPH:Oxygen Oxidoreductase (Nitric-Oxide-Forming)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9996467055290584</data><data key="n6">3</data><data key="n7">0.005411844134725785</data><data key="n8">0.005411844134725785</data><data key="n9">0.09876971586214278</data><data key="n10">0.19212758758955978</data><data key="n11">0.19753943172428556</data><data key="n12">NOS2;NOS1;NOS3</data></node>
+    <node id="MAM01365"><data key="n0">arginine</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">1.0</data><data key="n6">1</data><data key="n7">0.11946339427735386</data><data key="n8">0.11946339427735392</data><data key="n9">0.3058985786929229</data><data key="n10">0.492333763108492</data><data key="n11">0.6117971573858458</data></node>
+    <node id="MAM01588"><data key="n0">citrulline</data><data key="n1">metabolite</data><data key="n2">target</data><data key="n3">-2.33</data><data key="n4">0.0198061511183285</data><data key="n5">0.5</data><data key="n9">2.261781728807661</data><data key="n10">0.021236314619910712</data></node>
+    <node id="MAM02658"><data key="n0">ornithine</data><data key="n1">metabolite</data><data key="n2">metabolite</data><data key="n3">0.63</data><data key="n4">0.5286945842313552</data></node>
+    <node id="R_MAR03809"><data key="n0">Carbamoyl-phosphate:L-ornithine carbamoyltransferase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">1.0</data><data key="n6">1</data><data key="n7">0.04624609095334359</data><data key="n8">0.04624609095334359</data><data key="n9">0.14657044348469786</data><data key="n10">0.24689479601605213</data><data key="n11">0.2931408869693957</data><data key="n12">OTC</data></node>
+    <node id="R_MAR03811"><data key="n0">L-Citrulline:L-aspartate ligase (AMP-forming)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9998233527645293</data><data key="n6">2</data><data key="n7">0.006250666556139761</data><data key="n8">0.006250666556139761</data><data key="n9">0.10817680159151455</data><data key="n10">0.21010293662688934</data><data key="n11">0.2163536031830291</data><data key="n12">ASS1</data></node>
+    <node id="MAM01370"><data key="n0">aspartate</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9992063492063492</data><data key="n6">3</data><data key="n7">0.03844452526314618</data><data key="n8">0.03844452526314618</data><data key="n9">0.10079477757823826</data><data key="n10">0.16314502989333035</data><data key="n11">0.20158955515647653</data></node>
+    <node id="R_MAR03832"><data key="n0">L-Arginine iminohydrolase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9994700582935877</data><data key="n6">4</data><data key="n7">0.0050252838393880506</data><data key="n8">0.0050252838393880506</data><data key="n9">0.09171473615770395</data><data key="n10">0.17840418847601985</data><data key="n11">0.1834294723154079</data></node>
+    <node id="MAM01975"><data key="n0">glutamine</data><data key="n1">metabolite</data><data key="n2">target</data><data key="n3">-2.0</data><data key="n4">0.0455002638963584</data><data key="n5">1.0</data><data key="n9">8.529900723875507</data><data key="n10">0.032984028193895176</data></node>
+    <node id="R_MAR03993"><data key="n0">N-(omega)-Hydroxyarginine,NADPH:oxygen oxidoreductase (nitric-oxide-forming)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9989401165871754</data><data key="n6">6</data><data key="n7">0.0030924823627003772</data><data key="n8">0.0030924823627003772</data><data key="n9">0.056439837635510276</data><data key="n10">0.10978719290832017</data><data key="n11">0.11287967527102055</data><data key="n12">NOS2;NOS1;NOS3</data></node>
+    <edge source="MAM01365" target="R_MAR02023"><data key="e0">0.09876971586214228</data><data key="e1">0.19212758758955983</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="R_MAR02023" target="MAM01588"><data key="e0">0.08465975645326562</data><data key="e1">0.16468078936247987</data><data key="e2">product</data><data key="e3">false</data></edge>
+    <edge source="MAM01588" target="R_MAR03809"><data key="e0">0.13406555531798142</data><data key="e1">0.24689479601605213</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR03809" target="MAM02658"><data key="e0">0.10468985274226877</data><data key="e1">0.16313361453119413</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM01370" target="R_MAR03811"><data key="e0">0.07816632762519732</data><data key="e1">0.15053445903006657</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="MAM01588" target="R_MAR03811"><data key="e0">0.10817680159151422</data><data key="e1">0.21010293662688873</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="MAM01365" target="R_MAR03832"><data key="e0">0.09171473615770365</data><data key="e1">0.17840418847601913</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="R_MAR03832" target="MAM01588"><data key="e0">0.09171473615770426</data><data key="e1">0.17840418847602058</data><data key="e2">product</data><data key="e3">false</data></edge>
+    <edge source="R_MAR03993" target="MAM01588"><data key="e0">0.05643983763551014</data><data key="e1">0.10978719290831995</data><data key="e2">product</data><data key="e3">false</data></edge>
+  </graph>
+</graphml>

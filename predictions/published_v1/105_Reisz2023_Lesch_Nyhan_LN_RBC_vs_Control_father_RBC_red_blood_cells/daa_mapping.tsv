@@ -1,0 +1,15 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+C00114	-0.4964	0.0	MAM01513	KEGG	0.4964	True	target
+C00022	-1.9489	0.0	MAM02819	KEGG	1.9489	True	target
+C00074	1.936	2e-05	MAM02696	KEGG	1.936	True	source
+C00236	0.958	0.00015	MAM00247	KEGG	0.958	True	source
+L-Carnitine	0.7345	0.01008	MAM02348	metabolite	0.7345	True	source
+C00354	-0.7057	0.01303	MAM01841	KEGG	0.7057	True	target
+Zinc	-0.7777	0.0262	MAM03157	metabolite	0.7777	True	not in graph
+Tetradecenoyl Carnitine (acyl-C14:1)	0.5604	0.07739	MAM03980	metabolite (loose name)	0.5604	False	
+Potassium	-0.407	0.21528	MAM02200	metabolite via id_translation	0.407	False	
+D-Glucose 6-phosphate	-0.1663	0.29495	MAM01968	metabolite via id_translation	0.1663	False	
+HMDB06317	-0.1383	0.34238	MAM02117	KEGG	0.1383	False	
+C01996	-0.0271	0.85496	MAM01260	KEGG	0.0271	False	
+HMDB05066	-0.0196	0.9004	MAM02973	KEGG	0.0196	False	
+C02990	-0.0132	0.92749	MAM02411	KEGG	0.0132	False	

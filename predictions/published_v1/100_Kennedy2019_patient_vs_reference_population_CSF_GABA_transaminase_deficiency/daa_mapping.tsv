@@ -1,0 +1,5 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+homocarnosine	2.42	6.46425008685423e-05	MAM02132	metabolite	2.42	True	source
+glutamate	-1.1	0.079445543085134	MAM01974	metabolite	1.1	False	
+succinate	-0.38	0.5954934066922998	MAM02943	metabolite	0.38	False	
+GABA	0.2299999999999999	0.7449774004077269	MAM00970	metabolite via id_translation	0.2299999999999999	False	

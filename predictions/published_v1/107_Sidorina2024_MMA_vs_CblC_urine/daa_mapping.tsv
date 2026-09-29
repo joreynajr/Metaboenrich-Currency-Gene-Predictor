@@ -1,0 +1,44 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+Homocystine	-6.41	8.86234419184007e-10	MAM03394	metabolite (loose name)	6.41	True	target
+cystathionine	-6.29	9.96970441757838e-08	MAM02349	metabolite via id_translation	6.29	True	target
+L-Valine	-1.93	1.80076186850897e-07	MAM03135	metabolite via id_translation	1.93	True	target
+Glyoxylic acid	-2.45	7.20988326863292e-06	MAM02007	metabolite via id_translation	2.45	True	target
+Homocysteine	-5.22	3.01481742567278e-05	MAM02133	metabolite	5.22	True	target
+Propionic acid	4.42	0.0001140958436223	MAM02772	metabolite via id_translation	4.42	True	source
+Sulfuric acid	-2.09	0.0001348825320379	MAM02946	metabolite via id_translation	2.09	True	currency (removed)
+2-Hydroxybutyric acid	-2.32	0.0001410742380096	MAM00648	metabolite via id_translation	2.32	True	target
+Methylmalonic acid	3.98	0.0002784185361828	MAM02479	metabolite via id_translation	3.98	True	source
+Propionylcarnitine	4.18	0.000311817184711	MAM02657	metabolite via id_translation	4.18	True	source
+Threonine	-6.38	0.0004439109886149	MAM02993	metabolite	6.38	True	target
+Glucosamine 6-phosphate	-2.13	0.0009042099497894	MAM01963	metabolite via id_translation	2.13	True	target
+Dimethylglycine	-4.38	0.0009233235563204	MAM01708	metabolite	4.38	True	target
+DL-Citrulline	-1.96	0.0014287052574562	MAM01588	metabolite via id_translation	1.96	True	target
+DHEA sulfate	-4.63	0.0019615968780556	MAM01659	metabolite via id_translation	4.63	True	target
+D-Isoleucine	-4.58	0.002635055023729	MAM02184	metabolite (loose name)	4.58	True	target
+3-Methylhistidine	-1.45	0.0037381827603671	MAM03247	metabolite	1.45	True	target
+Acetylcarnitine	1.99	0.0039383505518365	MAM02634	metabolite (loose name)	1.99	True	source
+Lysine	-2.06	0.0048928896116092	MAM02426	metabolite	2.06	True	target
+Glycerone phosphate	-7.17	0.005818104967193	MAM01690	metabolite via id_translation	7.17	True	target
+L-(+)-Aspartic acid	-1.01	0.0072723650445445	MAM01370	metabolite via id_translation	1.01	True	target
+L-(+)-Cysteine	-2.52	0.0074625935481987	MAM01628	metabolite via id_translation	2.52	True	target
+Valylvaline	-2.97	0.0075935545195513	MAM04071	metabolite (loose name)	2.97	True	target
+Androsterone sulfate	-6.61	0.011892039402154	MAM01337	metabolite	6.61	True	target
+Gamma-Hydroxybutyric acid	-2.33	0.0119867077699756	MAM03277	metabolite via id_translation	2.33	True	target
+Thiosulfuric acid	-4.13	0.012385182267583	MAM02991	metabolite via id_translation	4.13	True	target
+N-Acetyl-b-D-glucosamine	-2.94	0.0131357513704815	MAM01438	metabolite via id_translation	2.94	True	target
+(Â±)-Malic Acid	2.66	0.0166458432132048	MAM02439	metabolite (loose name)	2.66	True	source
+Citric acid	-1.8	0.0173072264662735	MAM01587	metabolite via id_translation	1.8	True	target
+L-Threonic acid	-1.9	0.0226733925354446	MAM02992	metabolite via id_translation	1.9	True	target
+Suberic acid	1.41	0.0380874605338878	MAM03954	metabolite	1.41	True	source
+Fumaric acid	1.61	0.0424381488419506	MAM01862	metabolite via id_translation	1.61	True	source
+Glycine	-0.52	0.436581240214591	MAM01986	metabolite	0.52	False	
+Propionylglycine	0.58	0.554946127893283	MAM03886	metabolite (loose name)	0.58	False	
+2-methylcitric acid	0.28	0.569042368193994	MAM00665	metabolite via id_translation	0.28	False	
+Picolinate	-0.06	0.790598352514671	MAM02752	metabolite via id_translation	0.06	False	
+Taurine	0.58	0.803288702953322	MAM02961	metabolite	0.58	False	
+L-(-)-methionine	-0.2	0.921811466273377	MAM02471	metabolite via id_translation	0.2	False	
+3-Methylglutaconic acid	0.29	0.943792012966928	MAM03245	metabolite (loose name)	0.29	False	
+Tiglylglycine	-0.48	0.944196727019567	MAM03997	metabolite (loose name)	0.48	False	
+4-Aminobutanal	-0.22	0.987719984635782	MAM00969	metabolite	0.22	False	
+cysteamine	0.55	0.995415659520117	MAM01627	metabolite	0.55	False	
+2-Methyl-3-oxovaleric acid	0.41	0.999899331758043	MAM03191	metabolite (loose name)	0.41	False	

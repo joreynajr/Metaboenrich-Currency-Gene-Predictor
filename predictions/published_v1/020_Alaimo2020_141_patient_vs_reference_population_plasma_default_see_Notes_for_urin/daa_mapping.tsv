@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+tiglylglycine	3.07	0.0021405877093578	MAM03997	metabolite (loose name)	3.07	True	source
+tiglylcarnitine	1.64	0.1010051669482074	MAM03496	metabolite (loose name)	1.64	False	
+2-methyl-3-hydroxybutyric acid	-1.11	0.2669990264854944	MAM03189	metabolite (loose name)	1.11	False	

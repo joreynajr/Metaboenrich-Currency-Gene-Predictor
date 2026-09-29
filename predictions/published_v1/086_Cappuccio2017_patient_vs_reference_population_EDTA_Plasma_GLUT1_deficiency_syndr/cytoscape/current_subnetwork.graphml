@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="n0" for="node" attr.name="label" attr.type="string"/>
+  <key id="n1" for="node" attr.name="type" attr.type="string"/>
+  <key id="n2" for="node" attr.name="role" attr.type="string"/>
+  <key id="n3" for="node" attr.name="log2fc" attr.type="double"/>
+  <key id="n4" for="node" attr.name="p" attr.type="double"/>
+  <key id="n5" for="node" attr.name="final_score" attr.type="string"/>
+  <key id="n6" for="node" attr.name="rank" attr.type="string"/>
+  <key id="n7" for="node" attr.name="conductivity_loo" attr.type="string"/>
+  <key id="n8" for="node" attr.name="bottleneck_loo" attr.type="string"/>
+  <key id="n9" for="node" attr.name="conductivity" attr.type="string"/>
+  <key id="n10" for="node" attr.name="bottleneck" attr.type="string"/>
+  <key id="n11" for="node" attr.name="accumulated_current" attr.type="string"/>
+  <key id="n12" for="node" attr.name="genes" attr.type="string"/>
+  <key id="n13" for="node" attr.name="only_reaction_of" attr.type="string"/>
+  <key id="e0" for="edge" attr.name="mean_current" attr.type="string"/>
+  <key id="e1" for="edge" attr.name="max_current" attr.type="string"/>
+  <key id="e2" for="edge" attr.name="side" attr.type="string"/>
+  <key id="e3" for="edge" attr.name="reversible" attr.type="string"/>
+  <graph id="metaboenrich" edgedefault="directed">
+    <node id="MAM03201"><data key="n0">3-Hydroxy Butyryl Carnitine</data><data key="n1">metabolite</data><data key="n2">source</data><data key="n3">1.991666666666667</data><data key="n4">1.0685932693020408e-06</data></node>
+  </graph>
+</graphml>

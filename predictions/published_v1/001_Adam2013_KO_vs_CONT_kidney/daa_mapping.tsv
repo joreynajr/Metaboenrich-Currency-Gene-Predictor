@@ -1,0 +1,95 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+Adenine	-1.7978	7.70822108289949e-06	MAM01279	metabolite	1.7978	True	target
+Guanidinoacetate	-1.7995	8.94835087354607e-06	MAM02036	metabolite	1.7995	True	target
+Inosine	-1.6005	3.9541343136041e-05	MAM02170	metabolite	1.6005	True	target
+o-Acetylcarnitine	1.6165	6.77781191074575e-05	MAM02634	metabolite	1.6165	True	source
+Citrulline	1.4199	9.39649440607816e-05	MAM01588	metabolite	1.4199	True	source
+Hypoxanthine	-1.927	0.0002556154544802	MAM02159	metabolite	1.927	True	target
+5-Oxoproline	-1.8036	0.0002620747868294	MAM01127	metabolite	1.8036	True	target
+Phosphorylcholine	1.2872	0.0003254896141854	MAM02738	metabolite via id_translation	1.2872	True	source
+Guanosine	-1.0375	0.0003371035273219	MAM02038	metabolite	1.0375	True	target
+Cystine	-2.33	0.0003415091853322	MAM01629	metabolite	2.33	True	target
+5-Hydroxylysine	-1.8777	0.0006808342191148	MAM02381	metabolite via id_translation	1.8777	True	target
+Adenylosuccinate	6.6859	0.0007187025662056	MAM01282	metabolite	6.6859	True	source
+Glutarate	1.5897	0.0008691160766156	MAM03614	metabolite	1.5897	True	not in graph
+Asp	-1.925	0.0012767478636595	MAM01370	metabolite via id_translation	1.925	True	target
+Malonate	3.1705	0.0013033434100366	MAM02440	metabolite	3.1705	True	not in graph
+Glu	-1.2208	0.0013074424419344	MAM01974	metabolite via id_translation	1.2208	True	target
+Cys-Gly	3.1421	0.001395134833937	MAM01626	metabolite	3.1421	True	source
+Glucuronate	1.9392	0.0015782614351817	MAM01973	metabolite	1.9392	True	source
+Allantoin	2.0633	0.0018752383873811	MAM01313	metabolite	2.0633	True	source
+Malate	3.1207	0.0021071623978109	MAM02439	metabolite	3.1207	True	source
+IMP	-1.3226	0.0021588890319112	MAM02167	metabolite	1.3226	True	target
+Thr	-0.732	0.0022113068334385	MAM02993	metabolite via id_translation	0.732	True	target
+N-Acetylneuraminate	1.2711	0.0022142762292839	MAM02543	metabolite	1.2711	True	source
+Succinate	1.2168	0.0022513663749703	MAM02943	metabolite	1.2168	True	source
+Fumarate	4.2879	0.002348125755262	MAM01862	metabolite	4.2879	True	source
+N-Acetylglutamate	2.0383	0.0025118824321321	MAM02536	metabolite via id_translation	2.0383	True	source
+Choline	-1.4397	0.003120967460081	MAM01513	metabolite	1.4397	True	target
+Homovanillate	3.0939	0.0035754790133952	MAM02137	metabolite	3.0939	True	source
+Glycerophosphate	-0.8073	0.0035930761611274	MAM02914	metabolite via id_translation	0.8073	True	target
+Pyridoxamine 5'-phosphate	-1.1069	0.0036142126058133	MAM02816	metabolite via id_translation	1.1069	True	target
+Met	-0.7803	0.0036927452957369	MAM02471	metabolite via id_translation	0.7803	True	target
+1-Methylnicotinamide	3.5144	0.0037572273896309	MAM00536	metabolite	3.5144	True	source
+cis-Aconitate	2.3176	0.0037798323436618	MAM01580	metabolite	2.3176	True	source
+Gly	-0.9868	0.0047443301483773	MAM01986	metabolite via id_translation	0.9868	True	target
+N-Acetylglucosamine	-1.3958	0.0047795836784399	MAM02527	metabolite	1.3958	True	target
+Uridine	-0.884	0.0054357837045498	MAM03123	metabolite	0.884	True	target
+Pantothenate	-0.6924	0.0081295202683267	MAM02680	metabolite	0.6924	True	target
+Xanthine	-1.2805	0.0101329183495954	MAM03148	metabolite	1.2805	True	target
+Creatinine	3.7764	0.0102552916941374	MAM01621	metabolite	3.7764	True	source
+Pipecolate	3.2607	0.0103063140445372	MAM02413	metabolite via id_translation	3.2607	True	source
+N6,N6,N6-Trimethyllysine	1.1195	0.0119528160209351	MAM02517	metabolite via id_translation	1.1195	True	source
+Adenosine	-2.0557	0.0120740779549868	MAM01280	metabolite	2.0557	True	target
+FAD	-0.7121	0.0138281726177241	MAM01802	metabolite	0.7121	True	target
+Spermidine	0.6794	0.0150561471581487	MAM02923	metabolite	0.6794	True	source
+Argininosuccinate	3.8767	0.0150833756959892	MAM01366	metabolite	3.8767	True	source
+GABA	-1.3652	0.0150884410380867	MAM00970	metabolite via id_translation	1.3652	True	target
+Isocitrate	1.177	0.0153737726727864	MAM02183	metabolite	1.177	True	source
+Cysteate	-0.6686	0.0154404751209208	MAM02350	metabolite via id_translation	0.6686	True	target
+Citrate	3.439	0.0198892328405407	MAM01587	metabolite	3.439	True	source
+N-Acetylglucosamine 6-phosphate	-0.8992	0.0213533741265919	MAM02529	metabolite via id_translation	0.8992	True	target
+Thiamine monophosphate	-0.8284	0.0220589296224125	MAM02983	metabolite via id_translation	0.8284	True	target
+SAH	-1.191	0.0230949314239495	MAM02871	metabolite	1.191	True	target
+Phenaceturate	2.6538	0.0233651999218848	MAM02723	metabolite via id_translation	2.6538	True	source
+ATP	3.4148	0.0234494242360738	MAM01371	metabolite	3.4148	True	source
+CDP-choline	0.4745	0.0272559514700064	MAM01425	metabolite	0.4745	True	source
+beta-Ala	-0.7238	0.0281560219588414	MAM01383	metabolite via id_translation	0.7238	True	target
+Ser	-0.4758	0.028279361249276	MAM02896	metabolite via id_translation	0.4758	True	target
+Arg	-1.0027	0.0285552017483101	MAM01365	metabolite via id_translation	1.0027	True	target
+gamma-Butyrobetaine	0.3853	0.0292441193086773	MAM01922	metabolite	0.3853	True	source
+Uracil	-0.8324	0.029685080991695	MAM03118	metabolite	0.8324	True	target
+1-Methylhistamine	1.8612	0.0312410699818825	MAM02601	metabolite via id_translation	1.8612	True	source
+N-Acetylglucosamine 1-phosphate	-0.7898	0.0328320712673869	MAM02528	metabolite via id_translation	0.7898	True	target
+Asn	-0.2579	0.0334645625828085	MAM01369	metabolite via id_translation	0.2579	True	target
+GDP	1.5706	0.0338893927412681	MAM01948	metabolite	1.5706	True	source
+N-Acetylaspartate	0.9791	0.0341385918449331	MAM02532	metabolite via id_translation	0.9791	True	source
+Hippurate	4.2831	0.0350251562237932	MAM02123	metabolite	4.2831	True	source
+His	-0.5739	0.0356695724566095	MAM02125	metabolite via id_translation	0.5739	True	target
+Val	-0.2738	0.0362117560915251	MAM03135	metabolite via id_translation	0.2738	True	target
+3-Hydroxy-3-methylglutarate	1.4641	0.0366011979979585	MAM03212	metabolite via id_translation	1.4641	True	source
+GDP-mannose	4.4924	0.037691144313974	MAM01951	metabolite	4.4924	True	source
+Xanthosine	-1.4577	0.0393359523780759	MAM03149	metabolite	1.4577	True	target
+Thiamine	-0.7789	0.03955930120589	MAM02982	metabolite via id_translation	0.7789	True	target
+NADP+	-0.6504	0.0405107087526914	MAM02554	metabolite	0.6504	True	target
+Cys	2.1633	0.0442247793118266	MAM01628	metabolite via id_translation	2.1633	True	source
+Cytidine	-0.5501	0.0651249266444815	MAM01630	metabolite	0.5501	False	
+N-epsilon-Acetyllysine	-0.814	0.0827496142493471	MAM02169	metabolite via id_translation	0.814	False	
+Pyridoxamine	-1.0013	0.0941024990600273	MAM02815	metabolite	1.0013	False	
+Indole-3-acetamide	0.6862	0.124186570201119	MAM00155	metabolite via id_translation	0.6862	False	
+Hydroxyproline	-0.4742	0.132873727044724	MAM03037	metabolite via id_translation	0.4742	False	
+Taurine	-0.1172	0.149793503649029	MAM02961	metabolite	0.1172	False	
+Carnitine	-0.1725	0.159493468613392	MAM02348	metabolite via id_translation	0.1725	False	
+Ornithine	-0.1034	0.19874160281484	MAM02658	metabolite	0.1034	False	
+5-Methylthioadenosine	-0.5786	0.220563171573907	MAM01116	metabolite	0.5786	False	
+Hypotaurine	0.3631	0.226488487642407	MAM02157	metabolite	0.3631	False	
+Glycerophosphorylcholine	-0.3275	0.251828450255473	MAM02912	metabolite via id_translation	0.3275	False	
+Betaine	-0.219	0.317540285467503	MAM01393	metabolite	0.219	False	
+3-Methylhistidine	0.279	0.381393719383173	MAM03247	metabolite	0.279	False	
+Urate	0.2847	0.450843626935837	MAM03120	metabolite	0.2847	False	
+Trp	-0.1446	0.485619383859862	MAM03089	metabolite via id_translation	0.1446	False	
+Histamine	0.5152	0.48672458517665	MAM02124	metabolite	0.5152	False	
+AMP	-0.3244	0.504805685402106	MAM01334	metabolite	0.3244	False	
+GMP	-0.1039	0.620214778756549	MAM02016	metabolite	0.1039	False	
+Ethanolamine phosphate	-0.1369	0.677296643175261	MAM01798	metabolite via id_translation	0.1369	False	
+3-Ureidopropionate	0.023	0.966523275762464	MAM00923	metabolite	0.023	False	

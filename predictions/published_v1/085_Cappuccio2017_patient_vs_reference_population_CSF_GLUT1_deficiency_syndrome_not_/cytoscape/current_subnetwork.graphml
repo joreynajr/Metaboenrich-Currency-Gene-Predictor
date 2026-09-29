@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="n0" for="node" attr.name="label" attr.type="string"/>
+  <key id="n1" for="node" attr.name="type" attr.type="string"/>
+  <key id="n2" for="node" attr.name="role" attr.type="string"/>
+  <key id="n3" for="node" attr.name="log2fc" attr.type="double"/>
+  <key id="n4" for="node" attr.name="p" attr.type="double"/>
+  <key id="n5" for="node" attr.name="final_score" attr.type="double"/>
+  <key id="n6" for="node" attr.name="rank" attr.type="int"/>
+  <key id="n7" for="node" attr.name="conductivity_loo" attr.type="double"/>
+  <key id="n8" for="node" attr.name="bottleneck_loo" attr.type="double"/>
+  <key id="n9" for="node" attr.name="conductivity" attr.type="double"/>
+  <key id="n10" for="node" attr.name="bottleneck" attr.type="double"/>
+  <key id="n11" for="node" attr.name="accumulated_current" attr.type="double"/>
+  <key id="n12" for="node" attr.name="genes" attr.type="string"/>
+  <key id="n13" for="node" attr.name="only_reaction_of" attr.type="string"/>
+  <key id="e0" for="edge" attr.name="mean_current" attr.type="double"/>
+  <key id="e1" for="edge" attr.name="max_current" attr.type="double"/>
+  <key id="e2" for="edge" attr.name="side" attr.type="string"/>
+  <key id="e3" for="edge" attr.name="reversible" attr.type="boolean"/>
+  <graph id="metaboenrich" edgedefault="directed">
+    <node id="MAM01965"><data key="n0">glucose</data><data key="n1">metabolite</data><data key="n2">target</data><data key="n3">-1.5333333333333332</data><data key="n4">0.0131863144678524</data><data key="n5">0.8333333333333333</data><data key="n9">1.8908368751764273</data><data key="n10">0.579139705006976</data></node>
+    <node id="MAM02914"><data key="n0">sn-glycerol-3-phosphate</data><data key="n1">metabolite</data><data key="n2">target</data><data key="n3">-3.015</data><data key="n4">0.0001004654296193</data><data key="n5">0.6666666666666666</data><data key="n9">2.165059233605679</data><data key="n10">0.05689412476122291</data></node>
+    <node id="R_MAR00710"><data key="n0">Isocitrate:NADP+ oxidoreductase (decarboxylating)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9997366573033708</data><data key="n6">1</data><data key="n7">0.19385557010610843</data><data key="n8">0.19409354081901226</data><data key="n9">0.19393793060912065</data><data key="n10">0.19410265161514506</data><data key="n11">0.5818137918273619</data><data key="n12">IDH1</data></node>
+    <node id="MAM02183"><data key="n0">isocitrate</data><data key="n1">metabolite</data><data key="n2">source</data><data key="n3">2.0250000000000004</data><data key="n4">0.0104653848055005</data><data key="n5">1.0</data><data key="n9">1.8639139007455272</data><data key="n10">0.0</data></node>
+    <node id="MAM01306"><data key="n0">AKG</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">1.0</data><data key="n6">1</data><data key="n7">0.775422280424437</data><data key="n8">0.7763741632760497</data><data key="n9">0.7757517224364872</data><data key="n10">0.7764106064605876</data><data key="n11">2.3272551673094615</data></node>
+    <node id="R_MAR00712"><data key="n0">Isocitrate:NADP+ oxidoreductase (decarboxylating)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9997366573033708</data><data key="n6">1</data><data key="n7">0.19385557010610843</data><data key="n8">0.19409354081901226</data><data key="n9">0.19393793060912065</data><data key="n10">0.19410265161514506</data><data key="n11">0.5818137918273619</data><data key="n12">IDH1</data></node>
+    <node id="R_MAR03957"><data key="n0">isocitrate:NAD+ oxidoreductase (decarboxylating)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9997366573033708</data><data key="n6">1</data><data key="n7">0.19385557010610843</data><data key="n8">0.19409354081901226</data><data key="n9">0.19393793060912065</data><data key="n10">0.19410265161514506</data><data key="n11">0.5818137918273619</data><data key="n12">IDH3G;IDH3B;IDH3A</data></node>
+    <node id="R_MAR03958"><data key="n0">Isocitrate:NADP+ oxidoreductase (decarboxylating)</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9997366573033708</data><data key="n6">1</data><data key="n7">0.19385557010610843</data><data key="n8">0.19409354081901226</data><data key="n9">0.19393793060912065</data><data key="n10">0.19410265161514506</data><data key="n11">0.5818137918273619</data><data key="n12">IDH2</data></node>
+    <node id="MAM01587"><data key="n0">citrate</data><data key="n1">metabolite</data><data key="n2">intermediate</data><data key="n5">0.9988193624557261</data><data key="n6">4</data><data key="n7">0.18380823884129602</data><data key="n8">0.1838319623001386</data><data key="n9">0.18438169867367726</data><data key="n10">0.18552861833843975</data><data key="n11">0.5531450960210318</data></node>
+    <node id="MAM01840"><data key="n0">fructose</data><data key="n1">metabolite</data><data key="n2">target</data><data key="n3">-1.3133333333333332</data><data key="n4">0.0286504091808121</data><data key="n5">0.5</data><data key="n9">1.5358455934544752</data><data key="n10">0.1153536810987646</data></node>
+    <node id="R_MAR04454"><data key="n0">citrate hydroxymutase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9992099719101124</data><data key="n6">5</data><data key="n7">0.13580528465766045</data><data key="n8">0.13581926634136304</data><data key="n9">0.13620999207906484</data><data key="n10">0.13701940692187364</data><data key="n11">0.40862997623719455</data><data key="n12">ACO1</data></node>
+    <node id="R_MAR04488"><data key="n0">ITP:D-fructose 6-phosphotransferase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9986832865168539</data><data key="n6">9</data><data key="n7">0.017146475826904373</data><data key="n8">0.0326546552410068</data><data key="n9">0.0559673543677053</data><data key="n10">0.13360911144930715</data><data key="n11">0.1679020631031159</data><data key="n12">HKDC1;HK1;HK2;HK3</data></node>
+    <node id="R_MAR04489"><data key="n0">dATP:D-fructose 6-phosphotransferase</data><data key="n1">reaction</data><data key="n2">reaction</data><data key="n5">0.9989466292134832</data><data key="n6">6</data><data key="n7">0.02193854248671928</data><data key="n8">0.03970055426374963</data><data key="n9">0.06209763334010495</data><data key="n10">0.14241581504687628</data><data key="n11">0.18629290002031484</data><data key="n12">HKDC1;HK1;HK2;HK3</data></node>
+    <edge source="MAM02183" target="R_MAR00710"><data key="e0">0.19393793060912087</data><data key="e1">0.1941026516151454</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR00710" target="MAM01306"><data key="e0">0.19393793060912043</data><data key="e1">0.19410265161514473</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM02183" target="R_MAR00712"><data key="e0">0.19393793060912048</data><data key="e1">0.19410265161514506</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR00712" target="MAM01306"><data key="e0">0.1939379306091208</data><data key="e1">0.19410265161514506</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM02183" target="R_MAR03957"><data key="e0">0.19393793060912087</data><data key="e1">0.19410265161514528</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="R_MAR03957" target="MAM01306"><data key="e0">0.19393793060912043</data><data key="e1">0.19410265161514484</data><data key="e2">product</data><data key="e3">false</data></edge>
+    <edge source="MAM02183" target="R_MAR03958"><data key="e0">0.19393793060912054</data><data key="e1">0.19410265161514495</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR03958" target="MAM01306"><data key="e0">0.19393793060912076</data><data key="e1">0.19410265161514517</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM01587" target="R_MAR04454"><data key="e0">0.13620999207906506</data><data key="e1">0.13701940692187387</data><data key="e2">substrate</data><data key="e3">true</data></edge>
+    <edge source="R_MAR04454" target="MAM02183"><data key="e0">0.13620999207906462</data><data key="e1">0.13701940692187342</data><data key="e2">product</data><data key="e3">true</data></edge>
+    <edge source="MAM01840" target="R_MAR04488"><data key="e0">0.05577916472066091</data><data key="e1">0.13360911144930587</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+    <edge source="MAM01840" target="R_MAR04489"><data key="e0">0.061486404643580274</data><data key="e1">0.14241581504687661</data><data key="e2">substrate</data><data key="e3">false</data></edge>
+  </graph>
+</graphml>

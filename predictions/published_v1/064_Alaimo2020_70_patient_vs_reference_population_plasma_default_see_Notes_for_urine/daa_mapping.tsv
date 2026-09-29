@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+propionylcarnitine	3.65	0.0002622403088409	MAM02657	metabolite via id_translation	3.65	True	source
+propionylglycine	1.02	0.3077284607454697	MAM03886	metabolite (loose name)	1.02	False	
+glycine	-0.97	0.3320464921270592	MAM01986	metabolite	0.97	False	
