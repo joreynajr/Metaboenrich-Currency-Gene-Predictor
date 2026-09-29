@@ -63,13 +63,13 @@ changed; 10 salvage reactions restored.
 ### D8. Leave-one-out scoring (2026-09-25) — superseded by D9
 Introduced so a reaction forced by a single metabolite with only one route
 out would not rank first on that metabolite alone. Evidence at the time: in
-the lab's AlbCre/SPT3hKO data it removed NAGS, LAP3 and GATM/GAMT top hits
-that rested on one metabolite each.
+the lab's exploratory data it removed several top hits that each rested on a
+single measured metabolite.
 
 ### D9. Raw scoring is the default (2026-09-29)
 Evidence (inborn-error benchmark, 20 disorder groups, rank of the causal gene
 among 2,302 network genes): raw median 88 (top 3.8%), 11 of 20 in the top 100;
-leave-one-out median 237, 9 of 20; neighbour baseline 1,165 (random).
+leave-one-out median 236.5, 9 of 20; neighbour baseline 1,165 (random).
 Leave-one-out penalises exactly the single substrate–product signal typical of
 an enzyme defect (GAMT: rank 2 raw, 1,888 leave-one-out). Leave-one-out stays
 available (`--scoring loo`) and in every `reactions.tsv`.

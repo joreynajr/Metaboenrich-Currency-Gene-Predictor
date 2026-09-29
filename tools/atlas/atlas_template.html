@@ -1,0 +1,822 @@
+<title>Human-GEM Pruning Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --page: #f3f5f7;
+    --surface: #fbfcfd;
+    --ink: #12161b;
+    --ink-2: #4a5360;
+    --muted: #737c88;
+    --grid: #e3e7ec;
+    --axis: #c5ccd4;
+    --border: rgba(18, 22, 27, 0.10);
+    --accent: #2a78d6;
+    --dot0: #aab2bd;
+    --p1: #86b6ef;
+    --p2: #3987e5;
+    --p3: #1c5cab;
+    --p4: #0d366b;
+    --hl: #eb6834;
+    --hl-ink: #b8461b;
+    --control: #e8ecf0;
+    --control-on: #12161b;
+    --control-on-ink: #fbfcfd;
+    --sans: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0f1216;
+      --surface: #161a1f;
+      --ink: #eef1f5;
+      --ink-2: #b3bcc7;
+      --muted: #8a939e;
+      --grid: #242a31;
+      --axis: #38414b;
+      --border: rgba(238, 241, 245, 0.10);
+      --accent: #5598e7;
+      --dot0: #4a525c;
+      --p1: #256abf;
+      --p2: #3987e5;
+      --p3: #86b6ef;
+      --p4: #cde2fb;
+      --hl: #f07a45;
+      --hl-ink: #f39a70;
+      --control: #20262d;
+      --control-on: #eef1f5;
+      --control-on-ink: #161a1f;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0f1216;
+    --surface: #161a1f;
+    --ink: #eef1f5;
+    --ink-2: #b3bcc7;
+    --muted: #8a939e;
+    --grid: #242a31;
+    --axis: #38414b;
+    --border: rgba(238, 241, 245, 0.10);
+    --accent: #5598e7;
+    --dot0: #4a525c;
+    --p1: #256abf;
+    --p2: #3987e5;
+    --p3: #86b6ef;
+    --p4: #cde2fb;
+    --hl: #f07a45;
+    --hl-ink: #f39a70;
+    --control: #20262d;
+    --control-on: #eef1f5;
+    --control-on-ink: #161a1f;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font: 15px/1.55 var(--sans);
+    padding-inline: clamp(16px, 4vw, 48px);
+    padding-block: 32px 56px;
+  }
+  .wrap { max-width: 1240px; margin-inline: auto; display: grid; gap: 36px; }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(28px, 3.4vw, 38px); line-height: 1.12; font-weight: 700; letter-spacing: -0.015em; }
+  h2 { font-size: 19px; font-weight: 650; letter-spacing: -0.005em; }
+  h3 { font-size: 15px; font-weight: 650; }
+  p { margin: 0; }
+  .mono, code { font-family: var(--mono); font-size: 0.92em; }
+  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  header { display: grid; gap: 14px; }
+  .lede { max-width: 68ch; color: var(--ink-2); font-size: 16px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px 28px; max-width: 1100px; }
+  .findings li { list-style: none; padding-top: 10px; border-top: 1px solid var(--axis); color: var(--ink-2); font-size: 14px; }
+  .findings b { display: block; font-family: var(--mono); font-weight: 500; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+  .findings ul { margin: 0; padding: 0; display: contents; }
+
+  .trends { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .trend { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px 10px; display: grid; gap: 6px; }
+  .trend h3 { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .trend svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: end; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--page); padding-block: 12px; border-bottom: 1px solid var(--border); }
+  .control { display: grid; gap: 6px; }
+  .control > span { font: 500 11.5px/1 var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+  .seg { display: inline-flex; background: var(--control); border-radius: 6px; padding: 3px; gap: 3px; }
+  .seg button { font: 500 13.5px/1 var(--sans); color: var(--ink-2); background: transparent; border: 0; border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--control-on); color: var(--control-on-ink); }
+  .seg button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  input[type="search"], select { font: 14px/1.2 var(--sans); color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+  input[type="search"] { width: min(300px, 80vw); }
+  .match-note { font-size: 13px; color: var(--ink-2); min-height: 1.2em; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: 13px; color: var(--ink-2); }
+  .legend .sw { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { display: inline-block; border-radius: 50%; }
+  .legend .ring { width: 12px; height: 12px; border: 2px solid var(--hl); }
+
+  .panels { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+  @media (max-width: 420px) { .panels { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 14px 10px; display: grid; gap: 6px; align-content: start; }
+  .panel.alt { border-style: dashed; }
+  .panel p.desc { font-size: 13px; color: var(--ink-2); max-width: 60ch; }
+  .panel .stats { font: 12.5px/1.4 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .panel canvas { width: 100%; height: 300px; display: block; cursor: crosshair; }
+
+  .tip { position: fixed; z-index: 20; pointer-events: none; max-width: 320px; background: var(--surface); color: var(--ink);
+    border: 1px solid var(--axis); border-radius: 6px; padding: 10px 12px; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,0.14); display: grid; gap: 4px; }
+  .tip .t-name { font-weight: 600; }
+  .tip .t-id { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .tip dl { display: grid; grid-template-columns: auto 1fr; gap: 1px 12px; margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+  .tip dt { color: var(--muted); }
+  .tip dd { margin: 0; font-family: var(--mono); font-size: 12.5px; }
+  .tip .t-genes { color: var(--ink-2); font-size: 12px; word-break: break-word; }
+
+  .table-block { display: grid; gap: 12px; }
+  .table-head { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+  .table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th { font: 500 11.5px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  th.num { text-align: right; }
+  td.genes { white-space: normal; min-width: 180px; color: var(--ink-2); font-size: 12.5px; }
+  td .id { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+
+  .diagram-block { display: grid; gap: 12px; }
+  .diagram-head { display: grid; gap: 8px; }
+  .desc-wide { color: var(--ink-2); max-width: 75ch; font-size: 14.5px; }
+  .diagram-controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: end; }
+  .dlegend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--ink-2); align-items: center; }
+  .dlegend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dlegend svg { flex: none; }
+  #diagram { width: 100%; height: min(720px, 80vh); display: block; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 6px; cursor: grab; touch-action: none; }
+  #diagram.dragging { cursor: grabbing; }
+  .hint { font-size: 13px; color: var(--muted); }
+  .panel-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .linkbtn { font: 500 12.5px/1 var(--sans); color: var(--accent); background: transparent; border: 1px solid var(--axis);
+    border-radius: 4px; padding: 5px 8px; cursor: pointer; white-space: nowrap; }
+  .linkbtn:hover { border-color: var(--accent); }
+  .linkbtn:focus-visible, #diagram:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  footer { color: var(--muted); font-size: 13px; max-width: 80ch; display: grid; gap: 6px; border-top: 1px solid var(--border); padding-top: 16px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Metaboenrich · structural check · Human-GEM __MODEL__</span>
+    <h1>Human-GEM Pruning Atlas</h1>
+    <p class="lede">Each dot is one node of the network at one stage of pruning. <strong>Across</strong> is its number of edges.
+      <strong>Up</strong> is the share of current it carries when random metabolites act as sources and targets, with no data involved.
+      <strong>Colour</strong> is how many metabolites would be cut off from the rest of the network without it.
+      Dots high on the left, and dark blue dots, are bottlenecks made by wiring: any analysis that measures a metabolite behind them
+      will push current through them whatever the biology.</p>
+  </header>
+
+  <section class="findings" aria-label="What pruning changes">
+    <ul id="findings"></ul>
+  </section>
+
+  <section class="trends" id="trends" aria-label="Structural measures by stage"></section>
+
+  <div class="controls" role="group" aria-label="Chart controls">
+    <div class="control"><span>Nodes</span>
+      <div class="seg" id="seg-type">
+        <button type="button" id="type-r" data-v="r" aria-pressed="true">Reactions</button>
+        <button type="button" id="type-m" data-v="m" aria-pressed="false">Metabolites</button>
+      </div>
+    </div>
+    <div class="control"><span>Up axis</span>
+      <div class="seg" id="seg-y">
+        <button type="button" id="y-flow" data-v="flow" aria-pressed="true">Structural current</button>
+        <button type="button" id="y-pocket" data-v="pocket" aria-pressed="false">Pocket size</button>
+      </div>
+    </div>
+    <label class="control" for="search"><span>Highlight</span>
+      <input type="search" id="search" value="SCLY" placeholder="KEGG, HMDB, ChEBI, name, gene or Human-GEM id" autocomplete="off">
+    </label>
+    <div class="control" id="rmode-wrap"><span>Match reactions by</span>
+      <div class="seg" id="seg-rmode">
+        <button type="button" id="rmode-met" data-v="contains" aria-pressed="true">Metabolites they contain</button>
+        <button type="button" id="rmode-name" data-v="name" aria-pressed="false">Name or gene</button>
+      </div>
+    </div>
+    <div class="control"><span>Pocket size (metabolites cut off)</span>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+  <p class="match-note" id="match-note" aria-live="polite"></p>
+
+  <section class="panels" id="panels" aria-label="Scatter plots by pruning stage"></section>
+
+  <section class="diagram-block" id="diagrams" aria-label="Pruning diagrams">
+    <div class="diagram-head">
+      <h2>Pruning diagrams</h2>
+      <p class="desc-wide">One map for every stage. Each node keeps its place, so switching stages shows what pruning does:
+        hubs fade out on the left once they are removed, blue pockets appear as bottlenecks form, and the islands on the right
+        lose their last links to the main network. Only the nodes this page is about are drawn: pocket nodes and their pockets,
+        the busiest hubs, and islands of four or more metabolites.</p>
+    </div>
+    <div class="diagram-controls">
+      <div class="control"><span>Stage</span>
+        <div class="seg" id="seg-dstage"></div>
+      </div>
+      <div class="control"><span>View</span>
+        <div class="seg">
+          <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+          <button type="button" id="zoom-reset">Fit</button>
+        </div>
+      </div>
+    </div>
+    <div class="dlegend" aria-label="Diagram key">
+      <span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" fill="var(--p2)"></circle></svg>metabolite</span>
+      <span><svg width="14" height="14" viewBox="0 0 14 14"><rect x="3" y="3" width="8" height="8" rx="1.5" fill="var(--p2)"></rect></svg>reaction</span>
+      <span><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="var(--p3)" stroke="var(--ink)" stroke-width="2.5"></circle></svg>cuts off a pocket (named when 10+)</span>
+      <span><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="var(--p1)" stroke="var(--p3)" stroke-width="1.5" stroke-dasharray="2 2"></circle></svg>inside a pocket</span>
+      <span><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="var(--dot0)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="1 2"></circle></svg>island</span>
+      <span><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" fill="var(--grid)"></circle></svg>removed by this stage</span>
+      <span>Fill is pocket size, as above. Size is structural current.</span>
+    </div>
+    <p class="stats" id="diagram-stats"></p>
+    <canvas id="diagram" role="img" aria-label="Network diagram for the selected pruning stage"></canvas>
+    <p class="hint">Drag to pan, use + and − to zoom. Click a node to highlight it in the scatter plots.
+      The same diagrams open in Cytoscape: <code>results/stage_diagrams/*.cyjs</code> with <code>metaboenrich_pruning_style.xml</code>.</p>
+  </section>
+
+  <section class="table-block" aria-label="Largest pockets">
+    <div class="table-head">
+      <h2>Largest pockets</h2>
+      <label class="control" for="table-stage"><span>Stage</span><select id="table-stage"></select></label>
+    </div>
+    <div class="table-scroll"><table id="pocket-table"><thead><tr>
+      <th>Node</th><th>Type</th><th class="num">Edges</th><th class="num">Pocket</th><th class="num">Structural current</th><th>Genes</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <footer>
+    <p>Structural current: mean throughput over __PAIRS__ source–target pairs (__SAMPLES__ random sources × __SAMPLES__ random targets,
+      drawn from the largest connected piece at each stage, seed __SEED__). Nodes outside that piece carry none and sit on the bottom row.
+      Pocket: metabolites separated from the largest remaining piece of the node's component if the node is removed.</p>
+    <p>Dots are spread a few pixels sideways within each degree so overlapping nodes stay visible; the spread carries no meaning.
+      Regenerate with <code>python -m metaboenrich.structure --out results/structure</code>.</p>
+  </footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const META = D.nodes;                 // [id, name, type, genes]
+  const STAGES = D.stages;
+  const BINS = [
+    { lo: 0, hi: 0, label: "0", r: 1.6, key: "--dot0" },
+    { lo: 1, hi: 1, label: "1", r: 2.4, key: "--p1" },
+    { lo: 2, hi: 4, label: "2–4", r: 3.0, key: "--p2" },
+    { lo: 5, hi: 19, label: "5–19", r: 3.8, key: "--p3" },
+    { lo: 20, hi: Infinity, label: "20+", r: 4.8, key: "--p4" },
+  ];
+  const binOf = p => BINS.findIndex(b => p >= b.lo && p <= b.hi);
+  const FLOW_FLOOR = 1e-6;
+  const fmtInt = n => n.toLocaleString("en-US");
+  const fmtFlow = f => f <= 0 ? "none" : f < 0.001 ? f.toExponential(1) : f.toFixed(4);
+  const state = { type: "r", y: "flow", query: "SCLY", rmode: "contains" };
+
+  // ---- identifier lookup: Human-GEM annotations + id_translation bridges ----
+  // key (normalised id or lower-case name) -> [[meta index, source], ...]
+  const LOOKUP = new Map();
+  const addKey = (key, k, via) => {
+    if (!key) return;
+    if (!LOOKUP.has(key)) LOOKUP.set(key, []);
+    const list = LOOKUP.get(key);
+    if (!list.some(e => e[0] === k)) list.push([k, via]);
+  };
+  META.forEach((m, k) => {
+    if (m[2] !== "m") return;
+    addKey(m[0].toUpperCase(), k, "Human-GEM id");
+    addKey(m[1].toLowerCase(), k, "Human-GEM name");
+    const ids = D.ids[k];
+    if (!ids) return;
+    for (const [id, via] of ids[0]) addKey(id.toUpperCase(), k, via === "model" ? "Human-GEM annotation" : "id_translation");
+    for (const s of ids[1]) addKey(s.toLowerCase(), k, "id_translation synonym");
+  });
+  function normaliseQuery(q) {
+    const t = q.trim();
+    let m;
+    if ((m = t.match(/^hmdb0*(\d+)$/i))) return "HMDB" + m[1].padStart(7, "0");
+    if (/^c\d{5}$/i.test(t)) return t.toUpperCase();
+    if ((m = t.match(/^chebi:?\s*(\d+)$/i))) return "CHEBI:" + m[1];
+    if ((m = t.match(/^(?:M_)?(MAM\d{5})[a-z]?$/i))) return m[1].toUpperCase();
+    return t.toLowerCase();
+  }
+  const isIdQuery = key => /^(HMDB\d{7}|C\d{5}|CHEBI:\d+|MAM\d{5})$/.test(key);
+  function resolveMetabolites(q) {
+    const key = normaliseQuery(q);
+    return { key, hits: LOOKUP.get(key) || [], isId: isIdQuery(key) };
+  }
+  function stageAdjacency(st) {
+    if (st.adj) return st.adj;
+    st.adj = new Map();
+    for (let e = 0; e < st.edges.length; e += 2) {
+      const m = st.edges[e], r = st.edges[e + 1];
+      if (!st.adj.has(m)) st.adj.set(m, []);
+      st.adj.get(m).push(r);
+    }
+    return st.adj;
+  }
+  // Positions (within a stage) to ring, for the current query / node type / mode.
+  function stageHits(st, res) {
+    const out = new Set();
+    if (!state.query.trim()) return out;
+    const metPos = res.hits.map(([k]) => st.pos.get(k)).filter(j => j != null);
+    if (state.type === "m") {
+      if (res.hits.length) metPos.forEach(j => out.add(j));
+      else if (!res.isId) st.byType.m.forEach(j => { if (matches(st.node[j])) out.add(j); });
+    } else if (state.rmode === "contains" && res.hits.length) {
+      const adj = stageAdjacency(st);
+      metPos.forEach(j => (adj.get(j) || []).forEach(r => out.add(r)));
+    } else if (!res.isId) {
+      st.byType.r.forEach(j => { if (matches(st.node[j])) out.add(j); });
+    }
+    return out;
+  }
+
+  // ---- per stage, per type index lists ----------------------------------
+  for (const st of STAGES) {
+    st.byType = { r: [], m: [] };
+    st.node.forEach((k, j) => st.byType[META[k][2]].push(j));
+    st.pos = new Map(st.node.map((k, j) => [k, j]));
+  }
+  const maxOver = (type, arr) => Math.max(1, ...STAGES.map(st => Math.max(...st.byType[type].map(j => st[arr][j]))));
+  const DOM = {
+    r: { deg: maxOver("r", "degree"), pocket: maxOver("r", "pocket") },
+    m: { deg: maxOver("m", "degree"), pocket: maxOver("m", "pocket") },
+  };
+
+  const css = () => {
+    const s = getComputedStyle(document.documentElement);
+    const v = k => s.getPropertyValue(k).trim();
+    return { v, sans: v("--sans"), mono: v("--mono") };
+  };
+
+  // ---- findings text (numbers from the data) -----------------------------
+  const S = STAGES.map(st => st.summary);
+  const byKey = Object.fromEntries(STAGES.map(st => [st.key, st]));
+  const INDEX = new Map(META.map((m, k) => [m[0], k]));
+  const pocketOf = (key, id) => { const st = byKey[key]; const j = st.pos.get(INDEX.get(id)); return j == null ? "–" : st.pocket[j]; };
+  const findings = [
+    [`${S[0].metabolites_outside_main} → ${S[4].metabolites_outside_main} metabolites`,
+     "cut off from the main network. Every pruning step creates islands; the biggest jump comes from filtering cofactors (stage 3)."],
+    [`${S[0].reactions_pocket_ge5} → ${S[4].reactions_pocket_ge5} reactions`,
+     "are the sole link for five or more metabolites. None exist in the raw network; they appear once hubs stop bridging the gaps."],
+    [`${Math.round(S[0].top1pct_flow_share * 100)}% → ${Math.round(S[4].top1pct_flow_share * 100)}% of current`,
+     "passes through the top 1% of nodes. Removing hubs spreads the load, so hub-driven flow gives way to pocket-driven flow."],
+    [`SCLY pocket ${pocketOf("pools", "R_MAR07133")} → ${pocketOf("edits", "R_MAR07133")}`,
+     "The vitamin B6 group hangs off SCLY until the reaction edit removes it (stage 4 to 5). Search other names to follow them the same way."],
+  ];
+  document.getElementById("findings").innerHTML = findings
+    .map(([b, t]) => `<li><b>${b}</b>${t}</li>`).join("");
+
+  // ---- trend charts (SVG) ------------------------------------------------
+  const TRENDS = [
+    { key: "metabolites_outside_main", title: "Metabolites cut off from the main network", fmt: fmtInt },
+    { key: "reactions_pocket_ge5", title: "Reactions that alone cut off 5+ metabolites", fmt: fmtInt },
+    { key: "top1pct_flow_share", title: "Share of current through the top 1% of nodes", fmt: v => Math.round(v * 100) + "%" },
+  ];
+  const SHORT = ["1 Raw", "2 Inorg.", "3 Cofac.", "4 Pools", "5 Edits", "Alt"];
+  function drawTrends() {
+    const el = document.getElementById("trends");
+    const W = 320, H = 120, L = 8, R = 8, T = 18, B = 26;
+    const xs = SHORT.map((_, i) => L + (i < 5 ? i : 5.6) * ((W - L - R) / 5.6));
+    el.innerHTML = TRENDS.map(tr => {
+      const vals = S.map(s => s[tr.key]);
+      const max = Math.max(...vals) || 1;
+      const y = v => T + (H - T - B) * (1 - v / (max * 1.08));
+      const line = vals.slice(0, 5).map((v, i) => `${i ? "L" : "M"}${xs[i].toFixed(1)},${y(v).toFixed(1)}`).join("");
+      const dots = vals.map((v, i) => {
+        const alt = i === 5;
+        const label = (i === 0 || i === 4 || alt)
+          ? `<text x="${xs[i]}" y="${y(v) - 8}" text-anchor="${i === 0 ? "start" : "middle"}" class="tv">${tr.fmt(v)}</text>` : "";
+        return `<g><title>${STAGES[i].title}: ${tr.fmt(v)}</title>
+          <circle cx="${xs[i]}" cy="${y(v)}" r="${alt ? 4 : 3.5}" fill="${alt ? "var(--surface)" : "var(--accent)"}"
+            stroke="${alt ? "var(--accent)" : "var(--surface)"}" stroke-width="2"></circle>${label}</g>`;
+      }).join("");
+      const ticks = SHORT.map((s, i) => `<text x="${xs[i]}" y="${H - 6}" text-anchor="middle" class="tx">${s}</text>`).join("");
+      return `<figure class="trend" style="margin:0"><h3>${tr.title}</h3>
+        <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${tr.title} by stage">
+          <line x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}" stroke="var(--axis)" stroke-width="1"></line>
+          <line x1="${(xs[4] + xs[5]) / 2}" x2="${(xs[4] + xs[5]) / 2}" y1="${T - 6}" y2="${H - B}" stroke="var(--grid)" stroke-dasharray="3 3"></line>
+          <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"></path>
+          ${dots}${ticks}
+        </svg></figure>`;
+    }).join("");
+  }
+
+  // ---- scatter panels (canvas) -------------------------------------------
+  const panelsEl = document.getElementById("panels");
+  const panels = STAGES.map((st, i) => {
+    const div = document.createElement("article");
+    div.className = "panel" + (st.key === "alt_remove" ? " alt" : "");
+    const s = st.summary;
+    div.innerHTML = `<div class="panel-head"><h3>${st.title}</h3>
+        <button type="button" class="linkbtn" data-dstage="${i}" aria-label="Open the diagram for ${st.title}">Diagram ↓</button></div>
+      <p class="desc">${st.description}</p>
+      <p class="stats">${fmtInt(s.metabolites)} metabolites · ${fmtInt(s.reactions)} reactions · ${fmtInt(s.edges)} edges · ${fmtInt(s.metabolites_outside_main)} cut off</p>
+      <canvas role="img" aria-label="${st.title}: edges versus structural load"></canvas>`;
+    panelsEl.appendChild(div);
+    return { st, canvas: div.querySelector("canvas"), pts: [] };
+  });
+
+  const M = { l: 46, r: 10, t: 10, b: 34 };
+  function scales(w, h) {
+    const d = DOM[state.type];
+    const x1 = Math.log10(d.deg * 1.25);
+    const X = v => M.l + (w - M.l - M.r) * (Math.log10(Math.max(1, v)) / x1);
+    let Y, yTicks, noneY = null;
+    const plotB = h - M.b;
+    if (state.y === "flow") {
+      const y0 = Math.log10(FLOW_FLOOR), y1 = 0;
+      const top = M.t, bot = plotB - 16;
+      noneY = plotB - 5;
+      Y = v => v < FLOW_FLOOR ? noneY : bot - (bot - top) * ((Math.log10(v) - y0) / (y1 - y0));
+      yTicks = [-6, -5, -4, -3, -2, -1, 0].map(e => ({ v: 10 ** e, label: e === 0 ? "1" : `10${sup(e)}` }));
+    } else {
+      const y1 = Math.log10(1 + d.pocket * 1.15);
+      Y = v => plotB - (plotB - M.t) * (Math.log10(1 + v) / y1);
+      yTicks = [0, 1, 2, 5, 10, 20, 50, 100, 200].filter(v => v <= d.pocket * 1.15).map(v => ({ v, label: String(v) }));
+    }
+    const xTicks = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000].filter(v => v <= d.deg * 1.25);
+    return { X, Y, xTicks, yTicks, noneY, plotB };
+  }
+  const SUP = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶" };
+  function sup(e) { return String(e).split("").map(c => SUP[c]).join(""); }
+
+  function matches(k) {
+    const q = state.query.trim().toLowerCase();
+    if (!q) return false;
+    const m = META[k];
+    return m[0].toLowerCase().includes(q) || m[1].toLowerCase().includes(q) || (m[3] && m[3].toLowerCase().split(";").includes(q));
+  }
+
+  function drawPanel(p, c, res) {
+    const { canvas, st } = p;
+    const hitSet = stageHits(st, res);
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w) return;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    const g = canvas.getContext("2d");
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.fillStyle = c.v("--surface"); g.fillRect(0, 0, w, h);
+    const sc = scales(w, h);
+
+    // grid + ticks
+    g.font = `11px ${c.mono}`; g.fillStyle = c.v("--muted"); g.strokeStyle = c.v("--grid"); g.lineWidth = 1;
+    g.textAlign = "right"; g.textBaseline = "middle";
+    for (const t of sc.yTicks) {
+      const y = Math.round(sc.Y(t.v)) + 0.5;
+      g.beginPath(); g.moveTo(M.l, y); g.lineTo(w - M.r, y); g.stroke();
+      g.fillText(t.label, M.l - 6, y);
+    }
+    if (sc.noneY != null) { g.fillText("none", M.l - 6, sc.noneY); }
+    g.textAlign = "center"; g.textBaseline = "top";
+    for (const t of sc.xTicks) {
+      const x = Math.round(sc.X(t)) + 0.5;
+      g.beginPath(); g.moveTo(x, M.t); g.lineTo(x, sc.plotB); g.stroke();
+      g.fillText(t >= 1000 ? t / 1000 + "k" : String(t), x, sc.plotB + 5);
+    }
+    g.strokeStyle = c.v("--axis");
+    g.beginPath(); g.moveTo(M.l, sc.plotB + 0.5); g.lineTo(w - M.r, sc.plotB + 0.5); g.stroke();
+    g.fillStyle = c.v("--muted"); g.font = `11.5px ${c.sans}`;
+    g.fillText(state.type === "r" ? "metabolites per reaction (log)" : "reactions per metabolite (log)", (M.l + w - M.r) / 2, h - 14);
+
+    // points, pocket 0 first so larger pockets draw on top
+    const idx = st.byType[state.type];
+    const order = [...idx].sort((a, b) => st.pocket[a] - st.pocket[b]);
+    const colors = BINS.map(b => c.v(b.key));
+    p.pts = [];
+    const hits = [];
+    for (const j of order) {
+      const val = state.y === "flow" ? st.flow[j] : st.pocket[j];
+      // Degrees are whole numbers, so spread each column sideways by a fixed
+      // per-node offset (same node, same offset in every panel).
+      const k = st.node[j];
+      const jit = ((Math.sin(k * 12.9898) * 43758.5453) % 1) * 7;
+      const x = sc.X(st.degree[j]) + jit, y = sc.Y(val);
+      const bi = binOf(st.pocket[j]);
+      g.globalAlpha = bi === 0 ? 0.55 : 0.9;
+      g.fillStyle = colors[bi];
+      g.beginPath(); g.arc(x, y, BINS[bi].r, 0, 6.2832); g.fill();
+      p.pts.push([x, y, j]);
+      if (hitSet.has(j)) hits.push([x, y, j]);
+    }
+    g.globalAlpha = 1;
+    // highlighted nodes
+    g.strokeStyle = c.v("--hl"); g.lineWidth = 2;
+    for (const [x, y] of hits) { g.beginPath(); g.arc(x, y, 7, 0, 6.2832); g.stroke(); }
+    g.font = `600 11.5px ${c.sans}`; g.fillStyle = c.v("--hl-ink"); g.textBaseline = "middle";
+    hits.slice(0, 3).forEach(([x, y, j]) => {
+      const name = META[st.node[j]][state.type === "r" ? 3 : 1].split(";")[0] || META[st.node[j]][1];
+      const right = x < w - 110;
+      g.textAlign = right ? "left" : "right";
+      g.fillText(name.slice(0, 22), x + (right ? 10 : -10), y);
+    });
+    return hits.length;
+  }
+
+  function drawAll() {
+    const c = css();
+    const res = resolveMetabolites(state.query);
+    document.getElementById("rmode-wrap").hidden = state.type !== "r";
+    let total = 0; const perStage = [];
+    for (const p of panels) { const n = drawPanel(p, c, res) || 0; total += n; perStage.push(n); }
+    if (typeof drawDiagram === "function" && G) drawDiagram(res);
+    const note = document.getElementById("match-note");
+    const q = state.query.trim();
+    const noun = state.type === "r" ? "reactions" : "metabolites";
+    const byMet = res.hits.length && (state.type === "m" || state.rmode === "contains");
+    const resolved = res.hits.slice(0, 3).map(([k, via]) => `${META[k][1]} (${META[k][0]}, via ${via})`).join("; ")
+      + (res.hits.length > 3 ? `; +${res.hits.length - 3} more` : "");
+    if (!q) note.textContent = "";
+    else if (res.isId && !res.hits.length)
+      note.textContent = `${res.key} isn’t linked to any Human-GEM metabolite, either in the model’s annotations or through id_translation.`;
+    else if (!total)
+      note.textContent = (res.hits.length ? `“${q}” → ${resolved}, but it isn’t in the network at any stage as a ${noun.slice(0, -1)} match. ` : `No ${noun} match “${q}”. `)
+        + "Try the other node type, a gene symbol, a KEGG or HMDB id, or a Human-GEM id.";
+    else if (byMet && state.type === "r")
+      note.textContent = `“${q}” → ${resolved}. Reactions still containing it: ${perStage.join(" / ")} across the six stages (orange rings).`;
+    else if (byMet)
+      note.textContent = `“${q}” → ${resolved}. Present in ${perStage.map(n => n ? "✓" : "–").join(" / ")} of the six stages (orange rings).`;
+    else
+      note.textContent = `“${q}” matches ${perStage.join(" / ")} ${noun} by name${state.type === "r" ? ", id or gene" : ""} across the six stages (orange rings).`;
+  }
+
+  function drawLegend() {
+    const c = css();
+    document.getElementById("legend").innerHTML = BINS.map(b =>
+      `<span class="sw"><i style="width:${b.r * 2 + 2}px;height:${b.r * 2 + 2}px;background:var(${b.key})"></i>${b.label}</span>`
+    ).join("") + `<span class="sw"><i class="ring"></i>highlight</span>`;
+  }
+
+  // ---- hover --------------------------------------------------------------
+  const tip = document.getElementById("tip");
+  for (const p of panels) {
+    p.canvas.addEventListener("mousemove", e => {
+      const r = p.canvas.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+      let best = null, bd = 100;
+      for (const pt of p.pts) { const d = (pt[0] - mx) ** 2 + (pt[1] - my) ** 2; if (d < bd) { bd = d; best = pt; } }
+      if (!best) { tip.hidden = true; return; }
+      const st = p.st, j = best[2], m = META[st.node[j]];
+      tip.innerHTML = `<div class="t-name">${esc(m[1])}</div><div class="t-id">${m[0]} · ${st.title}</div>
+        ${m[2] === "r" && m[3] ? `<div class="t-genes">${esc(m[3])}</div>` : ""}
+        ${m[2] === "m" && D.ids[st.node[j]] ? `<div class="t-genes mono">${esc(D.ids[st.node[j]][0].map(([id]) => id).filter(id => !id.startsWith("CHEBI")).join(" · "))}</div>` : ""}
+        <dl><dt>Edges</dt><dd>${fmtInt(st.degree[j])}</dd>
+        <dt>Structural current</dt><dd>${fmtFlow(st.flow[j])}</dd>
+        <dt>Pocket</dt><dd>${fmtInt(st.pocket[j])} metabolite${st.pocket[j] === 1 ? "" : "s"}</dd>
+        ${st.main[j] ? "" : "<dt>Network</dt><dd>outside the main piece</dd>"}</dl>`;
+      tip.hidden = false;
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tw - 8) + "px";
+      tip.style.top = Math.min(e.clientY + 14, window.innerHeight - th - 8) + "px";
+    });
+    p.canvas.addEventListener("mouseleave", () => { tip.hidden = true; });
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch])); }
+
+  // ---- table ----------------------------------------------------------------
+  const sel = document.getElementById("table-stage");
+  sel.innerHTML = STAGES.map((st, i) => `<option value="${i}" ${st.key === "edits" ? "selected" : ""}>${st.title}</option>`).join("");
+  function drawTable() {
+    const st = STAGES[+sel.value];
+    const rows = st.node.map((_, j) => j).filter(j => st.pocket[j] > 0)
+      .sort((a, b) => st.pocket[b] - st.pocket[a] || st.flow[b] - st.flow[a]).slice(0, 15);
+    document.querySelector("#pocket-table tbody").innerHTML = rows.map(j => {
+      const m = META[st.node[j]];
+      return `<tr><td>${esc(m[1])}<br><span class="id">${m[0]}</span></td><td>${m[2] === "r" ? "reaction" : "metabolite"}</td>
+        <td class="num">${fmtInt(st.degree[j])}</td><td class="num">${fmtInt(st.pocket[j])}</td>
+        <td class="num">${fmtFlow(st.flow[j])}</td><td class="genes">${esc(m[3] || "")}</td></tr>`;
+    }).join("");
+  }
+  sel.addEventListener("change", drawTable);
+
+  // ---- pruning diagrams (canvas) ---------------------------------------------
+  const G = D.diagrams;                    // nodes: [id, name, type, genes, x, y]; stages: nodes [u, pocket, flow, deg, main, role], edges flat
+  const GIDX = new Map(G.nodes.map((n, i) => [n[0], i]));
+  const dCanvas = document.getElementById("diagram");
+  const DSHORT = ["1 Raw", "2 Inorganics", "3 Cofactors", "4 Pools", "5 Edits", "Alt"];
+  const view = { scale: 1, tx: 0, ty: 0, fitted: false };
+  let dStage = STAGES.findIndex(st => st.key === "edits");
+  let dPts = [];
+  const maxFlowG = Math.max(...G.stages.flatMap(s => s.nodes.map(n => n[2]))) || 1;
+  for (const s of G.stages) s.byU = new Map(s.nodes.map(n => [n[0], n]));
+
+  const segD = document.getElementById("seg-dstage");
+  segD.innerHTML = G.stages.map((s, i) =>
+    `<button type="button" id="dstage-${i}" data-i="${i}" aria-pressed="${i === dStage}">${DSHORT[i]}</button>`).join("");
+  function setDStage(i) {
+    dStage = i;
+    segD.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+    drawDiagram(resolveMetabolites(state.query));
+  }
+  segD.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setDStage(+b.dataset.i); });
+  panelsEl.addEventListener("click", e => {
+    const b = e.target.closest(".linkbtn"); if (!b) return;
+    setDStage(+b.dataset.dstage);
+    document.getElementById("diagrams").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+
+  function fitView() {
+    const w = dCanvas.clientWidth, h = dCanvas.clientHeight;
+    const xs = G.nodes.map(n => n[4]).concat(G.captions.map(c => c[1]));
+    const ys = G.nodes.map(n => n[5]).concat(G.captions.map(c => c[2]));
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    view.scale = Math.min((w - 40) / (x1 - x0), (h - 40) / (y1 - y0));
+    view.tx = w / 2 - view.scale * (x0 + x1) / 2;
+    view.ty = h / 2 - view.scale * (y0 + y1) / 2;
+    view.fitted = true;
+  }
+  const toScreen = (x, y) => [x * view.scale + view.tx, y * view.scale + view.ty];
+
+  function diagramHits(si, res) {
+    const out = new Set();
+    if (!state.query.trim()) return out;
+    const st = STAGES[si], keep = state.type;
+    for (const t of ["r", "m"]) {
+      state.type = t;
+      for (const j of stageHits(st, res)) { const u = GIDX.get(META[st.node[j]][0]); if (u != null) out.add(u); }
+    }
+    state.type = keep;
+    return out;
+  }
+
+  function nodeRadius(isR, flow) {
+    const s = (isR ? 7 : 12) + (isR ? 26 : 46) * Math.sqrt(flow / maxFlowG);
+    return Math.max(1.6, Math.min(28, s / 2 * Math.sqrt(view.scale) * 1.9));
+  }
+
+  function drawDiagram(res) {
+    const c = css();
+    const dpr = window.devicePixelRatio || 1;
+    const w = dCanvas.clientWidth, h = dCanvas.clientHeight;
+    if (!w) return;
+    if (!view.fitted) fitView();
+    dCanvas.width = Math.round(w * dpr); dCanvas.height = Math.round(h * dpr);
+    const g = dCanvas.getContext("2d");
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.fillStyle = c.v("--surface"); g.fillRect(0, 0, w, h);
+    const s = G.stages[dStage];
+    const hits = diagramHits(dStage, res);
+    const bins = BINS.map(b => c.v(b.key));
+
+    // region captions
+    g.font = `600 12.5px ${c.sans}`; g.fillStyle = c.v("--ink-2"); g.textAlign = "center"; g.textBaseline = "middle";
+    for (const [text, x, y] of G.captions) { const [sx, sy] = toScreen(x, y); g.fillText(text, sx, sy); }
+
+    // edges
+    const hub = u => { const n = s.byU.get(u); return n && n[5] === "hub"; };
+    g.lineWidth = 0.8;
+    for (let e = 0; e < s.edges.length; e += 2) {
+      const a = s.edges[e], b = s.edges[e + 1];
+      const [x1, y1] = toScreen(G.nodes[a][4], G.nodes[a][5]);
+      const [x2, y2] = toScreen(G.nodes[b][4], G.nodes[b][5]);
+      g.strokeStyle = c.v("--axis"); g.globalAlpha = hub(a) || hub(b) ? 0.22 : 0.6;
+      g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+    }
+    g.globalAlpha = 1;
+
+    // nodes: removed first (faint), then present, larger pockets on top
+    const order = [...s.nodes].sort((p, q) => ((q[5] === "removed") - (p[5] === "removed")) || (p[1] - q[1]));
+    dPts = [];
+    const labels = [];
+    for (const n of order) {
+      const [u, pk, fl, , inMain, role] = n;
+      const meta = G.nodes[u], isR = meta[2] === "r";
+      const [x, y] = toScreen(meta[4], meta[5]);
+      if (x < -30 || y < -30 || x > w + 30 || y > h + 30) continue;
+      const removed = role === "removed";
+      const r = removed ? nodeRadius(isR, 0) : nodeRadius(isR, fl);
+      g.beginPath();
+      if (isR) { const q = r * 0.85; g.roundRect ? g.roundRect(x - q, y - q, 2 * q, 2 * q, Math.min(2, q / 2)) : g.rect(x - q, y - q, 2 * q, 2 * q); }
+      else g.arc(x, y, r, 0, 6.2832);
+      g.fillStyle = removed ? c.v("--grid") : bins[binOf(pk)];
+      g.globalAlpha = removed ? 0.9 : 1;
+      g.fill();
+      g.globalAlpha = 1;
+      if (!removed) {
+        if (role === "cuts off a pocket") { g.lineWidth = 2.2; g.strokeStyle = c.v("--ink"); g.setLineDash([]); g.stroke(); }
+        else if (role === "in a pocket") { g.lineWidth = 1.2; g.strokeStyle = c.v("--p3"); g.setLineDash([2, 2]); g.stroke(); }
+        else if (role === "island") { g.lineWidth = 1.2; g.strokeStyle = c.v("--muted"); g.setLineDash([1, 2]); g.stroke(); }
+        g.setLineDash([]);
+        const short = isR && meta[3] ? meta[3].split(";")[0] : meta[1];
+        if (role === "cuts off a pocket" && pk >= 10) labels.push([x, y + r + 9, `${short.slice(0, 26)} · cuts off ${pk}`]);
+        else if (role === "hub") labels.push([x, y + r + 9, short.slice(0, 22)]);
+      }
+      if (hits.has(u)) { g.lineWidth = 2; g.strokeStyle = c.v("--hl"); g.beginPath(); g.arc(x, y, r + 5, 0, 6.2832); g.stroke();
+        labels.push([x, y - r - 10, (isR && meta[3] ? meta[3].split(";")[0] : meta[1]).slice(0, 26), true]); }
+      dPts.push([x, y, u, r]);
+    }
+    g.font = `500 11px ${c.sans}`; g.textAlign = "center"; g.lineJoin = "round";
+    for (const [x, y, t, isHit] of labels) {
+      g.lineWidth = 3; g.strokeStyle = c.v("--surface"); g.strokeText(t, x, y);
+      g.fillStyle = isHit ? c.v("--hl-ink") : c.v("--ink"); g.fillText(t, x, y);
+    }
+
+    const present = s.nodes.filter(n => n[5] !== "removed");
+    const pockets = present.filter(n => n[5] === "cuts off a pocket");
+    const islands = present.filter(n => n[5] === "island" && G.nodes[n[0]][2] === "m").length;
+    document.getElementById("diagram-stats").textContent =
+      `${STAGES[dStage].title} · ${fmtInt(present.length)} nodes drawn · ${fmtInt(s.nodes.length - present.length)} removed by this stage · `
+      + `${pockets.length} pocket nodes (5+) · ${fmtInt(islands)} island metabolites`
+      + (hits.size ? ` · ${hits.size} highlighted` : "");
+  }
+
+  // pan, zoom, hover, click
+  let drag = null;
+  dCanvas.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty, moved: false };
+    dCanvas.setPointerCapture(e.pointerId); dCanvas.classList.add("dragging"); });
+  dCanvas.addEventListener("pointermove", e => {
+    if (drag) {
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+      view.tx = drag.tx + dx; view.ty = drag.ty + dy;
+      tip.hidden = true; drawDiagram(resolveMetabolites(state.query)); return;
+    }
+    const best = nearestDiagramNode(e);
+    if (!best) { tip.hidden = true; return; }
+    const u = best[2], meta = G.nodes[u], n = G.stages[dStage].byU.get(u);
+    const removed = n[5] === "removed";
+    tip.innerHTML = `<div class="t-name">${esc(meta[1])}</div><div class="t-id">${meta[0]} · ${STAGES[dStage].title}</div>
+      ${meta[2] === "r" && meta[3] ? `<div class="t-genes">${esc(meta[3])}</div>` : ""}
+      <dl>${removed ? "<dt>Status</dt><dd>removed by this stage</dd>" :
+        `<dt>Role</dt><dd>${esc(n[5])}</dd><dt>Edges</dt><dd>${fmtInt(n[3])}</dd>
+         <dt>Structural current</dt><dd>${fmtFlow(n[2])}</dd><dt>Pocket</dt><dd>${fmtInt(n[1])}</dd>
+         ${n[4] ? "" : "<dt>Network</dt><dd>outside the main piece</dd>"}`}</dl>`;
+    tip.hidden = false;
+    tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8) + "px";
+    tip.style.top = Math.min(e.clientY + 14, window.innerHeight - tip.offsetHeight - 8) + "px";
+  });
+  dCanvas.addEventListener("pointerup", e => {
+    dCanvas.classList.remove("dragging");
+    const wasDrag = drag && drag.moved; drag = null;
+    if (wasDrag) return;
+    const best = nearestDiagramNode(e);
+    if (!best) return;
+    const id = G.nodes[best[2]][0];
+    const input = document.getElementById("search");
+    input.value = id; state.query = id; drawAll();
+  });
+  dCanvas.addEventListener("pointerleave", () => { tip.hidden = true; });
+  function nearestDiagramNode(e) {
+    const r = dCanvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    let best = null, bd = Infinity;
+    for (const p of dPts) { const d = (p[0] - mx) ** 2 + (p[1] - my) ** 2; if (d < bd && d < (p[3] + 6) ** 2) { bd = d; best = p; } }
+    return best;
+  }
+  function zoom(f) {
+    const w = dCanvas.clientWidth / 2, h = dCanvas.clientHeight / 2;
+    view.tx = w - (w - view.tx) * f; view.ty = h - (h - view.ty) * f; view.scale *= f;
+    drawDiagram(resolveMetabolites(state.query));
+  }
+  document.getElementById("zoom-in").addEventListener("click", () => zoom(1.4));
+  document.getElementById("zoom-out").addEventListener("click", () => zoom(1 / 1.4));
+  document.getElementById("zoom-reset").addEventListener("click", () => { fitView(); drawDiagram(resolveMetabolites(state.query)); });
+
+  // ---- controls -------------------------------------------------------------
+  function wireSeg(id, key) {
+    const seg = document.getElementById(id);
+    seg.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      state[key] = b.dataset.v;
+      seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      drawAll();
+    });
+  }
+  wireSeg("seg-type", "type"); wireSeg("seg-y", "y"); wireSeg("seg-rmode", "rmode");
+  document.getElementById("search").addEventListener("input", e => { state.query = e.target.value; drawAll(); });
+  state.query = document.getElementById("search").value;
+
+  new ResizeObserver(() => drawAll()).observe(panelsEl);
+  new ResizeObserver(() => { view.fitted = false; drawDiagram(resolveMetabolites(state.query)); }).observe(dCanvas);
+  const rerender = () => { drawLegend(); drawAll(); };
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", rerender);
+  new MutationObserver(rerender).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll);
+
+  drawTrends(); drawLegend(); drawTable(); drawAll();
+})();
+</script>
+<style>
+  .trend .tv { font: 500 11px var(--mono); fill: var(--ink); }
+  .trend .tx { font: 10.5px var(--mono); fill: var(--muted); }
+</style>

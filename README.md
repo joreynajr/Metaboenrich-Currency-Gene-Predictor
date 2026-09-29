@@ -22,6 +22,21 @@ protocol leaves a choice open, the choice made here is listed under
 - [Known limitations](#known-limitations)
 - [Development](#development)
 
+## Documents
+
+| Document | What it is |
+|---|---|
+| [docs/report.html](docs/report.html) | Progress report: network, benchmark, version 0.2, blind predictions (download and open in a browser) |
+| [docs/pruning_atlas.html](docs/pruning_atlas.html) | Pruning Atlas: structural effect of each pruning step, with linked network diagrams (download and open) |
+| [docs/stage_diagrams/](docs/stage_diagrams/) | The pruning-stage diagrams as Cytoscape files, style and opening steps |
+| [docs/benchmark.md](docs/benchmark.md) | Inborn-error benchmark: data, method, per-disorder results |
+| [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
+| [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |
+| [predictions/published_v1/](predictions/published_v1/PREDICTIONS.md) | Sealed blind predictions on published datasets |
+
+Rebuild the report with `python tools/report/build_report.py --public` and the
+atlas with `python tools/atlas/build_atlas.py` (see each script's header).
+
 ## Setup
 
 Python 3.9 or later.
@@ -66,10 +81,10 @@ log2FC < 0 are **targets**.
 comparisons. Pick one comparison with `--fc-col` and `--p-col`:
 
 ```sh
-.venv\Scripts\python -m metaboenrich --daa statistic_analysis.csv --out results/C_vs_E ^
+.venv\Scripts\python -m metaboenrich --daa statistic_analysis.csv --out results/A_vs_B ^
     --id-col HMDB KEGG Name ^
-    --fc-col "Log2_Fold_Change(AlbCre_C vs AlbCre_E)" ^
-    --p-col "Tukey_HSD_P_Value(AlbCre_C vs AlbCre_E)"
+    --fc-col "Log2_Fold_Change(GroupA vs GroupB)" ^
+    --p-col "Tukey_HSD_P_Value(GroupA vs GroupB)"
 ```
 
 In those files `Fold_Change(A vs B)` is B / A, so sources are metabolites

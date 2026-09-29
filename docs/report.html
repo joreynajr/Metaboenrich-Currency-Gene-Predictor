@@ -1,0 +1,196 @@
+<meta charset="utf-8">
+<title>Metaboenrich Prototype Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--axis:#c5ccd4;
+--accent:#1f63b5;--raw:#2a78d6;--loo:#eb6834;--nb:#8b95a1;--note:#eef3fa;--note-ink:#1c3e66;
+--sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;
+--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--raw:#3987e5;--loo:#f07a45;--nb:#8b95a1;--note:#18222e;--note-ink:#bcd4f2}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;
+--axis:#38414b;--accent:#6ea6ec;--raw:#3987e5;--loo:#f07a45;--nb:#8b95a1;--note:#18222e;--note-ink:#bcd4f2}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,4vw,40px);padding-block:40px 72px}
+main{max-width:980px;margin-inline:auto;display:grid;gap:44px}
+.prose{max-width:70ch;display:grid;gap:12px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(30px,4vw,40px);font-weight:700;letter-spacing:-.015em}
+h2{font-size:23px;font-weight:650;letter-spacing:-.005em;padding-top:8px;border-top:1px solid var(--rule)}
+h3{font-size:17px;font-weight:650}
+p,ul{margin:0}ul{padding-left:1.2em;display:grid;gap:6px}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.meta{font:13px/1.6 var(--mono);color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.9em}
+a{color:var(--accent)}
+section{display:grid;gap:16px}
+.summary{background:var(--note);color:var(--note-ink);border-radius:8px;padding:20px 24px;display:grid;gap:10px}
+.summary li{color:var(--note-ink)}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 11.5px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.tbl.wide td{min-width:90px}
+figure{margin:0;display:grid;gap:10px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 16px 10px}
+figure svg{width:100%;height:auto;display:block}
+figcaption{font-size:13.5px;color:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.grid{stroke:var(--rule);stroke-width:1}
+.random{fill:var(--axis);opacity:.6}
+.tick{font:11px var(--mono);fill:var(--muted)}
+.axis-label{font:12px var(--sans);fill:var(--ink-2)}
+.row-label{font:12.5px var(--sans);fill:var(--ink)}
+.span{stroke:var(--axis);stroke-width:1.5}
+.m-raw{fill:var(--raw);stroke:var(--surface);stroke-width:1.5}
+.m-loo{fill:var(--surface);stroke:var(--loo);stroke-width:2}
+.m-nb{fill:var(--nb);stroke:var(--surface);stroke-width:1.5}
+.small{font-size:13.5px;color:var(--ink-2)}
+u{text-decoration-color:var(--loo);text-decoration-thickness:2px;text-underline-offset:3px}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
+</style>
+<main>
+<header class="prose">
+  <span class="eyebrow">Metaboenrich · progress report · 29 September 2026</span>
+  <h1>Metaboenrich Prototype Report</h1>
+  <p class="meta">For Nina Frasketi, Joaquin Reyna and David Montefusco · tool 0.2.0.dev0 · network v0.1.1
+  (3,958 metabolites, 6,377 reactions, 16,356 edges; edge-list SHA-256 942cd8ac…) · Human-GEM 2.0.1</p>
+</header>
+
+<section class="summary" aria-label="Summary">
+  <h3>Where things stand</h3>
+  <ul>
+    <li>A working prototype of the protocol's current-flow method runs on Human-GEM in seconds, with
+      currency metabolites handled by role, a locked and versioned network, and Cytoscape output.</li>
+    <li>On inborn errors of metabolism with a known defective enzyme, it ranks the causal gene at a median of
+      <b>88 of 2,302</b> (top 3.8%), with
+      <b>11 of 20</b> disorders in the top 100. A simple baseline sits at random.</li>
+    <li>Blind predictions on the lab's 12 published datasets are made and sealed in git
+      (commit <span class="mono">2727d1b</span>, tag <span class="mono">predictions-published-v1</span>).
+      The answer key has not been built or read.</li>
+    <li>Several methods decisions are still open (listed at the end). The next step is the answer key.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>1. What the tool does</h2>
+  <div class="prose">
+    <p>Following the protocol (§1), Human-GEM becomes a network of metabolite and reaction nodes. Significantly
+    increased metabolites are current sources and significantly decreased ones are sinks. For every
+    source–sink pair the tool solves Kirchhoff's and Ohm's laws on the network, then scores each reaction by how
+    much of the current it carries (<i>conductivity</i>) and how much it constrains it (<i>bottleneck</i>).
+    Genes take the best score of their reactions. Outputs: ranked genes, reactions, pathways and transporters,
+    plus Cytoscape files.</p>
+  </div>
+</section>
+
+<section>
+  <h2>2. Building the network</h2>
+  <div class="prose">
+    <p>Human-GEM 2.0.1 has 8,460 compartment-specific metabolites (4,165 once compartments are merged),
+    12,877 reactions and 2,848 genes. Our data are bulk polar metabolomics with no compartment information, so
+    each metabolite is one node. Transport and exchange reactions then have nothing to connect and drop out.</p>
+    <p><b>Currency metabolites</b> are the main design problem: H⁺ is in 4,540 reactions and H₂O in 3,496, so
+    left in they connect everything. Following David's strategy, inorganics are removed everywhere, but cofactors
+    stay in the network through their own synthesis and breakdown and are removed only where they shuttle a
+    group in a cycle (ATP → ADP, NAD⁺ → NADH, CoA → acyl-CoA). That keeps 168 cofactor links and removes 6,808.
+    Two corrections followed: an annotation edit (SCLY listed the PLP cofactor as a reactant, which made it the
+    vitamin B6 pool's only link to the network) and a pairing fix in v0.1.1 that restored 10 nucleotide-salvage
+    reactions.</p>
+    <p>The structural check measures what each pruning step does, with no data involved:</p>
+  </div>
+  <div class="tbl "><table><thead><tr><th class="">Stage</th><th class="num">Metabolites</th><th class="num">Reactions</th><th class="num">Edges</th><th class="num">Metabolites cut off</th><th class="num">Reactions cutting off 5+</th><th class="num">Current via top 1% of nodes</th></tr></thead><tbody><tr><td class="">1. Raw Human-GEM</td><td class="num">4,035</td><td class="num">7,080</td><td class="num">38,766</td><td class="num">4</td><td class="num">0</td><td class="num">34%</td></tr><tr><td class="">2. Inorganics and carriers removed</td><td class="num">4,011</td><td class="num">7,052</td><td class="num">28,507</td><td class="num">50</td><td class="num">0</td><td class="num">27%</td></tr><tr><td class="">3. Cofactors role-filtered</td><td class="num">4,009</td><td class="num">6,476</td><td class="num">20,365</td><td class="num">181</td><td class="num">14</td><td class="num">21%</td></tr><tr><td class="">4. Pools and pseudo-reactions dropped</td><td class="num">3,958</td><td class="num">6,377</td><td class="num">16,358</td><td class="num">192</td><td class="num">21</td><td class="num">21%</td></tr><tr><td class="">5. Reaction edits applied</td><td class="num">3,958</td><td class="num">6,377</td><td class="num">16,356</td><td class="num">199</td><td class="num">20</td><td class="num">21%</td></tr><tr><td class="">Alternative: cofactors removed everywhere</td><td class="num">3,927</td><td class="num">6,289</td><td class="num">16,105</td><td class="num">204</td><td class="num">20</td><td class="num">21%</td></tr></tbody></table></div>
+  <p class="small prose">Removing hubs spreads the current (34% → 21% through the busiest 1% of nodes) but creates
+  islands and single-link pockets; the largest are drug glucuronides behind UDP-glucuronate (80) and glutathione
+  conjugates behind GSH (68). Interactive version with linked network diagrams:
+  <a href="https://claude.ai/code/artifact/c72ab942-2d9c-4214-88ee-538f1977a440">Human-GEM Pruning Atlas</a>.</p>
+</section>
+
+
+
+<section>
+  <h2>3. Benchmark: finding the defective enzyme</h2>
+  <div class="prose">
+    <p>To test the method against hard data, we used untargeted plasma metabolomics from patients with confirmed
+    inborn errors (Miller et al. 2015; Thistlethwaite et al. 2022; z-scores from the CTD package on CRAN):
+    20 polar-signature disorders with known causal genes, run per disorder group and per patient. A
+    <i>neighbour baseline</i> ranks each enzyme by how many significant metabolites its own reactions touch;
+    current flow has to beat it to add anything.</p>
+  </div>
+  <div class="tbl "><table><thead><tr><th class="">Set</th><th class="">Method</th><th class="">Median rank (percentile)</th><th class="num">Top 10</th><th class="num">Top 50</th><th class="num">Top 100</th></tr></thead><tbody><tr><td class="">Disorder groups (20)</td><td class=""><b>Metaboenrich, raw</b></td><td class="">88 (3.8%)</td><td class="num">3</td><td class="num">7</td><td class="num">11</td></tr><tr><td class="">Disorder groups (20)</td><td class="">Metaboenrich, leave-one-out</td><td class="">236.5 (10.3%)</td><td class="num">4</td><td class="num">7</td><td class="num">9</td></tr><tr><td class="">Disorder groups (20)</td><td class="">Neighbour baseline</td><td class="">1,164.8 (50.6%)</td><td class="num">1</td><td class="num">5</td><td class="num">7</td></tr><tr><td class="">Individual patients (160)</td><td class=""><b>Metaboenrich, raw</b></td><td class="">139 (6.0%)</td><td class="num">8</td><td class="num">55</td><td class="num">75</td></tr><tr><td class="">Individual patients (160)</td><td class="">Metaboenrich, leave-one-out</td><td class="">224 (9.7%)</td><td class="num">12</td><td class="num">43</td><td class="num">58</td></tr><tr><td class="">Individual patients (160)</td><td class="">Neighbour baseline</td><td class="">1,167.5 (50.7%)</td><td class="num">5</td><td class="num">51</td><td class="num">71</td></tr></tbody></table></div>
+  <figure>
+    <div class="legend" aria-hidden="true">
+      <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--raw)"/></svg>Metaboenrich, raw (default)</span>
+      <span><svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="none" stroke="var(--loo)" stroke-width="2"/></svg>Leave-one-out</span>
+      <span><svg width="12" height="12"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5" fill="var(--nb)"/></svg>Neighbour baseline</span>
+    </div>
+    <svg viewBox="0 0 760 526" role="img" aria-label="Rank of the causal gene per disorder, three methods"><line x1="250.0" x2="250.0" y1="26" y2="500" class="grid"/><text x="250.0" y="516" class="tick" text-anchor="middle">1</text><line x1="319.0" x2="319.0" y1="26" y2="500" class="grid"/><text x="319.0" y="516" class="tick" text-anchor="middle">3</text><line x1="394.6" x2="394.6" y1="26" y2="500" class="grid"/><text x="394.6" y="516" class="tick" text-anchor="middle">10</text><line x1="463.5" x2="463.5" y1="26" y2="500" class="grid"/><text x="463.5" y="516" class="tick" text-anchor="middle">30</text><line x1="539.1" x2="539.1" y1="26" y2="500" class="grid"/><text x="539.1" y="516" class="tick" text-anchor="middle">100</text><line x1="608.1" x2="608.1" y1="26" y2="500" class="grid"/><text x="608.1" y="516" class="tick" text-anchor="middle">300</text><line x1="683.7" x2="683.7" y1="26" y2="500" class="grid"/><text x="683.7" y="516" class="tick" text-anchor="middle">1,000</text><line x1="736.0" x2="736.0" y1="26" y2="500" class="grid"/><text x="736.0" y="516" class="tick" text-anchor="middle">2,302</text><text x="250" y="14" class="axis-label">Rank of the causal gene among 2,302 network genes (log scale; left is better; random ≈ 1,151)</text><rect x="691.5" y="26" width="2" height="474" class="random"/><text x="240" y="49.0" class="row-label" text-anchor="end">Thymidine phosphorylase deficiency</text><line x1="250.0" x2="693.5" y1="45.0" y2="45.0" class="span"/><g><title>Thymidine phosphorylase deficiency: Neighbour baseline rank 1169</title><rect x="689.0" y="40.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Thymidine phosphorylase deficiency: Leave-one-out rank 1</title><circle cx="250.0" cy="45.0" r="5" class="m-loo"/></g><g><title>Thymidine phosphorylase deficiency: Metaboenrich raw rank 1</title><circle cx="250.0" cy="45.0" r="5" class="m-raw"/></g><text x="240" y="71.0" class="row-label" text-anchor="end">GAMT deficiency</text><line x1="293.5" x2="723.6" y1="67.0" y2="67.0" class="span"/><g><title>GAMT deficiency: Neighbour baseline rank 34</title><rect x="465.9" y="62.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>GAMT deficiency: Leave-one-out rank 1888</title><circle cx="723.6" cy="67.0" r="5" class="m-loo"/></g><g><title>GAMT deficiency: Metaboenrich raw rank 2</title><circle cx="293.5" cy="67.0" r="5" class="m-raw"/></g><text x="240" y="93.0" class="row-label" text-anchor="end">TMLHE deficiency</text><line x1="328.6" x2="351.0" y1="89.0" y2="89.0" class="span"/><g><title>TMLHE deficiency: Neighbour baseline rank 4</title><rect x="324.1" y="84.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>TMLHE deficiency: Leave-one-out rank 5</title><circle cx="351.0" cy="89.0" r="5" class="m-loo"/></g><g><title>TMLHE deficiency: Metaboenrich raw rank 4</title><circle cx="337.0" cy="89.0" r="5" class="m-raw"/></g><text x="240" y="115.0" class="row-label" text-anchor="end">Isovaleric aciduria</text><line x1="420.0" x2="694.3" y1="111.0" y2="111.0" class="span"/><g><title>Isovaleric aciduria: Neighbour baseline rank 1184</title><rect x="689.8" y="106.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Isovaleric aciduria: Leave-one-out rank 15</title><circle cx="420.0" cy="111.0" r="5" class="m-loo"/></g><g><title>Isovaleric aciduria: Metaboenrich raw rank 17</title><circle cx="427.9" cy="111.0" r="5" class="m-raw"/></g><text x="240" y="137.0" class="row-label" text-anchor="end">3-Methylcrotonyl-CoA carboxylase deficie</text><line x1="434.8" x2="693.0" y1="133.0" y2="133.0" class="span"/><g><title>3-Methylcrotonyl-CoA carboxylase deficiency: Neighbour baseline rank 1160</title><rect x="688.5" y="128.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>3-Methylcrotonyl-CoA carboxylase deficiency: Leave-one-out rank 19</title><circle cx="434.8" cy="133.0" r="5" class="m-loo"/></g><g><title>3-Methylcrotonyl-CoA carboxylase deficiency: Metaboenrich raw rank 23</title><circle cx="446.8" cy="133.0" r="5" class="m-raw"/></g><text x="240" y="159.0" class="row-label" text-anchor="end">Argininosuccinic aciduria</text><line x1="293.5" x2="535.2" y1="155.0" y2="155.0" class="span"/><g><title>Argininosuccinic aciduria: Neighbour baseline rank 94</title><rect x="530.7" y="150.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Argininosuccinic aciduria: Leave-one-out rank 2</title><circle cx="293.5" cy="155.0" r="5" class="m-loo"/></g><g><title>Argininosuccinic aciduria: Metaboenrich raw rank 24</title><circle cx="449.5" cy="155.0" r="5" class="m-raw"/></g><text x="240" y="181.0" class="row-label" text-anchor="end">Maple syrup urine disease</text><line x1="351.0" x2="489.7" y1="177.0" y2="177.0" class="span"/><g><title>Maple syrup urine disease: Neighbour baseline rank 46</title><rect x="485.2" y="172.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Maple syrup urine disease: Leave-one-out rank 5</title><circle cx="351.0" cy="177.0" r="5" class="m-loo"/></g><g><title>Maple syrup urine disease: Metaboenrich raw rank 33</title><circle cx="469.5" cy="177.0" r="5" class="m-raw"/></g><text x="240" y="203.0" class="row-label" text-anchor="end">HMG-CoA lyase deficiency*</text><line x1="501.6" x2="692.8" y1="199.0" y2="199.0" class="span"/><g><title>HMG-CoA lyase deficiency: Neighbour baseline rank 1158</title><rect x="688.3" y="194.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>HMG-CoA lyase deficiency: Leave-one-out rank 220</title><circle cx="588.6" cy="199.0" r="5" class="m-loo"/></g><g><title>HMG-CoA lyase deficiency: Metaboenrich raw rank 55</title><circle cx="501.6" cy="199.0" r="5" class="m-raw"/></g><text x="240" y="225.0" class="row-label" text-anchor="end">Cobalamin biosynthesis defects (secondar</text><line x1="446.8" x2="693.7" y1="221.0" y2="221.0" class="span"/><g><title>Cobalamin biosynthesis defects: Neighbour baseline rank 1174</title><rect x="689.2" y="216.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Cobalamin biosynthesis defects: Leave-one-out rank 23</title><circle cx="446.8" cy="221.0" r="5" class="m-loo"/></g><g><title>Cobalamin biosynthesis defects: Metaboenrich raw rank 61</title><circle cx="508.1" cy="221.0" r="5" class="m-raw"/></g><text x="240" y="247.0" class="row-label" text-anchor="end">Citrullinemia type I</text><line x1="521.0" x2="618.1" y1="243.0" y2="243.0" class="span"/><g><title>Citrullinemia type I: Neighbour baseline rank 75</title><rect x="516.5" y="238.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Citrullinemia type I: Leave-one-out rank 352</title><circle cx="618.1" cy="243.0" r="5" class="m-loo"/></g><g><title>Citrullinemia type I: Metaboenrich raw rank 82</title><circle cx="526.6" cy="243.0" r="5" class="m-raw"/></g><text x="240" y="269.0" class="row-label" text-anchor="end">Argininemia</text><line x1="450.8" x2="531.1" y1="265.0" y2="265.0" class="span"/><g><title>Argininemia: Neighbour baseline rank 24</title><rect x="446.3" y="260.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Argininemia: Leave-one-out rank 63</title><circle cx="510.1" cy="265.0" r="5" class="m-loo"/></g><g><title>Argininemia: Metaboenrich raw rank 88</title><circle cx="531.1" cy="265.0" r="5" class="m-raw"/></g><text x="240" y="291.0" class="row-label" text-anchor="end">Aromatic L-amino acid decarboxylase defi</text><line x1="531.1" x2="696.0" y1="287.0" y2="287.0" class="span"/><g><title>Aromatic L-amino acid decarboxylase deficiency: Neighbour baseline rank 1218</title><rect x="691.5" y="282.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Aromatic L-amino acid decarboxylase deficiency: Leave-one-out rank 253</title><circle cx="597.4" cy="287.0" r="5" class="m-loo"/></g><g><title>Aromatic L-amino acid decarboxylase deficiency: Metaboenrich raw rank 88</title><circle cx="531.1" cy="287.0" r="5" class="m-raw"/></g><text x="240" y="313.0" class="row-label" text-anchor="end">Ornithine transcarbamylase deficiency</text><line x1="493.0" x2="697.2" y1="309.0" y2="309.0" class="span"/><g><title>Ornithine transcarbamylase deficiency: Neighbour baseline rank 1241</title><rect x="692.7" y="304.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Ornithine transcarbamylase deficiency: Leave-one-out rank 48</title><circle cx="493.0" cy="309.0" r="5" class="m-loo"/></g><g><title>Ornithine transcarbamylase deficiency: Metaboenrich raw rank 168</title><circle cx="571.7" cy="309.0" r="5" class="m-raw"/></g><text x="240" y="335.0" class="row-label" text-anchor="end">Homocystinuria</text><line x1="576.4" x2="697.4" y1="331.0" y2="331.0" class="span"/><g><title>Homocystinuria: Neighbour baseline rank 1246</title><rect x="692.9" y="326.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Homocystinuria: Leave-one-out rank 493</title><circle cx="639.3" cy="331.0" r="5" class="m-loo"/></g><g><title>Homocystinuria: Metaboenrich raw rank 181</title><circle cx="576.4" cy="331.0" r="5" class="m-raw"/></g><text x="240" y="357.0" class="row-label" text-anchor="end">Phenylketonuria*</text><line x1="424.1" x2="578.1" y1="353.0" y2="353.0" class="span"/><g><title>Phenylketonuria: Neighbour baseline rank 16</title><rect x="419.6" y="348.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Phenylketonuria: Leave-one-out rank 73</title><circle cx="519.3" cy="353.0" r="5" class="m-loo"/></g><g><title>Phenylketonuria: Metaboenrich raw rank 186</title><circle cx="578.1" cy="353.0" r="5" class="m-raw"/></g><text x="240" y="379.0" class="row-label" text-anchor="end">GABA-transaminase deficiency*</text><line x1="604.2" x2="692.6" y1="375.0" y2="375.0" class="span"/><g><title>GABA-transaminase deficiency: Neighbour baseline rank 1152</title><rect x="688.1" y="370.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>GABA-transaminase deficiency: Leave-one-out rank 282</title><circle cx="604.2" cy="375.0" r="5" class="m-loo"/></g><g><title>GABA-transaminase deficiency: Metaboenrich raw rank 282</title><circle cx="604.2" cy="375.0" r="5" class="m-raw"/></g><text x="240" y="401.0" class="row-label" text-anchor="end">Adenylosuccinate lyase deficiency</text><line x1="619.9" x2="693.6" y1="397.0" y2="397.0" class="span"/><g><title>Adenylosuccinate lyase deficiency: Neighbour baseline rank 1172</title><rect x="689.1" y="392.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Adenylosuccinate lyase deficiency: Leave-one-out rank 384</title><circle cx="623.6" cy="397.0" r="5" class="m-loo"/></g><g><title>Adenylosuccinate lyase deficiency: Metaboenrich raw rank 362</title><circle cx="619.9" cy="397.0" r="5" class="m-raw"/></g><text x="240" y="423.0" class="row-label" text-anchor="end">Methylmalonic aciduria</text><line x1="632.0" x2="699.2" y1="419.0" y2="419.0" class="span"/><g><title>Methylmalonic aciduria: Neighbour baseline rank 1280</title><rect x="694.7" y="414.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Methylmalonic aciduria: Leave-one-out rank 676</title><circle cx="659.1" cy="419.0" r="5" class="m-loo"/></g><g><title>Methylmalonic aciduria: Metaboenrich raw rank 439</title><circle cx="632.0" cy="419.0" r="5" class="m-raw"/></g><text x="240" y="445.0" class="row-label" text-anchor="end">Holocarboxylase synthetase deficiency*</text><line x1="656.3" x2="693.6" y1="441.0" y2="441.0" class="span"/><g><title>Holocarboxylase synthetase deficiency: Neighbour baseline rank 1172</title><rect x="689.1" y="436.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Holocarboxylase synthetase deficiency: Leave-one-out rank 647</title><circle cx="656.3" cy="441.0" r="5" class="m-loo"/></g><g><title>Holocarboxylase synthetase deficiency: Metaboenrich raw rank 717</title><circle cx="662.8" cy="441.0" r="5" class="m-raw"/></g><text x="240" y="467.0" class="row-label" text-anchor="end">Glutaric aciduria type I</text><line x1="672.9" x2="693.7" y1="463.0" y2="463.0" class="span"/><g><title>Glutaric aciduria type I: Neighbour baseline rank 1174</title><rect x="689.2" y="458.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Glutaric aciduria type I: Leave-one-out rank 843</title><circle cx="672.9" cy="463.0" r="5" class="m-loo"/></g><g><title>Glutaric aciduria type I: Metaboenrich raw rank 930</title><circle cx="679.1" cy="463.0" r="5" class="m-raw"/></g><text x="240" y="489.0" class="row-label" text-anchor="end">Propionic aciduria</text><line x1="689.0" x2="699.4" y1="485.0" y2="485.0" class="span"/><g><title>Propionic aciduria: Neighbour baseline rank 1285</title><rect x="694.9" y="480.5" width="9" height="9" rx="1.5" class="m-nb"/></g><g><title>Propionic aciduria: Leave-one-out rank 1088</title><circle cx="689.0" cy="485.0" r="5" class="m-loo"/></g><g><title>Propionic aciduria: Metaboenrich raw rank 1187</title><circle cx="694.4" cy="485.0" r="5" class="m-raw"/></g></svg>
+    <figcaption>Group-level rank of the causal gene per disorder. * one-sided run (only increases significant).
+    Hover a mark for its value.</figcaption>
+  </figure>
+  <div class="prose">
+    <p>Current flow finds enzymes the baseline cannot see, where the defect's signal sits a step or more away
+    (TYMP, IVD, MCC, OTC, AADC). Leave-one-out scoring, introduced earlier to discount single-metabolite routes,
+    hurts here: an enzyme defect often <i>is</i> one substrate–product pair (GAMT: rank 2 raw, 1,888 with
+    leave-one-out). Raw scoring is therefore the default; leave-one-out stays as an option and a column. The
+    organic acidurias (MMA, PA, GA) rank poorly with every method and need a closer look.</p>
+  </div>
+</section>
+
+<section>
+  <h2>4. What changed in version 0.2</h2>
+  <ul class="prose">
+    <li><b>One-sided flow:</b> when nothing significant goes down (or up), current is exchanged with the measured,
+      unchanged metabolites. All 20 benchmark disorders now run (4 could not before).</li>
+    <li><b>Pathways:</b> Human-GEM subsystems tested for over-representation among the top 100 reactions.</li>
+    <li><b>Transporters:</b> scored by the metabolites they carry, reported as a separate list (e.g. for GLUT1).</li>
+    <li><b>Name mapping:</b> the lab's <span class="mono">id_translation.csv</span> synonym table, then an
+      unambiguous loose-name match; every match is labelled.</li>
+    <li><b>Provenance:</b> every result records the tool version, scoring and the network fingerprint.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>5. Blind test on published datasets</h2>
+  <div class="prose">
+    <p>The tool was frozen (commit <span class="mono">8d4a8da</span>) and run on the lab's standardised table of 12
+    published studies, split into analysis units with significance rules fixed in advance. The predictions were
+    committed before anyone built or read the answer key, so the git timestamp is the record. Answers will be
+    judged against each paper's conclusions (genes, pathways, processes), not only single genes.</p>
+  </div>
+  <div class="tbl "><table><thead><tr><th class=""></th><th class="num">Units</th></tr></thead><tbody><tr><td class="">Units defined</td><td class="num">111</td></tr><tr><td class="">Run</td><td class="num">66</td></tr><tr><td class="">Skipped (fewer than 3 metabolites)</td><td class="num">45</td></tr><tr><td class="">With at least one significant mapped metabolite</td><td class="num">30</td></tr></tbody></table></div>
+  <div class="tbl wide"><table><thead><tr><th class="">Unit</th><th class="num">Mapped</th><th class="">Up / down</th><th class="">Diagnosed gene: rank</th><th class="">Predicted top genes</th><th class="">Predicted top pathways</th></tr></thead><tbody><tr><td class="">Adam2013 KO vs CONT kidney</td><td class="num">94</td><td class="">33 / 39</td><td class="">FH: 204</td><td class="">AHCY, AHCYL2, NAGS, GATM, NNMT, HYKK</td><td class="">Purine metabolism; Lysine metabolism; Tricarboxylic acid cycle and glyoxylate/dicarboxylate metabolism</td></tr><tr><td class="">Adam2013 KO vs KO FH kidney</td><td class="num">94</td><td class="">23 / 33</td><td class="">FH: 110</td><td class="">NNMT, GATM, HDC, HYKK, GAMT, PHYKPL</td><td class="">Purine metabolism; Lysine metabolism; Arginine and proline metabolism</td></tr><tr><td class="">Adam2013 KO vs KO FHcyt kidney</td><td class="num">94</td><td class="">17 / 25</td><td class="">FH: 85</td><td class="">NNMT, GATM, FAAH2, GAMT, HYKK, AOC1</td><td class="">Purine metabolism; Arginine and proline metabolism; Lysine metabolism</td></tr><tr><td class="">Adam2013 KO vs WT kidney</td><td class="num">120</td><td class="">59 / 57</td><td class="">FH: 367</td><td class="">AHCY, AHCYL2, GATM, HDC, NUDT5, ADPRM</td><td class="">Purine metabolism; Pentose phosphate pathway; Thiamine metabolism</td></tr><tr><td class="">Adam2013 Tumor vs Normal kidney tumor HLRCC type 2 papillary</td><td class="num">153</td><td class="">80 / 71</td><td class="">FH: 279</td><td class="">AHCY, AHCYL2, ACY1, GATM, GAMT, HDC</td><td class="">Purine metabolism; Arginine and proline metabolism; Pyrimidine metabolism</td></tr><tr><td class="">Burrage2019 patient vs reference population plasma Arginase deficiency</td><td class="num">11</td><td class="">6 / 5</td><td class="">–</td><td class="">GATM, UPB1, DHODH, DPYS, UMPS, DPYD</td><td class="">Pyrimidine metabolism; Protein degradation; Beta-alanine metabolism</td></tr><tr><td class="">Burrage2019 patient vs reference population plasma Argininosuccinate l</td><td class="num">12</td><td class="">1 / 2</td><td class="">–</td><td class="">UPB1, OTC, DPYS, ASS1, NOS2, NOS1</td><td class="">Beta-alanine metabolism; Protein degradation; Peptide metabolism</td></tr><tr><td class="">Burrage2019 patient vs reference population plasma Citrullinemia type </td><td class="num">11</td><td class="">5 / 5</td><td class="">–</td><td class="">UPB1, DPYS, BCAT2, BCAT1, BCKDHB, BCKDHA</td><td class="">Pyrimidine metabolism; Protein degradation; Beta-alanine metabolism</td></tr><tr><td class="">Burrage2019 patient vs reference population plasma Ornithine transcarb</td><td class="num">10</td><td class="">2 / 2</td><td class="">–</td><td class="">GATM, GAMT, DPYD, UPB1, UCK2, UCK1</td><td class="">Purine metabolism; Pyrimidine metabolism; Nucleotide metabolism</td></tr><tr><td class="">Cappuccio2017 patient vs reference population CSF GLUT1 deficiency syn</td><td class="num">5</td><td class="">1 / 3</td><td class="">SLC2A1: not scored</td><td class="">IDH1, IDH3G, IDH3B, IDH3A, IDH2, ACO1</td><td class="">Starch and sucrose metabolism; Tricarboxylic acid cycle and glyoxylate/dicarboxylate metabolism; C5-branched dibasic acid metabolism</td></tr><tr><td class="">Cappuccio2017 patient vs reference population EDTA Plasma GLUT1 defici</td><td class="num">1</td><td class="">1 / 0</td><td class="">SLC2A1: –</td><td class="">no current flow (too few metabolites)</td><td class=""></td></tr><tr><td class="">Du2023 MELAS vs Healthy Control plasma</td><td class="num">283</td><td class="">8 / 27</td><td class="">–</td><td class="">BDH2, BDH1, UGT1A1, UGT1A10, UGT1A8, UGT2B7</td><td class="">Vitamin D metabolism; Thiamine metabolism; Glucocorticoid biosynthesis</td></tr><tr><td class="">Du2023 MNGIE vs Healthy Control plasma</td><td class="num">284</td><td class="">25 / 29</td><td class="">–</td><td class="">UGT2B7, UGT1A1, UGT1A8, UGT1A10, UGT2B28, UGT2B17</td><td class="">Androgen metabolism; Arginine and proline metabolism; Pyrimidine metabolism</td></tr><tr><td class="">Hou2017 Fumarase insufficient siRNA knockdown HUVEC vs negative contro</td><td class="num">49</td><td class="">8 / 14</td><td class="">–</td><td class="">GNPAT, PGP, FAR2, FAR1, RAD1, RAD9A</td><td class="">Tricarboxylic acid cycle and glyoxylate/dicarboxylate metabolism; Protein degradation; Glycine, serine and threonine metabolism</td></tr><tr><td class="">Kennedy2019 patient vs reference population CSF GABA transaminase defi</td><td class="num">4</td><td class="">1 / 0 ¹</td><td class="">ABAT: 4</td><td class="">CNDP2, CNDP1, CARNS1, ABAT, GAD2, GAD1</td><td class="">Peptide metabolism; Protein degradation; Beta-alanine metabolism</td></tr><tr><td class="">Reisz2023 Carrier mother RBC vs Control father RBC red blood cells</td><td class="num">12</td><td class="">1 / 2</td><td class="">–</td><td class="">CHAT, PGM2L1, GAPDHS, GAPDH, ACHE, BCHE</td><td class="">Glycerophospholipid metabolism; Glycine, serine and threonine metabolism; Glycolysis / Gluconeogenesis</td></tr><tr><td class="">Reisz2023 Lesch Nyhan LN RBC vs Control father RBC red blood cells</td><td class="num">14</td><td class="">3 / 3</td><td class="">–</td><td class="">ALDOB, ALDOC, ALDOA, GAPDHS, GAPDH, PGM2L1</td><td class="">Glycolysis / Gluconeogenesis; Glycerophospholipid metabolism; Amino sugar and nucleotide sugar metabolism</td></tr><tr><td class="">Sebaa2023 VLCADD newborn DBS vs healthy newborn DBS dried blood spot</td><td class="num">37</td><td class="">14 / 23</td><td class="">–</td><td class="">AOC3, AOC1, AOC2, MAOB, MAOA, GLYAT</td><td class="">Nicotinate and nicotinamide metabolism; Inositol phosphate metabolism; Fructose and mannose metabolism</td></tr><tr><td class="">Sidorina2024 MMA vs CblC urine</td><td class="num">43</td><td class="">7 / 24</td><td class="">–</td><td class="">ACOT8, LDHB, LDHAL6B, LDHC, LDHAL6A, CPT1A</td><td class="">Tricarboxylic acid cycle and glyoxylate/dicarboxylate metabolism; Cysteine and methionine metabolism; Valine, leucine, and isoleucine metabolism</td></tr><tr><td class="">Sidorina2024 PA vs CblC urine</td><td class="num">43</td><td class="">16 / 24</td><td class="">–</td><td class="">GLYAT, ACAT1, LDHB, LDHAL6B, LDHC, LDHAL6A</td><td class="">Cysteine and methionine metabolism; Tricarboxylic acid cycle and glyoxylate/dicarboxylate metabolism; Glycine, serine and threonine metabolism</td></tr><tr><td class="">Sidorina2024 PA vs MMA urine</td><td class="num">43</td><td class="">14 / 2</td><td class="">–</td><td class="">GLYAT, ACAT1, ALDH9A1, ALDH3A2, ALDH7A1, ALDH2</td><td class="">Valine, leucine, and isoleucine metabolism; Propanoate metabolism; Pantothenate and CoA metabolism</td></tr></tbody></table></div>
+  <p class="small prose">¹ one-sided run. Not shown: 39 Alaimo 2020 patient units, 9 with any
+  signal; the master table lists only a few metabolites per patient. Burrage 2019 and Kennedy 2019 probably share
+  patients with the benchmark, so they are not independent tests. Alaimo, Glinton, Cappuccio and Wangler are too
+  sparse in the master table to judge; their full supplementary tables would support a second, separately sealed
+  round.</p>
+</section>
+
+<section>
+  <h2>6. Open decisions and next steps</h2>
+  <ul class="prose">
+    <li><b>Answer key:</b> turn each paper's conclusions and the "Expected tool prediction" sheet into checkable
+      items, ideally written by someone who has not studied the predictions, then score.</li>
+    <li><b>Scoring:</b> raw vs leave-one-out is settled for now by the benchmark; the final-score formula and whether
+      fold-change size should weight the current are still open.</li>
+    <li><b>Network:</b> deoxynucleotides as cofactors and the RNA/DNA nodes (likely behind recurring HK1–3, PKM,
+      RAD1/TREX1 hits); candidate cofactors glutathione, THF, acetyl-CoA, glutamate/AKG, carnitine.</li>
+    <li><b>Benchmark by pruning stage:</b> score each pruning step against the benchmark, so each decision in the
+      log has a number next to it.</li>
+    <li><b>Organic acidurias:</b> find out why MMA, PA and GA rank poorly.</li>
+    <li><b>Tissue context:</b> a liver-specific network for hepatocyte data.</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Repository: <a href="https://github.com/joreynajr/Metaboenrich-Currency-Gene-Predictor">github.com/joreynajr/Metaboenrich-Currency-Gene-Predictor</a> · tags <span class="mono">v0.1.0</span>,
+  <span class="mono">v0.1.1</span>, <span class="mono">predictions-published-v1</span>.
+  Details: <span class="mono">README.md</span>, <span class="mono">CHANGELOG.md</span>,
+  <span class="mono">docs/decisions.md</span>, <span class="mono">docs/benchmark.md</span>,
+  <span class="mono">predictions/published_v1/PREDICTIONS.md</span>.</p>
+  <p>Built from result files by <span class="mono">tools/report/build_report.py</span>.</p>
+</footer>
+</main>

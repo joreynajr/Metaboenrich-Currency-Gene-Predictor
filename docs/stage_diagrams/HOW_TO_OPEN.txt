@@ -1,0 +1,32 @@
+﻿Metaboenrich pruning-stage diagrams (Human-GEM v2.0.1, network v0.1.1)
+
+Files
+  1_raw.cyjs            Stage 1: raw Human-GEM (compartments merged)
+  2_inorganic.cyjs      Stage 2: inorganics and generic carriers removed
+  3_cofactors.cyjs      Stage 3: cofactors role-filtered
+  4_pools.cyjs          Stage 4: pools and pseudo-reactions dropped
+  5_edits.cyjs          Stage 5: reaction edits applied (the analysis network)
+  alt_cofactors_removed_everywhere.cyjs   Alternative approach, for comparison
+  metaboenrich_pruning_style.xml          Visual style for all of the above
+
+Open in Cytoscape (3.10)
+  1. File > Import > Network from File...  pick one .cyjs file.
+     Repeat for any other stages; each becomes its own network.
+  2. File > Import > Styles from File...   pick metaboenrich_pruning_style.xml.
+  3. Style panel (left): choose "Metaboenrich pruning" for each network.
+  4. Do not run a layout. Positions are stored in the files, so every node
+     sits in the same place at every stage.
+
+Reading the diagrams
+  Fill      pocket size: grey = 0, light to dark blue = 1, 2-4, 5-19, 20+
+            (metabolites cut off from the network if this node were removed)
+  Size      structural current (share of current carried with no data)
+  Shape     circle = metabolite, square = reaction
+  Border    thick dark = cuts off a pocket (named when 10+)
+            dashed     = inside a pocket
+            dotted     = island (cut off from the main network)
+  Faint     removed by this stage
+  Regions   left = removed by pruning, centre = main network, right = islands
+
+Click a node to see role, pocket, pocket_of, structural_current, removed_at
+and genes in the Node Table.

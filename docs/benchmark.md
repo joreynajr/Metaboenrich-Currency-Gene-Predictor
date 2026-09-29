@@ -50,7 +50,7 @@ lysinuric protein intolerance: transporter).
 | Level | Method | Median rank (percentile) | Top 10 | Top 50 | Top 100 |
 |---|---|---|---|---|---|
 | Group (20) | **Metaboenrich, raw** | **88 (3.8%)** | 3 | 7 | **11** |
-| Group (20) | Metaboenrich, leave-one-out | 237 (10.3%) | 4 | 7 | 9 |
+| Group (20) | Metaboenrich, leave-one-out | 236.5 (10.3%) | 4 | 7 | 9 |
 | Group (20) | Neighbour baseline | 1,165 (50.6%) | 1 | 5 | 7 |
 | Patient (160) | **Metaboenrich, raw** | **139 (6.0%)** | 8 | 55 | 75 |
 | Patient (160) | Metaboenrich, leave-one-out | 224 (9.7%) | 12 | 43 | 58 |
