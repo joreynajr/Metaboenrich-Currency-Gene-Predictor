@@ -29,7 +29,7 @@ from scipy.sparse.csgraph import connected_components
 
 from .gem import load_sbml
 from .network import build_graph
-from .structure import stages
+from .structure import ALTERNATIVE_STAGES, LAYOUT_STAGE, stages
 
 POCKET_MIN = 5
 ISLAND_MIN = 4
@@ -110,14 +110,15 @@ def main(argv=None):
     data = json.loads(Path(args.structure).read_text(encoding="utf-8"))
     meta = data["nodes"]                       # [id, name, type, genes]
     model = load_sbml(args.model)
-    stage_defs = stages(model)
+    stage_set = data.get("stage_set", "pruning")
+    stage_defs = stages(model, stage_set)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
     # ---- per stage: graphs, pockets, islands, hubs -------------------------
     per = []
-    for st, (key, title, desc, rules, max_size, drop_obj) in zip(data["stages"], stage_defs):
-        g = build_graph(model, rules, max_size, drop_obj)
+    for st, (key, title, desc, rules, max_size, drop_obj, atom_pairs) in zip(data["stages"], stage_defs):
+        g = build_graph(model, rules, max_size, drop_obj, atom_pairs=atom_pairs)
         assert [meta[k][0] for k in st["node"]] == g.node_ids, f"stage {key} does not match structure.json"
         adj = adjacency(g)
         labels = g.components()
@@ -153,9 +154,10 @@ def main(argv=None):
             focus.add(v)
             role[v] = role.get(v) if role.get(v) == "cuts off a pocket" else "hub"
 
+        channel_bases = {b for i, b in g.base_reaction.items() if g.node_ids[i] != b}
         per.append({"key": key, "title": title, "description": desc, "graph": g, "labels": labels,
                     "main": main_lab, "pocket": pocket, "flow": flow, "focus": focus, "role": role,
-                    "pocket_of": pocket_of, "degree": np.array(st["degree"])})
+                    "pocket_of": pocket_of, "degree": np.array(st["degree"]), "channel_bases": channel_bases})
 
     # ---- union of focus nodes, by Human-GEM id ------------------------------
     union = []
@@ -165,11 +167,26 @@ def main(argv=None):
             if nid not in union:
                 union.append(nid)
     uidx = {nid: i for i, nid in enumerate(union)}
-    final = next(s for s in per if s["key"] == "edits")
-    stage_order = [s["key"] for s in per if s["key"] != "alt_remove"]
+    final = next(s for s in per if s["key"] == LAYOUT_STAGE[stage_set])
+    stage_order = [s["key"] for s in per if s["key"] not in ALTERNATIVE_STAGES]
+
+    # A reaction split into carbon channels ("R_MAR03827#1", "#2") keeps its
+    # place on the map: layout is by reaction identity, channels are offset.
+    key_of = lambda nid: nid.split("#", 1)[0]
+
+    def status(s, nid):
+        """present | hidden (shown instead as its whole reaction / its channels) | removed"""
+        if nid in s["graph"].index:
+            return "present"
+        base = key_of(nid)
+        if nid != base and base in s["graph"].index:
+            return "hidden"
+        if nid == base and base in s["channel_bases"]:
+            return "hidden"
+        return "removed"
 
     def present(s, nid):
-        return nid in s["graph"].index
+        return status(s, nid) != "removed"
 
     def removed_at(nid):
         """First main stage in which nid is absent (None if present at the end)."""
@@ -179,57 +196,72 @@ def main(argv=None):
                 return key
         return None
 
-    # ---- layout ---------------------------------------------------------------
-    pos = np.zeros((len(union), 2))
+    keys = list(dict.fromkeys(key_of(nid) for nid in union))
+    members = {}
+    for nid in union:
+        members.setdefault(key_of(nid), []).append(nid)
     g5 = final["graph"]
-    in5 = [nid for nid in union if present(final, nid)]
-    main5 = [nid for nid in in5 if final["labels"][g5.index[nid]] == final["main"]]
-    island_nodes = [nid for nid in in5 if nid not in set(main5)]
-    shelf = [nid for nid in union if not present(final, nid)]
+    # the final-stage node(s) standing for each key
+    fin_nodes = {}
+    for i, nid in enumerate(g5.node_ids):
+        if key_of(nid) in members:
+            fin_nodes.setdefault(key_of(nid), []).append(i)
+
+    # ---- layout ---------------------------------------------------------------
+    kpos = {}
+    in5 = [k for k in keys if k in fin_nodes]
+    main5 = [k for k in in5 if any(final["labels"][i] == final["main"] for i in fin_nodes[k])]
+    island_keys = [k for k in in5 if k not in set(main5)]
+    shelf = [k for k in keys if k not in fin_nodes]
 
     # Main network: force-directed on the final network's edges among drawn nodes.
-    local = {nid: i for i, nid in enumerate(main5)}
-    e5 = [(local[g5.node_ids[a]], local[g5.node_ids[b]]) for a, b in g5.edges
-          if g5.node_ids[a] in local and g5.node_ids[b] in local]
+    local = {k: i for i, k in enumerate(main5)}
+    kid = lambda i: key_of(g5.node_ids[i])
+    e5 = sorted({(local[kid(a)], local[kid(b)]) for a, b in g5.edges
+                 if kid(a) in local and kid(b) in local and kid(a) != kid(b)})
     # Nodes drawn but not linked to anything else drawn would drift; tie them to
-    # the neighbour with the highest structural current in the final network.
+    # a neighbour in the final network.
     linked = {i for ab in e5 for i in ab}
     adj5 = adjacency(g5)
-    for nid, i in local.items():
+    for k, i in local.items():
         if i not in linked:
-            nb = [g5.node_ids[w] for w in adj5[g5.index[nid]].indices if g5.node_ids[w] in local]
+            nb = [kid(w) for v in fin_nodes[k] for w in adj5[v].indices if kid(w) in local and kid(w) != k]
             if nb:
                 e5.append((i, local[nb[0]]))
     W_MAIN = 2400.0
     if main5:
-        pos[[uidx[n] for n in main5]] = fruchterman_reingold(len(main5), e5, width=W_MAIN)
+        for k, xy in zip(main5, fruchterman_reingold(len(main5), e5, width=W_MAIN)):
+            kpos[k] = xy
 
-    # Islands: each laid out on its own, packed in a grid to the right.
+    # Islands: each laid out on its own, packed in rows to the right.
     islands = {}
-    for nid in island_nodes:
-        islands.setdefault(final["labels"][g5.index[nid]], []).append(nid)
+    for k in island_keys:
+        islands.setdefault(final["labels"][fin_nodes[k][0]], []).append(k)
     groups = sorted(islands.values(), key=len, reverse=True)
     x0, row_w = W_MAIN / 2 + 300, 1300.0
     cx, cy, row_h = x0, -W_MAIN / 2 + 60, 0.0
-    for nodes in groups:
-        loc = {nid: i for i, nid in enumerate(nodes)}
-        ee = [(loc[g5.node_ids[a]], loc[g5.node_ids[b]]) for a, b in g5.edges
-              if g5.node_ids[a] in loc and g5.node_ids[b] in loc]
-        size = 60.0 + 34.0 * math.sqrt(len(nodes))          # box edge for this island
-        sub = fruchterman_reingold(len(nodes), ee, iters=200, width=size * 0.7)
+    for ks in groups:
+        loc = {k: i for i, k in enumerate(ks)}
+        ee = sorted({(loc[kid(a)], loc[kid(b)]) for a, b in g5.edges
+                     if kid(a) in loc and kid(b) in loc and kid(a) != kid(b)})
+        size = 60.0 + 34.0 * math.sqrt(len(ks))          # box edge for this island
+        sub = fruchterman_reingold(len(ks), ee, iters=200, width=size * 0.7)
         if cx + size > x0 + row_w:                            # wrap to the next row
             cx, cy, row_h = x0, cy + row_h + 40, 0.0
-        pos[[uidx[n] for n in nodes]] = sub + [cx + size / 2, cy + size / 2]
+        for k, xy in zip(ks, sub + [cx + size / 2, cy + size / 2]):
+            kpos[k] = xy
         cx += size + 40
         row_h = max(row_h, size)
     island_center_x = x0 + row_w / 2
 
     # Shelf: removed nodes in columns by the stage that removed them.
     by_stage = {}
-    for nid in shelf:
-        by_stage.setdefault(removed_at(nid) or "alt_remove", []).append(nid)
+    for k in shelf:
+        rep = k if k in uidx else members[k][0]
+        by_stage.setdefault(removed_at(rep) or next(iter(ALTERNATIVE_STAGES)), []).append(k)
     shelf_x = -W_MAIN / 2 - 300
     col = 0
+    n_groups = 0
     captions = [("cap_main", "Main network", 0.0, -W_MAIN / 2 - 170),
                 ("cap_islands", "Islands (cut off from the main network)", island_center_x, -W_MAIN / 2 - 170)]
     for key in stage_order:
@@ -238,16 +270,28 @@ def main(argv=None):
             continue
         s = next(x for x in per if x["key"] == key)
         prev = per[[x["key"] for x in per].index(key) - 1]
-        nodes.sort(key=lambda nid: -prev["flow"][prev["graph"].index[nid]] if present(prev, nid) else 0)
+        pflow = lambda k: -prev["flow"][prev["graph"].index[k]] if k in prev["graph"].index else 0
+        nodes.sort(key=pflow)
         per_col = 26
         ncols = math.ceil(len(nodes) / per_col)
-        for i, nid in enumerate(nodes):
+        for i, k in enumerate(nodes):
             c, r = divmod(i, per_col)
-            pos[uidx[nid]] = [shelf_x - (col + c) * 90, -W_MAIN / 2 + 40 + r * 80]
+            kpos[k] = np.array([shelf_x - (col + c) * 90, -W_MAIN / 2 + 40 + r * 80])
+        # captions alternate between two heights so narrow neighbouring groups never overlap
         captions.append((f"cap_removed_{key}", f"Removed at {s['title'].split('.')[0]}",
-                         shelf_x - (col + (ncols - 1) / 2) * 90, -W_MAIN / 2 - 60))
+                         shelf_x - (col + (ncols - 1) / 2) * 90, -W_MAIN / 2 - 60 - 55 * (n_groups % 2)))
+        n_groups += 1
         col += ncols + 2                      # room for the next group's caption
     captions.append(("cap_removed", "Removed by pruning", shelf_x - (col - 3) * 45, -W_MAIN / 2 - 170))
+
+    # Node positions: the reaction's place, channels spread slightly around it.
+    pos = np.zeros((len(union), 2))
+    for k, nids in members.items():
+        xy = np.asarray(kpos.get(k, np.zeros(2)), dtype=float)
+        chans = sorted(n for n in nids if n != k)
+        for n in nids:
+            dx = (chans.index(n) - (len(chans) - 1) / 2) * 16 if n != k and len(chans) > 1 else 0.0
+            pos[uidx[n]] = xy + [dx, 0.0 if n == k else 10.0]
 
     # ---- write one Cytoscape.js file per stage -------------------------------
     names = {nid: None for nid in union}
@@ -274,6 +318,9 @@ def main(argv=None):
             i = g.index.get(nid)
             is_r = type_of[nid] == "reaction"
             x, y = pos[uidx[nid]]
+            if i is None and status(s, nid) == "hidden":
+                vstage["nodes"].append([uidx[nid], 0, 0, 0, 0, "hidden"])
+                continue
             if i is None:
                 d = {"id": nid, "name": names[nid], "type": type_of[nid], "status": "removed",
                      "removed_at": (next((x["title"] for x in per if x["key"] == removed_at(nid)), "") if removed_at(nid) else ""),
@@ -329,7 +376,12 @@ def main(argv=None):
         doc = {"format_version": "1.0", "generated_by": "metaboenrich.stage_diagrams",
                "data": {"name": s["title"], "description": s["description"]},
                "elements": {"nodes": nodes_json, "edges": edges_json}}
-        fname = f"{si + 1}_{s['key']}.cyjs" if s["key"] != "alt_remove" else "alt_cofactors_removed_everywhere.cyjs"
+        if s["key"] == "alt_remove":
+            fname = "alt_cofactors_removed_everywhere.cyjs"
+        elif s["key"] in ALTERNATIVE_STAGES:
+            fname = f"alt_{s['key']}.cyjs"
+        else:
+            fname = f"{stage_order.index(s['key']) + 1}_{s['key']}.cyjs"
         (out / fname).write_text(json.dumps(doc), encoding="utf-8")
         viewer["stages"].append(vstage)
         print(f"{fname:42s} {sum(1 for n in nodes_json if n['data']['status'] == 'present'):4d} present, "

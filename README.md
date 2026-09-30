@@ -29,6 +29,8 @@ protocol leaves a choice open, the choice made here is listed under
 | [docs/report.html](docs/report.html) | Progress report: network, benchmark, version 0.2, blind predictions (download and open in a browser) |
 | [docs/pruning_atlas.html](docs/pruning_atlas.html) | Pruning Atlas: structural effect of each pruning step, with linked network diagrams (download and open) |
 | [docs/stage_diagrams/](docs/stage_diagrams/) | The pruning-stage diagrams as Cytoscape files, style and opening steps |
+| [docs/carbon_atlas.html](docs/carbon_atlas.html) | Carbon Channel Atlas: the experimental carbon-skeleton network compared with the current one (download and open) |
+| [docs/carbon_diagrams/](docs/carbon_diagrams/) | The carbon-network diagrams as Cytoscape files |
 | [docs/benchmark.md](docs/benchmark.md) | Inborn-error benchmark: data, method, per-disorder results |
 | [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
 | [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |

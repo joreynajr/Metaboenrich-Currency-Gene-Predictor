@@ -127,6 +127,19 @@ current 88 / 11; channels with KEGG overriding the mapper 101 / 10; union
 Hub concentration falls (top 1% of nodes 21% → 19%; acetyl-CoA no longer the
 largest hub) but islands grow (199 → 274 metabolites). Not adopted as default:
 no clear gain on a 20-disorder benchmark. Revisit with a larger benchmark.
+Carbon links alone, with no currency rules, do not solve the hub problem: CoA
+stays a hub in 1,237 reactions and the busiest 1% of nodes still carry 26% of
+current (raw 34%, current network 21%); benchmark median 153 vs 88. Documented
+in the Carbon Channel Atlas (`docs/carbon_atlas.html`).
+
+### D16. Which pruning steps matter for finding the faulty enzyme (2026-09-30)
+Group benchmark, raw scoring, median rank (of ~2,300 genes) / top 100 of 20:
+raw network 161.5 / 8; inorganics removed 137 / 9; cofactors role-filtered
+87 / 11; pools dropped 88 / 11; reaction edits 88 / 11; cofactors removed
+everywhere 86 / 11. Almost all of the gain comes from removing inorganics and
+filtering cofactors. Dropping pools and the SCLY edit fix specific structural
+artifacts but do not change this benchmark. Role-based filtering (D3) matches
+removing cofactors everywhere while keeping 30 more metabolites.
 
 ## Open
 

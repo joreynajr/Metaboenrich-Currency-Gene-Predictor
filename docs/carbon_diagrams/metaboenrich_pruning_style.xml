@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vizmap documentVersion="3.1" id="metaboenrich-pruning">
+  <visualStyle name="Metaboenrich pruning">
+    <network>
+      <visualProperty name="NETWORK_BACKGROUND_PAINT" default="#FBFCFD"/>
+    </network>
+    <node>
+      <dependency name="nodeSizeLocked" value="true"/>
+      <dependency name="nodeCustomGraphicsSizeSync" value="true"/>
+      <visualProperty name="NODE_FILL_COLOR" default="#AAB2BD">
+        <passthroughMapping attributeName="fill" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_SIZE" default="12.0">
+        <passthroughMapping attributeName="size" attributeType="double"/>
+      </visualProperty>
+      <visualProperty name="NODE_SHAPE" default="ELLIPSE">
+        <passthroughMapping attributeName="shape" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_BORDER_WIDTH" default="0.0">
+        <passthroughMapping attributeName="border_width" attributeType="double"/>
+      </visualProperty>
+      <visualProperty name="NODE_BORDER_PAINT" default="#12161B">
+        <passthroughMapping attributeName="border_color" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_BORDER_STROKE" default="SOLID">
+        <passthroughMapping attributeName="border_style" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_TRANSPARENCY" default="255">
+        <passthroughMapping attributeName="opacity" attributeType="integer"/>
+      </visualProperty>
+      <visualProperty name="NODE_LABEL" default="">
+        <passthroughMapping attributeName="label_text" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="NODE_LABEL_COLOR" default="#12161B"/>
+      <visualProperty name="NODE_LABEL_FONT_SIZE" default="11"/>
+      <visualProperty name="NODE_LABEL_POSITION" default="N,S,c,0.00,4.00"/>
+      <visualProperty name="NODE_BORDER_TRANSPARENCY" default="255"/>
+    </node>
+    <edge>
+      <dependency name="arrowColorMatchesEdge" value="false"/>
+      <visualProperty name="EDGE_STROKE_UNSELECTED_PAINT" default="#B9C1CB">
+        <passthroughMapping attributeName="color" attributeType="string"/>
+      </visualProperty>
+      <visualProperty name="EDGE_TRANSPARENCY" default="230">
+        <passthroughMapping attributeName="opacity" attributeType="integer"/>
+      </visualProperty>
+      <visualProperty name="EDGE_WIDTH" default="1.0"/>
+    </edge>
+  </visualStyle>
+</vizmap>

@@ -240,6 +240,44 @@ def clean_pairs(pairs):
     return [[a, b, n] for a, b, n in pairs if n == best_p[b] or n == best_s[a]]
 
 
+def _rule_top_donor(pairs):
+    best = {}
+    for a, b, n in pairs:
+        best[b] = max(best.get(b, 0), n)
+    return [[a, b, n] for a, b, n in pairs if n == best[b]]
+
+
+CLEANING_RULES = {
+    "Raw atom maps (any shared carbon)": lambda p: p,
+    "Main carbon source of each product": _rule_top_donor,
+    "Main source or main destination (used)": clean_pairs,
+}
+
+
+def evaluate_rules(model, raw_mapped, kegg, excluded):
+    """Agreement of each cleaning rule with KEGG RCLASS pairs, on reactions that
+    have both, counting only pairs between metabolites not in `excluded`
+    (the currency metabolites, whose links the graph never uses).
+    Returns rows: rule, reaction set, n, precision, recall, exactly right."""
+    common = [r for r in kegg if r in raw_mapped and raw_mapped[r].get("pairs")]
+    multi = [r for r in common if len([x for x in reaction_sides(model, model.reactions[r])[0] if x not in excluded]) >= 2]
+    rows = []
+    for label, rule in CLEANING_RULES.items():
+        for set_name, sel in (("all reactions", common), ("multi-substrate reactions", multi)):
+            tp = fp = fn = exact = 0
+            for r in sel:
+                pred = {(a, b) for a, b, _ in rule(raw_mapped[r]["pairs"]) if a not in excluded and b not in excluded}
+                gold = {tuple(p) for p in kegg[r] if p[0] not in excluded and p[1] not in excluded}
+                tp += len(pred & gold)
+                fp += len(pred - gold)
+                fn += len(gold - pred)
+                exact += pred == gold
+            rows.append({"rule": label, "reactions": set_name, "n": len(sel),
+                         "precision": tp / max(tp + fp, 1), "recall": tp / max(tp + fn, 1),
+                         "exactly_right": exact / max(len(sel), 1)})
+    return rows
+
+
 def combine_pairs(raw_mapped, kegg):
     """{reaction id: {"pairs": [[sub, prod], ...], "source": "kegg" | "rxnmapper"}}:
     KEGG RCLASS pairs where available, otherwise cleaned RXNMapper pairs."""

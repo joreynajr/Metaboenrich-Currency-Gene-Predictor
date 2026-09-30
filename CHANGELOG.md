@@ -35,6 +35,9 @@ Network unchanged from v0.1.1 (3,958 / 6,377 / 16,356; edge-list SHA-256
   reactions split into carbon-sharing substrate–product channels from KEGG
   RCLASS and RXNMapper atom maps. Off by default; no clear benchmark gain yet
   (decision D15). Needs `pip install -r requirements-atoms.txt`.
+- **Carbon Channel Atlas** (`docs/carbon_atlas.html`, `tools/atlas/build_carbon_atlas.py`)
+  and its Cytoscape diagrams; `--stage-set carbon` for the structure check and
+  diagrams; `--stage SET:KEY` benchmarks any named network (decision D16).
 
 ## 0.1.1 (2026-09-28)
 

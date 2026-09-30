@@ -27,7 +27,53 @@ from .network import (CurrencyRules, DEFAULT_REACTION_EDITS, build_graph, load_r
 DEFAULT_MODEL = "data/Human-GEM.xml"
 
 
-def stages(model):
+STAGE_SETS = ("pruning", "carbon")
+# Stages that are side-by-side alternatives rather than steps in the main
+# sequence; the diagrams place removed nodes by the main sequence only.
+ALTERNATIVE_STAGES = {"alt_remove", "carbon_kegg", "carbon_mapper", "carbon_only"}
+# The stage whose network sets the shared layout of the diagrams.
+LAYOUT_STAGE = {"pruning": "edits", "carbon": "carbon_union"}
+
+
+def stages(model, stage_set="pruning", atom_dir="data"):
+    """(key, title, description, rules, max_reaction_size, drop_objective, atom_pairs)
+    per stage. 'pruning': the currency-pruning steps. 'carbon': the carbon-
+    skeleton channel networks (needs data/atom_pairs*.json from
+    python -m metaboenrich.atoms)."""
+    if stage_set == "carbon":
+        return _carbon_stages(model, atom_dir)
+    return [s + (None,) for s in _pruning_stages(model)]
+
+
+def _carbon_stages(model, atom_dir):
+    from .atoms import load_atom_pairs
+    p = {k: _pruning_stages(model)[i] for i, k in ((0, "raw"), (4, "edits"))}
+    pairs = {v: load_atom_pairs(Path(atom_dir) / f) for v, f in
+             (("union", "atom_pairs_union.json"), ("kegg", "atom_pairs.json"), ("mapper", "atom_pairs_mapperfirst.json"))}
+    raw, edits = p["raw"], p["edits"]
+    return [
+        ("raw", "1. Raw Human-GEM", raw[2], raw[3], raw[4], raw[5], None),
+        ("current", "2. Current analysis network",
+         "Currency rules, pools dropped and the SCLY edit: stage 5 of the Pruning Atlas. Every reaction links all its "
+         "remaining substrates to all its remaining products.", edits[3], edits[4], edits[5], None),
+        ("carbon_union", "3. Carbon channels (main version)",
+         "The current network with each reaction split into carbon-sharing substrate-product channels. Pairs: KEGG's "
+         "curated pairs combined with cleaned atom maps. Reactions without a mapping stay whole.",
+         edits[3], edits[4], edits[5], pairs["union"]),
+        ("carbon_kegg", "Alternative: KEGG pairs first",
+         "Carbon channels using KEGG's curated pairs wherever KEGG has the reaction, atom maps elsewhere. KEGG lists "
+         "only main pairs, so minor carbon donors (carbamoyl-phosphate in OTC) are lost.",
+         edits[3], edits[4], edits[5], pairs["kegg"]),
+        ("carbon_mapper", "Alternative: atom maps first",
+         "Carbon channels using cleaned atom maps wherever available, KEGG's pairs only where the mapper failed.",
+         edits[3], edits[4], edits[5], pairs["mapper"]),
+        ("carbon_only", "Alternative: carbon channels on the raw network",
+         "Carbon channels with no currency rules at all: tests whether following carbon alone removes the hub "
+         "problem (the literature's claim).", raw[3], raw[4], raw[5], pairs["union"]),
+    ]
+
+
+def _pruning_stages(model):
     """(key, title, description, rules, max_reaction_size, drop_objective) per pruning stage."""
     role, _ = resolve_currency(model, "role")
     remove, _ = resolve_currency(model, "remove")
@@ -142,6 +188,9 @@ def main(argv=None):
     p.add_argument("--samples", type=int, default=150,
                    help="random sources and targets per stage (pairs = samples^2; default: %(default)s)")
     p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--stage-set", choices=STAGE_SETS, default="pruning",
+                   help="pruning: currency-pruning steps; carbon: carbon-skeleton channel networks "
+                        "(needs python -m metaboenrich.atoms first) (default: %(default)s)")
     args = p.parse_args(argv)
 
     if not Path(args.model).exists():
@@ -154,9 +203,9 @@ def main(argv=None):
 
     node_index, node_meta = {}, []   # shared across stages: id -> position; [id, name, type, genes]
     result = {"model": f"{model.id} {model.version}", "samples": args.samples, "seed": args.seed,
-              "nodes": node_meta, "stages": []}
-    for key, title, desc, rules, max_size, drop_obj in stages(model):
-        g = build_graph(model, rules, max_size, drop_obj)
+              "stage_set": args.stage_set, "nodes": node_meta, "stages": []}
+    for key, title, desc, rules, max_size, drop_obj, atom_pairs in stages(model, args.stage_set):
+        g = build_graph(model, rules, max_size, drop_obj, atom_pairs=atom_pairs)
         degree, flow, pocket, in_main = analyse_stage(g, args.samples, np.random.default_rng(args.seed))
         ids = []
         for i, nid in enumerate(g.node_ids):
@@ -180,6 +229,9 @@ def main(argv=None):
             "top1pct_flow_share": round(concentration(flow), 4),
             "max_metabolite_degree": int(degree[top_m]),
             "max_degree_metabolite": g.node_names[top_m],
+            "reactions_original": len({g.base_reaction.get(i, g.node_ids[i]) for i in np.flatnonzero(is_rxn)}),
+            "reactions_kept_whole": len(g.unmapped_reactions) if atom_pairs is not None else None,
+            "reactions_dropped_no_carbon_pair": len(g.no_pair_reactions) if atom_pairs is not None else None,
         }
         result["stages"].append({
             "key": key, "title": title, "description": desc, "summary": summary,

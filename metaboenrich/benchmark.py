@@ -171,6 +171,8 @@ def main(argv=None):
     p.add_argument("--model", default="data/Human-GEM.xml")
     p.add_argument("--out", default="results/benchmark")
     p.add_argument("--levels", nargs="+", default=["group", "patient"], choices=["group", "patient"])
+    p.add_argument("--stage", default=None, metavar="SET:KEY",
+                   help="benchmark a named network from metaboenrich.structure, e.g. pruning:raw or carbon:carbon_union")
     p.add_argument("--atom-pairs", default=None, metavar="JSON",
                    help="carbon-channel network from metaboenrich.atoms (default: the standard network)")
     p.add_argument("--include", nargs="+", default=["primary", "secondary"],
@@ -188,7 +190,13 @@ def main(argv=None):
     if args.atom_pairs:
         from .atoms import load_atom_pairs
         atom_pairs = load_atom_pairs(args.atom_pairs)
-    graph = build_graph(model, rules, atom_pairs=atom_pairs)
+    if args.stage:
+        from .structure import stages
+        stage_set, key = args.stage.split(":", 1)
+        st = next(s for s in stages(model, stage_set) if s[0] == key)
+        graph = build_graph(model, st[3], st[4], st[5], atom_pairs=st[6])
+    else:
+        graph = build_graph(model, rules, atom_pairs=atom_pairs)
     ranker = Ranker(model, graph)
     U = len(ranker.universe)
     print(f"Network: {graph.n} nodes; {U} genes on network reactions (the ranking universe)")
@@ -243,7 +251,7 @@ def main(argv=None):
                 df[f"pct_{m}"] = df[f"rank_{m}"] / U
             df.to_csv(out / f"{name}_results.tsv", sep="\t", index=False)
     (out / "run_info.json").write_text(json.dumps({
-        "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "runtime_s": round(time.time() - t0, 1),
+        "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "stage": args.stage or "", "runtime_s": round(time.time() - t0, 1),
         "group_rule": "BH q < 0.05 on z-test of mean z, and |mean z| >= 1",
         "patient_rule": "|z| >= 2", "scoring": "leave-one-out conductivity + bottleneck"}, indent=2))
     print(f"\nWrote {out}/ in {time.time() - t0:.0f}s")
