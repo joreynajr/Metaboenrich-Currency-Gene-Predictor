@@ -107,6 +107,27 @@ committed before building or reading the answer key (each paper's conclusions
 and the "Expected tool prediction" sheet). Answers are judged against paper
 conclusions (genes, pathways, processes), not only single genes.
 
+### D15. Carbon-skeleton channels: built, kept optional (2026-09-30, DM proposed)
+Idea: keep a substrate–product link only where carbon atoms pass between the
+two molecules (atom mapping; after Arita 2004, PNAS), so group transfers
+(phosphate, amino group, electrons) create no path. Implementation: each
+reaction becomes one channel per carbon-sharing pair (`--atom-pairs`,
+`metaboenrich/atoms.py`); unmapped reactions are kept whole and flagged.
+Pairs: KEGG RCLASS (curated, 2,058 Human-GEM reactions) and RXNMapper on
+Human-GEM's own SMILES (5,794 reactions mapped; 1,067 lack structures, 227
+too long for the mapper). Raw atom maps invent cross-pairs in transaminases;
+the cleaning rule (keep a pair if it is the product's main carbon donor or the
+substrate's main destination) was chosen by agreement with KEGG on 2,027
+reactions: precision 90.0%, recall 96.3% (raw: 85.4% / 98.3%). KEGG itself
+omits minor carbon donors (e.g. carbamoyl-phosphate → citrulline in OTC).
+Evidence (group benchmark, raw scoring, median rank / top 100 of 20):
+current 88 / 11; channels with KEGG overriding the mapper 101 / 10; union
+101.5 / 10; mapper first 78.5 / 11. Large per-disorder swings both ways
+(glutaric aciduria 930 → 293 with union; OTC 168 → 971 with KEGG override).
+Hub concentration falls (top 1% of nodes 21% → 19%; acetyl-CoA no longer the
+largest hub) but islands grow (199 → 274 metabolites). Not adopted as default:
+no clear gain on a 20-disorder benchmark. Revisit with a larger benchmark.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.

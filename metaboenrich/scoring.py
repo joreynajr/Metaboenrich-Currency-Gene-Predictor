@@ -51,9 +51,22 @@ def pathway_table(rxn, graph, subsystems, top_n=100):
     (best first); reactions without current count as not in the top.
     """
     from scipy.stats import hypergeom
-    net = [graph.node_ids[i] for i in np.flatnonzero(graph.is_reaction)]
+    # Carbon-channel graphs split a reaction into several nodes; count the
+    # original reaction once.
+    base = lambda i: graph.base_reaction.get(i, graph.node_ids[i])
+    net = sorted({base(i) for i in np.flatnonzero(graph.is_reaction)})
     sub_of = {r: (subsystems.get(r) or ["(none)"])[0] for r in net}
-    top = [r for r in rxn.node_id.head(top_n)]
+    top, seen = [], set()
+    for i in rxn.index:
+        b = base(i)
+        if b not in seen:
+            seen.add(b)
+            top.append(b)
+        if len(top) == top_n:
+            break
+    first_node = {}
+    for i in rxn.index:
+        first_node.setdefault(base(i), i)
     N, n = len(net), len(top)
     size = pd.Series(sub_of).value_counts()
     hits = pd.Series([sub_of[r] for r in top]).value_counts() if top else pd.Series(dtype=int)
@@ -64,7 +77,7 @@ def pathway_table(rxn, graph, subsystems, top_n=100):
         genes = []
         for r in top:
             if sub_of[r] == sub:
-                i = graph.index[r]
+                i = first_node[r]
                 genes += [g for g in rxn.loc[i, "genes"].split(";") if g and g not in genes]
         rows.append({"subsystem": sub, "reactions_in_network": K, "in_top": int(k),
                      "expected": round(K * n / N, 2), "fold": round(k / (K * n / N), 2), "p": p,

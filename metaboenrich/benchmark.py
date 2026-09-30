@@ -171,6 +171,8 @@ def main(argv=None):
     p.add_argument("--model", default="data/Human-GEM.xml")
     p.add_argument("--out", default="results/benchmark")
     p.add_argument("--levels", nargs="+", default=["group", "patient"], choices=["group", "patient"])
+    p.add_argument("--atom-pairs", default=None, metavar="JSON",
+                   help="carbon-channel network from metaboenrich.atoms (default: the standard network)")
     p.add_argument("--include", nargs="+", default=["primary", "secondary"],
                    help="case statuses to run (default: primary secondary)")
     args = p.parse_args(argv)
@@ -182,7 +184,11 @@ def main(argv=None):
     model = load_sbml(args.model)
     rules, _ = resolve_currency(model, "role")
     rules.edits, _ = load_reaction_edits(DEFAULT_REACTION_EDITS, model)
-    graph = build_graph(model, rules)
+    atom_pairs = None
+    if args.atom_pairs:
+        from .atoms import load_atom_pairs
+        atom_pairs = load_atom_pairs(args.atom_pairs)
+    graph = build_graph(model, rules, atom_pairs=atom_pairs)
     ranker = Ranker(model, graph)
     U = len(ranker.universe)
     print(f"Network: {graph.n} nodes; {U} genes on network reactions (the ranking universe)")
@@ -237,7 +243,7 @@ def main(argv=None):
                 df[f"pct_{m}"] = df[f"rank_{m}"] / U
             df.to_csv(out / f"{name}_results.tsv", sep="\t", index=False)
     (out / "run_info.json").write_text(json.dumps({
-        "network_nodes": graph.n, "gene_universe": U, "runtime_s": round(time.time() - t0, 1),
+        "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "runtime_s": round(time.time() - t0, 1),
         "group_rule": "BH q < 0.05 on z-test of mean z, and |mean z| >= 1",
         "patient_rule": "|z| >= 2", "scoring": "leave-one-out conductivity + bottleneck"}, indent=2))
     print(f"\nWrote {out}/ in {time.time() - t0:.0f}s")

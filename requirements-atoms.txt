@@ -1,0 +1,5 @@
+# Optional: only for carbon-skeleton channels (python -m metaboenrich.atoms).
+# Pulls in PyTorch (several hundred MB). RDKit 2024.9+ is needed for NumPy 2.
+-r requirements.txt
+rdkit>=2024.9.6
+rxnmapper>=0.4.3

@@ -31,6 +31,10 @@ Network unchanged from v0.1.1 (3,958 / 6,377 / 16,356; edge-list SHA-256
 - **Pruning-stage diagrams** (`metaboenrich/stage_diagrams.py`) and the
   structural check (`metaboenrich/structure.py`, Pruning Atlas).
 - Scoring moved to `metaboenrich/scoring.py` (outputs verified byte-identical).
+- **Experimental carbon-skeleton channels** (`--atom-pairs`, `metaboenrich/atoms.py`):
+  reactions split into carbon-sharing substrate–product channels from KEGG
+  RCLASS and RXNMapper atom maps. Off by default; no clear benchmark gain yet
+  (decision D15). Needs `pip install -r requirements-atoms.txt`.
 
 ## 0.1.1 (2026-09-28)
 

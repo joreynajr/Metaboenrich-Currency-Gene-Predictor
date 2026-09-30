@@ -246,6 +246,12 @@ class Graph:
     currency_audit: list = field(default_factory=list)
     edge_side: list = field(default_factory=list)    # per edge: "substrate" | "product"
     reversible: dict = field(default_factory=dict)   # reaction node index -> bool
+    # carbon-channel mode (build_graph atom_pairs=...): channel node -> original
+    # reaction id; reactions kept whole for lack of a mapping; mapped reactions
+    # dropped because no carbon pair survived the currency rules
+    base_reaction: dict = field(default_factory=dict)
+    unmapped_reactions: list = field(default_factory=list)
+    no_pair_reactions: list = field(default_factory=list)
 
     @property
     def n(self):
@@ -348,7 +354,14 @@ def transport_genes(model, rules=None):
     return out
 
 
-def build_graph(model, rules, max_reaction_size=20, drop_objective=True):
+def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pairs=None):
+    """atom_pairs: optional {reaction id: [(substrate, product, n_carbons), ...]}
+    (see metaboenrich.atoms). A mapped reaction becomes one channel node per
+    carbon-sharing pair that survives the currency rules, so current can only
+    follow carbon skeletons (glutamate -> 2-oxoglutarate, not glutamate ->
+    alanine, in a transaminase). A mapped reaction left with no pair is
+    dropped. Unmapped reactions are kept whole and listed in
+    graph.unmapped_reactions."""
     met_names = {s.met_id: s.name for s in model.species.values()}
     node_ids, node_names, is_rxn, index = [], [], [], {}
 
@@ -361,11 +374,33 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True):
         return index[nid]
 
     edges, arcs, reaction_genes, audit_rows, sides, reversible = [], [], {}, [], [], {}
+    base, unmapped, no_pairs = {}, [], []
     for rxn, subs, prods, audit in _usable_reactions(model, max_reaction_size, rules, drop_objective):
         audit_rows.extend(audit)
+        if atom_pairs is not None:
+            mapped = atom_pairs.get(rxn.id)
+            if mapped is not None:
+                kept = [(a, b) for a, b, *_ in mapped if a in subs and b in prods]
+                if not kept:
+                    no_pairs.append(rxn.id)
+                    continue
+                for k, (a, b) in enumerate(kept, start=1):
+                    cid = f"{rxn.id}#{k}" if len(kept) > 1 else rxn.id
+                    c = node(cid, f"{rxn.name} [{met_names[a]} → {met_names[b]}]" if len(kept) > 1 else rxn.name, True)
+                    reaction_genes[c], reversible[c], base[c] = rxn.genes, rxn.forward and rxn.backward, rxn.id
+                    ma, mb = node(a, met_names[a], False), node(b, met_names[b], False)
+                    edges += [(ma, c), (mb, c)]
+                    sides += ["substrate", "product"]
+                    if rxn.forward:
+                        arcs += [(ma, c), (c, mb)]
+                    if rxn.backward:
+                        arcs += [(mb, c), (c, ma)]
+                continue
+            unmapped.append(rxn.id)
         r = node(rxn.id, rxn.name, True)
         reaction_genes[r] = rxn.genes
         reversible[r] = rxn.forward and rxn.backward
+        base[r] = rxn.id
         for met in sorted(subs):
             m = node(met, met_names[met], False)
             edges.append((m, r))
@@ -394,4 +429,7 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True):
         currency_audit=audit_rows,
         edge_side=sides,
         reversible=reversible,
+        base_reaction=base,
+        unmapped_reactions=unmapped,
+        no_pair_reactions=no_pairs,
     )

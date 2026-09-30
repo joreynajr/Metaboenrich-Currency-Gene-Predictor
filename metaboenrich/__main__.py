@@ -1,4 +1,4 @@
-﻿"""Metaboenrich prototype: current-flow analysis of a DAA on Human-GEM.
+"""Metaboenrich prototype: current-flow analysis of a DAA on Human-GEM.
 
     python -m metaboenrich --daa examples/example_daa.csv --out results/example
 """
@@ -57,6 +57,9 @@ def parse_args(argv=None):
     p.add_argument("--reaction-edits", default=str(DEFAULT_REACTION_EDITS),
                    help="TSV of (reaction_id, met_id) pairs to remove from the model, correcting "
                         "annotation problems; 'none' to disable (default: the bundled reaction_edits.tsv)")
+    p.add_argument("--atom-pairs", default=None, metavar="JSON",
+                   help="experimental: split reactions into carbon-sharing channels using pairs from "
+                        "python -m metaboenrich.atoms (default: off)")
     p.add_argument("--max-reaction-size", type=int, default=20,
                    help="drop pseudo-reactions with more than N metabolites (default: %(default)s)")
     p.add_argument("--scoring", choices=["raw", "loo"], default="raw",
@@ -182,7 +185,15 @@ def main(argv=None):
         daa.loc[lost.index, "role"] = "currency (removed)"
 
     # --- graph and current flow --------------------------------------------
-    graph = build_graph(model, rules, args.max_reaction_size)
+    atom_pairs = None
+    if args.atom_pairs:
+        from .atoms import load_atom_pairs
+        atom_pairs = load_atom_pairs(args.atom_pairs)
+    graph = build_graph(model, rules, args.max_reaction_size, atom_pairs=atom_pairs)
+    if atom_pairs is not None:
+        print(f"Carbon channels: {len(atom_pairs)} reactions split by carbon pairs; "
+              f"{len(graph.unmapped_reactions)} kept whole (no mapping); "
+              f"{len(graph.no_pair_reactions)} dropped (no carbon pair after currency rules)")
     n_rxn = int(graph.is_reaction.sum())
     audit = pd.DataFrame(graph.currency_audit, columns=["met_id", "reaction_id", "decision", "partner"])
     print(f"Graph: {graph.n - n_rxn} metabolite nodes, {n_rxn} reaction nodes, {len(graph.edges)} edges "
@@ -315,6 +326,7 @@ def main(argv=None):
         "network_edges_sha256": hashlib.sha256(edge_list.encode()).hexdigest(),
         "scoring": "leave-one-out" if use_loo else "raw", "one_sided": bool(ground),
         "id_translation": str(args.id_translation or ""),
+        "atom_pairs": str(args.atom_pairs or ""),
         "model": f"{model.id} {model.version}", "daa": str(args.daa), "mode": args.mode,
         "pair_weight": args.pair_weight, "alpha": args.alpha, "bottleneck_tau": args.bottleneck_tau,
         "currency_mode": args.currency_mode,
