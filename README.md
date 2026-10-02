@@ -31,6 +31,8 @@ protocol leaves a choice open, the choice made here is listed under
 | [docs/stage_diagrams/](docs/stage_diagrams/) | The pruning-stage diagrams as Cytoscape files, style and opening steps |
 | [docs/carbon_atlas.html](docs/carbon_atlas.html) | Carbon Channel Atlas: the experimental carbon-skeleton network compared with the current one (download and open) |
 | [docs/carbon_diagrams/](docs/carbon_diagrams/) | The carbon-network diagrams as Cytoscape files |
+| [docs/rw_report.html](docs/rw_report.html) | Absorbing-walk report: the experimental `--mode walk` against current flow on the inborn-error benchmark (download and open; rebuild with `python tools/report/build_rw_report.py`) |
+| [docs/network_report.html](docs/network_report.html) | Network Explorer: interactive cytoscape.js views of each benchmark disorder's current-carrying subnetwork and top pathways, for current flow and the walk (download and open; rebuild with `python tools/report/build_network_report.py`, about 8 minutes) |
 | [docs/benchmark.md](docs/benchmark.md) | Inborn-error benchmark: data, method, per-disorder results |
 | [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
 | [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |
@@ -98,6 +100,8 @@ p-values are not corrected for multiple comparisons.
 | option | effect |
 |---|---|
 | `--mode directed` | keep only source–target pairs joined by a directed path (protocol §2.2) |
+| `--mode walk` | experimental: replace current flow with an absorbing random walk that follows reaction directions (step 8 below) |
+| `--walk-kappa K` | walk mode: targets absorb with probability 1 − exp(−K·\|log2FC\|) instead of always |
 | `--pair-weight fc` | weight each pair by (\|log2FC_s\| + \|log2FC_t\|) / 2 instead of 1 |
 | `--no-leave-one-out` | rank on raw scores instead of leave-one-out scores (see below) |
 | `--currency MAM01261 ...` | remove extra metabolites from every reaction |
@@ -296,6 +300,21 @@ release URL and verified by hash.
    reversible reactions go both ways. Pairs with no directed s → t path are
    excluded; the remaining pairs use the undirected calculation.
 
+8. **Absorbing random walk (`--mode walk`, experimental).** Instead of
+   current, walkers start at the sources, in proportion to |log2FC|, and step
+   along reaction directions until a target absorbs them. Reversible reactions
+   become a forward and a backward state, and a walker may not undo its last
+   step, so it cannot hop between co-substrates. Walkers that reach a dead end
+   are lost, and only walks that reach a target are scored. Scores keep the
+   same columns: throughput is net walker traffic, `bottleneck` is the
+   largest share for any single source, and `net_forward` in `reactions.tsv`
+   says which direction a reaction is used in. For a source,
+   `source_target_metabolites.tsv`'s `conductivity` is the probability that
+   its walkers reach a target; for a target, the share of walkers it absorbs.
+   Leave-one-out scoring isn't available. Directed cycles can circulate
+   walkers, so throughput can exceed 1. See D17 in
+   [docs/decisions.md](docs/decisions.md) for the benchmark.
+
 ## Decisions still open
 
 These are placeholders for the three of us to settle, not settled methodology:
@@ -355,6 +374,7 @@ These are placeholders for the three of us to settle, not settled methodology:
 | `metaboenrich/network.py` | graph construction, currency rules, reaction edits |
 | `metaboenrich/daa.py` | DAA loading and identifier mapping |
 | `metaboenrich/flow.py` | current flow and leave-one-out scores |
+| `metaboenrich/walk.py` | absorbing random walk (`--mode walk`, experimental) |
 | `metaboenrich/cytoscape.py` | GraphML writer |
 | `metaboenrich/__main__.py` | command-line entry point and scoring |
 | `metaboenrich/export_network.py` | writes `network/` |

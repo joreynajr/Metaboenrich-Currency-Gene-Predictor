@@ -141,11 +141,48 @@ filtering cofactors. Dropping pools and the SCLY edit fix specific structural
 artifacts but do not change this benchmark. Role-based filtering (D3) matches
 removing cofactors everywhere while keeping 30 more metabolites.
 
+### D17. Absorbing random walk: built, kept optional (2026-10-01, Reyna: plainest version, hooks 1–2)
+Direction-respecting alternative to current flow (`--mode walk`,
+`metaboenrich/walk.py`). Walkers start at the sources in proportion to
+|log2FC| (hook 1) and follow reaction directions from the flux bounds. All
+targets absorb together; with `--walk-kappa K` a target absorbs a walker with
+probability 1 − exp(−K·|log2FC|) and lets the rest walk on (hook 2). Reversible
+reactions are split into a forward and a backward state, and a walker may not
+reverse the step it just took. Without that rule, forward-then-backward through
+one reversible reaction is a co-substrate hop in two steps. Dead ends leak, and
+scores use only walks that reach a target (Doob h-transform). One sparse LU per
+run (21,787 states, 0.3 s on Human-GEM). Scores reuse the current-flow tables:
+throughput from net traffic per edge, plus `net_forward` (> 0: the reaction is
+used in its forward direction). Leave-one-out is not defined. Checked against
+a Monte Carlo simulation on a toy network (max difference 0.005).
+Evidence, inborn-error benchmark, raw scoring, rank of the causal gene among
+2,302 genes. Group level, 20 primary disorders, median / top 100 / top 10:
+current flow 88.5 / 11 / 3; walk 48 / 13 / 5. Patient level, 159 primary
+patients: current flow median 134, 47% in the top 100, 5% in the top 10; walk
+67, 55%, 28%; the walk is better for 71% of patients and in 14 of 20
+disorders. Largest gains: MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176,
+citrullinemia 82 → 20 (group). Partial absorption changes almost nothing:
+group medians 45.5–47 for K = 0.5, 1 and 2 vs 48 with full absorption; patient
+median 70 at K = 1 vs 67.
+Losses explain where direction hurts. AADC (88 → 1,317): the main source is
+3-O-methyldopa, which COMT makes irreversibly *from* L-DOPA, the blocked
+substrate. Walkers cannot run back to L-DOPA and then forward through DDC, so
+accumulated shunt products point away from the block. Homocystinuria
+(181 → 765): the only decreased metabolite is cortisol, so there is no
+informative sink. In both, under 4% of walkers reach a target.
+Only 20% of released walkers reach a target on the synthetic example: most end
+in directed dead ends, which is why conditioning on success matters.
+Not adopted as default: it is a methods change to §2.3, the gain comes from
+one benchmark, and the blind predictions (D14) were made with current flow.
+Decide before the next blind round. Not tried: biased steps (hook 3), unchanged
+metabolites as leaks (hook 4), the reverse "activation" orientation.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
 - Fold-change magnitude does not enter L x = b (`--pair-weight fc` exists).
-- Directed current (protocol §2.3) not implemented.
+- Directed current (protocol §2.3): no directed Laplacian; the absorbing walk
+  (D17) is an experimental alternative. Whether to make it the default is open.
 - Deoxynucleotides as cofactor families; RNA/DNA polymer nodes as carriers
   (likely source of HK1–3, PKM, RAD1/TREX1 recurring hits).
 - Organic acidurias (MMA, PA, GA) rank poorly with every method.

@@ -32,6 +32,9 @@ class FlowResult:
     endpoint: dict             # node -> {"pairs", "eff_conductance", "max_edge_share"}
     edge_current: np.ndarray = None  # per edge: weighted mean |current| over pairs
     edge_max_current: np.ndarray = None  # per edge: max |current| over pairs
+    # Set only by walk.absorbing_walk: net forward traffic per reaction, and run-level numbers
+    net_forward: np.ndarray = None
+    walk_info: dict = None
 
 
 def _potentials(graph, laplacian, labels, nodes):

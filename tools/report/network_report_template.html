@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Network Explorer</title>
+<!-- Template for tools/report/build_network_report.py. The builder replaces the two
+     placeholder comments below (the data JSON and the cytoscape.js library); the
+     rest of this file is the page as shipped. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Tokens: same names and values as the other reports, plus the network's own.
+   --div-* are the diverging mean z-score stops (z = -4, -2, 0, 2, 4), validated
+   for lightness symmetry and colour-blind separation in each theme. The page
+   script reads every graph colour from these, so the canvas follows the theme. */
+:root{--page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--axis:#c5ccd4;
+--accent:#1f63b5;--note:#eef3fa;--note-ink:#1c3e66;
+--div-n4:#184f95;--div-n2:#3987e5;--div-0:#dddbd5;--div-p2:#e34948;--div-p4:#932a26;
+--edge:#7c8794;--edge-hl:#2e353e;--rxn:#6b7480;--node-line:#8d96a1;--unmeas:#f4f5f7;--causal:#4a3aa7;--found:#eda100;
+--sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0f1216;--surface:#161a1f;
+--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;
+--div-n4:#86b6ef;--div-n2:#2a78d6;--div-0:#3a3a37;--div-p2:#d03b3b;--div-p4:#f29b94;
+--edge:#6b7480;--edge-hl:#c5ccd4;--rxn:#9aa3ae;--node-line:#6b7480;--unmeas:#1d2228;--causal:#9085e9;--found:#c98500}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;
+--rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;
+--div-n4:#86b6ef;--div-n2:#2a78d6;--div-0:#3a3a37;--div-p2:#d03b3b;--div-p4:#f29b94;
+--edge:#6b7480;--edge-hl:#c5ccd4;--rxn:#9aa3ae;--node-line:#6b7480;--unmeas:#1d2228;--causal:#9085e9;--found:#c98500}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,3vw,40px);padding-block:28px 72px}
+main{max-width:1440px;margin-inline:auto;display:grid;gap:36px}
+main>*,section>*{min-width:0}
+.prose{max-width:76ch;display:grid;gap:12px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,3.4vw,36px);font-weight:700;letter-spacing:-.015em}
+h2{font-size:23px;font-weight:650;padding-top:10px;border-top:1px solid var(--rule)}
+h3{font-size:16px;font-weight:650}
+p,ul{margin:0}ul{padding-left:1.2em;display:grid;gap:6px}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:17px;color:var(--ink-2)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+a{color:var(--accent)}
+section{display:grid;gap:12px}
+.small{font-size:13.5px;color:var(--ink-2)}
+
+/* -- controls: one row above the graph, wrapping on narrow screens */
+.controls{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;background:var(--surface);border:1px solid var(--rule);
+border-radius:8px;padding:12px 14px}
+.ctl{display:grid;gap:4px;min-width:0;justify-items:start}
+.ctl>select,.ctl>form{justify-self:stretch}
+.ctl>span,.k{font:500 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ctl.case{flex:1 1 200px;max-width:320px}.ctl.view{flex:2 1 240px;max-width:460px}
+select,input,button{font:inherit;font-size:14px;color:var(--ink);background:var(--page);border:1px solid var(--axis);border-radius:6px;
+min-height:34px;padding:4px 8px;max-width:100%}
+select{width:100%}
+button{cursor:pointer}
+button:hover,select:hover{border-color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg{display:inline-flex;border:1px solid var(--axis);border-radius:6px;overflow:hidden;background:var(--page)}
+.seg button{border:0;border-radius:0;background:transparent;min-height:32px;padding:4px 11px;white-space:nowrap;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--axis)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);font-weight:600}
+.search form{display:flex;gap:6px}
+.search input{width:150px;min-width:0}
+.search{flex:1 1 180px;max-width:280px}
+.search form input{flex:1}
+#find-msg{font-size:12.5px;color:var(--ink-2);min-height:1.2em}
+
+/* -- summary strip */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:8px 12px;display:grid;gap:0;align-content:start}
+.tile.on{border-color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--ink-2)}
+.tile .v{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.25}
+.tile .v small{font-size:13.5px;font-weight:500;color:var(--ink-2)}
+.tile .s{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.tag{font:500 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--axis);border-radius:4px;
+padding:2px 4px;color:var(--ink-2);vertical-align:2px;white-space:nowrap}
+
+/* -- view header */
+.viewhead{display:grid;gap:6px}
+.viewhead h2{border:0;padding:0;font-size:20px}
+.viewhead .tbl{max-width:760px}
+
+/* -- graph + side panel */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;align-items:start}
+.graphs{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.graphs.compare{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:grid;
+grid-template-columns:minmax(0,1fr);position:relative}
+.ptitle{font-size:13px;line-height:20px;height:35px;color:var(--ink-2);padding:7px 12px;border-bottom:1px solid var(--rule);
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptitle>*{margin-right:14px}
+.ptitle b{color:var(--ink);font-weight:650}
+/* One line per title (ellipsis), so in compare mode both canvases start at the same height. */
+#tA{padding-right:104px}
+.fitbtn{position:absolute;top:4px;right:8px;min-height:26px;padding:1px 9px;font-size:12.5px;z-index:2}
+/* Height is set by the script from the panel width and the view's aspect ratio; this is the fallback. */
+.cy{height:clamp(380px,68vh,780px);width:100%;min-width:0;overflow:hidden;position:relative}
+.zoomhint{position:absolute;right:10px;bottom:8px;font-size:11.5px;color:var(--muted);pointer-events:none;background:var(--surface);
+padding:1px 6px;border-radius:4px;opacity:.9}
+.touchbtn{position:absolute;left:8px;bottom:8px;min-height:30px;padding:2px 10px;font-size:12.5px;z-index:2;background:var(--surface)}
+.side{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;display:grid;gap:14px;
+max-height:calc(clamp(380px,68vh,780px) + 36px);overflow:auto;align-content:start}
+.key{border-bottom:1px solid var(--rule);padding-bottom:10px}
+.key summary{font:500 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.key svg{display:block;margin-top:6px;max-width:100%;height:auto;overflow:visible}
+.key text{font:10.5px var(--sans);fill:var(--ink-2)}
+.key .t{font:10px var(--mono);fill:var(--muted)}
+.side h3{font-size:15px;overflow-wrap:anywhere}
+.side .sub{font-size:12.5px;color:var(--ink-2);overflow-wrap:anywhere}
+.side .empty{font-size:13.5px;color:var(--muted)}
+dl.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;margin:0;font-size:13.5px}
+dl.kv dt{color:var(--muted)}dl.kv dd{margin:0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.side table{font-size:12.5px}.side th,.side td{padding:4px 6px}
+.linklist{display:grid;gap:6px;font-size:13px;padding:0;list-style:none}
+.linkbtn{background:none;border:0;padding:0;min-height:0;color:var(--accent);text-decoration:underline;text-underline-offset:2px;
+font-size:inherit;text-align:left}
+
+/* -- legend */
+.legend{display:flex;flex-wrap:wrap;gap:14px 34px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:12px 16px}
+.lg{display:grid;gap:4px;min-width:0}
+.lg svg{display:block;max-width:100%;height:auto;overflow:visible}
+.lg text{font:11px var(--sans);fill:var(--ink-2)}
+.lg .t{font:11px var(--mono);fill:var(--muted)}
+
+/* -- tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}tbody tr.click:hover td{background:var(--page)}
+.tip{position:fixed;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--axis);border-radius:6px;
+padding:7px 10px;font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.14);max-width:320px;z-index:10}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 32px}
+.howto p{font-size:15px}
+
+@media (max-width:980px){
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .side{max-height:none}
+}
+@media (max-width:760px),(pointer:coarse){.zoomhint{display:none}}
+@media (max-width:760px){
+  .graphs.compare{grid-template-columns:minmax(0,1fr)}
+  .graphs.compare .cy{height:clamp(300px,46vh,520px)}
+  .cy{height:clamp(340px,62vh,640px)}
+  .ctl.case,.ctl.view,.search{max-width:none;flex-basis:100%}
+}
+</style></head><body><main>
+
+<header class="prose">
+  <div class="eyebrow" id="eyebrow">Metaboenrich</div>
+  <h1>Network Explorer</h1>
+  <p class="lede">Where each method sends current through Human-GEM for every benchmark disorder, drawn in place: the
+  current-carrying subnetwork and the pathways each method picks out. Node colour is the metabolite change; edge width is
+  the current.</p>
+</header>
+
+<section aria-label="Network viewer">
+  <div class="controls">
+    <label class="ctl case"><span>Disorder</span><select id="case"></select></label>
+    <label class="ctl view"><span>View</span><select id="view"></select></label>
+    <div class="ctl"><span id="method-l">Method</span>
+      <div class="seg" id="method" role="group" aria-labelledby="method-l">
+        <button type="button" data-v="flow">Current flow</button><button type="button" data-v="walk">Absorbing walk</button><button type="button" data-v="compare">Compare</button>
+      </div></div>
+    <div class="ctl"><span id="metric-l">Edge width: current</span>
+      <div class="seg" id="metric" role="group" aria-labelledby="metric-l">
+        <button type="button" data-v="mean">Mean</button><button type="button" data-v="max">Max</button>
+      </div></div>
+    <div class="ctl search"><span>Find a metabolite or gene</span>
+      <form id="find" autocomplete="off"><input id="find-q" list="find-list" placeholder="e.g. PAH, L-tyrosine" aria-label="Find a metabolite or gene">
+        <button type="submit">Find</button></form>
+      <datalist id="find-list"></datalist></div>
+  </div>
+  <div id="find-msg" role="status"></div>
+
+  <div class="strip" id="strip"></div>
+  <div class="viewhead" id="viewhead"></div>
+
+  <div class="stage">
+    <div class="graphs" id="graphs">
+      <div class="panel" id="pA"><div class="ptitle" id="tA"></div><button type="button" id="fit" class="fitbtn">Fit to view</button><div class="cy" id="cyA"></div>
+        <div class="zoomhint" id="zoomhint">scroll to zoom · more labels appear as you zoom in</div>
+        <button type="button" id="touch" class="touchbtn" aria-pressed="false" hidden>Enable pan &amp; zoom</button></div>
+      <div class="panel" id="pB" hidden><div class="ptitle" id="tB"></div><div class="cy" id="cyB"></div></div>
+    </div>
+    <aside class="side" id="side" aria-live="polite"></aside>
+  </div>
+
+  <div class="legend" id="legend" aria-label="Legend"></div>
+
+  <div class="viewhead"><h3 id="top-h">Top reactions in this view</h3><p class="small" id="top-note"></p></div>
+  <div class="tbl" id="top"></div>
+</section>
+
+<section>
+  <h2>How to read this</h2>
+  <div class="howto">
+    <p><b>Node colour</b> is the metabolite's <b>mean z-score</b> across the disorder's patients: blue decreased, red increased,
+    grey near zero, clipped at |z| = 4. The benchmark data are already standardised, so these are mean z-scores, not log2 fold
+    changes. A <b>small hollow circle with a dashed outline</b> marks a metabolite that was not measured (or could not be
+    mapped): an intermediate on the network with no value.</p>
+    <p><b>Dark ring</b>: a significant metabolite (BH q &lt; 0.05 and |mean z| ≥ 1). Increased ones are the <b>sources</b> of
+    current, decreased ones the <b>targets</b>. When a disorder has only increases (or only decreases), every other measured
+    metabolite on the network becomes a <b>ground</b>: current drains to it.</p>
+    <p><b>Edge width</b> is current, on one absolute scale for both methods and every view, drawn at a fixed size on screen
+    (zooming does not change it, so the legend always applies). <b>Current flow</b>: Kirchhoff current when one unit is
+    pushed from a source to a target; <i>mean</i> averages over all source–target pairs, <i>max</i> takes the largest pair. It
+    ignores reaction direction. <b>Absorbing walk</b>: net walker traffic across the edge per walker released (mean over sources,
+    or the largest source). It follows reaction direction, and directed cycles can push it above 1.</p>
+    <p><b>Arrows</b> show the reaction's direction in the model (substrate → reaction → product); no arrowhead means the reaction is
+    reversible. <b>Squares</b> are reactions, labelled by gene symbols (the reaction id when no gene is known). A
+    <b>violet ring</b> and bold label mark reactions of the disorder's causal gene. Labels are drawn at a fixed size; where two
+    would collide, the less important one is hidden (causal, significant and top-ranked nodes are labelled first) and more
+    appear as you zoom in. Hover any node for its name.</p>
+    <p><b>Pathway views</b> come from an over-representation test: which Human-GEM subsystems are enriched among each method's
+    top 100 reactions (hypergeometric test, BH-adjusted; each reaction counts in its first subsystem). Each method contributes
+    its top 6 subsystems with q &lt; 0.05 (or its top 3 by p, flagged <i>not significant</i>, if fewer qualify), and the menu
+    lists the union with each picking method's p and q. A subsystem with more than 150 reactions on the network shows only the
+    reactions that carry current under either method. The <b>causal-gene neighbourhood</b> view shows the causal gene's
+    reactions, their metabolites and the neighbouring reactions that carry current, so the causal gene is always on a map.</p>
+    <p><b>Ranks.</b> A reaction's rank is its place among all reactions that carry current under that method (1 = best, raw
+    scoring). The causal-gene rank in the summary is the benchmark's: the gene's place among all genes on the network. Both are
+    recomputed here and checked against the benchmark results on every build.</p>
+    <p><b>Mapping caveat.</b> Values sit on the network node the benchmark maps them to. In the Thistlethwaite data the
+    <i>ornithine</i> row carries HMDB03374 (D-ornithine), so in the urea-cycle disorders (OTC deficiency, citrullinemia type I,
+    argininosuccinic aciduria, argininemia) its value is drawn on the D-ornithine node and L-ornithine, next to OTC and ARG1, appears as unmeasured.</p>
+  </div>
+</section>
+
+<footer>
+  <span id="foot"></span>
+</footer>
+</main>
+<div class="tip" id="tip" hidden></div>
+<script type="application/json" id="data">/*__DATA__*/</script>
+<script>/*__CYTOSCAPE__*/</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const N = D.nodes, E = D.edges, META = D.meta, CASES = D.cases;
+const NAME = META.methods;                       // {flow: "Current flow", walk: "Absorbing walk"}
+const Z_CLIP = META.z_clip;
+const W_CAP = 1.5;                               // currents above this draw at the widest stroke
+// Screen-constant drawing: edge widths, label sizes and the dashed outline are given in
+// screen pixels (each style value is divided by the zoom, which cytoscape multiplies
+// back in), so the width legend holds at every zoom. Nodes grow with the zoom but never
+// draw smaller than NODE_MIN of their size at 100%.
+const NODE_MIN = 0.7, FIT_MAX = 1.7, MAX_ZOOM = 3;
+const LABEL_PX = {base: 10, sig: 11, causal: 11.5};
+const $ = id => document.getElementById(id);
+const state = {case: CASES[0].id, view: "net", method: "flow", metric: "mean", sel: null};
+let findQ = "";                                  // the active Find query (re-applied after every re-render)
+
+// ---- formatting ---------------------------------------------------------------
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const SUP = {"-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹"};
+function fmtSci(x) {                             // 1.2e-48 -> 1.2×10⁻⁴⁸
+  const [m, e] = x.toExponential(1).split("e");
+  return `${m}×10${String(+e).replace(/./g, c => SUP[c] || c)}`;
+}
+function fmtN(x, p = 3) {
+  if (x == null) return "–";
+  if (x === 0) return "0";
+  const a = Math.abs(x);
+  if (a >= 1000) return Math.round(x).toLocaleString("en");
+  if (a < 1e-3) return fmtSci(x);
+  return String(Number(x.toPrecision(p)));
+}
+const fmtQ = q => q == null ? "–" : q < 1e-3 ? fmtSci(q) : String(Number(q.toPrecision(2)));
+const fmtRank = r => r == null ? "–" : Number.isInteger(r) ? r.toLocaleString("en") : r.toFixed(1);
+const fmtZ = z => z == null ? "–" : (z > 0 ? "+" : z < 0 ? "−" : "") + Math.abs(z).toFixed(2);
+const pct = x => x == null ? "–" : x > 0 && x < 1e-3 ? "<0.1%" : (100 * x).toFixed(1) + "%";
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+const short = (s, n = 26) => s.length > n ? s.slice(0, n - 1) + "…" : s;
+
+function rxnLabel(g) {                           // first two gene symbols, else the reaction id
+  const s = N.genes[g];
+  if (!s) return N.id[g].replace(/^R_/, "");
+  const a = s.split(";");
+  return a.length > 2 ? `${a[0]}, ${a[1]} +${a.length - 2}` : a.join(", ");
+}
+// Different metabolites can share a name (e.g. two alpha-D-glucose ids): within a view,
+// such names carry the metabolite id so the nodes can be told apart.
+function dupNames(v) {
+  if (!v._dup) {
+    const seen = new Map();
+    v.nodes.forEach(g => { if (!N.kind[g]) seen.set(N.name[g], (seen.get(N.name[g]) || 0) + 1); });
+    v._dup = new Set([...seen].filter(([, k]) => k > 1).map(([n]) => n));
+  }
+  return v._dup;
+}
+const metName = (g, v) => v && dupNames(v).has(N.name[g]) ? `${N.name[g]} (${N.id[g]})` : N.name[g];
+const metLabel = (g, v) => v && dupNames(v).has(N.name[g]) ? `${short(N.name[g], 18)} (${N.id[g]})` : short(N.name[g]);
+const nodeTitle = (g, v) => N.kind[g] ? rxnLabel(g) : metName(g, v);
+
+// ---- colour -------------------------------------------------------------------
+// The diverging scale is interpolated in OKLab between the theme's five CSS stops.
+const lin = c => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+const unlin = c => c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+function hexLab(h) {
+  h = h.trim().replace("#", "");
+  const [r, g, b] = [0, 2, 4].map(i => lin(parseInt(h.slice(i, i + 2), 16) / 255));
+  const l = Math.cbrt(.4122214708 * r + .5363325363 * g + .0514459929 * b);
+  const m = Math.cbrt(.2119034982 * r + .6806995451 * g + .1073969566 * b);
+  const s = Math.cbrt(.0883024619 * r + .2817188376 * g + .6299787005 * b);
+  return [.2104542553 * l + .7936177850 * m - .0040720468 * s, 1.9779984951 * l - 2.4285922050 * m + .4505937099 * s,
+          .0259040371 * l + .7827717662 * m - .8086757660 * s];
+}
+function labHex([L, a, b]) {
+  const l = (L + .3963377774 * a + .2158037573 * b) ** 3, m = (L - .1055613458 * a - .0638541728 * b) ** 3,
+        s = (L - .0894841775 * a - 1.2914855480 * b) ** 3;
+  return "#" + [4.0767416621 * l - 3.3077115913 * m + .2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - .3413193965 * s,
+                -.0041960863 * l - .7034186147 * m + 1.7076147010 * s]
+    .map(c => Math.round(Math.min(1, Math.max(0, unlin(c))) * 255).toString(16).padStart(2, "0")).join("");
+}
+let T = {}, ZTAB = [];                           // theme tokens and the z -> colour table (steps of 0.05)
+function readTheme() {
+  const cs = getComputedStyle(document.documentElement), v = k => cs.getPropertyValue("--" + k).trim();
+  T = {surface: v("surface"), ink: v("ink"), ink2: v("ink-2"), muted: v("muted"), edge: v("edge"), edgeHl: v("edge-hl"),
+       rxn: v("rxn"), nodeLine: v("node-line"), unmeas: v("unmeas"), causal: v("causal"), found: v("found"),
+       sans: v("sans")};
+  const stops = [[-4, v("div-n4")], [-2, v("div-n2")], [0, v("div-0")], [2, v("div-p2")], [4, v("div-p4")]]
+    .map(([z, h]) => [z * Z_CLIP / 4, hexLab(h)]);
+  ZTAB = [];
+  for (let i = 0; i <= Math.round(2 * Z_CLIP / 0.05); i++) {
+    const z = -Z_CLIP + i * 0.05;
+    let k = 0; while (k < stops.length - 2 && z > stops[k + 1][0]) k++;
+    const [z0, a] = stops[k], [z1, b] = stops[k + 1], t = Math.min(1, Math.max(0, (z - z0) / (z1 - z0)));
+    ZTAB.push(labHex(a.map((x, j) => x + (b[j] - x) * t)));
+  }
+}
+const zColor = z => ZTAB[Math.round((Math.max(-Z_CLIP, Math.min(Z_CLIP, z)) + Z_CLIP) / 0.05)];
+// Edge width: square-root scale, fixed for both methods (0 -> 0.6 px, 1 -> 10 px).
+const width = c => c > 0 ? 0.6 + 9.4 * Math.sqrt(Math.min(c, W_CAP)) : 0.6;
+
+// ---- per-case lookups ---------------------------------------------------------
+function prep(c) {
+  if (c._p) return c._p;
+  const met = new Map();
+  c.mets.node.forEach((g, i) => met.set(g, {z: c.mets.z[i], q: c.mets.q[i], role: c.mets.role[i], input: c.mets.input[i]}));
+  return (c._p = {rxnIx: new Map(c.rxn.map((g, i) => [g, i])), edgeIx: new Map(c.edges.map((g, i) => [g, i])), met,
+                  causal: new Set(c.causal_rxn), views: new Map(c.views.map(v => [v.id, v]))});
+}
+const curCase = () => CASES.find(c => c.id === state.case);
+const curView = () => prep(curCase()).views.get(state.view);
+const panelMethods = () => state.method === "compare" ? ["flow", "walk"] : [state.method];
+
+function roleText(c, mm) {
+  if (!mm) return "unmeasured";
+  if (mm.role === "source") return "source (significantly increased)";
+  if (mm.role === "target") return "target (significantly decreased)";
+  return c.one_sided ? "ground (measured, not significant)" : "measured, not significant";
+}
+
+// ---- graph elements -----------------------------------------------------------
+function elements(c, v, m) {
+  const P = prep(c), M = c.methods[m], els = [];
+  v.nodes.forEach((g, i) => {
+    const d = {id: "n" + g, g}, cls = [];
+    if (N.kind[g]) {
+      const k = P.rxnIx.get(g);
+      d.label = rxnLabel(g); d.rank = M.rxn.rank[k];
+      cls.push("rxn"); if (P.causal.has(g)) cls.push("causal");
+    } else {
+      const mm = P.met.get(g);
+      d.label = metLabel(g, v);
+      cls.push("met");
+      if (!mm) cls.push("unmeas");
+      else { d.z = mm.z; if (mm.role) cls.push("sig"); }
+    }
+    els.push({group: "nodes", data: d, position: {x: v.pos[2 * i], y: v.pos[2 * i + 1]}, classes: cls.join(" ")});
+  });
+  v.edges.forEach(ge => {
+    const k = P.edgeIx.get(ge), mg = E.m[ge], rg = E.r[ge], dir = E.dir[ge];
+    const [s, t] = dir === -1 ? [rg, mg] : [mg, rg];          // draw along the reaction's direction
+    els.push({group: "edges", data: {id: "e" + ge, ge, source: "n" + s, target: "n" + t,
+                                     mean: M.edge_mean[k], max: M.edge_max[k]},
+              classes: dir === 0 ? "rev" : ""});
+  });
+  return els;
+}
+
+function setWidths(cy) {
+  // w is the stroke width in screen pixels; as the arrowhead scale at that width.
+  cy.batch(() => cy.edges().forEach(e => {
+    const c = e.data(state.metric), w = width(c);
+    // Arrowheads grow with the stroke in cytoscape; shrink them on thick edges.
+    e.data({w, as: Math.max(0.35, Math.min(0.9, 2.2 / w)), zi: Math.round(w * 10)});
+    e.toggleClass("zero", !(c > 0));
+  }));
+}
+
+// ---- screen-constant sizes and label culling ---------------------------------
+const zk = e => 1 / e.cy().zoom();                                   // model units per screen pixel
+const ns = e => Math.max(e.cy().zoom(), NODE_MIN) / e.cy().zoom();  // node size factor (model units)
+// cytoscape's arrowhead is max((13.37 w)^0.9, 29) * scale model units for a w-wide edge; pick
+// the scale that keeps the arrowhead at its 100%-zoom screen size.
+const arrowBase = w => Math.max(Math.pow(13.37 * w, 0.9), 29);
+const arrowScale = e => { const z = e.cy().zoom(), w = e.data("w"); return arrowBase(w) * e.data("as") / z / arrowBase(w / z); };
+
+// Function mappers re-run when an element's data changes, so touching one data field
+// re-evaluates every zoom-dependent value. Then labels are culled for the new zoom.
+function rescale(cy) {
+  const z = cy.zoom();
+  if (cy.scratch("zk") === z) return;
+  cy.scratch("zk", z);
+  cy.batch(() => cy.elements().data("zk", z));
+  cullLabels(cy);
+}
+// Re-styling costs about 0.05 ms per element, so small views follow the zoom every frame;
+// large ones (where a frame would stutter) re-style once the zoom has settled.
+const pendingScale = new Map();
+function scheduleRescale(cy) {
+  const run = () => { pendingScale.delete(cy); rescale(cy); }, p = pendingScale.get(cy);
+  if (cy.elements().length < 500) {
+    if (!p) pendingScale.set(cy, {raf: requestAnimationFrame(run)});
+  } else {
+    if (p) p.raf != null ? cancelAnimationFrame(p.raf) : clearTimeout(p.timer);
+    pendingScale.set(cy, {timer: setTimeout(run, 110)});
+  }
+}
+
+// Greedy label placement in screen space. Labels are taken in priority order (selected,
+// found, causal, significant, reactions by rank, measured metabolites by |z|, the rest) and a
+// label is drawn only if its box clears the labels already placed; ordinary labels must also
+// clear other nodes. Runs on every zoom change (positions are fixed, so pan does not matter).
+const measure = document.createElement("canvas").getContext("2d"), textW = new Map();
+function labelWidth(text, px, weight) {
+  const key = `${weight}|${px}|${text}`;
+  if (!textW.has(key)) { measure.font = `${weight} ${px}px ${T.sans || "sans-serif"}`; textW.set(key, measure.measureText(text).width); }
+  return textW.get(key);
+}
+function labelTier(n) {
+  if (n.hasClass("sel")) return 0;
+  if (n.hasClass("found")) return 1;
+  if (n.hasClass("causal")) return 2;
+  if (n.hasClass("sig")) return 3;
+  if (n.hasClass("rxn")) return n.data("rank") != null ? 4 + Math.min(n.data("rank"), 1e6) / 1e7 : 6;
+  return n.hasClass("unmeas") ? 7 : 5 + (Z_CLIP - Math.min(Z_CLIP, Math.abs(n.data("z") || 0))) / 100;
+}
+function cullLabels(cy) {
+  const z = cy.zoom(), CELL = 64, labels = new Map(), glyphs = new Map();
+  const cells = (b, f) => { for (let i = Math.floor(b.x1 / CELL); i <= Math.floor(b.x2 / CELL); i++)
+                              for (let j = Math.floor(b.y1 / CELL); j <= Math.floor(b.y2 / CELL); j++) f(i + "," + j); };
+  const hits = (grid, b, self) => { let hit = false;
+    cells(b, k => { if (!hit) for (const o of grid.get(k) || []) if (o.id !== self && o.x1 < b.x2 && b.x1 < o.x2 && o.y1 < b.y2 && b.y1 < o.y2) { hit = true; break; } });
+    return hit; };
+  const add = (grid, b) => cells(b, k => { if (!grid.has(k)) grid.set(k, []); grid.get(k).push(b); });
+  const items = cy.nodes().map(n => {
+    const p = n.position(), half = n.width() * z / 2, x = p.x * z, y = p.y * z;
+    const g = {id: n.id(), x1: x - half, x2: x + half, y1: y - half, y2: y + half};
+    add(glyphs, g);
+    return {n, x, y, half, tier: labelTier(n)};
+  }).sort((a, b) => a.tier - b.tier);
+  cy.batch(() => items.forEach(({n, x, y, half, tier}) => {
+    const px = n.hasClass("causal") ? LABEL_PX.causal : n.hasClass("sig") ? LABEL_PX.sig : LABEL_PX.base;
+    const weight = n.hasClass("causal") || n.hasClass("sel") ? 700 : n.hasClass("sig") ? 600 : 400;
+    // text width + background padding + a 2 px gap on each side
+    const w = Math.min(150, labelWidth(n.data("label") || "", px, weight)) + 8;
+    const b = {id: n.id(), x1: x - w / 2, x2: x + w / 2, y1: y + half, y2: y + half + 5 + px * 1.35};
+    const ok = tier < 2 || (!hits(labels, b, null) && (tier < 4 || !hits(glyphs, b, n.id())));
+    if (ok) add(labels, b);
+    if (n.hasClass("nl") === ok) n.toggleClass("nl", !ok);
+  }));
+}
+
+function cyStyle() {
+  // Sizes marked zk(e) are screen pixels (constant at every zoom); ns(e) scales a node glyph
+  // with the zoom but keeps it at least NODE_MIN of its 100% size.
+  const font = T.sans || "system-ui, sans-serif";
+  return [
+    {selector: "node", style: {"label": "data(label)", "font-family": font, "font-size": e => LABEL_PX.base * zk(e), "color": T.ink2,
+      "text-valign": "bottom", "text-margin-y": e => 2 * zk(e), "text-background-color": T.surface, "text-background-opacity": 0.8,
+      "text-background-padding": e => 1.5 * zk(e), "text-background-shape": "roundrectangle",
+      "text-wrap": "ellipsis", "text-max-width": e => 150 * zk(e), "overlay-opacity": 0}},
+    {selector: "node.met", style: {"shape": "ellipse", "width": e => 18 * ns(e), "height": e => 18 * ns(e),
+      "background-color": ele => zColor(ele.data("z") || 0), "border-width": e => ns(e), "border-color": T.nodeLine}},
+    // Unmeasured: smaller, hollow (surface fill) with a dashed outline of constant screen width.
+    {selector: "node.met.unmeas", style: {"width": e => 13 * ns(e), "height": e => 13 * ns(e), "background-color": T.surface,
+      "border-style": "dashed", "border-width": e => 1.5 * zk(e), "border-color": T.muted}},
+    // Significant: a surface-coloured gap then an ink ring, so the ring reads on any fill.
+    {selector: "node.met.sig", style: {"width": e => 22 * ns(e), "height": e => 22 * ns(e), "border-width": e => 2 * ns(e),
+      "border-color": T.surface, "outline-width": e => 2.5 * ns(e), "outline-color": T.ink, "font-size": e => LABEL_PX.sig * zk(e),
+      "font-weight": 600, "color": T.ink, "z-index": 10}},
+    {selector: "node.rxn", style: {"shape": "round-rectangle", "width": e => 12 * ns(e), "height": e => 12 * ns(e),
+      "background-color": T.rxn, "border-width": e => ns(e), "border-color": T.surface}},
+    {selector: "node.rxn.causal", style: {"width": e => 16 * ns(e), "height": e => 16 * ns(e), "border-width": e => 2 * ns(e),
+      "border-color": T.surface, "outline-width": e => 3.5 * ns(e), "outline-color": T.causal, "font-weight": 700,
+      "font-size": e => LABEL_PX.causal * zk(e), "color": T.ink, "z-index": 20}},
+    {selector: "edge", style: {"width": e => e.data("w") * zk(e), "line-color": T.edge, "curve-style": "straight",
+      "target-arrow-shape": "triangle", "target-arrow-color": T.edge, "arrow-scale": arrowScale, "opacity": 0.9,
+      "z-index": "data(zi)", "overlay-opacity": 0}},
+    {selector: "edge.rev", style: {"target-arrow-shape": "none"}},
+    {selector: "edge.zero", style: {"opacity": 0.5}},
+    {selector: "edge.hl", style: {"line-color": T.edgeHl, "target-arrow-color": T.edgeHl, "opacity": 1}},
+    {selector: "node.nl", style: {"label": ""}},            // label culled at this zoom (see cullLabels)
+    {selector: "node.found", style: {"underlay-color": T.found, "underlay-opacity": 0.55, "underlay-padding": e => 9 * ns(e),
+      "underlay-shape": "ellipse"}},
+    {selector: "node.sel", style: {"underlay-color": T.ink, "underlay-opacity": 0.28, "underlay-padding": e => 12 * ns(e),
+      "underlay-shape": "ellipse", "color": T.ink, "font-weight": 700, "z-index": 30}},
+  ];
+}
+
+// ---- cytoscape instances ------------------------------------------------------
+const CY = {};
+let syncing = false, autoFit = true;
+function makeCy(key) {
+  const cy = cytoscape({container: $("cy" + key), elements: [], style: cyStyle(), minZoom: 0.05, maxZoom: MAX_ZOOM,
+                        boxSelectionEnabled: false, autounselectify: true, pixelRatio: "auto"});
+  cy.on("zoom", () => scheduleRescale(cy));
+  cy.on("tap", "node", e => select(e.target.data("g"), false));
+  cy.on("tap", e => { if (e.target === cy) select(null, false); });
+  cy.on("mouseover", "node", e => showTip(e, tipNode(cy, e.target)));
+  cy.on("mouseover", "edge", e => showTip(e, tipEdge(e.target)));
+  cy.on("mouseout", "node, edge", hideTip);
+  cy.on("mousemove", e => { if (!$("tip").hidden) placeTip(e.originalEvent); });
+  cy.on("dragpan scrollzoom pinchzoom", () => { autoFit = false; $("zoomhint").hidden = true; });   // the user took over the viewport
+  cy.on("viewport", () => {                      // compare mode: both panels move together
+    if (syncing || state.method !== "compare") return;
+    const other = CY[key === "A" ? "B" : "A"];
+    if (!other) return;
+    syncing = true; other.viewport({zoom: cy.zoom(), pan: cy.pan()}); syncing = false;
+  });
+  cy.userPanningEnabled(!touchLock); cy.userZoomingEnabled(!touchLock);
+  // Gentler wheel zoom than cytoscape's default (about 2.5x per notch): about 1.25x per
+  // 100-px notch. Caught on the panel in the capture phase, before cytoscape's own handler.
+  const box = $("cy" + key);
+  box.parentElement.addEventListener("wheel", ev => {
+    if (!box.contains(ev.target) || !cy.userZoomingEnabled()) return;
+    ev.preventDefault(); ev.stopPropagation();
+    const r = box.getBoundingClientRect(), d = ev.deltaY * (ev.deltaMode === 1 ? 33 : ev.deltaMode === 2 ? 400 : 1);
+    const level = Math.min(MAX_ZOOM, Math.max(cy.minZoom(), cy.zoom() * Math.exp(-d * 0.0022)));
+    cy.zoom({level, renderedPosition: {x: ev.clientX - r.left, y: ev.clientY - r.top}});
+    autoFit = false; $("zoomhint").hidden = true;
+  }, {capture: true, passive: false});
+  return cy;
+}
+const stopAll = () => Object.values(CY).forEach(cy => cy.stop(true));   // drop queued camera moves
+function fit() {
+  autoFit = true;
+  stopAll();
+  const cyA = CY.A;
+  cyA.fit(undefined, 28);
+  if (cyA.zoom() > FIT_MAX) { cyA.zoom(FIT_MAX); cyA.center(); }
+  if (state.method === "compare" && CY.B) { syncing = true; CY.B.viewport({zoom: cyA.zoom(), pan: cyA.pan()}); syncing = false; }
+  Object.values(CY).forEach(rescale);
+}
+
+// Canvas height follows the panel width and the view's aspect ratio (so the fit zoom is
+// not wasted on empty canvas), within a band that depends on the screen.
+function setHeights() {
+  const v = curView(), xs = v.pos.filter((_, i) => i % 2 === 0), ys = v.pos.filter((_, i) => i % 2 === 1);
+  const bw = Math.max(...xs) - Math.min(...xs) + 60, bh = Math.max(...ys) - Math.min(...ys) + 60;
+  const narrow = innerWidth <= 760, lo = narrow ? 300 : 380;
+  const hi = Math.max(lo, Math.min(780, innerHeight * (narrow ? 0.62 : 0.78)));
+  let hA = 0;
+  ["A", "B"].forEach(k => {
+    if (k === "B" && state.method !== "compare") return;
+    const el = $("cy" + k), w = el.clientWidth || el.parentElement.clientWidth;
+    const h = Math.round(Math.min(hi, Math.max(lo, (w - 56) * bh / bw + 56)));
+    if (el.style.height !== h + "px") el.style.height = h + "px";
+    hA = Math.max(hA, h);
+  });
+  $("side").style.maxHeight = innerWidth > 980 ? (hA + 36) + "px" : "none";
+}
+
+// Touch screens at phone width: single-finger drags scroll the page until the reader turns
+// pan & zoom on (cytoscape would otherwise capture every drag that starts on the graph).
+const TOUCH = matchMedia("(pointer: coarse)").matches;
+let touchLock = TOUCH && innerWidth <= 760;
+function applyTouchLock() {
+  const show = TOUCH && innerWidth <= 760;
+  if (!show) touchLock = false;
+  Object.values(CY).forEach(cy => { cy.userPanningEnabled(!touchLock); cy.userZoomingEnabled(!touchLock); });
+  const b = $("touch");
+  b.hidden = !show;
+  b.textContent = touchLock ? "Enable pan & zoom" : "Lock graph (scroll page)";
+  b.setAttribute("aria-pressed", String(!touchLock));
+}
+
+// ---- tooltip ------------------------------------------------------------------
+function showTip(e, html) { const t = $("tip"); t.innerHTML = html; t.hidden = false; placeTip(e.originalEvent); }
+function hideTip() { $("tip").hidden = true; }
+function placeTip(ev) {
+  if (!ev) return;
+  const t = $("tip"), pad = 14, r = t.getBoundingClientRect();
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  t.style.left = Math.max(4, x) + "px"; t.style.top = Math.max(4, y) + "px";
+}
+function tipNode(cy, n) {
+  const c = curCase(), g = n.data("g");
+  if (N.kind[g]) {
+    const k = prep(c).rxnIx.get(g), m = cy.scratch("method"), M = c.methods[m];
+    return `<b>${esc(rxnLabel(g))}</b>${prep(c).causal.has(g) ? " <span class='tag'>causal</span>" : ""}<br>` +
+           `<span class="small">${esc(short(N.name[g], 60))}</span><br>${esc(NAME[m])}: rank ${fmtRank(M.rxn.rank[k])}, ` +
+           `score ${fmtN(M.rxn.score[k])}`;
+  }
+  const mm = prep(c).met.get(g);
+  return `<b>${esc(metName(g, curView()))}</b><br>` + (mm ? `mean z ${fmtZ(mm.z)}, q ${fmtQ(mm.q)}<br>${esc(roleText(c, mm))}`
+                                              : "unmeasured (no value)");
+}
+function tipEdge(e) {
+  const c = curCase(), k = prep(c).edgeIx.get(e.data("ge")), ge = e.data("ge");
+  const rows = ["flow", "walk"].map(m => `${esc(NAME[m])}: mean ${fmtN(c.methods[m].edge_mean[k])}, max ${fmtN(c.methods[m].edge_max[k])}`);
+  return `<b>${esc(short(N.name[E.m[ge]], 40))}</b> ${E.side[ge] ? "product of" : "substrate of"} <b>${esc(rxnLabel(E.r[ge]))}</b><br>` +
+         rows.join("<br>");
+}
+
+// ---- rendering ----------------------------------------------------------------
+function renderGraphs(refit = true) {
+  const c = curCase(), v = curView(), ms = panelMethods();
+  const cmp = state.method === "compare";
+  hideTip();                                   // removed elements never fire mouseout
+  stopAll();
+  $("graphs").classList.toggle("compare", cmp);
+  $("pB").hidden = !cmp;
+  if (cmp && !CY.B) CY.B = makeCy("B");
+  setHeights();
+  ms.forEach((m, i) => {
+    const key = i ? "B" : "A", cy = CY[key], M = c.methods[m];
+    cy.resize();
+    cy.scratch("method", m);
+    cy.scratch("zk", null);
+    cy.batch(() => { cy.elements().remove(); cy.add(elements(c, v, m)); });
+    setWidths(cy);
+    const carry = v.nodes.filter(g => N.kind[g] && M.rxn.rank[prep(c).rxnIx.get(g)] != null).length;
+    const nr = v.nodes.filter(g => N.kind[g]).length;
+    const title = `${NAME[m]} · causal gene rank ${fmtRank(M.causal_rank)} · ${carry} of ${nr} reactions here carry current`;
+    $("t" + key).innerHTML = `<b>${esc(NAME[m])}</b><span>causal gene rank ${fmtRank(M.causal_rank)}</span>` +
+      `<span>${carry} of ${nr} reactions here carry current</span>`;
+    $("t" + key).title = title;
+  });
+  if (cmp) CY.B.resize();
+  markFound();
+  applySelection(false);
+  if (refit) fit(); else Object.values(CY).forEach(rescale);
+}
+
+function tile(k, v, s, on) {
+  return `<div class="tile${on ? " on" : ""}"><span class="k">${k}</span>` +
+         `<span class="v">${v}</span><span class="s">${s}${on ? " · <b>shown</b>" : ""}</span></div>`;
+}
+function renderStrip() {
+  const c = curCase(), F = c.methods.flow, W = c.methods.walk, G = META.network.genes.toLocaleString("en");
+  const shown = m => state.method === m || state.method === "compare";
+  const genes = c.causal_in_network.length ? c.causal_in_network.join(", ") : c.causal_genes.join(", ") + " (not in network)";
+  const ep = c.one_sided ? `one-sided: current drains to ${plural(c.ground, "ground metabolite")}`
+                         : `${c.mapped_on_graph} of ${c.measured} measured metabolites on the network`;
+  // One-sided cases have no targets: walkers are absorbed at ground metabolites instead.
+  const sink = c.one_sided ? "ground metabolite" : "target";
+  const un = W.sources_unreached;
+  $("strip").innerHTML =
+    tile("Causal gene", esc(genes), `${esc(c.disorder)} · ${plural(c.patients, "patient")} · ${esc(c.status)}`) +
+    tile("Causal gene rank, flow", fmtRank(F.causal_rank), `of ${G} network genes`, shown("flow")) +
+    tile("Causal gene rank, walk", fmtRank(W.causal_rank), `of ${G} network genes`, shown("walk")) +
+    tile("Sources / targets", `${c.sources} <small>up</small> · ${c.targets} <small>down</small>`, ep) +
+    tile("Pairs", `${F.pairs} <small>flow</small> · ${W.pairs} <small>walk</small>`,
+         (c.one_sided ? "flow: source–ground runs" : "flow: source–target pairs") + `; walk: one per source that reaches a ${sink}`) +
+    tile(c.one_sided ? "Walkers reaching a ground" : "Walkers reaching a target", pct(W.walk_success_fraction),
+         un ? `${plural(un, "source")} reach${un === 1 ? "es" : ""} no ${sink}` : `every source reaches some ${sink}`);
+}
+
+function pathwayRows(c, sub) {
+  return ["flow", "walk"].map(m => [m, c.methods[m].pathways.find(r => r.subsystem === sub)]);
+}
+// Each picking method's own p and q; a top-3-by-p fallback pick is flagged "not significant".
+const pickText = (m, r) => `${m} (p ${fmtQ(r.p)}, q ${fmtQ(r.q)}${r.significant ? "" : ", not significant"})`;
+function viewLabel(c, v) {
+  if (v.kind === "net") return `Current-carrying subnetwork (${v.nodes.length} nodes)`;
+  if (v.kind === "causal") return `Causal-gene neighbourhood (${v.nodes.length} nodes)`;
+  const picks = pathwayRows(c, v.subsystem).filter(([, r]) => r && r.selected).map(([m, r]) => pickText(m, r));
+  return `${v.title} · picked by ${picks.join(" + ")}`;
+}
+const viewName = v => v.kind === "net" ? "Current-carrying subnetwork" : v.title;
+function renderViewHead() {
+  const c = curCase(), v = curView();
+  let h = `<h2>${esc(viewName(v))}</h2>`;
+  if (v.kind === "causal") {
+    h += `<p class="small">${esc(v.note)}. ${v.nodes.length} nodes, ${v.edges.length} edges. Edges between these nodes that carry
+          little or no current are drawn thin and faint.</p>`;
+  } else if (v.kind === "net") {
+    h += `<p class="small">${esc(v.note)}. ${v.nodes.length} nodes, ${v.edges.length} edges; edges between these nodes that
+          carry less current are drawn too, thin and faint.${v.nodes.length < 30 ? " Few edges reach the threshold in this case; the pathway views show more of the network." : ""}</p>`;
+  } else {
+    const rows = pathwayRows(c, v.subsystem).map(([m, r]) => [
+      esc(NAME[m]), r.selected ? (r.significant ? "yes" : "yes, top 3 by p (not significant)") : "no", `${r.in_top} of 100`, fmtN(r.expected), fmtN(r.fold), fmtQ(r.p), fmtQ(r.q)]);
+    h += `<p class="small">Human-GEM subsystem, ${esc(v.note)}; ${v.nodes.length} nodes, ${v.edges.length} edges.
+          Over-representation among each method's top 100 reactions (${v.total} reactions of this subsystem on the network):</p>` +
+         table(["Method", "Picked", "In top 100", "Expected", "Fold", "p", "q (BH)"], rows, [2, 3, 4, 5, 6]);
+  }
+  $("viewhead").innerHTML = h;
+}
+function table(head, rows, num = [], rowAttr = null) {
+  const th = head.map((x, i) => `<th${num.includes(i) ? ' class="num"' : ""}>${x}</th>`).join("");
+  const tb = rows.map((r, j) => `<tr${rowAttr ? rowAttr(j) : ""}>` +
+    r.map((x, i) => `<td${num.includes(i) ? ' class="num"' : ""}>${x}</td>`).join("") + "</tr>").join("");
+  return `<div class="tbl"><table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table></div>`;
+}
+
+function renderTop() {
+  const c = curCase(), v = curView(), P = prep(c), cmp = state.method === "compare";
+  const rx = v.nodes.filter(g => N.kind[g]).map(g => ({g, k: P.rxnIx.get(g)}));
+  const rk = (m, o) => c.methods[m].rxn.rank[o.k];
+  const key = o => cmp ? Math.min(rk("flow", o) ?? Infinity, rk("walk", o) ?? Infinity) : (rk(state.method, o) ?? Infinity);
+  const list = rx.filter(o => key(o) < Infinity).sort((a, b) => key(a) - key(b));
+  const LIMIT = 25, rows = list.slice(0, LIMIT);
+  const gcell = o => `<button class="linkbtn" data-g="${o.g}" title="Show in the graph">${esc(rxnLabel(o.g))}</button>` +
+                     `${P.causal.has(o.g) ? " <span class='tag'>causal</span>" : ""}`;
+  const sub = o => esc(D.subsystems[N.sub[o.g]] || "");
+  let html;
+  if (cmp) {
+    const F = c.methods.flow.rxn, W = c.methods.walk.rxn;
+    html = table(["Rank, flow", "Rank, walk", "Genes", "Reaction", "Score, flow", "Score, walk"],
+      rows.map(o => [fmtRank(F.rank[o.k]), fmtRank(W.rank[o.k]), gcell(o), esc(N.name[o.g]), fmtN(F.score[o.k]), fmtN(W.score[o.k])]),
+      [0, 1, 4, 5], j => ` class="click" data-g="${rows[j].g}"`);
+  } else {
+    // The pathway column only adds information in the subnetwork view (a pathway view is one subsystem).
+    const R = c.methods[state.method].rxn, walk = state.method === "walk", net = v.kind === "net";
+    const cols = [["Rank", o => fmtRank(R.rank[o.k]), 1], ["Genes", gcell, 0], ["Reaction", o => esc(N.name[o.g]), 0]]
+      .concat(net ? [["Pathway", sub, 0]] : [])
+      .concat([["Final score", o => fmtN(R.score[o.k]), 1], ["Conductivity", o => fmtN(R.cond[o.k]), 1],
+               ["Bottleneck", o => fmtN(R.bott[o.k]), 1]])
+      .concat(walk ? [["Net forward", o => fmtN(R.nf[o.k]), 1]] : []);
+    html = table(cols.map(x => x[0]), rows.map(o => cols.map(x => x[1](o))), cols.flatMap((x, i) => x[2] ? [i] : []),
+      j => ` class="click" data-g="${rows[j].g}"`);
+  }
+  const scored = cmp ? `${c.methods.flow.reactions_scored.toLocaleString("en")} (flow) and ${c.methods.walk.reactions_scored.toLocaleString("en")} (walk)`
+                     : c.methods[state.method].reactions_scored.toLocaleString("en");
+  $("top-h").textContent = cmp ? "Top reactions in this view, both methods" : `Top reactions in this view, ${NAME[state.method].toLowerCase()}`;
+  $("top-note").textContent = `${list.length} of ${rx.length} reactions in this view carry current` +
+    (list.length > LIMIT ? `; the best ${LIMIT} are listed` : "") + `. Rank among the ${scored} reactions with current ` +
+    `(1 = best${cmp ? "; sorted by the better of the two" : ""}). Click a row to find it in the graph.`;
+  $("top").innerHTML = list.length ? html : `<p class="small" style="padding:10px 12px">No reaction in this view carries current under this method.</p>`;
+  $("top").querySelectorAll("tr.click").forEach(tr => tr.addEventListener("click", () => select(+tr.dataset.g, true)));
+  // the Genes cell's button gives keyboard access (its click bubbles to the row)
+}
+
+// ---- side panel ---------------------------------------------------------------
+function viewsWith(c, g) { return c.views.filter(v => v.nodes.includes(g)); }
+function causalBlock(c) {
+  const P = prep(c), v = curView();
+  if (!c.causal_rxn.length) return `<div><h3>Causal-gene reactions</h3><p class="empty">The causal gene has no reaction on the network.</p></div>`;
+  const items = c.causal_rxn.map(g => {
+    const k = P.rxnIx.get(g), here = v.nodes.includes(g), other = here ? null : viewsWith(c, g)[0];
+    const r = m => c.methods[m].rxn.rank[k] == null ? "no current" : fmtRank(c.methods[m].rxn.rank[k]);
+    const rk = `flow ${r("flow")}, walk ${r("walk")}`;
+    const act = here ? `<button class="linkbtn" data-g="${g}">show</button>`
+              : other ? `<button class="linkbtn" data-g="${g}" data-view="${esc(other.id)}">open in ${esc(short(other.kind === "net" ? "subnetwork" : other.kind === "causal" ? "causal-gene neighbourhood" : other.title, 34))}</button>`
+              : `<span class="sub">in no view</span>`;
+    return `<li><b class="mono">${esc(rxnLabel(g))}</b> <span class="sub">${esc(short(N.name[g], 48))}</span><br>` +
+           `<span class="sub">reaction rank: ${rk}</span> · ${act}</li>`;
+  }).join("");
+  return `<div><h3>Causal-gene reactions (${c.causal_rxn.length})</h3><ul class="linklist">${items}</ul></div>`;
+}
+function edgeRows(c, g) {
+  // Edges of the selected node in the current view, by current under the shown method(s).
+  const P = prep(c), v = curView(), ms = panelMethods(), mt = state.metric;
+  const es = v.edges.filter(ge => E.m[ge] === g || E.r[ge] === g).map(ge => ({ge, k: P.edgeIx.get(ge)}));
+  const val = (m, o) => c.methods[m][mt === "mean" ? "edge_mean" : "edge_max"][o.k];
+  es.sort((a, b) => Math.max(...ms.map(m => val(m, b))) - Math.max(...ms.map(m => val(m, a))));
+  const head = [N.kind[g] ? "Metabolite" : "Reaction", "Side"].concat(["flow", "walk"].map(m => m === "flow" ? "Flow" : "Walk"));
+  const rows = es.slice(0, 30).map(o => {
+    const other = N.kind[g] ? E.m[o.ge] : E.r[o.ge];
+    return [`<button class="linkbtn" data-g="${other}">${esc(short(nodeTitle(other, v), 30))}</button>`,
+            E.side[o.ge] ? "product" : "substrate", fmtN(val("flow", o)), fmtN(val("walk", o))];
+  });
+  return `<div><h3>Edges in this view (${es.length})</h3><p class="sub">${mt === "mean" ? "Mean" : "Max"} current per edge` +
+         `${es.length > 30 ? "; the 30 largest" : ""}.</p>${table(head, rows, [2, 3])}</div>`;
+}
+function renderSide() {
+  const c = curCase(), g = state.sel, P = prep(c);
+  let h = "";
+  if (g == null) {
+    h = `<p class="empty">Click or tap a node for its details. Hover for a summary.</p>`;
+  } else if (N.kind[g]) {
+    const k = P.rxnIx.get(g), F = c.methods.flow.rxn, W = c.methods.walk.rxn;
+    const row = (lab, f, w) => `<tr><td>${lab}</td><td class="num">${f}</td><td class="num">${w}</td></tr>`;
+    h = `<div><h3>${esc(rxnLabel(g))}${P.causal.has(g) ? " <span class='tag'>causal gene</span>" : ""}</h3>
+         <p class="sub">${esc(N.name[g])}</p></div>
+         <dl class="kv"><dt>Reaction</dt><dd class="mono">${esc(N.id[g])}</dd>
+         <dt>Genes</dt><dd class="mono">${esc((N.genes[g] || "none known").split(";").join(", "))}</dd>
+         <dt>Pathway</dt><dd>${esc(D.subsystems[N.sub[g]] || "–")}</dd>
+         <dt>Direction</dt><dd>${N.rev[g] ? "reversible" : "irreversible"}</dd></dl>
+         <div class="tbl"><table><thead><tr><th></th><th class="num">Flow</th><th class="num">Walk</th></tr></thead><tbody>
+         ${row("Reaction rank", fmtRank(F.rank[k]), fmtRank(W.rank[k]))}
+         ${row("Final score", fmtN(F.score[k]), fmtN(W.score[k]))}
+         ${row("Conductivity", fmtN(F.cond[k]), fmtN(W.cond[k]))}
+         ${row("Bottleneck", fmtN(F.bott[k]), fmtN(W.bott[k]))}
+         ${row("Net forward", "–", fmtN(W.nf ? W.nf[k] : null))}</tbody></table></div>` + edgeRows(c, g);
+  } else {
+    const mm = P.met.get(g);
+    h = `<div><h3>${esc(metName(g, curView()))}</h3><p class="sub">${esc(roleText(c, mm))}</p></div>
+         <dl class="kv"><dt>Metabolite</dt><dd class="mono">${esc(N.id[g])}</dd>` +
+        (mm ? `<dt>Data id</dt><dd class="mono">${esc(mm.input)}</dd><dt>Mean z-score</dt><dd>${fmtZ(mm.z)}</dd><dt>q (BH)</dt><dd>${fmtQ(mm.q)}</dd>`
+            : `<dt>Mean z-score</dt><dd>unmeasured</dd>`) + `</dl>` + edgeRows(c, g);
+  }
+  $("side").innerHTML = keyHtml() + h + causalBlock(c);
+  $("side").querySelector("details.key").addEventListener("toggle", e => { keyOpen = e.target.open; });
+  $("side").querySelectorAll(".linkbtn").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.view && b.dataset.view !== state.view) { state.view = b.dataset.view; state.sel = +b.dataset.g; refresh(); focusSel(); }
+    else select(+b.dataset.g, true);
+  }));
+}
+
+// ---- selection, search, hash --------------------------------------------------
+function applySelection(center) {
+  Object.values(CY).forEach(cy => {
+    cy.batch(() => { cy.elements(".sel").removeClass("sel"); cy.edges(".hl").removeClass("hl");
+      if (state.sel != null) { const n = cy.getElementById("n" + state.sel); n.addClass("sel"); n.connectedEdges().addClass("hl"); } });
+    cullLabels(cy);
+  });
+  if (center) focusSel();
+}
+function focusSel() {
+  const n = CY.A.getElementById("n" + state.sel);
+  if (!n.nonempty()) return;
+  autoFit = false;
+  stopAll();                                   // a new jump replaces any queued one
+  CY.A.animate({center: {eles: n}, zoom: Math.max(CY.A.zoom(), 1.3)}, {duration: 300});
+}
+function select(g, center) {
+  state.sel = g; applySelection(center); renderSide(); writeHash();
+}
+function findNodes(q) {
+  q = q.trim().toLowerCase();
+  if (!q) return {here: [], elsewhere: []};
+  const match = g => N.name[g].toLowerCase().includes(q) || N.id[g].toLowerCase() === q ||
+                     (N.genes[g] && N.genes[g].toLowerCase().split(";").some(s => s === q || s.startsWith(q)));
+  const exact = g => N.name[g].toLowerCase() === q || (N.genes[g] && N.genes[g].toLowerCase().split(";").includes(q));
+  const c = curCase(), v = curView();
+  const here = v.nodes.filter(match).sort((a, b) => exact(b) - exact(a));
+  const elsewhere = here.length ? [] : c.views.filter(w => w.id !== v.id && w.nodes.some(match));
+  return {here, elsewhere};
+}
+// Highlight the active query's matches in the current graphs (called after every re-render,
+// so a method switch keeps them; a case or view change clears the query).
+function markFound() {
+  const here = findQ ? findNodes(findQ).here : [];
+  Object.values(CY).forEach(cy => cy.batch(() => {
+    cy.nodes(".found").removeClass("found");
+    here.forEach(g => cy.getElementById("n" + g).addClass("found"));
+  }));
+  Object.values(CY).forEach(cullLabels);
+}
+function clearFind() { findQ = ""; $("find-msg").textContent = ""; }
+function runFind(ev) {
+  if (ev) ev.preventDefault();
+  const q = $("find-q").value, {here, elsewhere} = findNodes(q), msg = $("find-msg");
+  findQ = here.length ? q : "";
+  markFound();
+  if (!q.trim()) { msg.textContent = ""; return; }
+  if (here.length) {
+    msg.textContent = `${here.length} match${here.length > 1 ? "es" : ""} in this view (highlighted); centred on ${nodeTitle(here[0], curView())}.`;
+    select(here[0], true);
+  } else if (elsewhere.length) {
+    msg.innerHTML = `Not in this view. Found in: ` + elsewhere.map(w =>
+      `<button class="linkbtn" data-view="${esc(w.id)}">${esc(viewName(w))}</button>`).join(", ");
+    msg.querySelectorAll(".linkbtn").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; state.sel = null; refresh(); runFind(); }));
+  } else msg.textContent = `No node in this disorder's views matches “${q}”.`;
+}
+function fillFindList() {
+  const v = curView(), opts = new Set();
+  v.nodes.forEach(g => { if (N.kind[g]) (N.genes[g] ? N.genes[g].split(";") : []).forEach(s => opts.add(s)); else opts.add(N.name[g]); });
+  $("find-list").innerHTML = [...opts].sort().map(s => `<option value="${esc(s)}">`).join("");
+}
+function readHash() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get("case") && CASES.some(c => c.id === h.get("case"))) state.case = h.get("case");
+  const c = curCase();
+  state.view = h.get("view") && prep(c).views.has(h.get("view")) ? h.get("view") : "net";
+  if (["flow", "walk", "compare"].includes(h.get("method"))) state.method = h.get("method");
+  if (["mean", "max"].includes(h.get("metric"))) state.metric = h.get("metric");
+  const id = h.get("node"), v = curView();
+  state.sel = id ? (v.nodes.find(g => N.id[g] === id) ?? null) : null;
+}
+function writeHash() {
+  const h = new URLSearchParams({case: state.case, view: state.view, method: state.method, metric: state.metric});
+  if (state.sel != null) h.set("node", N.id[state.sel]);
+  const s = "#" + h.toString();
+  if (location.hash !== s) history.replaceState(null, "", s);
+}
+
+// ---- legend -------------------------------------------------------------------
+function renderLegend() {
+  const W = 260, n = 24, stops = Array.from({length: n + 1}, (_, i) => {
+    const z = -Z_CLIP + 2 * Z_CLIP * i / n;
+    return `<stop offset="${(100 * i / n).toFixed(1)}%" stop-color="${zColor(z)}"/>`;
+  }).join("");
+  const ticks = [-4, -2, -1, 0, 1, 2, 4].map(z => {
+    const x = 10 + (z + Z_CLIP) / (2 * Z_CLIP) * W;
+    return `<line x1="${x}" x2="${x}" y1="26" y2="31" stroke="var(--muted)"/><text class="t" x="${x}" y="43" text-anchor="middle">${z > 0 ? "+" + z : z < 0 ? "−" + (-z) : 0}</text>`;
+  }).join("");
+  const zbar = `<div class="lg"><span class="k">Metabolite fill: mean z-score</span>
+    <svg viewBox="0 0 ${W + 20} 60" width="${W + 20}"><defs><linearGradient id="zg">${stops}</linearGradient></defs>
+    <rect x="10" y="12" width="${W}" height="14" rx="3" fill="url(#zg)" stroke="var(--node-line)" stroke-width=".8"/>${ticks}
+    <text x="10" y="8" font-size="11">← decreased</text><text x="${W + 10}" y="8" text-anchor="end">increased →</text>
+    <text x="${10 + W / 2}" y="57" text-anchor="middle">clipped at |z| = ${Z_CLIP}; significant: q &lt; 0.05 and |z| ≥ 1</text></svg></div>`;
+
+  const sym = (shape, label, i) => `<g transform="translate(0 ${i * 22})">${shape}<text x="34" y="15">${label}</text></g>`;
+  const shapes = [
+    `<circle cx="14" cy="11" r="8" fill="${zColor(2.5)}" stroke="var(--node-line)"/>`,
+    `<circle cx="14" cy="11" r="5.8" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 2"/>`,
+    `<circle cx="14" cy="11" r="7.5" fill="${zColor(-3)}" stroke="var(--surface)" stroke-width="2"/><circle cx="14" cy="11" r="9.6" fill="none" stroke="var(--ink)" stroke-width="2.4"/>`,
+    `<rect x="9" y="6" width="10" height="10" rx="2.5" fill="var(--rxn)"/>`,
+    `<rect x="8" y="5" width="12" height="12" rx="3" fill="var(--rxn)" stroke="var(--surface)" stroke-width="2"/><rect x="5.5" y="2.5" width="17" height="17" rx="4.5" fill="none" stroke="var(--causal)" stroke-width="3"/>`,
+  ];
+  const labels = ["metabolite (measured)", "metabolite, unmeasured", "significant: source or target", "reaction (label: genes)", "reaction of the causal gene"];
+  const marks = `<div class="lg"><span class="k">Nodes</span><svg viewBox="0 0 220 112" width="220">
+    ${shapes.map((s, i) => sym(s, labels[i], i)).join("")}</svg></div>`;
+
+  const refs = [0, 0.01, 0.1, 0.5, 1, W_CAP];
+  const lines = refs.map((c, i) => {
+    const y = 10 + i * 18, w = width(c);
+    return `<line x1="8" x2="70" y1="${y}" y2="${y}" stroke="var(--edge)" stroke-width="${w}" opacity="${c > 0 ? .9 : .4}" stroke-linecap="butt"/>` +
+           `<text x="82" y="${y + 4}">${c === 0 ? "0 (no current)" : c === W_CAP ? "≥ " + W_CAP : c}</text>`;
+  }).join("");
+  const wl = `<div class="lg"><span class="k">Edge width: ${state.metric === "mean" ? "mean" : "max"} current</span>
+    <svg viewBox="0 0 200 116" width="200">${lines}</svg></div>`;
+  const arrows = `<div class="lg"><span class="k">Direction</span><svg viewBox="0 0 230 60" width="230">
+    <line x1="8" x2="52" y1="12" y2="12" stroke="var(--edge)" stroke-width="2"/><path d="M60,12 l-10,-5 v10 z" fill="var(--edge)"/>
+    <text x="70" y="16">reaction direction in the model</text>
+    <line x1="8" x2="60" y1="36" y2="36" stroke="var(--edge)" stroke-width="2"/><text x="70" y="40">reversible (no arrowhead)</text>
+    </svg><span class="small" style="max-width:230px">Width uses one scale for both methods and every view, drawn at a fixed screen size at any zoom: per pair (flow) or per source (walk).</span></div>`;
+  $("legend").innerHTML = zbar + marks + wl + arrows;
+}
+
+// A compact key at the top of the side panel, so the encodings are in view next to the graph
+// (the full legend sits below the graph). Open by default except at phone width.
+let keyOpen = innerWidth > 760;
+function keyHtml() {
+  const W = 200, n = 16, stops = Array.from({length: n + 1}, (_, i) =>
+    `<stop offset="${(100 * i / n).toFixed(1)}%" stop-color="${zColor(-Z_CLIP + 2 * Z_CLIP * i / n)}"/>`).join("");
+  const glyph = (x, shape, label) => `<g transform="translate(${x} 58)">${shape}<text x="0" y="30" text-anchor="middle">${label}</text></g>`;
+  const glyphs = glyph(26, `<circle r="5.8" cy="10" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 2"/>`, "unmeasured") +
+    glyph(94, `<circle r="7" cy="10" fill="${zColor(3)}" stroke="var(--surface)" stroke-width="2"/><circle r="9.2" cy="10" fill="none" stroke="var(--ink)" stroke-width="2.4"/>`, "significant") +
+    glyph(160, `<rect x="-5" y="5" width="10" height="10" rx="2.5" fill="var(--rxn)"/>`, "reaction") +
+    glyph(222, `<rect x="-6" y="4" width="12" height="12" rx="3" fill="var(--rxn)" stroke="var(--surface)" stroke-width="2"/><rect x="-8.5" y="1.5" width="17" height="17" rx="4.5" fill="none" stroke="var(--causal)" stroke-width="3"/>`, "causal gene");
+  const ws = [0, 0.1, 0.5, 1].map((c, i) => {
+    const x = 6 + i * 60, w = width(c);
+    return `<line x1="${x}" x2="${x + 40}" y1="${118}" y2="${118}" stroke="var(--edge)" stroke-width="${w}" opacity="${c > 0 ? .9 : .5}"/>` +
+           `<text class="t" x="${x + 20}" y="${138}" text-anchor="middle">${c === 0 ? "0" : c}</text>`;
+  }).join("");
+  return `<details class="key"${keyOpen ? " open" : ""}><summary>Key</summary><svg viewBox="0 0 252 146" width="252" role="img"
+    aria-label="Key: fill is mean z-score, blue decreased, red increased; hollow dashed circle unmeasured; dark ring significant; squares reactions; violet ring causal gene; edge width is current">
+    <defs><linearGradient id="kg">${stops}</linearGradient></defs>
+    <text x="0" y="9">fill: mean z-score (clipped at ±${Z_CLIP})</text>
+    <rect x="6" y="15" width="${W}" height="10" rx="2" fill="url(#kg)" stroke="var(--node-line)" stroke-width=".6"/>
+    <text class="t" x="6" y="38">−${Z_CLIP} down</text><text class="t" x="${6 + W / 2}" y="38" text-anchor="middle">0</text>
+    <text class="t" x="${6 + W}" y="38" text-anchor="end">up +${Z_CLIP}</text>
+    ${glyphs}<text x="0" y="106">edge width: ${state.metric} current</text>${ws}</svg></details>`;
+}
+
+// ---- controls -----------------------------------------------------------------
+function fillCases() {
+  const groups = {primary: [], secondary: []};
+  CASES.forEach(c => (groups[c.status] || (groups[c.status] = [])).push(c));
+  $("case").innerHTML = Object.entries(groups).filter(([, l]) => l.length).map(([k, l]) =>
+    `<optgroup label="${k === "primary" ? "Primary cases" : "Secondary cases"}">` +
+    l.map(c => `<option value="${esc(c.id)}">${esc(c.disorder)} (${esc(c.causal_genes.join(", "))})</option>`).join("") + "</optgroup>").join("");
+}
+function fillViews() {
+  const c = curCase();
+  const pw = c.views.filter(v => v.kind === "pathway"), opt = v => `<option value="${esc(v.id)}">${esc(viewLabel(c, v))}</option>`;
+  $("view").innerHTML = c.views.filter(v => v.kind !== "pathway").map(opt).join("") +
+    `<optgroup label="Pathways picked by over-representation">` + pw.map(opt).join("") + "</optgroup>";
+}
+function syncControls() {
+  $("case").value = state.case; $("view").value = state.view;
+  document.querySelectorAll("#method button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.method)));
+  document.querySelectorAll("#metric button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.metric)));
+}
+function refresh(refit = true) {
+  fillViews(); syncControls(); renderStrip(); renderViewHead(); renderGraphs(refit); renderTop(); renderSide(); renderLegend();
+  fillFindList(); writeHash();
+}
+
+$("case").addEventListener("change", e => { state.case = e.target.value; state.view = "net"; state.sel = null; clearFind(); refresh(); });
+$("view").addEventListener("change", e => { state.view = e.target.value; if (state.sel != null && !curView().nodes.includes(state.sel)) state.sel = null; clearFind(); refresh(); });
+$("method").addEventListener("click", e => { const b = e.target.closest("button"); if (!b || b.dataset.v === state.method) return;
+  // flow <-> walk keeps the viewport (same canvas size); entering or leaving compare changes
+  // the panel width, so re-fit instead.
+  const vp = {zoom: CY.A.zoom(), pan: CY.A.pan()}, keep = state.method !== "compare" && b.dataset.v !== "compare";
+  state.method = b.dataset.v; refresh(false);
+  if (keep) { CY.A.viewport(vp); rescale(CY.A); } else fit(); });
+$("metric").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+  state.metric = b.dataset.v; syncControls(); Object.values(CY).forEach(setWidths); renderLegend(); renderSide(); writeHash(); });
+$("fit").addEventListener("click", fit);
+$("find").addEventListener("submit", runFind);
+addEventListener("hashchange", () => {
+  const before = state.case + "/" + state.view;
+  readHash();
+  if (state.case + "/" + state.view !== before) clearFind();
+  refresh();
+  if (state.sel != null) focusSel();          // as on a fresh load
+});
+$("touch").addEventListener("click", () => { touchLock = !touchLock; applyTouchLock(); });
+
+// Theme: restyle the canvas whenever the system scheme or the page's data-theme changes.
+function restyle() { readTheme(); Object.values(CY).forEach(cy => cy.style(cyStyle())); renderLegend(); renderSide(); }
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", restyle);
+new MutationObserver(restyle).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+// Web fonts change label widths: re-measure and re-cull once they have loaded.
+if (document.fonts) document.fonts.ready.then(() => { readTheme(); textW.clear();
+  Object.values(CY).forEach(cy => { cy.style(cyStyle()); cullLabels(cy); }); });
+// Panels change size with the window, the compare toggle and the phone's rotation:
+// keep cytoscape's idea of its size current, and re-fit unless the user has panned or zoomed.
+let resizeTimer;
+const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => {
+  setHeights(); applyTouchLock(); Object.values(CY).forEach(cy => cy.resize()); if (autoFit) fit(); }, 120); };
+if (window.ResizeObserver) { const ro = new ResizeObserver(onResize); ro.observe($("cyA")); ro.observe($("cyB")); }
+addEventListener("resize", onResize);           // the height band depends on the window height too
+
+// ---- start --------------------------------------------------------------------
+$("eyebrow").textContent = "Metaboenrich · " + (META.git || "");
+$("foot").innerHTML = `Built ${esc(META.generated)} by <code>tools/report/build_network_report.py</code> (cytoscape.js ${esc(META.cytoscape)}, inlined).
+  Network: ${META.network.nodes.toLocaleString("en")} nodes, ${META.network.genes.toLocaleString("en")} genes. ${CASES.length} group-level cases;
+  significance ${esc(META.significance)}. Pathway rule: ${esc(META.pathway_rule)}. Methods: <code>metaboenrich/flow.py</code>, <code>metaboenrich/walk.py</code>.`;
+readTheme();
+fillCases();
+CY.A = makeCy("A");
+applyTouchLock();
+readHash();
+refresh();
+if (state.sel != null) focusSel();
+</script>
+</body></html>

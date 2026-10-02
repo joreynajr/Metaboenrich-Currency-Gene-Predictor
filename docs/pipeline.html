@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Metaboenrich Pipeline Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--axis:#c5ccd4;
+  --accent:#1f63b5;--note:#eef3fa;--note-ink:#1c3e66;--box:#ffffff;--box-main:#eaf1fb;--box-main-edge:#9dbbe3;
+  --p-numpy:#2a78d6;--p-scipy:#138a76;--p-pandas:#7b52c8;--p-std:#7c8794;--p-rdkit:#d27a12;--p-rxn:#cf3f68;--p-ext:#8a6a3b;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;
+  --accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--box:#1b2026;--box-main:#17263a;--box-main-edge:#335a8a;
+  --p-numpy:#5c9be6;--p-scipy:#3dbba4;--p-pandas:#a283e0;--p-std:#9aa4b0;--p-rdkit:#eda04a;--p-rxn:#ec6f92;--p-ext:#c09a63}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;
+  --accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--box:#1b2026;--box-main:#17263a;--box-main-edge:#335a8a;
+  --p-numpy:#5c9be6;--p-scipy:#3dbba4;--p-pandas:#a283e0;--p-std:#9aa4b0;--p-rdkit:#eda04a;--p-rxn:#ec6f92;--p-ext:#c09a63}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,4vw,40px);padding-block:40px 72px}
+main{max-width:1040px;margin-inline:auto;display:grid;gap:48px}
+.prose{max-width:72ch;display:grid;gap:12px}
+.narrow{max-width:72ch}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(30px,4vw,40px);font-weight:700;letter-spacing:-.015em}
+h2{font-size:23px;font-weight:650;padding-top:10px;border-top:1px solid var(--rule)}
+h3{font-size:18px;font-weight:650}
+p,ul,ol{margin:0}
+ul,ol{padding-left:1.2em;display:grid;gap:6px}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+section{display:grid;gap:18px}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:18px;color:var(--ink-2);max-width:68ch}
+.small{font-size:14px;color:var(--ink-2)}
+.summary{background:var(--note);color:var(--note-ink);border-radius:8px;padding:18px 22px;display:grid;gap:8px}
+.summary li,.summary p{color:var(--note-ink)}
+
+/* package chips */
+.pk{display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1.3 var(--mono);color:var(--ink);white-space:nowrap}
+.pk::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.pk.numpy{--c:var(--p-numpy)}.pk.scipy{--c:var(--p-scipy)}.pk.pandas{--c:var(--p-pandas)}.pk.std{--c:var(--p-std)}
+.pk.rdkit{--c:var(--p-rdkit)}.pk.rxn{--c:var(--p-rxn)}.pk.ext{--c:var(--p-ext)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center}
+.legend .pk small{font:400 12px var(--sans);color:var(--muted)}
+
+/* overview diagram */
+figure{margin:0;display:grid;gap:12px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 18px 14px}
+.scroll{overflow-x:auto}
+.scroll svg{display:block;min-width:900px;width:100%;height:auto}
+figcaption{font-size:14px;color:var(--ink-2)}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .lane{font:500 10.5px var(--mono);letter-spacing:.08em;fill:var(--muted)}
+svg .lane-sub{font:11px var(--mono);fill:var(--muted)}
+svg .b{fill:var(--box);stroke:var(--axis);stroke-width:1}
+svg .b-main{fill:var(--box-main);stroke:var(--box-main-edge);stroke-width:1.2}
+svg .b-opt{fill:var(--box);stroke:var(--axis);stroke-width:1;stroke-dasharray:4 3}
+svg .t{font-size:13px;font-weight:600}svg .ti{font-size:12px}
+svg .m{font:10.5px var(--mono);fill:var(--ink-2)}
+svg .s{font-size:11px;fill:var(--muted)}
+svg .n{font:600 11px var(--mono);fill:var(--accent)}
+svg .ar{stroke:var(--muted);stroke-width:1.3;fill:none}
+svg .ah{fill:var(--muted)}
+svg a:hover .b,svg a:hover .b-main,svg a:hover .b-opt{stroke:var(--accent);stroke-width:1.8}
+svg .d-numpy{fill:var(--p-numpy)}svg .d-scipy{fill:var(--p-scipy)}svg .d-pandas{fill:var(--p-pandas)}svg .d-std{fill:var(--p-std)}
+svg .d-rdkit{fill:var(--p-rdkit)}svg .d-rxn{fill:var(--p-rxn)}svg .d-ext{fill:var(--p-ext)}
+
+/* matrix */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font:500 11.5px/1.3 var(--mono);letter-spacing:.04em;text-transform:none;color:var(--muted);white-space:nowrap;position:sticky;top:0;background:var(--surface)}
+tbody th{font-weight:600;white-space:nowrap}
+tbody th small{display:block;font:400 11.5px var(--mono);color:var(--muted)}
+td code{display:inline-block;margin:0 8px 3px 0;font-size:12px;line-height:1.45;color:var(--ink)}
+td.none{color:var(--axis)}
+tr.group td,tr.group th{background:var(--page);font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:7px 12px}
+tr:last-child td,tr:last-child th{border-bottom:0}
+table.matrix{table-layout:fixed;min-width:880px}table.matrix td code{overflow-wrap:anywhere}table.matrix tbody th{white-space:normal}
+
+/* stage cards */
+.stages{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px 22px;display:grid;gap:14px;scroll-margin-top:16px}
+.card:target{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.card-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.num{font:600 13px var(--mono);color:var(--accent);background:var(--note);border-radius:6px;padding:2px 8px}
+.where{font:12.5px var(--mono);color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px 28px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.label{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.fn{list-style:none;padding:0;display:grid;gap:8px}
+.fn li{display:block}
+.fn code{font-size:13px;color:var(--ink)}
+.fn span{display:block;font-size:14px;color:var(--ink-2)}
+.pkgs{list-style:none;padding:0;display:grid;gap:8px}
+.pkgs li{display:block}
+.pkgs li > span:last-child{display:block;font-size:13.5px;color:var(--ink-2);padding-left:15px}
+.io{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--rule);padding-top:10px}
+.io b{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.math{font:13.5px/1.7 var(--mono);background:var(--page);border-radius:6px;padding:10px 14px;overflow-x:auto;white-space:nowrap}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
+</style>
+</head>
+<body>
+<main>
+
+<header class="prose">
+  <div class="eyebrow">Metaboenrich 0.2.0.dev0 · code map</div>
+  <h1>Pipeline map</h1>
+  <p class="lede">What each step of the analysis does, which module and function does it, and which package does the
+  work underneath. Every function and package call named here was checked against the code at commit <code>48786d1</code>.</p>
+  <nav class="toc">
+    <a href="#overview">Overview</a><a href="#matrix">Packages by step</a><a href="#main-run">Main run, step by step</a>
+    <a href="#other">Other entry points</a><a href="#deps">Dependencies</a>
+  </nav>
+</header>
+
+<section class="summary">
+  <p><strong>In one paragraph.</strong> The main run (<code>python -m metaboenrich</code>) loads Human-GEM, removes
+  currency metabolites, maps the DAA table onto model metabolites, and builds a metabolite–reaction graph. It then
+  treats increased metabolites as current sources and decreased ones as sinks and solves Kirchhoff's equations for every
+  source–target pair, then ranks reactions, genes and pathways by the current they carry. The heavy maths is three
+  calls: <code>scipy.sparse</code> to build the Laplacian, <code>scipy.sparse.linalg.splu</code> to factor it once per
+  connected component, and numpy matrix products for the per-pair currents. Everything else is pandas tables
+  and the Python standard library. Model parsing uses no SBML library, only <code>xml.etree</code>.</p>
+</section>
+
+<section id="overview">
+  <h2>Overview</h2>
+  <div class="legend" aria-label="Package colours">
+    <span class="pk numpy">numpy</span>
+    <span class="pk scipy">scipy</span>
+    <span class="pk pandas">pandas</span>
+    <span class="pk std">Python standard library</span>
+    <span class="pk rdkit">rdkit <small>optional</small></span>
+    <span class="pk rxn">rxnmapper <small>optional</small></span>
+    <span class="pk ext">external service / R</span>
+  </div>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 420" role="img" aria-labelledby="ov-title">
+      <title id="ov-title">Pipeline overview: inputs feed seven main-run steps; five other scripts reuse parts of the main run</title>
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" class="ah"/>
+        </marker>
+      </defs>
+
+      <!-- lane labels -->
+      <text class="lane" x="0" y="44">INPUTS</text>
+      <text class="lane" x="0" y="160">MAIN RUN</text>
+      <text class="lane-sub" x="0" y="176">python -m</text>
+      <text class="lane-sub" x="0" y="190">metaboenrich</text>
+      <text class="lane" x="0" y="318">OTHER</text>
+      <text class="lane" x="0" y="332">ENTRY POINTS</text>
+
+      <!-- inputs -->
+      <a href="#s1"><rect class="b" x="112" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="122" y="38">Human-GEM</text>
+        <text class="s" x="122" y="54">v2.0.1 SBML + YAML</text>
+        <text class="s" x="122" y="67">SHA-256 pinned</text></a>
+      <a href="#s2"><rect class="b" x="239" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="249" y="38">reaction_edits</text>
+        <text class="s" x="249" y="54">.tsv, model</text>
+        <text class="s" x="249" y="67">corrections</text></a>
+      <a href="#s3"><rect class="b" x="366" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="376" y="38">DAA table</text>
+        <text class="s" x="376" y="54">.csv / .tsv</text>
+        <text class="s" x="376" y="67">+ id_translation</text></a>
+      <a href="#oC"><rect class="b-opt" x="493" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="503" y="38">atom_pairs.json</text>
+        <text class="s" x="503" y="54">optional</text>
+        <text class="s" x="503" y="67">--atom-pairs</text></a>
+      <path class="ar" d="M169 74 V120" marker-end="url(#arr)"/>
+      <path class="ar" d="M296 74 V120" marker-end="url(#arr)"/>
+      <path class="ar" d="M423 74 V120" marker-end="url(#arr)"/>
+      <path class="ar" d="M550 74 V120" marker-end="url(#arr)" stroke-dasharray="4 3"/>
+
+      <!-- main run -->
+      <a href="#s1"><rect class="b-main" x="112" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="122" y="144">1</text><text class="t" x="134" y="144">Load model</text>
+        <text class="m" x="122" y="164">gem.py</text><text class="m" x="122" y="180">load_sbml</text>
+        <circle class="d-std" cx="126" cy="204" r="4.5"/></a>
+      <a href="#s2"><rect class="b-main" x="239" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="249" y="144">2</text><text class="t" x="261" y="144">Currency</text>
+        <text class="m" x="249" y="164">network.py</text><text class="m" x="249" y="180">resolve_currency</text>
+        <circle class="d-std" cx="253" cy="204" r="4.5"/></a>
+      <a href="#s3"><rect class="b-main" x="366" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="376" y="144">3</text><text class="t" x="388" y="144">Map DAA</text>
+        <text class="m" x="376" y="164">daa.py</text><text class="m" x="376" y="180">load_daa</text>
+        <circle class="d-pandas" cx="380" cy="204" r="4.5"/><circle class="d-numpy" cx="393" cy="204" r="4.5"/><circle class="d-std" cx="406" cy="204" r="4.5"/></a>
+      <a href="#s4"><rect class="b-main" x="493" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="503" y="144">4</text><text class="t" x="515" y="144">Build graph</text>
+        <text class="m" x="503" y="164">network.py</text><text class="m" x="503" y="180">build_graph</text>
+        <circle class="d-numpy" cx="507" cy="204" r="4.5"/><circle class="d-scipy" cx="520" cy="204" r="4.5"/><circle class="d-std" cx="533" cy="204" r="4.5"/></a>
+      <a href="#s5"><rect class="b-main" x="620" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="630" y="144">5</text><text class="t" x="642" y="144">Current flow</text>
+        <text class="m" x="630" y="164">flow.py</text><text class="m" x="630" y="180">current_flow</text>
+        <circle class="d-numpy" cx="634" cy="204" r="4.5"/><circle class="d-scipy" cx="647" cy="204" r="4.5"/></a>
+      <a href="#s6"><rect class="b-main" x="747" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="757" y="144">6</text><text class="t" x="769" y="144">Score &amp; rank</text>
+        <text class="m" x="757" y="164">scoring.py</text><text class="m" x="757" y="180">gene_table</text>
+        <circle class="d-pandas" cx="761" cy="204" r="4.5"/><circle class="d-numpy" cx="774" cy="204" r="4.5"/><circle class="d-scipy" cx="787" cy="204" r="4.5"/></a>
+      <a href="#s7"><rect class="b-main" x="874" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="884" y="144">7</text><text class="t" x="896" y="144">Outputs</text>
+        <text class="m" x="884" y="164">cytoscape.py</text><text class="m" x="884" y="180">write_graphml</text>
+        <circle class="d-pandas" cx="888" cy="204" r="4.5"/><circle class="d-numpy" cx="901" cy="204" r="4.5"/><circle class="d-std" cx="914" cy="204" r="4.5"/></a>
+      <path class="ar" d="M226 172 H237" marker-end="url(#arr)"/>
+      <path class="ar" d="M353 172 H364" marker-end="url(#arr)"/>
+      <path class="ar" d="M480 172 H491" marker-end="url(#arr)"/>
+      <path class="ar" d="M607 172 H618" marker-end="url(#arr)"/>
+      <path class="ar" d="M734 172 H745" marker-end="url(#arr)"/>
+      <path class="ar" d="M861 172 H872" marker-end="url(#arr)"/>
+
+      <!-- other entry points -->
+      <a href="#oA"><rect class="b" x="112" y="288" width="160" height="108" rx="7"/>
+        <text class="n" x="122" y="308">A</text><text class="t" x="136" y="308">Locked network</text>
+        <text class="m" x="122" y="328">export_network.py</text>
+        <text class="s" x="122" y="346">→ network/</text>
+        <text class="s" x="122" y="362">reuses steps 1, 2, 4, 7</text>
+        <circle class="d-pandas" cx="126" cy="382" r="4.5"/><circle class="d-std" cx="139" cy="382" r="4.5"/></a>
+      <a href="#oB"><rect class="b" x="291" y="288" width="160" height="108" rx="7"/>
+        <text class="n" x="301" y="308">B</text><text class="t" x="315" y="308">Pruning atlases</text>
+        <text class="m" x="301" y="328">structure.py</text>
+        <text class="s" x="301" y="346">→ structure.json, .cyjs</text>
+        <text class="s" x="301" y="362">reuses steps 1, 2, 4, 5</text>
+        <circle class="d-numpy" cx="305" cy="382" r="4.5"/><circle class="d-scipy" cx="318" cy="382" r="4.5"/><circle class="d-pandas" cx="331" cy="382" r="4.5"/></a>
+      <a href="#oC"><rect class="b-opt" x="470" y="288" width="160" height="108" rx="7"/>
+        <text class="n" x="480" y="308">C</text><text class="t" x="494" y="308">Carbon channels</text>
+        <text class="m" x="480" y="328">atoms.py</text>
+        <text class="s" x="480" y="346">→ atom_pairs.json</text>
+        <text class="s" x="480" y="362">experimental; feeds step 4</text>
+        <circle class="d-rdkit" cx="484" cy="382" r="4.5"/><circle class="d-rxn" cx="497" cy="382" r="4.5"/><circle class="d-ext" cx="510" cy="382" r="4.5"/><circle class="d-pandas" cx="523" cy="382" r="4.5"/></a>
+      <a href="#oD"><rect class="b" x="649" y="288" width="160" height="108" rx="7"/>
+        <text class="n" x="659" y="308">D</text><text class="t" x="673" y="308">Benchmark</text>
+        <text class="m" x="659" y="328">benchmark.py</text>
+        <text class="s" x="659" y="346">→ causal-gene ranks</text>
+        <text class="s" x="659" y="362">reuses steps 1–6</text>
+        <circle class="d-pandas" cx="663" cy="382" r="4.5"/><circle class="d-numpy" cx="676" cy="382" r="4.5"/><circle class="d-ext" cx="689" cy="382" r="4.5"/></a>
+      <a href="#oE"><rect class="b" x="828" y="288" width="160" height="108" rx="7"/>
+        <text class="n" x="838" y="308">E</text><text class="t" x="852" y="308">Blind predictions</text>
+        <text class="m" x="838" y="328">published_predictions</text>
+        <text class="s" x="838" y="346">→ predictions/</text>
+        <text class="s" x="838" y="362">runs the whole CLI, 1–7</text>
+        <circle class="d-pandas" cx="842" cy="382" r="4.5"/><circle class="d-numpy" cx="855" cy="382" r="4.5"/></a>
+
+      <line x1="112" x2="988" y1="252" y2="252" stroke="var(--rule)" stroke-dasharray="2 4"/>
+      <text class="s" x="112" y="272">These scripts import the same functions as the main run; they do not reimplement them.</text>
+    </svg>
+    </div>
+    <figcaption>Click any box to jump to its details. Dots under each box show which packages that step relies on
+    (colours as in the legend). Dashed boxes are optional or experimental.</figcaption>
+  </figure>
+</section>
+
+<section id="matrix">
+  <h2>Packages by step</h2>
+  <p class="small narrow">Rows are pipeline steps; each cell names the specific call that step makes into that package. A blank
+  cell means the step doesn't use the package.</p>
+  <div class="tbl">
+  <table class="matrix"><colgroup><col style="width:17%"><col><col><col><col><col></colgroup>
+    <thead><tr>
+      <th>Step</th><th><span class="pk numpy">numpy</span></th><th><span class="pk scipy">scipy</span></th>
+      <th><span class="pk pandas">pandas</span></th><th><span class="pk std">stdlib</span></th>
+      <th><span class="pk ext">other</span></th>
+    </tr></thead>
+    <tbody>
+      <tr class="group"><th colspan="6">Main run · python -m metaboenrich</th></tr>
+      <tr><th>1 Load model<small>gem.py</small></th>
+        <td class="none">·</td><td class="none">·</td><td class="none">·</td>
+        <td><code>xml.etree.ElementTree.parse</code><code>urllib.request.urlretrieve</code><code>hashlib.sha256</code></td>
+        <td>Human-GEM release on GitHub (download once)</td></tr>
+      <tr><th>2 Currency rules<small>network.py</small></th>
+        <td class="none">·</td><td class="none">·</td><td class="none">·</td>
+        <td><code>re</code> (formula, name tokens)<code>collections.Counter</code><code>dataclasses</code></td><td class="none">·</td></tr>
+      <tr><th>3 Map DAA<small>daa.py</small></th>
+        <td><code>np.where</code> (roles)<code>np.log2</code></td><td class="none">·</td>
+        <td><code>read_csv</code><code>drop_duplicates</code><code>Series.map</code></td>
+        <td><code>re</code> (HMDB / ChEBI / name normalising)</td><td class="none">·</td></tr>
+      <tr><th>4 Build graph<small>network.py</small></th>
+        <td><code>int64 edge / arc arrays</code></td>
+        <td><code>sparse.csr_matrix</code> (incidence B)<code>sparse.csgraph.connected_components</code></td>
+        <td class="none">·</td><td><code>collections.deque</code> (directed BFS)</td><td class="none">·</td></tr>
+      <tr><th>5 Current flow<small>flow.py</small></th>
+        <td><code>B @ X</code>, <code>|B|ᵀ @ |I|</code><code>np.add.at</code>, <code>np.maximum.at</code><code>np.sort</code> (leave-one-out)</td>
+        <td><code>sparse.linalg.splu</code> (LU per component)</td>
+        <td class="none">·</td><td><code>dataclasses</code> (FlowResult)</td><td class="none">·</td></tr>
+      <tr><th>6 Score &amp; rank<small>scoring.py</small></th>
+        <td><code>np.minimum.accumulate</code> (BH q-values)<code>np.bincount</code> (degree)</td>
+        <td><code>stats.hypergeom.sf</code> (pathways)</td>
+        <td><code>Series.rank(pct=True)</code><code>DataFrame</code>, <code>sort_values</code></td>
+        <td class="none">·</td><td class="none">·</td></tr>
+      <tr><th>7 Write outputs<small>__main__.py, cytoscape.py</small></th>
+        <td>boolean masks for the subnetwork</td><td class="none">·</td>
+        <td><code>to_csv(sep="\t")</code></td>
+        <td><code>xml.sax.saxutils.escape</code> (GraphML)<code>json</code><code>hashlib.sha256</code> (edge fingerprint)</td><td class="none">·</td></tr>
+      <tr class="group"><th colspan="6">Other entry points</th></tr>
+      <tr><th>A Locked network<small>export_network.py</small></th>
+        <td class="none">·</td><td class="none">·</td><td><code>to_csv</code></td>
+        <td><code>hashlib.sha256</code><code>json</code></td><td class="none">·</td></tr>
+      <tr><th>B Structure &amp; atlases<small>structure.py, stage_diagrams.py, tools/</small></th>
+        <td><code>random.default_rng</code> (sampling)<code>fruchterman_reingold</code> (own layout)</td>
+        <td><code>sparse.csr_matrix</code><code>csgraph.connected_components</code></td>
+        <td><code>read_csv</code> (atlas builders)</td><td><code>json</code><code>html</code></td><td class="none">·</td></tr>
+      <tr><th>C Carbon channels<small>atoms.py</small></th>
+        <td class="none">·</td><td class="none">·</td><td><code>read_csv</code> (SMILES table)</td>
+        <td><code>urllib.request.urlopen</code></td>
+        <td><span class="pk rdkit">rdkit</span> <code>Chem.MolFromSmiles</code><span class="pk rxn">rxnmapper</span> <code>RXNMapper.get_attention_guided_atom_maps</code><span class="pk ext">KEGG REST</span> <code>rest.kegg.jp/get</code></td></tr>
+      <tr><th>D Benchmark<small>benchmark.py, get_benchmark_data.py</small></th>
+        <td><code>np.median</code><code>bh()</code> (own BH)</td><td class="none">·</td>
+        <td><code>read_csv</code>, <code>rank</code></td>
+        <td><code>math.erfc</code> (z → p)<code>subprocess</code>, <code>tarfile</code></td>
+        <td><span class="pk ext">CRAN</span> CTD 1.3 tarball<br><span class="pk ext">R</span> <code>Rscript</code> export</td></tr>
+      <tr><th>E Blind predictions<small>published_predictions.py</small></th>
+        <td><code>bh()</code>, <code>normal_p()</code></td><td class="none">·</td>
+        <td><code>read_excel</code> (needs openpyxl)<code>pivot_table</code></td>
+        <td><code>math.erfc</code></td><td>lab's master .xlsx</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="main-run">
+  <h2>Main run, step by step</h2>
+  <p class="small narrow">Entry point: <code>metaboenrich/__main__.py → main()</code>. It parses arguments with
+  <code>argparse</code>, then calls the steps below in order. A full run on Human-GEM takes a few seconds.</p>
+  <div class="stages">
+
+  <article class="card" id="s1">
+    <div class="card-head"><span class="num">1</span><h3>Load the model</h3><span class="where">metaboenrich/gem.py</span></div>
+    <p>Reads Human-GEM v2.0.1 (SBML level 3 with the FBC v2 package) into plain dataclasses. It keeps only what the
+    analysis needs: metabolites with their HMDB/KEGG/ChEBI cross-references and formulas, reactions with participants,
+    direction (from the flux bounds) and genes, and the gene symbol table. If the file is missing, the pinned
+    release is downloaded and checked against its SHA-256 hash, so every machine uses the same model.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>download_human_gem(path)</code><span>Fetches the SBML and rejects it if the hash differs.</span></li>
+        <li><code>load_sbml(path) → Model</code><span>Builds <code>Species</code>, <code>Reaction</code> and gene maps; <code>forward = ub &gt; 0</code>, <code>backward = lb &lt; 0</code>.</span></li>
+        <li><code>load_subsystems(path)</code><span>Pathway (subsystem) per reaction from the matching YAML. Used in step 6; parsed line by line, without a YAML library.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk std">xml.etree.ElementTree</span><span>Parses the SBML. No libSBML or COBRApy.</span></li>
+        <li><span class="pk std">urllib.request · hashlib</span><span>Download and hash check.</span></li>
+        <li><span class="pk std">dataclasses</span><span><code>Model</code>, <code>Species</code>, <code>Reaction</code>.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b>data/Human-GEM.xml, data/Human-GEM.yml</span><span><b>Out</b><code>Model</code> object in memory</span></div>
+  </article>
+
+  <article class="card" id="s2">
+    <div class="card-head"><span class="num">2</span><h3>Decide what counts as currency</h3><span class="where">metaboenrich/network.py</span></div>
+    <p>Currency metabolites such as H⁺ (4,540 reactions) and H₂O (3,496) would connect almost everything in one step, so current would
+    bypass real pathways. Inorganics and generic carriers are removed from every reaction. Cofactors (ATP, NAD(P)H, CoA, SAM, …)
+    are removed only where they exchange with a partner form of themselves, and kept in their own synthesis and breakdown.
+    Reactions that feed lumped pools are marked for dropping. The rules are only <em>decided</em> here; step 4 applies them.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>resolve_currency(model, mode="role") → CurrencyRules</code><span>Looks up the curated lists (<code>INORGANIC_CURRENCY</code>, <code>CARRIER_CURRENCY</code>, <code>POOL_METABOLITES</code>, <code>COFACTOR_FAMILIES</code>) by name.</span></li>
+        <li><code>CurrencyRules.classify(subs, prods)</code><span>Pairs cofactors across the reaction, closest formula first. A paired cofactor is an exchanger and gets removed.</span></li>
+        <li><code>CurrencyRules.in_family(fam, met)</code><span>Recognises loaded carriers (UDP-glucose, acetyl-CoA) from the name plus the formula.</span></li>
+        <li><code>parse_formula(formula)</code><span>Counts heavy atoms, e.g. <code>'C21H32N7O16P3S'</code>.</span></li>
+        <li><code>load_reaction_edits(path, model)</code><span>Reads <code>reaction_edits.tsv</code>, currently one edit (SCLY, B6 vitamers).</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk std">re</span><span>Formula parsing and loaded-carrier name tokens.</span></li>
+        <li><span class="pk std">collections.Counter</span><span>Atom counts for formula comparison.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b><code>Model</code>, reaction_edits.tsv, <code>--currency*</code> options</span><span><b>Out</b><code>CurrencyRules</code> (removed, family_of, pools, edits)</span></div>
+  </article>
+
+  <article class="card" id="s3">
+    <div class="card-head"><span class="num">3</span><h3>Load and map the DAA table</h3><span class="where">metaboenrich/daa.py</span></div>
+    <p>Reads the differential-abundance table and matches each row to a Human-GEM metabolite. It tries each <code>--id-col</code>
+    in order, then the optional synonym table, then an unambiguous loose-name match. When several rows hit the same
+    metabolite, the most significant row is kept. Significant metabolites with log2FC &gt; 0 become <strong>sources</strong>
+    and those with log2FC &lt; 0 become <strong>targets</strong>; φ = |log2FC| is recorded.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>load_daa(path, model, id_cols, fc_col, p_col, alpha, …)</code><span>Returns the mapped table, the unmapped rows and the duplicates.</span></li>
+        <li><code>build_lookup(model)</code> · <code>map_identifier(raw, lookup)</code><span>Human-GEM id, HMDB (zero-padded), KEGG, ChEBI or exact name.</span></li>
+        <li><code>load_name_bridge(path)</code><span>The lab's <code>id_translation.csv</code>: synonym → KEGG/HMDB.</span></li>
+        <li><code>loose_key(name)</code> · <code>build_loose_index(model)</code><span>Strips stereo prefixes and unifies acid/salt forms; accepts only keys that match exactly one metabolite.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span><code>read_csv</code>, column mapping, <code>drop_duplicates("met_id")</code>.</span></li>
+        <li><span class="pk numpy">numpy</span><span><code>np.where</code> assigns source / target roles; <code>np.log2</code> for <code>--fc-linear</code>.</span></li>
+        <li><span class="pk std">re</span><span>Identifier and name normalisation.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b>DAA .csv/.tsv, optional id_translation.csv</span><span><b>Out</b>daa table with <code>met_id</code>, <code>role</code>, <code>phi</code> → daa_mapping.tsv, daa_unmapped.tsv</span></div>
+  </article>
+
+  <article class="card" id="s4">
+    <div class="card-head"><span class="num">4</span><h3>Build the metabolite–reaction graph</h3><span class="where">metaboenrich/network.py</span></div>
+    <p>One node per metabolite (compartments merged) and one per reaction, joined by unit-conductance edges. This is where
+    the step 2 rules take effect. Dropped: the biomass objective, blocked reactions, pool reactions, reactions with more than 20 metabolites,
+    and reactions left with fewer than 2 metabolites (transport, exchange). The result is the locked network: 3,958 metabolites,
+    6,377 reactions and 16,356 edges. With <code>--atom-pairs</code>, each reaction is split into carbon-sharing
+    substrate→product channels instead.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>build_graph(model, rules, max_reaction_size=20, atom_pairs=None) → Graph</code><span>Builds nodes, undirected <code>edges</code>, directed <code>arcs</code>, reaction genes and the currency audit.</span></li>
+        <li><code>_usable_reactions(…)</code><span>Applies every drop rule and the cofactor classification, reaction by reaction.</span></li>
+        <li><code>Graph.incidence()</code><span>Signed edge×node matrix B; the Laplacian is L = BᵀB.</span></li>
+        <li><code>Graph.components()</code> · <code>Graph.reachable_from(v)</code><span>Connected components, and directed reachability for <code>--mode directed</code>.</span></li>
+        <li><code>metabolite_degrees()</code> · <code>transport_genes()</code><span>Feed currency_metabolites.tsv and the transporter list (step 6).</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">scipy.sparse</span><span><code>csr_matrix</code> for the incidence and adjacency matrices.</span></li>
+        <li><span class="pk scipy">scipy.sparse.csgraph</span><span><code>connected_components</code>.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Edge and arc arrays (<code>int64</code>), the <code>is_reaction</code> mask.</span></li>
+        <li><span class="pk std">collections.deque</span><span>Breadth-first search over arcs.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b><code>Model</code>, <code>CurrencyRules</code>, optional atom_pairs.json</span><span><b>Out</b><code>Graph</code>; currency_metabolites.tsv, currency_edges.tsv</span></div>
+  </article>
+
+  <article class="card" id="s5">
+    <div class="card-head"><span class="num">5</span><h3>Solve the current flow</h3><span class="where">metaboenrich/flow.py</span></div>
+    <p>For every source–target pair (s, t), inject one unit of current at s, withdraw it at t, and solve Kirchhoff's equations.
+    It never forms a pseudoinverse. Instead it grounds one node per connected component, LU-factorises that component's Laplacian
+    <em>once</em>, and solves for a unit injection at each source and target. By linearity every pair's potentials are a difference
+    of two of those solutions, so |S| + |T| solves cover all |S| × |T| pairs.</p>
+    <div class="math">L y<sub>v</sub> = e<sub>v</sub> (grounded, one LU per component) &nbsp;→&nbsp; x<sub>st</sub> = y<sub>s</sub> − y<sub>t</sub>
+      &nbsp;→&nbsp; I = B x<sub>st</sub> (Ohm) &nbsp;→&nbsp; throughput = ½ |B|ᵀ |I|</div>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>current_flow(graph, sources, targets, weights, directed, tau, ground) → FlowResult</code><span>Processes pairs in chunks of 128 and accumulates conductivity, bottleneck, edge currents and endpoint effective conductance (1/R<sub>eff</sub>).</span></li>
+        <li><code>select_pairs(…)</code><span>Drops pairs in different components, or with no directed path in directed mode → excluded_pairs.tsv. Directed mode is <em>only</em> this filter: the pairs that survive are solved on the same undirected Laplacian, so current can still run against a reaction's direction. Protocol §2.3 (directed current) is not implemented.</span></li>
+        <li><code>_potentials(graph, L, labels, nodes)</code><span>The grounded LU solves.</span></li>
+        <li><code>_leave_one_out(…)</code><span>The lowest score after dropping any single source or target (<code>*_loo</code> columns).</span></li>
+        <li>One-sided mode (<code>GROUND</code>)<span>If only one direction is significant, current is exchanged evenly with the measured, unchanged metabolites.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">scipy.sparse.linalg.splu</span><span>The sparse LU factorisation. This is the core numerical step.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Sparse–dense products for currents and throughput; <code>np.add.at</code> / <code>np.maximum.at</code> for per-metabolite sums and maxima; <code>np.sort</code> for leave-one-out bottlenecks.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b><code>Graph</code>, source/target node lists, optional φ weights</span><span><b>Out</b><code>FlowResult</code> (per-node and per-edge arrays)</span></div>
+  </article>
+
+  <article class="card" id="s6">
+    <div class="card-head"><span class="num">6</span><h3>Score and rank</h3><span class="where">metaboenrich/scoring.py</span></div>
+    <p>Turns the per-node arrays into ranked tables. A reaction's final score is the mean percentile rank of conductivity
+    and bottleneck: raw scores by default, leave-one-out scores with <code>--scoring loo</code>. Genes inherit the best score among their reactions.
+    Pathways are tested for over-representation among the top 100 reactions. Transporters are scored separately by what they carry,
+    because transport reactions aren't in the graph.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>node_table(graph, flow)</code><span>One row per node with every score.</span></li>
+        <li><code>reaction_table(…)</code> · <code>rank_score(df, cols)</code><span>Final score; flags <code>only_reaction_of</code> for endpoints with a single reaction.</span></li>
+        <li><code>gene_table(rxn, graph, model)</code><span>Best reaction score per gene. GPR and/or logic is ignored.</span></li>
+        <li><code>pathway_table(rxn, graph, subsystems, top_n=100)</code><span>Hypergeometric test with Benjamini–Hochberg correction across subsystems.</span></li>
+        <li><code>transporter_table(transport, met_scores, model)</code><span>Each transporter gets the score of its best carried metabolite.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span><code>Series.rank(pct=True)</code> for the final score; the tables themselves.</span></li>
+        <li><span class="pk scipy">scipy.stats.hypergeom</span><span><code>.sf</code> for pathway p-values.</span></li>
+        <li><span class="pk numpy">numpy</span><span>BH q-values via <code>np.minimum.accumulate</code>; <code>np.bincount</code> for node degree.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>In</b><code>FlowResult</code>, <code>Graph</code>, subsystems</span><span><b>Out</b>reactions, genes, pathways, transporters, intermediate &amp; source/target tables</span></div>
+  </article>
+
+  <article class="card" id="s7">
+    <div class="card-head"><span class="num">7</span><h3>Write outputs</h3><span class="where">metaboenrich/__main__.py · metaboenrich/cytoscape.py</span></div>
+    <p>Writes every table as TSV and two Cytoscape GraphML files: the full network, and the subnetwork of edges that carry at least 10% of some
+    pair's current. It also writes <code>summary.json</code> with run parameters, counts and a SHA-256 fingerprint of the edge list.
+    That fingerprint matches <code>network/network_info.json</code> when the run used the locked network.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>write_cytoscape(out, graph, …)</code><span>Assembles node and edge attributes and applies the <code>--cytoscape-min-current</code> mask.</span></li>
+        <li><code>write_graphml(path, graph, node_attrs, edge_attrs, …)</code><span>A small hand-written GraphML writer that infers each attribute's type.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span><code>to_csv(sep="\t")</code> for every table.</span></li>
+        <li><span class="pk std">xml.sax.saxutils · json · hashlib</span><span>XML escaping (no networkx), summary.json, edge fingerprint.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Node and edge masks for the subnetwork.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>Out</b>genes.tsv, reactions.tsv, pathways.tsv, transporters.tsv, intermediate_metabolites.tsv,
+      source_target_metabolites.tsv, currency_*.tsv, daa_*.tsv, excluded_pairs.tsv, summary.json, cytoscape/*.graphml</span></div>
+  </article>
+
+  </div>
+</section>
+
+<section id="other">
+  <h2>Other entry points</h2>
+  <p class="small narrow">These scripts import the functions above rather than copying them, so a change to the core
+  carries through everywhere.</p>
+  <div class="stages">
+
+  <article class="card" id="oA">
+    <div class="card-head"><span class="num">A</span><h3>Locked network</h3><span class="where">python -m metaboenrich.export_network --out network</span></div>
+    <p>Builds the graph with no DAA and writes it as plain tables plus provenance: model URL and hash, every currency setting, and the
+    edge-list fingerprint. <code>tests/test_network_snapshot.py</code> rebuilds the graph and fails if it no longer matches <code>network/</code>.</p>
+    <div class="cols">
+      <div><div class="label">Calls</div><ul class="fn">
+        <li><code>load_sbml</code> → <code>resolve_currency</code> + <code>load_reaction_edits</code> → <code>build_graph</code> → <code>write_graphml</code></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span>nodes.tsv, edges.tsv, currency_edges.tsv</span></li>
+        <li><span class="pk std">hashlib · json</span><span>network_info.json</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="oB">
+    <div class="card-head"><span class="num">B</span><h3>Structural check, stage diagrams and atlases</h3><span class="where">structure.py → stage_diagrams.py → tools/atlas, tools/report</span></div>
+    <p>A data-free check of each pruning stage (raw → inorganics → cofactors → pools → edits, plus an alternative where cofactors are removed everywhere). For every node it records
+    degree, structural current with 150 random sources and 150 random targets, and pocket size (how many metabolites the node alone cuts off).
+    The diagrams put every stage on one shared layout. The atlas and report builders embed these results in the HTML pages in <code>docs/</code>.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>structure.stages()</code> · <code>_pruning_stages()</code> · <code>_carbon_stages()</code><span>A <code>CurrencyRules</code> object per stage.</span></li>
+        <li><code>analyse_stage()</code><span>Calls <code>current_flow</code> on random pairs; <code>concentration()</code> gives the top-1% share of current.</span></li>
+        <li><code>pocket_sizes(graph)</code><span>Iterative Tarjan articulation-point search.</span></li>
+        <li><code>stage_diagrams.fruchterman_reingold()</code><span>Force-directed layout written in numpy → .cyjs + Cytoscape style XML.</span></li>
+        <li><code>build_atlas.py</code> · <code>build_carbon_atlas.py</code> · <code>build_report.py</code><span>→ pruning_atlas.html, carbon_atlas.html, report.html</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk numpy">numpy</span><span><code>random.default_rng</code>, the layout, array bookkeeping.</span></li>
+        <li><span class="pk scipy">scipy.sparse · csgraph</span><span>Adjacency and connected components.</span></li>
+        <li><span class="pk pandas">pandas</span><span>Benchmark and translation tables in the builders.</span></li>
+        <li><span class="pk std">json · html</span><span>structure.json and the embedded page data.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="oC">
+    <div class="card-head"><span class="num">C</span><h3>Carbon-skeleton channels (experimental)</h3><span class="where">python -m metaboenrich.atoms --out data/atom_pairs.json</span></div>
+    <p>Works out which substrate→product pairs in each reaction share carbon atoms, so current can follow carbon skeletons
+    (glutamate→2-oxoglutarate in a transaminase, not glutamate→alanine). It uses KEGG's curated RCLASS pairs where KEGG has the reaction, and cleaned
+    atom maps elsewhere. The output feeds step 4 through <code>--atom-pairs</code>. It is off by default; see decision D15.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>load_smiles()</code><span>Human-GEM's metabolites.tsv (pinned, hash-checked).</span></li>
+        <li><code>map_model(model, smiles)</code><span>Atom-maps every reaction in batches of 8 (about 10 minutes on CPU; cached in atom_pairs_raw.json).</span></li>
+        <li><code>carbon_pairs(mapped_rxn, …)</code><span>Counts carbons shared by each substrate and product, using atom-map numbers.</span></li>
+        <li><code>clean_pairs()</code><span>Keeps a pair only if the substrate is the product's main carbon source, or the product is the substrate's main carbon destination.</span></li>
+        <li><code>kegg_pairs_for_model()</code> · <code>fetch_kegg_rclass_pairs()</code> · <code>combine_pairs()</code></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk rxn">rxnmapper</span><span><code>RXNMapper().get_attention_guided_atom_maps</code> (Schwaller et al. 2021).</span></li>
+        <li><span class="pk rdkit">rdkit</span><span><code>Chem.MolFromSmiles</code>, <code>MolToSmiles</code>, atom-map numbers.</span></li>
+        <li><span class="pk ext">KEGG REST</span><span><code>https://rest.kegg.jp/get/rn:…</code> via <code>urllib</code>, 10 ids per call, cached.</span></li>
+        <li><span class="pk pandas">pandas</span><span>The SMILES table.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="oD">
+    <div class="card-head"><span class="num">D</span><h3>Inborn-error benchmark</h3><span class="where">benchmarks/get_benchmark_data.py → python -m metaboenrich.benchmark</span></div>
+    <p>Asks whether the known defective enzyme ranks near the top. Data are plasma metabolomics z-scores from Thistlethwaite et al. 2020 and
+    Miller et al. 2015. At group level, a metabolite is significant if the z-test on mean z gives BH q &lt; 0.05 and |mean z| ≥ 1; at patient level, if |z| ≥ 2.
+    The causal gene's rank among the 2,302 network genes is compared against a neighbour baseline.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>get_benchmark_data.main()</code><span>Downloads the CTD 1.3 R package from CRAN and exports its datasets with Rscript.</span></li>
+        <li><code>load_t2020()</code> · <code>load_miller()</code> · <code>group_daa()</code> · <code>patient_daa()</code></li>
+        <li><code>Ranker.run()</code><span><code>load_daa</code> → <code>current_flow</code> → <code>node_table</code> → <code>reaction_table</code> → <code>gene_table</code>, for raw and leave-one-out scoring.</span></li>
+        <li><code>best_rank()</code><span>The best rank of any causal gene.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span>z-score matrices and result tables.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Its own <code>bh()</code>; medians.</span></li>
+        <li><span class="pk std">math.erfc · subprocess · tarfile</span><span>z → two-sided p; running R; unpacking the package.</span></li>
+        <li><span class="pk ext">R (Rscript) · CRAN</span><span>Only to fetch the data; no R packages needed.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="oE">
+    <div class="card-head"><span class="num">E</span><h3>Blind predictions on published datasets</h3><span class="where">python benchmarks/published_predictions.py --out predictions/published_v1</span></div>
+    <p>Splits the lab's standardised master spreadsheet into analysis units, applies a significance rule fixed in advance,
+    and runs the unchanged command-line tool on each unit. The answer key is never read, and the outputs are trimmed and committed before anyone looks at it.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>units(master)</code> · <code>unit_daa(g)</code><span>One DAA per (study, comparison, matrix[, group]) with its own rule.</span></li>
+        <li><code>metaboenrich.__main__.main([...])</code><span>The full steps 1–7, called as a function.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas</span><span><code>read_excel</code> (needs openpyxl), <code>pivot_table</code>.</span></li>
+        <li><span class="pk numpy">numpy · math</span><span><code>normal_p()</code> and <code>bh()</code>, as in D.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  </div>
+</section>
+
+<section id="deps">
+  <h2>Dependencies</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Package</th><th>Needed for</th><th>Declared in</th></tr></thead>
+    <tbody>
+      <tr><th><span class="pk numpy">numpy ≥ 1.24</span></th><td>Steps 3–7, structure, benchmark</td><td>requirements.txt</td></tr>
+      <tr><th><span class="pk scipy">scipy ≥ 1.10</span></th><td>Graph matrices, LU solve, pathway test</td><td>requirements.txt</td></tr>
+      <tr><th><span class="pk pandas">pandas ≥ 2.0</span></th><td>Every table in and out</td><td>requirements.txt</td></tr>
+      <tr><th><span class="pk rdkit">rdkit</span> · <span class="pk rxn">rxnmapper</span></th><td>Only <code>atoms.py</code> (carbon channels). Imported inside the functions, so the main run never needs them</td><td>not declared; install by hand</td></tr>
+      <tr><th><span class="pk pandas">openpyxl</span></th><td>Only <code>published_predictions.py</code> (<code>pd.read_excel</code>)</td><td>not declared</td></tr>
+      <tr><th><span class="pk ext">R (Rscript)</span></th><td>Only <code>get_benchmark_data.py</code>, once</td><td>system install</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">Not used anywhere: libSBML, COBRApy, networkx, PyYAML. SBML, YAML and GraphML are each read or written with a few dozen lines
+  of standard-library code, which keeps the install to three packages.</p>
+</section>
+
+<footer>
+  <span>Written by hand from the code at commit 48786d1 (v0.2.0.dev0). Unlike report.html, it is not regenerated by a build script; update it when modules change.</span>
+  <span>Related: <a href="report.html">report.html</a> · <a href="pruning_atlas.html">pruning_atlas.html</a> · <a href="carbon_atlas.html">carbon_atlas.html</a> · <a href="decisions.md">decisions.md</a></span>
+</footer>
+
+</main>
+</body>
+</html>

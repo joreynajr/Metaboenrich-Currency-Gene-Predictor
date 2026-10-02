@@ -13,7 +13,7 @@ def rank_score(df, cols):
 
 
 def node_table(graph, flow):
-    return pd.DataFrame({
+    df = pd.DataFrame({
         "node_id": graph.node_ids,
         "name": graph.node_names,
         "is_reaction": graph.is_reaction,
@@ -24,6 +24,9 @@ def node_table(graph, flow):
         "conductivity_loo": flow.conductivity_loo,
         "bottleneck_loo": flow.bottleneck_loo,
     })
+    if flow.net_forward is not None:     # walk mode: > 0 runs forward, < 0 backward
+        df["net_forward"] = flow.net_forward
+    return df
 
 
 def reaction_table(nodes, graph, model, endpoints, score_cols):

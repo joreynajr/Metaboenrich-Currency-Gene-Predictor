@@ -31,6 +31,7 @@ from .flow import current_flow
 from .gem import load_sbml
 from .network import DEFAULT_REACTION_EDITS, build_graph, load_reaction_edits, resolve_currency
 from .scoring import gene_table, node_table, reaction_table
+from .walk import absorbing_walk
 
 DATA = Path("data/benchmark")
 CASES = Path("benchmarks/cases.tsv")
@@ -95,8 +96,9 @@ def patient_daa(z, ann, sample):
 
 # ---- one run ------------------------------------------------------------------
 class Ranker:
-    def __init__(self, model, graph):
+    def __init__(self, model, graph, method="flow", kappa=None):
         self.model, self.graph = model, graph
+        self.method, self.kappa = method, kappa      # "flow" (current flow) or "walk" (absorbing walk)
         self.universe = sorted(set().union(*graph.reaction_genes.values()))
         self._universe_set = set(self.universe)
         self.symbol_to_ens = {}
@@ -135,15 +137,23 @@ class Ranker:
             ground = on[on.role == ""].node.tolist()
         info["one_sided"] = bool(ground)
         if (sources and targets) or ground:
-            flow = current_flow(self.graph, sources, targets, ground=ground)
+            walk = self.method == "walk"
+            if walk:
+                flow = absorbing_walk(self.graph, sources, targets, dict(zip(on.node, on.phi)),
+                                      kappa=self.kappa, ground=ground)
+                info["walk_success_fraction"] = flow.walk_info["walk_success_fraction"]
+            else:
+                flow = current_flow(self.graph, sources, targets, ground=ground)
             info["pairs"] = len(flow.pairs)
             if flow.pairs:
                 nodes = node_table(self.graph, flow)
                 for key, cols in (("loo", ["conductivity_loo", "bottleneck_loo"]),
                                   ("raw", ["conductivity", "bottleneck"])):
+                    if walk and key == "loo":
+                        continue                     # leave-one-out is not defined for the walk
                     rxn = reaction_table(nodes, self.graph, self.model, set(sources) | set(targets), cols)
                     g_df = gene_table(rxn, self.graph, self.model)
-                    if key == "loo":
+                    if key == "loo" or walk:
                         genes = g_df
                     scored = [g for g in g_df.ensembl_id if g in self._universe_set]
                     rank = {g: i + 1 for i, g in enumerate(scored)}
@@ -175,6 +185,10 @@ def main(argv=None):
                    help="benchmark a named network from metaboenrich.structure, e.g. pruning:raw or carbon:carbon_union")
     p.add_argument("--atom-pairs", default=None, metavar="JSON",
                    help="carbon-channel network from metaboenrich.atoms (default: the standard network)")
+    p.add_argument("--method", choices=["flow", "walk"], default="flow",
+                   help="flow: current flow (default); walk: absorbing random walk (experimental, raw scoring only)")
+    p.add_argument("--walk-kappa", type=float, default=None,
+                   help="walk: partial absorption strength (default: absorb every walker)")
     p.add_argument("--include", nargs="+", default=["primary", "secondary"],
                    help="case statuses to run (default: primary secondary)")
     args = p.parse_args(argv)
@@ -197,7 +211,7 @@ def main(argv=None):
         graph = build_graph(model, st[3], st[4], st[5], atom_pairs=st[6])
     else:
         graph = build_graph(model, rules, atom_pairs=atom_pairs)
-    ranker = Ranker(model, graph)
+    ranker = Ranker(model, graph, args.method, args.walk_kappa)
     U = len(ranker.universe)
     print(f"Network: {graph.n} nodes; {U} genes on network reactions (the ranking universe)")
 
@@ -251,9 +265,11 @@ def main(argv=None):
                 df[f"pct_{m}"] = df[f"rank_{m}"] / U
             df.to_csv(out / f"{name}_results.tsv", sep="\t", index=False)
     (out / "run_info.json").write_text(json.dumps({
-        "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "stage": args.stage or "", "runtime_s": round(time.time() - t0, 1),
+        "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "stage": args.stage or "", "method": args.method, "walk_kappa": args.walk_kappa, "runtime_s": round(time.time() - t0, 1),
         "group_rule": "BH q < 0.05 on z-test of mean z, and |mean z| >= 1",
-        "patient_rule": "|z| >= 2", "scoring": "leave-one-out conductivity + bottleneck"}, indent=2))
+        "patient_rule": "|z| >= 2",
+        "scoring": "raw conductivity + bottleneck (absorbing walk)" if args.method == "walk"
+                   else "leave-one-out and raw conductivity + bottleneck"}, indent=2))
     print(f"\nWrote {out}/ in {time.time() - t0:.0f}s")
 
 

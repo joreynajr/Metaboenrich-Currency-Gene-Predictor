@@ -20,6 +20,7 @@ from .gem import download_human_gem, load_sbml, load_subsystems
 from .scoring import gene_table, node_table, pathway_table, rank_score, reaction_table, transporter_table
 from .network import (DEFAULT_REACTION_EDITS, build_graph, load_reaction_edits, metabolite_degrees,
                       resolve_currency, transport_genes)
+from .walk import ANY, absorbing_walk
 
 DEFAULT_MODEL = "data/Human-GEM.xml"
 
@@ -40,8 +41,13 @@ def parse_args(argv=None):
     p.add_argument("--alpha", type=float, default=0.05, help="significance cutoff (default: %(default)s)")
     p.add_argument("--min-log2fc", type=float, default=0.0,
                    help="sources/targets also need |log2FC| >= this, e.g. 0.585 for 1.5-fold (default: %(default)s)")
-    p.add_argument("--mode", choices=["undirected", "directed"], default="undirected",
-                   help="directed keeps only pairs joined by a directed s->t path (protocol §2.2)")
+    p.add_argument("--mode", choices=["undirected", "directed", "walk"], default="undirected",
+                   help="directed keeps only pairs joined by a directed s->t path (protocol §2.2); "
+                        "walk (experimental) replaces current flow with an absorbing random walk that follows "
+                        "reaction directions from sources (weighted by |log2FC|) to targets (see metaboenrich/walk.py)")
+    p.add_argument("--walk-kappa", type=float, default=None, metavar="K",
+                   help="walk mode: a target absorbs a walker with probability 1 - exp(-K * |log2FC|) and lets "
+                        "the rest walk on (default: absorb every walker)")
     p.add_argument("--pair-weight", choices=["unit", "fc"], default="unit",
                    help="unit: every pair injects 1 A (protocol as written); "
                         "fc: weight pair by (|log2FC_s| + |log2FC_t|) / 2")
@@ -146,6 +152,11 @@ def write_cytoscape(out, graph, model, flow, rxn, inter, ep, on, sources, target
 
 def main(argv=None):
     args = parse_args(argv)
+    walk = args.mode == "walk"
+    if walk and args.scoring == "loo":
+        raise SystemExit("--scoring loo is not defined for --mode walk")
+    if args.walk_kappa is not None and not walk:
+        raise SystemExit("--walk-kappa needs --mode walk")
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -233,7 +244,7 @@ def main(argv=None):
     on = daa.dropna(subset=["node"]).astype({"node": int})
     sources = on[on.role == "source"].node.tolist()
     targets = on[on.role == "target"].node.tolist()
-    phi = dict(zip(on.node, on.phi)) if args.pair_weight == "fc" else None
+    phi = dict(zip(on.node, on.phi)) if args.pair_weight == "fc" or walk else None
 
     # One-sided data: nothing significant in one direction. The ground is the
     # measured metabolites that did not change.
@@ -244,12 +255,22 @@ def main(argv=None):
         else:
             ground = on[on.role == ""].node.tolist()
             side = "sources" if sources else "targets"
-            print(f"One-sided: only {side} are significant; current is exchanged with {len(ground)} "
-                  f"measured, unchanged metabolites (the ground)")
-    flow = current_flow(graph, sources, targets, weights=phi,
-                        directed=args.mode == "directed", tau=args.bottleneck_tau, ground=ground)
-    print(f"Current flow: {len(flow.pairs)} source-target pairs retained, {len(flow.excluded)} excluded "
-          f"({args.mode}{', one-sided' if ground else ''})")
+            print(f"One-sided: only {side} are significant; {'walkers are' if walk else 'current is'} "
+                  f"exchanged with {len(ground)} measured, unchanged metabolites (the ground)")
+    if walk:
+        flow = absorbing_walk(graph, sources, targets, phi, kappa=args.walk_kappa,
+                              tau=args.bottleneck_tau, ground=ground)
+        wi = flow.walk_info
+        print(f"Absorbing walk: {len(flow.pairs)} source-target pairs reached, {len(flow.excluded)} not; "
+              f"{wi['walk_success_fraction']:.1%} of released walkers reach a target; "
+              f"{wi['walk_sources_unreached']} sources reach no target "
+              f"({'full absorption' if args.walk_kappa is None else f'kappa={args.walk_kappa}'}"
+              f"{', one-sided' if ground else ''})")
+    else:
+        flow = current_flow(graph, sources, targets, weights=phi,
+                            directed=args.mode == "directed", tau=args.bottleneck_tau, ground=ground)
+        print(f"Current flow: {len(flow.pairs)} source-target pairs retained, {len(flow.excluded)} excluded "
+              f"({args.mode}{', one-sided' if ground else ''})")
 
     # --- scoring (§1.5) -------------------------------------------------------
     nodes = node_table(graph, flow)
@@ -308,7 +329,7 @@ def main(argv=None):
     if len(unmapped):
         unmapped.to_csv(out / "daa_unmapped.tsv", sep="\t", index=False)
     if flow.excluded:
-        label = lambda v: "ground" if v == GROUND else graph.node_ids[v]
+        label = lambda v: "ground" if v == GROUND else "any" if v == ANY else graph.node_ids[v]
         pd.DataFrame([(label(s), label(t), why) for s, t, why in flow.excluded],
                      columns=["source", "target", "reason"]).to_csv(out / "excluded_pairs.tsv", sep="\t", index=False)
 
@@ -328,7 +349,7 @@ def main(argv=None):
         "id_translation": str(args.id_translation or ""),
         "atom_pairs": str(args.atom_pairs or ""),
         "model": f"{model.id} {model.version}", "daa": str(args.daa), "mode": args.mode,
-        "pair_weight": args.pair_weight, "alpha": args.alpha, "bottleneck_tau": args.bottleneck_tau,
+        "pair_weight": "|log2FC| start weights (walk)" if walk else args.pair_weight, "alpha": args.alpha, "bottleneck_tau": args.bottleneck_tau,
         "currency_mode": args.currency_mode,
         "currency_removed_everywhere": len(rules.removed),
         "cofactors_role_filtered": len(rules.family_of),
@@ -341,6 +362,8 @@ def main(argv=None):
         "cytoscape_subnetwork_nodes": n_cyto[0], "cytoscape_subnetwork_edges": n_cyto[1],
         "runtime_s": round(time.time() - t0, 1),
     }
+    if walk:
+        summary.update(flow.walk_info)
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
 
     print(f"\nTop reactions:")

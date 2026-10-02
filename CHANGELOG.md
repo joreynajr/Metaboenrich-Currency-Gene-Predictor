@@ -9,6 +9,13 @@ reaction nodes / edges. The reasons behind each change are in
 Network unchanged from v0.1.1 (3,958 / 6,377 / 16,356; edge-list SHA-256
 `942cd8ac…`).
 
+- **Absorbing random walk** (experimental, branch `directed-rw`; `--mode walk`,
+  `metaboenrich/walk.py`): walkers start at the sources weighted by |log2FC|,
+  follow reaction directions, and stop at the targets (optional partial
+  absorption, `--walk-kappa`). Only walks that reach a target are scored.
+  `reactions.tsv` gains `net_forward`. Benchmark: `--method walk`. Not the
+  default; evidence in D17.
+
 - **Benchmark** (`metaboenrich/benchmark.py`, `benchmarks/`): inborn errors of
   metabolism from Miller et al. 2015 and Thistlethwaite et al. 2020 (plasma
   z-scores, fetched from the CTD package on CRAN). Group- and patient-level
