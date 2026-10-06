@@ -1,12 +1,12 @@
-Metaboenrich carbon-network diagrams (Human-GEM v2.0.1, network v0.1.1)
+Metaboenrich carbon-network diagrams (Human-GEM v2.0.1)
 
 Files
-  1_raw.cyjs                 Raw Human-GEM (compartments merged)
-  2_current.cyjs             Current analysis network (stage 5 of the Pruning Atlas)
-  3_carbon_union.cyjs        Carbon links, main version (KEGG pairs + cleaned atom maps)
-  alt_carbon_kegg.cyjs       Alternative: KEGG pairs first
-  alt_carbon_mapper.cyjs     Alternative: atom maps first
-  alt_carbon_only.cyjs       Alternative: carbon links on the raw network, no currency rules
+  1_raw.cyjs                   Raw Human-GEM (compartments merged)
+  2_carbon_rule1.cyjs          Rule 1: reactions split into carbon-sharing links
+  3_carbon_method.cyjs         Rules 1 + 2: the carbon method (cofactor couples removed)
+  alt_carbon_mapped_only.cyjs  The carbon method without reactions that have no atom map
+  alt_first_method.cyjs        Reference: the first method (Pruning Atlas stage 5)
+  alt_combined.cyjs            Reference: first method + carbon split
   metaboenrich_pruning_style.xml   Visual style for all of the above
 
 A reaction split into carbon links appears as its links, side by side where

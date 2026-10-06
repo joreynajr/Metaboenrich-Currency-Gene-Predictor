@@ -27,49 +27,160 @@ from .network import (CurrencyRules, DEFAULT_REACTION_EDITS, build_graph, load_r
 DEFAULT_MODEL = "data/Human-GEM.xml"
 
 
-STAGE_SETS = ("pruning", "carbon")
+STAGE_SETS = ("pruning", "carbon", "three_rule")
 # Stages that are side-by-side alternatives rather than steps in the main
 # sequence; the diagrams place removed nodes by the main sequence only.
-ALTERNATIVE_STAGES = {"alt_remove", "carbon_kegg", "carbon_mapper", "carbon_only"}
+ALTERNATIVE_STAGES = {"alt_remove", "carbon_mapped_only", "first_method", "combined", "acyl_merged",
+                      "acyl_merged_keep_rarest", "rules12_keep_rarest"}
 # The stage whose network sets the shared layout of the diagrams.
-LAYOUT_STAGE = {"pruning": "edits", "carbon": "carbon_union"}
+LAYOUT_STAGE = {"pruning": "edits", "carbon": "carbon_method", "three_rule": "three_rule"}
 
 
-def stages(model, stage_set="pruning", atom_dir="data"):
-    """(key, title, description, rules, max_reaction_size, drop_objective, atom_pairs)
-    per stage. 'pruning': the currency-pruning steps. 'carbon': the carbon-
+def stages(model, stage_set="pruning", atom_dir="data", couple_min_reactions=None):
+    """(key, title, description, rules, max_reaction_size, drop_objective,
+    extra build_graph options) per stage. 'pruning': the currency-pruning steps. 'carbon': the carbon-
     skeleton channel networks (needs data/atom_pairs*.json from
     python -m metaboenrich.atoms)."""
     if stage_set == "carbon":
-        return _carbon_stages(model, atom_dir)
-    return [s + (None,) for s in _pruning_stages(model)]
+        return _carbon_stages(model, atom_dir, couple_min_reactions)
+    if stage_set == "three_rule":
+        return _three_rule_stages(model, atom_dir, couple_min_reactions)
+    return [s + ({},) for s in _pruning_stages(model)]
 
 
-def _carbon_stages(model, atom_dir):
-    from .atoms import load_atom_pairs
-    p = {k: _pruning_stages(model)[i] for i, k in ((0, "raw"), (4, "edits"))}
-    pairs = {v: load_atom_pairs(Path(atom_dir) / f) for v, f in
-             (("union", "atom_pairs_union.json"), ("kegg", "atom_pairs.json"), ("mapper", "atom_pairs_mapperfirst.json"))}
-    raw, edits = p["raw"], p["edits"]
+def _carbon_stages(model, atom_dir, couple_min_reactions=None):
+    """The carbon method on its own (no hand-made currency lists), with the
+    first method alongside for reference. Pairs: KEGG's curated pairs plus
+    cleaned atom maps (data/atom_pairs_union.json)."""
+    from .atoms import (COUPLE_MIN_REACTIONS, carbon_method_pairs, carbon_method_rules, carbon_rule1_pairs,
+                        load_atom_pairs)
+    n_min = couple_min_reactions or COUPLE_MIN_REACTIONS
+    pr = _pruning_stages(model)
+    raw, edits = pr[0], pr[4]
+    pools = edits[3].pools
+    union = load_atom_pairs(Path(atom_dir) / "atom_pairs_union.json")
+    rule1 = carbon_rule1_pairs(model, union)
+    method, couples = carbon_method_pairs(model, union, n_min)
+    r1_rules = carbon_method_rules(model, rule1, {}, pools)
+    m_rules = carbon_method_rules(model, method, couples, pools)
     return [
-        ("raw", "1. Raw Human-GEM", raw[2], raw[3], raw[4], raw[5], None),
-        ("current", "2. Current analysis network",
-         "Currency rules, pools dropped and the SCLY edit: stage 5 of the Pruning Atlas. Every reaction links all its "
-         "remaining substrates to all its remaining products.", edits[3], edits[4], edits[5], None),
-        ("carbon_union", "3. Carbon channels (main version)",
-         "The current network with each reaction split into carbon-sharing substrate-product channels. Pairs: KEGG's "
-         "curated pairs combined with cleaned atom maps. Reactions without a mapping stay whole.",
-         edits[3], edits[4], edits[5], pairs["union"]),
-        ("carbon_kegg", "Alternative: KEGG pairs first",
-         "Carbon channels using KEGG's curated pairs wherever KEGG has the reaction, atom maps elsewhere. KEGG lists "
-         "only main pairs, so minor carbon donors (carbamoyl-phosphate in OTC) are lost.",
-         edits[3], edits[4], edits[5], pairs["kegg"]),
-        ("carbon_mapper", "Alternative: atom maps first",
-         "Carbon channels using cleaned atom maps wherever available, KEGG's pairs only where the mapper failed.",
-         edits[3], edits[4], edits[5], pairs["mapper"]),
-        ("carbon_only", "Alternative: carbon channels on the raw network",
-         "Carbon channels with no currency rules at all: tests whether following carbon alone removes the hub "
-         "problem (the literature's claim).", raw[3], raw[4], raw[5], pairs["union"]),
+        ("raw", "1. Raw Human-GEM", raw[2], raw[3], raw[4], raw[5], {}),
+        ("carbon_rule1", "2. Rule 1: follow carbon",
+         "Each reaction is split into its substrate-product pairs that share carbon atoms; molecules with no carbon "
+         "(water, H+, phosphate, O2, NH3, ions) never link. Biomass and pool pseudo-reactions dropped. Reactions "
+         "that cannot be atom-mapped are kept whole, minus their carbon-free molecules.",
+         r1_rules, 20, True, {"atom_pairs": rule1}),
+        ("carbon_method", "3. Rules 1 + 2: the carbon method",
+         f"Rule 1, then any carbon pair found in {n_min} or more reactions is treated as a cofactor couple "
+         f"(ATP/ADP, NAD+/NADH, CoA/acetyl-CoA ...) and removed everywhere; {len(couples)} couples detected from "
+         "the network itself. No hand-made lists.",
+         m_rules, 20, True, {"atom_pairs": method}),
+        ("carbon_mapped_only", "4. Carbon method, mapped reactions only",
+         "Network 3 without the reactions that could not be atom-mapped: shows what the method gives when every "
+         "link is backed by an atom map or KEGG pair.",
+         m_rules, 20, True, {"atom_pairs": method, "drop_unmapped": True}),
+        ("first_method", "Reference: first method",
+         "The current analysis network (stage 5 of the Pruning Atlas): hand-made lists of inorganics and cofactors, "
+         "cofactors kept only where made or broken down. Reactions are not split.",
+         edits[3], edits[4], edits[5], {}),
+        ("combined", "Reference: first method + carbon split",
+         "The first method's network with each reaction then split into its carbon pairs (the version shown in the "
+         "earlier draft of this report).", edits[3], edits[4], edits[5], {"atom_pairs": union}),
+    ]
+
+
+# Filled by the most recent _three_rule_stages call: the rescues made by the
+# keep-rarest safeguard in 3-rule pruning (list of dicts, see
+# metaboenrich.atoms.carbon_method_pairs), the same without Rule 3, and the
+# carriers found by Rule 3 ({carrier: {loaded forms}}).
+KEPT_RAREST_LOG = []
+KEPT_RAREST_LOG_RULES12 = []
+CARRIERS_FOUND = {}
+
+
+def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
+    """The carbon method revised: pool pseudo-metabolites and transporters
+    dropped, carriers removed (Rule 3: CoA, carnitine, glutathione ... found
+    from structure), and the keep-rarest safeguard (a reaction whose carbon
+    pairs were all removed keeps its rarest one instead of dropping out).
+    The carbon method itself, earlier variants and the first method are shown
+    for comparison; the carbon stage set is not changed."""
+    from .atoms import (COUPLE_MIN_REACTIONS, acyl_coa_merge, carbon_method_pairs, carbon_method_rules,
+                        find_carriers, load_atom_pairs, pool_metabolites, transport_reactions)
+    n_min = couple_min_reactions or COUPLE_MIN_REACTIONS
+    carbon = {s[0]: s for s in _carbon_stages(model, atom_dir, couple_min_reactions)}
+    pr = _pruning_stages(model)
+    union = load_atom_pairs(Path(atom_dir) / "atom_pairs_union.json")
+    pools = set(pr[4][3].pools) | pool_metabolites(model)
+    cargo = transport_reactions(model, carbon_cargo=True)
+    shared = transport_reactions(model, carbon_cargo=False)
+    drop = {"drop_reactions": cargo}
+
+    method, couples = carbon_method_pairs(model, union, n_min)
+    clean_rules = carbon_method_rules(model, method, couples, pools)
+
+    carriers, carrier_pairs = find_carriers(model, union, Path(atom_dir) / "Human-GEM_metabolites.tsv")
+    CARRIERS_FOUND.clear()
+    CARRIERS_FOUND.update(carriers)
+    cr = {"carriers": carrier_pairs}
+    c_pairs, _ = carbon_method_pairs(model, union, n_min, **cr)
+    c_rules = carbon_method_rules(model, c_pairs, couples, pools, carriers=carriers)
+    log = []
+    cl_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, log=log, **cr)
+    cl_rules = carbon_method_rules(model, cl_pairs, couples, pools, keep_rarest=True, no_rescue=shared, log=log,
+                                   carriers=carriers)
+    KEPT_RAREST_LOG[:] = log
+
+    log0 = []
+    ll_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, log=log0)
+    ll_rules = carbon_method_rules(model, ll_pairs, couples, pools, keep_rarest=True, no_rescue=shared, log=log0)
+    KEPT_RAREST_LOG_RULES12[:] = log0
+
+    merge, merge_names, _ = acyl_coa_merge(model, Path(atom_dir) / "Human-GEM_metabolites.tsv")
+    mg = {"merge": merge, "merge_names": merge_names}
+    m_pairs, m_couples = carbon_method_pairs(model, union, n_min, merge=merge)
+    m_rules = carbon_method_rules(model, m_pairs, m_couples, pools, merge=merge)
+    ml_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, merge=merge)
+    ml_rules = carbon_method_rules(model, ml_pairs, m_couples, pools, keep_rarest=True, no_rescue=shared,
+                                   merge=merge)
+    n_lc = sum(v == "ACYLCOA_LC" for v in merge.values())
+    n_vlc = len(merge) - n_lc
+    names = {s.met_id: s.name for s in model.species.values()}
+    carrier_text = ", ".join(f"{names[c]} ({len(x)})" for c, x in sorted(carriers.items(), key=lambda kv: -len(kv[1])))
+    raw, cm, first = carbon["raw"], carbon["carbon_method"], carbon["first_method"]
+    return [
+        raw,
+        ("carbon_method", "2. Carbon method (Rules 1 + 2)", cm[2], cm[3], cm[4], cm[5], cm[6]),
+        ("carbon_cleaned", "3. Pools and transporters dropped",
+         f"Network 2 without reactions that involve any of Human-GEM's {len(pools)} pool pseudo-metabolites "
+         f"(acyl-CoA pool, PI pool, ...) and without {len(cargo):,} transporters, i.e. reactions carrying a "
+         "carbon-containing metabolite across a membrane (ATP-driven pumps, vesicle secretion). Their genes stay "
+         "in the transporter table.",
+         clean_rules, 20, True, {"atom_pairs": method, **drop}),
+        ("carbon_carriers", "4. Carriers removed (Rule 3)",
+         "Network 3 without the links between a carrier and its loaded forms. A carrier is found from structure: "
+         f"a molecule found whole inside at least 10 of its partners, always attached at the same atom through a "
+         f"heteroatom (thioester, ester, amide). Carriers found: {carrier_text}. Links between two loaded forms "
+         "(acetyl-CoA to acetoacetyl-CoA) stay.",
+         c_rules, 20, True, {"atom_pairs": c_pairs, **drop}),
+        ("three_rule", "5. 3-rule pruning (final)",
+         "Network 4, but a reaction whose carbon pairs were all removed keeps the rarest one instead of dropping "
+         "out (glutamate dehydrogenase keeps glutamate/2-oxoglutarate, 41 reactions, over NAD+/NADH, 427). "
+         "Reactions that carry anything across a membrane are never rescued.",
+         cl_rules, 20, True, {"atom_pairs": cl_pairs, **drop}),
+        ("rules12_keep_rarest", "Alternative: Rules 1-2 with the keep-rarest safeguard",
+         "Network 3 with the keep-rarest safeguard but without removing carriers.",
+         ll_rules, 20, True, {"atom_pairs": ll_pairs, **drop}),
+        ("acyl_merged", "Alternative: long acyl-CoAs merged",
+         f"Network 3 with the {n_lc} long-chain (C13-C21) and {n_vlc} very-long-chain (C22+) acyl-CoAs merged into "
+         "one node per class, found from structure. Short and medium acyl-CoAs, including acetyl- and malonyl-CoA, "
+         "stay individual. Couples are counted on the merged network, so CoA / long-chain acyl-CoA becomes one "
+         "frequent pair.",
+         m_rules, 20, True, {"atom_pairs": m_pairs, **drop, **mg}),
+        ("acyl_merged_keep_rarest", "Alternative: long acyl-CoAs merged, keep-rarest safeguard",
+         "The merged network with the keep-rarest safeguard.",
+         ml_rules, 20, True, {"atom_pairs": ml_pairs, **drop, **mg}),
+        first,
     ]
 
 
@@ -204,8 +315,9 @@ def main(argv=None):
     node_index, node_meta = {}, []   # shared across stages: id -> position; [id, name, type, genes]
     result = {"model": f"{model.id} {model.version}", "samples": args.samples, "seed": args.seed,
               "stage_set": args.stage_set, "nodes": node_meta, "stages": []}
-    for key, title, desc, rules, max_size, drop_obj, atom_pairs in stages(model, args.stage_set):
-        g = build_graph(model, rules, max_size, drop_obj, atom_pairs=atom_pairs)
+    for key, title, desc, rules, max_size, drop_obj, extra in stages(model, args.stage_set):
+        g = build_graph(model, rules, max_size, drop_obj, **extra)
+        atom_pairs = extra.get("atom_pairs")
         degree, flow, pocket, in_main = analyse_stage(g, args.samples, np.random.default_rng(args.seed))
         ids = []
         for i, nid in enumerate(g.node_ids):

@@ -117,8 +117,8 @@ def main(argv=None):
 
     # ---- per stage: graphs, pockets, islands, hubs -------------------------
     per = []
-    for st, (key, title, desc, rules, max_size, drop_obj, atom_pairs) in zip(data["stages"], stage_defs):
-        g = build_graph(model, rules, max_size, drop_obj, atom_pairs=atom_pairs)
+    for st, (key, title, desc, rules, max_size, drop_obj, extra) in zip(data["stages"], stage_defs):
+        g = build_graph(model, rules, max_size, drop_obj, **extra)
         assert [meta[k][0] for k in st["node"]] == g.node_ids, f"stage {key} does not match structure.json"
         adj = adjacency(g)
         labels = g.components()

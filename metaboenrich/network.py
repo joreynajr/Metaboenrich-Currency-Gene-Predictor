@@ -300,7 +300,7 @@ def metabolite_degrees(model, max_reaction_size):
     return deg, names
 
 
-def _usable_reactions(model, max_reaction_size, rules, drop_objective=True):
+def _usable_reactions(model, max_reaction_size, rules, drop_objective=True, drop_reactions=frozenset(), merge=None):
     """Yield (reaction, substrate met_ids, product met_ids, audit rows) after
     collapsing compartments and applying the currency rules.
 
@@ -312,13 +312,16 @@ def _usable_reactions(model, max_reaction_size, rules, drop_objective=True):
     currency metabolites).
     """
     for rxn in model.reactions.values():
-        if (drop_objective and rxn.is_objective) or not (rxn.forward or rxn.backward):
+        if (drop_objective and rxn.is_objective) or not (rxn.forward or rxn.backward) or rxn.id in drop_reactions:
             continue
         subs = {model.species[s].met_id for s in rxn.substrates}
         prods = {model.species[s].met_id for s in rxn.products}
+        if rules is not None and (subs | prods) & rules.pools:
+            continue
+        if merge:
+            subs = {merge.get(m, m) for m in subs}
+            prods = {merge.get(m, m) for m in prods}
         if rules is not None:
-            if (subs | prods) & rules.pools:
-                continue
             edited = rules.edits.get(rxn.id, set())
             subs, prods = subs - edited, prods - edited
         both = subs & prods  # same metabolite on both sides, e.g. transport
@@ -354,15 +357,22 @@ def transport_genes(model, rules=None):
     return out
 
 
-def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pairs=None):
+def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pairs=None, drop_unmapped=False,
+                drop_reactions=frozenset(), merge=None, merge_names=None):
     """atom_pairs: optional {reaction id: [(substrate, product, n_carbons), ...]}
     (see metaboenrich.atoms). A mapped reaction becomes one channel node per
     carbon-sharing pair that survives the currency rules, so current can only
     follow carbon skeletons (glutamate -> 2-oxoglutarate, not glutamate ->
     alanine, in a transaminase). A mapped reaction left with no pair is
     dropped. Unmapped reactions are kept whole and listed in
-    graph.unmapped_reactions."""
+    graph.unmapped_reactions. drop_reactions: reaction ids left out entirely
+    (e.g. transporters, see metaboenrich.atoms.transport_reactions).
+    merge / merge_names: {met_id: merged id} and {merged id: name}; merged
+    metabolites become one node (see metaboenrich.atoms.acyl_coa_merge).
+    Pools are checked on the original ids; atom_pairs and rules.edits must
+    use the merged ids."""
     met_names = {s.met_id: s.name for s in model.species.values()}
+    met_names.update(merge_names or {})
     node_ids, node_names, is_rxn, index = [], [], [], {}
 
     def node(nid, name, rxn):
@@ -375,7 +385,7 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pa
 
     edges, arcs, reaction_genes, audit_rows, sides, reversible = [], [], {}, [], [], {}
     base, unmapped, no_pairs = {}, [], []
-    for rxn, subs, prods, audit in _usable_reactions(model, max_reaction_size, rules, drop_objective):
+    for rxn, subs, prods, audit in _usable_reactions(model, max_reaction_size, rules, drop_objective, drop_reactions, merge):
         audit_rows.extend(audit)
         if atom_pairs is not None:
             mapped = atom_pairs.get(rxn.id)
@@ -397,6 +407,8 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pa
                         arcs += [(mb, c), (c, ma)]
                 continue
             unmapped.append(rxn.id)
+            if drop_unmapped:
+                continue
         r = node(rxn.id, rxn.name, True)
         reaction_genes[r] = rxn.genes
         reversible[r] = rxn.forward and rxn.backward

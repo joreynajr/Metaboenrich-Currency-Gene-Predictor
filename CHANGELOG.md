@@ -4,6 +4,28 @@ Network counts are for the analysis network (stage 5): metabolite nodes /
 reaction nodes / edges. The reasons behind each change are in
 [docs/decisions.md](docs/decisions.md).
 
+## 3_rule_pruning branch (2026-10-06)
+
+The analysis network (first method) is unchanged. New: 3-rule pruning, a
+carbon-based network without hand-made currency lists (decisions D17, D18).
+
+- **3-rule pruning** (`metaboenrich/atoms.py`, `metaboenrich/structure.py`
+  stage set `three_rule`): Step 1 pools/biomass/transporters; Rule 1 carbon
+  links; Rule 2 cofactor couples; Rule 3 carriers found from structure
+  (`find_carriers`); keep-rarest safeguard. 3,808 metabolites / 7,676 reaction
+  nodes / 16,060 edges; edge-list SHA-256 `6aa5eaba…`.
+- **Reproduction**: `python -m metaboenrich.atoms --combine union` rebuilds the
+  carbon-pair file; `tools/reproduce_three_rule.py` runs every step;
+  `tools/export_three_rule.py` writes the network with a manifest of inputs,
+  versions and parameters; `tools/rules_audit.py` writes the before/after
+  workbook.
+- **Benchmark**: `--id-translation` (name lookup) and `--couple-min`.
+- **Docs**: `docs/3_rule_pruning_methods.md`, `docs/three_rule_atlas.html`,
+  `docs/three_rule_diagrams/`; Carbon Channel Atlas reworked to show the carbon
+  method on its own.
+- **Graph builder**: `build_graph` options `drop_unmapped`, `drop_reactions`,
+  `merge` (all off by default; existing networks byte-identical, tested).
+
 ## 0.2.0.dev0 (2026-09-29, in progress)
 
 Network unchanged from v0.1.1 (3,958 / 6,377 / 16,356; edge-list SHA-256

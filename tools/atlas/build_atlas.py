@@ -49,9 +49,9 @@ def build_html(structure, diagrams_path, model_path, id_translation, template, r
     # per-stage edges, as positions into each stage's node list
     model = load_sbml(model_path)
     meta_index = {m[0]: k for k, m in enumerate(meta)}
-    for st, (key, _, _, rules, max_size, drop_obj, atom_pairs) in zip(d["stages"], stages(model, d.get("stage_set", "pruning"))):
+    for st, (key, _, _, rules, max_size, drop_obj, extra) in zip(d["stages"], stages(model, d.get("stage_set", "pruning"))):
         assert st["key"] == key
-        g = build_graph(model, rules, max_size, drop_obj, atom_pairs=atom_pairs)
+        g = build_graph(model, rules, max_size, drop_obj, **extra)
         assert [meta_index[x] for x in g.node_ids] == st["node"], f"node order differs in stage {key}"
         st["edges"] = g.edges.ravel().tolist()
 
