@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Random Walk Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--axis:#c5ccd4;
+  --accent:#1f63b5;--note:#eef3fa;--note-ink:#1c3e66;--box:#ffffff;--box-main:#eaf1fb;--box-main-edge:#9dbbe3;
+  --warn:#b4472c;--good:#1d7a4f;
+  --p-numpy:#2a78d6;--p-scipy:#138a76;--p-pandas:#7b52c8;--p-std:#7c8794;--p-rdkit:#d27a12;--p-rxn:#cf3f68;--p-ext:#8a6a3b;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;
+  --accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--box:#1b2026;--box-main:#17263a;--box-main-edge:#335a8a;
+  --warn:#ec8a6c;--good:#5cc596;
+  --p-numpy:#5c9be6;--p-scipy:#3dbba4;--p-pandas:#a283e0;--p-std:#9aa4b0;--p-rdkit:#eda04a;--p-rxn:#ec6f92;--p-ext:#c09a63}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;
+  --accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--box:#1b2026;--box-main:#17263a;--box-main-edge:#335a8a;
+  --warn:#ec8a6c;--good:#5cc596;
+  --p-numpy:#5c9be6;--p-scipy:#3dbba4;--p-pandas:#a283e0;--p-std:#9aa4b0;--p-rdkit:#eda04a;--p-rxn:#ec6f92;--p-ext:#c09a63}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,4vw,40px);padding-block:40px 72px}
+main{max-width:1040px;margin-inline:auto;display:grid;gap:48px}
+.prose{max-width:72ch;display:grid;gap:12px}
+.narrow{max-width:72ch}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(30px,4vw,40px);font-weight:700;letter-spacing:-.015em}
+h2{font-size:23px;font-weight:650;padding-top:10px;border-top:1px solid var(--rule)}
+h3{font-size:18px;font-weight:650}
+p,ul,ol{margin:0}
+ul,ol{padding-left:1.2em;display:grid;gap:6px}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+section{display:grid;gap:18px}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:18px;color:var(--ink-2);max-width:68ch}
+.small{font-size:14px;color:var(--ink-2)}
+.summary{background:var(--note);color:var(--note-ink);border-radius:8px;padding:18px 22px;display:grid;gap:10px}
+.summary li,.summary p{color:var(--note-ink)}
+
+/* package chips */
+.pk{display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1.3 var(--mono);color:var(--ink);white-space:nowrap}
+.pk::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.pk.numpy{--c:var(--p-numpy)}.pk.scipy{--c:var(--p-scipy)}.pk.pandas{--c:var(--p-pandas)}.pk.std{--c:var(--p-std)}
+.pk.ext{--c:var(--p-ext)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center}
+.legend .pk small{font:400 12px var(--sans);color:var(--muted)}
+
+/* diagrams */
+figure{margin:0;display:grid;gap:12px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 18px 14px}
+.scroll{overflow-x:auto}
+.scroll svg{display:block;min-width:900px;width:100%;height:auto}
+figcaption{font-size:14px;color:var(--ink-2)}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .lane{font:500 10.5px var(--mono);letter-spacing:.08em;fill:var(--muted)}
+svg .lane-sub{font:11px var(--mono);fill:var(--muted)}
+svg .b{fill:var(--box);stroke:var(--axis);stroke-width:1}
+svg .b-main{fill:var(--box-main);stroke:var(--box-main-edge);stroke-width:1.2}
+svg .b-opt{fill:var(--box);stroke:var(--axis);stroke-width:1;stroke-dasharray:4 3}
+svg .t{font-size:13px;font-weight:600}svg .ti{font-size:12px}
+svg .m{font:10.5px var(--mono);fill:var(--ink-2)}
+svg .s{font-size:11px;fill:var(--muted)}
+svg .n{font:600 11px var(--mono);fill:var(--accent)}
+svg .ar{stroke:var(--muted);stroke-width:1.3;fill:none}
+svg .ah{fill:var(--muted)}
+svg .zoom{stroke:var(--box-main-edge);stroke-width:1;stroke-dasharray:3 4;fill:none}
+svg a:hover .b,svg a:hover .b-main,svg a:hover .b-opt{stroke:var(--accent);stroke-width:1.8}
+svg .d-numpy{fill:var(--p-numpy)}svg .d-scipy{fill:var(--p-scipy)}svg .d-pandas{fill:var(--p-pandas)}svg .d-std{fill:var(--p-std)}
+svg .d-ext{fill:var(--p-ext)}
+/* state-space diagram */
+svg .met{fill:var(--box);stroke:var(--ink-2);stroke-width:1.2}
+svg .met-src{fill:var(--box-main);stroke:var(--accent);stroke-width:1.6}
+svg .met-tgt{fill:var(--box);stroke:var(--good);stroke-width:1.6}
+svg .met-dim{fill:var(--box);stroke:var(--axis);stroke-width:1.2}
+svg .rxn{fill:var(--page);stroke:var(--ink-2);stroke-width:1.2}
+svg .rxn-dim{fill:var(--page);stroke:var(--axis);stroke-width:1.2}
+svg .ln{stroke:var(--ink-2);stroke-width:1.3;fill:none}
+svg .ln-dim{stroke:var(--axis);stroke-width:1.3;fill:none;stroke-dasharray:4 3}
+svg .ln-hop{stroke:var(--warn);stroke-width:2;fill:none;stroke-dasharray:6 4}
+svg .ln-no{stroke:var(--warn);stroke-width:1.5;fill:none;stroke-dasharray:4 3}
+svg .lbl{font-size:13px;font-weight:600;text-anchor:middle}
+svg .lbl-dim{font-size:13px;font-weight:600;text-anchor:middle;fill:var(--muted)}
+svg .cap{font-size:11px;fill:var(--muted);text-anchor:middle}
+svg .warn{font-size:11.5px;fill:var(--warn)}
+svg .good{font-size:11.5px;fill:var(--good)}
+svg .x{stroke:var(--warn);stroke-width:2.2}
+svg .panel{font:500 10.5px var(--mono);letter-spacing:.08em;fill:var(--muted)}
+svg .ah-w{fill:var(--warn)}
+svg .ah-d{fill:var(--axis)}
+
+/* tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font:500 11.5px/1.3 var(--mono);letter-spacing:.04em;color:var(--muted);white-space:nowrap;background:var(--surface)}
+tbody th{font-weight:600}
+tbody th small{display:block;font:400 11.5px var(--mono);color:var(--muted)}
+td code{font-size:12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.group td,tr.group th{background:var(--page);font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:7px 12px}
+tr:last-child td,tr:last-child th{border-bottom:0}
+table.cmp{min-width:760px}table.cmp tbody th{width:20%}table.cmp td{width:40%}
+
+/* cards */
+.stages{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px 22px;display:grid;gap:14px;scroll-margin-top:16px}
+.card.main{border-color:var(--box-main-edge)}
+.card:target{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.card-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.num{font:600 13px var(--mono);color:var(--accent);background:var(--note);border-radius:6px;padding:2px 8px}
+.where{font:12.5px var(--mono);color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px 28px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.label{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.fn{list-style:none;padding:0;display:grid;gap:8px}
+.fn li{display:block}
+.fn code{font-size:13px;color:var(--ink)}
+.fn span{display:block;font-size:14px;color:var(--ink-2)}
+.pkgs{list-style:none;padding:0;display:grid;gap:8px}
+.pkgs li{display:block}
+.pkgs li > span:last-child{display:block;font-size:13.5px;color:var(--ink-2);padding-left:15px}
+.io{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--ink-2);border-top:1px dashed var(--rule);padding-top:10px}
+.io b{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.math{font:13.5px/1.9 var(--mono);background:var(--page);border-radius:6px;padding:10px 14px;overflow-x:auto;white-space:nowrap}
+.math .c{color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+.cmd{font:13px/1.7 var(--mono);background:var(--page);border-radius:6px;padding:10px 14px;overflow-x:auto;white-space:pre;margin:0}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
+</style>
+</head>
+<body>
+<main>
+
+<header class="prose">
+  <div class="eyebrow">Metaboenrich 0.2.0.dev0 · code map · experimental</div>
+  <h1>Random-walk pipeline map</h1>
+  <p class="lede">What changes when the pipeline runs with <code>--mode walk</code>: how the absorbing random walk
+  in <code>metaboenrich/walk.py</code> works, step by step, which function does each part, and which package does the
+  work underneath. Every function and package call named here was checked against the code at commit <code>0f6c135</code>
+  (branch <code>directed-rw</code>).</p>
+  <nav class="toc">
+    <a href="#overview">Overview</a><a href="#states">State space</a><a href="#compare">Walk vs current flow</a>
+    <a href="#run">Walk run, step by step</a><a href="#options">Options</a><a href="#other">Other entry points</a>
+    <a href="#results">Benchmark</a><a href="#deps">Packages</a>
+  </nav>
+</header>
+
+<section class="summary">
+  <p><strong>In one paragraph.</strong> <code>--mode walk</code> keeps steps 1–4 of the main run and swaps step 5.
+  Instead of solving Kirchhoff's equations on the undirected graph, it releases walkers at the increased metabolites
+  (sources), in proportion to |log2FC|, and lets them step only along reaction directions until a decreased metabolite
+  (target) absorbs them. Walkers that hit a dead end are lost, and only walks that reach a target are scored. The maths is one
+  sparse LU of (I − Q) on the walk's state space (<code>scipy.sparse.linalg.splu</code>, about 0.3 s on Human-GEM).
+  That one factorisation gives every source's chance of reaching a target and its expected traffic over every arc. The walk
+  returns the same <code>FlowResult</code> as current flow, so scoring and outputs are shared. The result tables gain one column,
+  <code>net_forward</code>, and <code>summary.json</code> gains a few <code>walk_*</code> fields.</p>
+  <p><strong>Not a random walk with restart (RWR).</strong> Walkers never teleport back to where they started. They
+  stop when a target absorbs them or when they reach a dead end. The scores are expected traffic of
+  <em>successful</em> walks, not a stationary distribution.</p>
+</section>
+
+<section id="overview">
+  <h2>Overview</h2>
+  <div class="legend" aria-label="Package colours">
+    <span class="pk numpy">numpy</span>
+    <span class="pk scipy">scipy</span>
+    <span class="pk pandas">pandas</span>
+    <span class="pk std">Python standard library</span>
+    <span class="pk ext">external service / R / JS</span>
+  </div>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 520" role="img" aria-labelledby="ov-title">
+      <title id="ov-title">Walk pipeline overview: steps 1 to 4 are shared with the main run, step 5 is the absorbing walk in five parts, steps 6 and 7 are shared with small additions, and four scripts use the walk</title>
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" class="ah"/>
+        </marker>
+      </defs>
+
+      <!-- lane labels -->
+      <text class="lane" x="0" y="44">INPUTS</text>
+      <text class="lane" x="0" y="160">MAIN RUN</text>
+      <text class="lane-sub" x="0" y="176">--mode walk</text>
+      <text class="lane" x="0" y="296">INSIDE</text>
+      <text class="lane" x="0" y="310">STEP 5</text>
+      <text class="lane" x="0" y="440">OTHER</text>
+      <text class="lane" x="0" y="454">ENTRY POINTS</text>
+
+      <!-- inputs -->
+      <a href="pipeline.html#s1"><rect class="b" x="112" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="122" y="38">Human-GEM</text>
+        <text class="s" x="122" y="54">v2.0.1 SBML + YAML</text>
+        <text class="s" x="122" y="67">bounds → direction</text></a>
+      <a href="pipeline.html#s2"><rect class="b" x="239" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="249" y="38">reaction_edits</text>
+        <text class="s" x="249" y="54">.tsv, model</text>
+        <text class="s" x="249" y="67">corrections</text></a>
+      <a href="pipeline.html#s3"><rect class="b" x="366" y="16" width="114" height="58" rx="6"/>
+        <text class="t ti" x="376" y="38">DAA table</text>
+        <text class="s" x="376" y="54">.csv / .tsv</text>
+        <text class="s" x="376" y="67">→ φ = |log2FC|</text></a>
+      <path class="ar" d="M169 74 V120" marker-end="url(#arr)"/>
+      <path class="ar" d="M296 74 V120" marker-end="url(#arr)"/>
+      <path class="ar" d="M423 74 V120" marker-end="url(#arr)"/>
+
+      <!-- main run: 1-4 shared -->
+      <a href="pipeline.html#s1"><rect class="b" x="112" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="122" y="144">1</text><text class="t" x="134" y="144">Load model</text>
+        <text class="m" x="122" y="164">gem.py</text><text class="s" x="122" y="180">unchanged</text>
+        <circle class="d-std" cx="126" cy="204" r="4.5"/></a>
+      <a href="pipeline.html#s2"><rect class="b" x="239" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="249" y="144">2</text><text class="t" x="261" y="144">Currency</text>
+        <text class="m" x="249" y="164">network.py</text><text class="s" x="249" y="180">unchanged</text>
+        <circle class="d-std" cx="253" cy="204" r="4.5"/></a>
+      <a href="pipeline.html#s3"><rect class="b" x="366" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="376" y="144">3</text><text class="t" x="388" y="144">Map DAA</text>
+        <text class="m" x="376" y="164">daa.py</text><text class="s" x="376" y="180">φ always passed</text>
+        <circle class="d-pandas" cx="380" cy="204" r="4.5"/><circle class="d-numpy" cx="393" cy="204" r="4.5"/><circle class="d-std" cx="406" cy="204" r="4.5"/></a>
+      <a href="pipeline.html#s4"><rect class="b" x="493" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="503" y="144">4</text><text class="t" x="515" y="144">Build graph</text>
+        <text class="m" x="503" y="164">network.py</text><text class="s" x="503" y="180">walk reads arcs</text>
+        <circle class="d-numpy" cx="507" cy="204" r="4.5"/><circle class="d-scipy" cx="520" cy="204" r="4.5"/><circle class="d-std" cx="533" cy="204" r="4.5"/></a>
+      <!-- step 5: the walk -->
+      <a href="#s5"><rect class="b-main" x="620" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="630" y="144">5</text><text class="t" x="642" y="144">Absorbing walk</text>
+        <text class="m" x="630" y="164">walk.py</text><text class="m" x="630" y="180">absorbing_walk</text>
+        <circle class="d-numpy" cx="634" cy="204" r="4.5"/><circle class="d-scipy" cx="647" cy="204" r="4.5"/><circle class="d-std" cx="660" cy="204" r="4.5"/></a>
+      <a href="#s6"><rect class="b" x="747" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="757" y="144">6</text><text class="t" x="769" y="144">Score &amp; rank</text>
+        <text class="m" x="757" y="164">scoring.py</text><text class="s" x="757" y="180">+ net_forward</text>
+        <circle class="d-pandas" cx="761" cy="204" r="4.5"/><circle class="d-numpy" cx="774" cy="204" r="4.5"/><circle class="d-scipy" cx="787" cy="204" r="4.5"/></a>
+      <a href="#s7"><rect class="b" x="874" y="124" width="114" height="96" rx="7"/>
+        <text class="n" x="884" y="144">7</text><text class="t" x="896" y="144">Outputs</text>
+        <text class="m" x="884" y="164">__main__.py</text><text class="s" x="884" y="180">+ walk_* fields</text>
+        <circle class="d-pandas" cx="888" cy="204" r="4.5"/><circle class="d-numpy" cx="901" cy="204" r="4.5"/><circle class="d-std" cx="914" cy="204" r="4.5"/></a>
+      <path class="ar" d="M226 172 H237" marker-end="url(#arr)"/>
+      <path class="ar" d="M353 172 H364" marker-end="url(#arr)"/>
+      <path class="ar" d="M480 172 H491" marker-end="url(#arr)"/>
+      <path class="ar" d="M607 172 H618" marker-end="url(#arr)"/>
+      <path class="ar" d="M734 172 H745" marker-end="url(#arr)"/>
+      <path class="ar" d="M861 172 H872" marker-end="url(#arr)"/>
+
+      <!-- zoom into step 5 -->
+      <path class="zoom" d="M620 220 L112 258"/>
+      <path class="zoom" d="M734 220 L988 258"/>
+
+      <!-- sub-steps of 5 -->
+      <a href="#s5a"><rect class="b-main" x="112" y="260" width="164" height="90" rx="7"/>
+        <text class="n" x="122" y="280">5a</text><text class="t" x="142" y="280">State space</text>
+        <text class="m" x="122" y="300">walk_states</text>
+        <text class="s" x="122" y="318">reversible → 2 states,</text>
+        <text class="s" x="122" y="333">one arrival state per step</text></a>
+      <a href="#s5b"><rect class="b-main" x="290" y="260" width="164" height="90" rx="7"/>
+        <text class="n" x="300" y="280">5b</text><text class="t" x="320" y="280">Absorb &amp; prune</text>
+        <text class="m" x="300" y="300">_can_reach</text>
+        <text class="s" x="300" y="318">a_t at targets; drop states</text>
+        <text class="s" x="300" y="333">that cannot reach one</text></a>
+      <a href="#s5c"><rect class="b-main" x="468" y="260" width="164" height="90" rx="7"/>
+        <text class="n" x="478" y="280">5c</text><text class="t" x="498" y="280">Reach probability</text>
+        <text class="m" x="478" y="300">splu(I − Q)</text>
+        <text class="s" x="478" y="318">h = P(absorbed) per state;</text>
+        <text class="s" x="478" y="333">one LU per run</text></a>
+      <a href="#s5d"><rect class="b-main" x="646" y="260" width="164" height="90" rx="7"/>
+        <text class="n" x="656" y="280">5d</text><text class="t" x="676" y="280">Successful traffic</text>
+        <text class="m" x="656" y="300">lu.solve(…, trans="T")</text>
+        <text class="s" x="656" y="318">visits per source, then</text>
+        <text class="s" x="656" y="333">condition on success</text></a>
+      <a href="#s5e"><rect class="b-main" x="824" y="260" width="164" height="90" rx="7"/>
+        <text class="n" x="834" y="280">5e</text><text class="t" x="854" y="280">Fold to scores</text>
+        <text class="m" x="834" y="300">M @ C, |B|ᵀ |net|</text>
+        <text class="s" x="834" y="318">net edge flow → throughput,</text>
+        <text class="s" x="834" y="333">FlowResult</text></a>
+      <path class="ar" d="M276 305 H288" marker-end="url(#arr)"/>
+      <path class="ar" d="M454 305 H466" marker-end="url(#arr)"/>
+      <path class="ar" d="M632 305 H644" marker-end="url(#arr)"/>
+      <path class="ar" d="M810 305 H822" marker-end="url(#arr)"/>
+
+      <line x1="112" x2="988" y1="380" y2="380" stroke="var(--rule)" stroke-dasharray="2 4"/>
+      <text class="s" x="112" y="400">These import absorbing_walk; they do not reimplement it.</text>
+
+      <!-- other entry points -->
+      <a href="#oD"><rect class="b" x="112" y="412" width="205" height="96" rx="7"/>
+        <text class="n" x="122" y="432">D</text><text class="t" x="136" y="432">Benchmark</text>
+        <text class="m" x="122" y="452">benchmark.py --method walk</text>
+        <text class="s" x="122" y="470">→ causal-gene ranks (raw)</text>
+        <circle class="d-pandas" cx="126" cy="492" r="4.5"/><circle class="d-numpy" cx="139" cy="492" r="4.5"/><circle class="d-ext" cx="152" cy="492" r="4.5"/></a>
+      <a href="#oT"><rect class="b" x="335" y="412" width="205" height="96" rx="7"/>
+        <text class="n" x="345" y="432">T</text><text class="t" x="359" y="432">Tests</text>
+        <text class="m" x="345" y="452">tests/test_walk.py</text>
+        <text class="s" x="345" y="470">toy networks + Monte Carlo</text>
+        <circle class="d-numpy" cx="349" cy="492" r="4.5"/><circle class="d-std" cx="362" cy="492" r="4.5"/></a>
+      <a href="#oR"><rect class="b" x="558" y="412" width="205" height="96" rx="7"/>
+        <text class="n" x="568" y="432">R</text><text class="t" x="582" y="432">Walk report</text>
+        <text class="m" x="568" y="452">build_rw_report.py</text>
+        <text class="s" x="568" y="470">→ rw_report.html</text>
+        <circle class="d-pandas" cx="572" cy="492" r="4.5"/><circle class="d-numpy" cx="585" cy="492" r="4.5"/><circle class="d-std" cx="598" cy="492" r="4.5"/></a>
+      <a href="#oN"><rect class="b" x="781" y="412" width="205" height="96" rx="7"/>
+        <text class="n" x="791" y="432">N</text><text class="t" x="805" y="432">Network Explorer</text>
+        <text class="m" x="791" y="452">build_network_report.py</text>
+        <text class="s" x="791" y="470">→ network_report.html</text>
+        <circle class="d-numpy" cx="795" cy="492" r="4.5"/><circle class="d-pandas" cx="808" cy="492" r="4.5"/><circle class="d-ext" cx="821" cy="492" r="4.5"/></a>
+    </svg>
+    </div>
+    <figcaption>Click any box to jump to its details. Plain boxes for steps 1–4 link to <a href="pipeline.html">pipeline.html</a>,
+    because the walk does not change them. Step 5 is replaced, shown as its five parts. Steps 6 and 7 are shared, with one new column
+    and a few new summary fields. Dots show which packages each step relies on.</figcaption>
+  </figure>
+</section>
+
+<section id="states">
+  <h2>The walk's state space</h2>
+  <p class="small narrow">The walk does not run directly on the metabolite–reaction graph. It runs on a larger directed graph of
+  <em>states</em> built from it (step <a href="#s5a">5a</a>), so that a walker always knows which way it is going through a
+  reaction. The example below has two reactions: r1, A + B ⇌ C (reversible), and r2, C → D (irreversible). A is a source and D a target.</p>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 320" role="img" aria-labelledby="st-title">
+      <title id="st-title">Left: on the undirected graph current can go from A through r1 straight to its co-substrate B. Right: in the walk's state space, a walker from A goes r1 forward to C, then r2 forward to D, where it is absorbed; going back through r1 to B is forbidden.</title>
+      <defs>
+        <marker id="arr2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" class="ah"/>
+        </marker>
+        <marker id="arr-w" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" class="ah-w"/>
+        </marker>
+        <marker id="arr-d" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" class="ah-d"/>
+        </marker>
+      </defs>
+
+      <!-- left panel: graph -->
+      <text class="panel" x="20" y="22">GRAPH · WHAT CURRENT FLOW SEES</text>
+      <line class="ln" x1="60" y1="90" x2="170" y2="150"/>
+      <line class="ln" x1="60" y1="210" x2="170" y2="150"/>
+      <line class="ln" x1="170" y1="150" x2="270" y2="150"/>
+      <line class="ln" x1="270" y1="150" x2="350" y2="150"/>
+      <line class="ln" x1="350" y1="150" x2="420" y2="150"/>
+      <path class="ln-hop" d="M78 84 Q170 128 190 150 Q170 174 78 216" marker-end="url(#arr-w)"/>
+      <circle class="met-src" cx="60" cy="90" r="17"/><text class="lbl" x="60" y="95">A</text>
+      <circle class="met" cx="60" cy="210" r="17"/><text class="lbl" x="60" y="215">B</text>
+      <rect class="rxn" x="153" y="133" width="34" height="34" rx="5"/><text class="lbl" x="170" y="155">r1</text>
+      <circle class="met" cx="270" cy="150" r="17"/><text class="lbl" x="270" y="155">C</text>
+      <rect class="rxn" x="333" y="133" width="34" height="34" rx="5"/><text class="lbl" x="350" y="155">r2</text>
+      <circle class="met-tgt" cx="420" cy="150" r="17"/><circle class="met-tgt" cx="420" cy="150" r="13" fill="none"/><text class="lbl" x="420" y="155">D</text>
+      <text class="cap" x="60" y="62">source</text>
+      <text class="cap" x="420" y="186">target</text>
+      <text class="cap" x="170" y="186">⇌</text>
+      <text class="cap" x="350" y="186">→</text>
+      <text class="warn" x="20" y="262">Undirected edges let current take A → r1 → B,</text>
+      <text class="warn" x="20" y="278">a co-substrate hop that no reaction performs.</text>
+
+      <line x1="465" x2="465" y1="10" y2="300" stroke="var(--rule)"/>
+
+      <!-- right panel: walk states -->
+      <text class="panel" x="490" y="22">WALK STATES · WHAT THE WALK SEES</text>
+      <!-- arcs row 1 -->
+      <line class="ln" x1="527" y1="90" x2="580" y2="90" marker-end="url(#arr2)"/>
+      <line class="ln" x1="619" y1="90" x2="670" y2="90" marker-end="url(#arr2)"/>
+      <line class="ln" x1="707" y1="90" x2="760" y2="90" marker-end="url(#arr2)"/>
+      <line class="ln" x1="799" y1="90" x2="858" y2="90" marker-end="url(#arr2)"/>
+      <!-- B start feeds r1 forward too -->
+      <line class="ln-dim" x1="522" y1="198" x2="586" y2="106" marker-end="url(#arr-d)"/>
+      <!-- forbidden reversal -->
+      <line class="ln-no" x1="690" y1="108" x2="690" y2="190" marker-end="url(#arr-w)"/>
+      <line class="x" x1="682" y1="141" x2="698" y2="157"/><line class="x" x1="698" y1="141" x2="682" y2="157"/>
+      <line class="ln-dim" x1="709" y1="210" x2="780" y2="210" marker-end="url(#arr-d)"/>
+
+      <circle class="met-src" cx="510" cy="90" r="17"/><text class="lbl" x="510" y="95">A</text>
+      <text class="cap" x="510" y="62">start</text>
+      <rect class="rxn" x="583" y="73" width="34" height="34" rx="5"/><text class="lbl" x="600" y="95">r1→</text>
+      <circle class="met" cx="690" cy="90" r="17"/><text class="lbl" x="690" y="95">C</text>
+      <text class="cap" x="690" y="62">arrived via r1→</text>
+      <rect class="rxn" x="763" y="73" width="34" height="34" rx="5"/><text class="lbl" x="780" y="95">r2→</text>
+      <circle class="met-tgt" cx="880" cy="90" r="17"/><circle class="met-tgt" cx="880" cy="90" r="13" fill="none"/><text class="lbl" x="880" y="95">D</text>
+      <text class="cap" x="880" y="62">arrived via r2→</text>
+      <text class="good" x="903" y="94">absorbed</text>
+
+      <circle class="met-dim" cx="510" cy="210" r="17"/><text class="lbl-dim" x="510" y="215">B</text>
+      <text class="cap" x="510" y="244">start</text>
+      <rect class="rxn-dim" x="673" y="193" width="34" height="34" rx="5"/><text class="lbl-dim" x="690" y="215">r1←</text>
+      <circle class="met-dim" cx="800" cy="210" r="17"/><text class="lbl-dim" x="800" y="215">B</text>
+      <text class="cap" x="800" y="244">arrived via r1←</text>
+      <text class="warn" x="706" y="146">no immediate reversal:</text>
+      <text class="warn" x="706" y="161">r1← is the opposite of r1→</text>
+
+      <text class="s" x="490" y="282">Circle: a metabolite state (where a walker starts, or arrived from a given reaction direction).</text>
+      <text class="s" x="490" y="298">Square: one direction of a reaction. Double ring: a target, which absorbs. Grey: not reachable from A.</text>
+    </svg>
+    </div>
+    <figcaption>Three rules make the walk respect chemistry: a walker enters a reaction through a substrate and leaves through a product
+    (the reverse for a backward step); a reversible reaction becomes two states, r1→ and r1←; and a walker may not take the
+    opposite direction of the reaction it just used. Without the third rule, r1→ then r1← would be the same co-substrate hop in two steps
+    (<code>test_no_immediate_reversal</code>).</figcaption>
+  </figure>
+</section>
+
+<section id="compare">
+  <h2>Walk vs current flow</h2>
+  <div class="tbl">
+  <table class="cmp">
+    <thead><tr><th>Aspect</th><th>Current flow (default)</th><th>Absorbing walk (<code>--mode walk</code>)</th></tr></thead>
+    <tbody>
+      <tr><th>Module</th><td><code>flow.current_flow</code></td><td><code>walk.absorbing_walk</code></td></tr>
+      <tr><th>Graph used</th><td>Undirected metabolite–reaction edges, unit conductance</td><td>Directed state space built from <code>Graph.arcs</code> (reaction directions from the flux bounds)</td></tr>
+      <tr><th>Reaction direction</th><td>Ignored. <code>--mode directed</code> only filters pairs; solved pairs still use the undirected Laplacian</td><td>Respected at every step; reversible reactions can be used either way</td></tr>
+      <tr><th>Co-substrate hops</th><td>Allowed (substrate → reaction → other substrate)</td><td>Impossible: in through a substrate, out through a product, no immediate reversal</td></tr>
+      <tr><th>Unit of analysis</th><td>Every source–target pair, one unit of current each</td><td>Every source; all targets absorb together</td></tr>
+      <tr><th>Fold change</th><td>Not used unless <code>--pair-weight fc</code></td><td>Always: sources weighted by φ = |log2FC| (hook 1); with <code>--walk-kappa</code>, also absorption strength (hook 2)</td></tr>
+      <tr><th>Dead ends</th><td>None: current must reach the sink</td><td>Walkers leak; only walks that reach a target are scored (Doob h-transform)</td></tr>
+      <tr><th>Linear algebra</th><td>One LU per connected component of the Laplacian; |S| + |T| solves</td><td>One LU of I − Q on the live states (21,787 states on Human-GEM); 1 + |S| solves</td></tr>
+      <tr><th>Throughput range</th><td>0–1</td><td>Can exceed 1: directed cycles can circulate walkers</td></tr>
+      <tr><th>Leave-one-out</th><td>Yes (<code>*_loo</code> columns, <code>--scoring loo</code>)</td><td>Not defined: columns are NaN, <code>--scoring loo</code> is refused</td></tr>
+      <tr><th>Endpoint <code>eff_conductance</code></th><td>1 / effective resistance</td><td>Source: probability its walkers reach a target. Target: share of successful walkers it absorbs</td></tr>
+      <tr><th>Extra outputs</th><td>None</td><td><code>net_forward</code> per reaction; <code>walk_*</code> fields in summary.json</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="run">
+  <h2>Walk run, step by step</h2>
+  <p class="small narrow">Entry point: <code>python -m metaboenrich --mode walk …</code>, i.e. <code>metaboenrich/__main__.py → main()</code>.
+  When <code>args.mode == "walk"</code> it calls <code>absorbing_walk</code> where it would otherwise call
+  <code>current_flow</code>. Everything before and after that call is the same code as the default run.</p>
+  <div class="stages">
+
+  <article class="card" id="s1-4">
+    <div class="card-head"><span class="num">1–4</span><h3>Model, currency, DAA, graph: unchanged</h3><span class="where">gem.py · network.py · daa.py</span></div>
+    <p>The walk uses the same locked network as current flow (3,958 metabolites, 6,377 reactions, 16,356 edges); see
+    <a href="pipeline.html#s1">pipeline.html, steps 1–4</a>. It relies on three things those steps already produce:</p>
+    <ul class="fn">
+      <li><code>Reaction.forward</code> / <code>Reaction.backward</code> (step 1)<span>Directions from the flux bounds: <code>forward = ub &gt; 0</code>, <code>backward = lb &lt; 0</code>. Reversible reactions have both.</span></li>
+      <li><code>Graph.arcs</code> and <code>Graph.edge_side</code> (step 4)<span>The directed arcs and whether each edge joins a substrate or a product. Step 5a reads these to decide which directions each reaction allows.</span></li>
+      <li><code>daa.phi</code> (step 3)<span>φ = |log2FC| per mapped metabolite. In walk mode <code>main()</code> always builds the <code>{node: φ}</code> map, whatever <code>--pair-weight</code> says.</span></li>
+    </ul>
+  </article>
+
+  <article class="card main" id="s5">
+    <div class="card-head"><span class="num">5</span><h3>Run the absorbing walk</h3><span class="where">metaboenrich/walk.py → absorbing_walk(graph, sources, targets, phi, kappa, tau, ground)</span></div>
+    <p>Releases walkers at the sources, follows reaction directions until a target absorbs them, and turns the expected traffic of the
+    successful walks into the same per-node and per-edge arrays that current flow produces. The five parts below run in order inside one call.</p>
+    <div class="math">
+      <span class="c">5b</span>&nbsp; a<sub>t</sub> = 1 &nbsp;or&nbsp; 1 − e<sup>−κφ<sub>t</sub></sup> &nbsp;·&nbsp; Q<sub>uv</sub> = (1 − a<sub>u</sub>) / outdeg(u)<br>
+      <span class="c">5c</span>&nbsp; (I − Q) h = a &nbsp;→&nbsp; h(u) = P(walk from u is absorbed) &nbsp;·&nbsp; w<sub>s</sub> ∝ φ<sub>s</sub> h(s)<br>
+      <span class="c">5d</span>&nbsp; n<sub>s</sub> = (I − Q)<sup>−T</sup> e<sub>s</sub> &nbsp;→&nbsp; traffic(u→v | success) = n<sub>s</sub>(u) Q<sub>uv</sub> h(v) / h(s)<br>
+      <span class="c">5e</span>&nbsp; net = M · traffic &nbsp;→&nbsp; throughput = ½ |B|ᵀ |net| &nbsp;(− ½ absorbed at a target) &nbsp;→&nbsp; conductivity = Σ<sub>s</sub> w<sub>s</sub> T<sub>s</sub>
+    </div>
+    <div class="io"><span><b>In</b><code>Graph</code>, source and target node lists, φ, optional κ, τ, ground</span><span><b>Out</b><code>FlowResult</code> with <code>net_forward</code> and <code>walk_info</code> set</span></div>
+  </article>
+
+  <article class="card" id="s5a">
+    <div class="card-head"><span class="num">5a</span><h3>Build the state space</h3><span class="where">walk.walk_states(graph) → WalkStates</span></div>
+    <p>States <code>0 … graph.n − 1</code> are the graph's own nodes. A metabolite's state is where walkers start, and a reaction's state
+    is its first allowed direction. Each reversible reaction then gets a second state for its other direction, and every
+    (reaction direction → product metabolite) step gets its own <em>arrival</em> state, so a walker on a metabolite remembers which
+    direction it came from. Arcs run start → direction, direction → arrival, and arrival → any direction the metabolite feeds,
+    <em>except</em> the opposite of the one just used. See the <a href="#states">diagram above</a>.</p>
+    <div class="cols">
+      <div><div class="label">Functions and fields</div><ul class="fn">
+        <li><code>walk_states(graph)</code><span>Reads <code>graph.arcs</code> against <code>graph.edge_side</code> to set <code>fwd[r]</code> / <code>bwd[r]</code>, then builds the <code>inputs</code> (metabolite → directions it feeds) and <code>outputs</code> (direction → products) maps and the arc list.</span></li>
+        <li><code>WalkStates</code><span><code>node</code> (graph node of each state), <code>arrival</code> mask, arcs <code>arc_u → arc_v</code>, the graph edge each arc runs along (<code>arc_edge</code>), and <code>arc_sign</code> (+1 metabolite → reaction, −1 reaction → metabolite).</span></li>
+        <li><code>opposite</code><span>Maps r→ to r← and back; the no-reversal rule skips that one arc.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk std">dict · set · dataclasses</span><span>Direction flags, input/output maps, the <code>WalkStates</code> container.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Final <code>int64</code> arc arrays and the arrival mask.</span></li>
+      </ul></div>
+    </div>
+    <div class="io"><span><b>Size</b>21,787 states on Human-GEM (D17)</span></div>
+  </article>
+
+  <article class="card" id="s5b">
+    <div class="card-head"><span class="num">5b</span><h3>Set absorption, prune dead states</h3><span class="where">walk.absorbing_walk · walk._can_reach</span></div>
+    <p>Only <em>arrival</em> states of targets absorb: a walker has to get there through a reaction. With full absorption (default)
+    a<sub>t</sub> = 1. With <code>--walk-kappa κ</code>, a<sub>t</sub> = 1 − exp(−κ φ<sub>t</sub>): a deep drop catches nearly every walker,
+    a mild one lets some walk on to targets further along. A reverse breadth-first search from the absorbing states marks every state that
+    can still reach one (<em>live</em>). Transition probabilities use the full out-degree, so a step into a dead state is lost
+    mass. That is how dead ends leak.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>_can_reach(n_states, arc_u, arc_v, goals)</code><span>Predecessor matrix in CSR, then BFS backwards from the goal states.</span></li>
+        <li><code>q = (1 − absorb[au]) / outdeg[au]</code><span>Q<sub>uv</sub> on live → live arcs only.</span></li>
+        <li>One-sided data (<code>ground</code>)<span>If only sources are significant, the measured, unchanged metabolites absorb (a = 1). If only targets are, walkers start evenly from them.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">scipy.sparse.csr_matrix</span><span>Predecessor lists for the reverse search.</span></li>
+        <li><span class="pk std">collections.deque</span><span>The BFS queue.</span></li>
+        <li><span class="pk numpy">numpy</span><span><code>np.isin</code> / <code>np.flatnonzero</code> for target states, <code>np.bincount</code> for out-degrees.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="s5c">
+    <div class="card-head"><span class="num">5c</span><h3>Factor once, get reach probabilities</h3><span class="where">splu(I − Q) · lu.solve(absorb)</span></div>
+    <p>Builds Q on the live states and LU-factorises I − Q once. Solving against the absorption vector gives h(u), the
+    probability that a walk from state u ends at a target. h(s) for a source is its <strong>reach probability</strong>. Sources with
+    h(s) ≈ 0 are excluded ("no directed path to a target"). The rest are weighted w<sub>s</sub> ∝ φ<sub>s</sub> h(s), their
+    share of all released walkers that reach a target.</p>
+    <div class="cols">
+      <div><div class="label">Calls</div><ul class="fn">
+        <li><code>sp.csc_matrix((q, (pos[au], pos[av])))</code><span>Q, indexed by live-state position.</span></li>
+        <li><code>splu((I − Q).tocsc())</code><span>The single factorisation, about 0.3 s on Human-GEM. Reused in 5d.</span></li>
+        <li><code>walk_success_fraction</code><span>Σ φ<sub>s</sub> h(s) / Σ φ<sub>s</sub>: the share of released walkers that reach a target, reported in summary.json.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">scipy.sparse.linalg.splu</span><span>The core numerical step, as in current flow but on a different matrix.</span></li>
+        <li><span class="pk scipy">scipy.sparse</span><span><code>csc_matrix</code>, <code>identity</code>.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="s5d">
+    <div class="card-head"><span class="num">5d</span><h3>Expected traffic of successful walks</h3><span class="where">lu.solve(E, trans="T") · chunks of 128 sources</span></div>
+    <p>For a block of sources, the transposed solve gives n<sub>s</sub>, the expected number of visits to each state by walks
+    released at s. Multiplying by Q<sub>uv</sub> h(v) / h(s) keeps only the part of that traffic belonging to walks that end at a target.
+    This is the Doob h-transform: per source, the conditioned walk is exactly one unit of flow from s to the targets. The same solve
+    gives the share of s's successful walkers absorbed at each target, which decides the reached (s, t) pairs.</p>
+    <div class="cols">
+      <div><div class="label">Calls</div><ul class="fn">
+        <li><code>N[live_idx] = lu.solve(E, trans="T")</code><span>Expected visits, one column per source in the block.</span></li>
+        <li><code>C = N[au] * (q * h[av])[:, None] / hs</code><span>Conditioned traffic on every arc.</span></li>
+        <li><code>absorbed = G @ N / hs</code><span>Share absorbed at each target. A pair with no share goes to <code>excluded</code> as "no walk reaches this target".</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">SuperLU.solve</span><span>Reuses the factor from 5c; no new factorisation.</span></li>
+        <li><span class="pk numpy">numpy</span><span>Dense blocks of 128 columns; broadcasting for the conditioning.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="s5e">
+    <div class="card-head"><span class="num">5e</span><h3>Fold traffic back onto the graph</h3><span class="where">M @ C · |B|ᵀ · FlowResult(…)</span></div>
+    <p>Arc traffic is summed onto the original metabolite–reaction edges as signed net flow (+ towards the reaction, − away), so
+    traffic that runs both ways through an edge cancels. A node's throughput is half the summed |net flow| on its edges, as in
+    current flow. Walkers that stop at a target are subtracted there, so a target scores only what it relays onwards. A source's own
+    walkers are not counted at that source. Per-source throughputs are then combined.</p>
+    <div class="cols">
+      <div><div class="label">Results (FlowResult fields)</div><ul class="fn">
+        <li><code>conductivity</code> = <code>accumulated</code><span>Σ<sub>s</sub> w<sub>s</sub> T<sub>s</sub>: weighted mean throughput (weights sum to 1).</span></li>
+        <li><code>bottleneck</code><span>Largest throughput for any single source.</span></li>
+        <li><code>bottleneck_frac</code><span>Weighted share of sources for which throughput ≥ τ (<code>--bottleneck-tau</code>).</span></li>
+        <li><code>edge_current</code> · <code>edge_max_current</code><span>Weighted mean and maximum |net flow| per edge; feed the Cytoscape subnetwork.</span></li>
+        <li><code>net_forward</code><span>Net flow on each reaction's substrate edges: &gt; 0 used forward, &lt; 0 used backward. NaN for metabolites.</span></li>
+        <li><code>conductivity_loo</code> · <code>bottleneck_loo</code><span>NaN: leave-one-out is not defined for the walk.</span></li>
+        <li><code>walk_info</code><span><code>walk_kappa</code>, <code>walk_one_sided</code>, <code>walk_success_fraction</code>, <code>walk_sources_unreached</code>, <code>walk_states</code>, <code>walk_live_states</code>, <code>walk_arcs</code>.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk scipy">scipy.sparse.csr_matrix</span><span><code>M</code> (arc → signed edge), <code>|B|ᵀ</code> (node × edge), <code>S_fwd</code> (substrate edges per reaction), <code>G</code> (absorption per target).</span></li>
+        <li><span class="pk numpy">numpy</span><span><code>np.maximum</code> for bottlenecks; matrix–vector products for the weighted sums.</span></li>
+        <li><span class="pk std">dataclasses</span><span><code>FlowResult</code>, imported from <code>flow.py</code>.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="s6">
+    <div class="card-head"><span class="num">6</span><h3>Score and rank: shared, one extra column</h3><span class="where">metaboenrich/scoring.py</span></div>
+    <p>Exactly as in <a href="pipeline.html#s6">pipeline.html step 6</a>: final score = mean percentile rank of
+    <code>conductivity</code> and <code>bottleneck</code>; genes take their best reaction; pathways by hypergeometric test on the top 100
+    reactions. The only code change is in <code>node_table</code>: if <code>flow.net_forward</code> is set, it adds a
+    <code>net_forward</code> column, which carries through to <code>reactions.tsv</code>. Raw scoring only.</p>
+    <div class="io"><span><b>Note</b>In <code>source_target_metabolites.tsv</code>, <code>conductivity</code> for a source is its reach probability; for a target, the share of successful walkers it absorbs.</span></div>
+  </article>
+
+  <article class="card" id="s7">
+    <div class="card-head"><span class="num">7</span><h3>Write outputs: shared, a few extra fields</h3><span class="where">metaboenrich/__main__.py · metaboenrich/cytoscape.py</span></div>
+    <p>Same files as the default run (<a href="pipeline.html#s7">pipeline.html step 7</a>). Differences:</p>
+    <ul>
+      <li><code>summary.json</code> gains every <code>walk_info</code> field, and <code>pair_weight</code> reads "|log2FC| start weights (walk)".</li>
+      <li><code>excluded_pairs.tsv</code> uses the walk's reasons ("no directed path to a target", "no walk reaches this target") and writes
+      <code>any</code> where a row covers every target or source.</li>
+      <li><code>current_subnetwork.graphml</code> keeps edges with max walker traffic ≥ <code>--cytoscape-min-current</code> (0.1).</li>
+      <li>The console line reports pairs reached, the share of walkers that reach a target, and how many sources reach none.</li>
+    </ul>
+  </article>
+
+  </div>
+</section>
+
+<section id="options">
+  <h2>Options</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Option</th><th>Effect in walk mode</th></tr></thead>
+    <tbody>
+      <tr><th><code>--mode walk</code></th><td>Replaces current flow with <code>absorbing_walk</code>. Off by default.</td></tr>
+      <tr><th><code>--walk-kappa K</code></th><td>Partial absorption, a<sub>t</sub> = 1 − exp(−K·φ<sub>t</sub>). Default: every walker is absorbed. Refused without <code>--mode walk</code>.</td></tr>
+      <tr><th><code>--scoring loo</code></th><td>Refused: "--scoring loo is not defined for --mode walk".</td></tr>
+      <tr><th><code>--pair-weight</code></th><td>Ignored. Sources are always weighted by φ = |log2FC|.</td></tr>
+      <tr><th><code>--bottleneck-tau</code></th><td>Threshold for <code>bottleneck_frac</code>, as in current flow.</td></tr>
+      <tr><th><code>--one-sided auto</code></th><td>With only sources significant, the unchanged measured metabolites absorb. With only targets, walkers start evenly from them.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <pre class="cmd">python -m metaboenrich --daa my_daa.csv --out results/my_walk --mode walk
+python -m metaboenrich --daa my_daa.csv --out results/my_walk_k1 --mode walk --walk-kappa 1</pre>
+</section>
+
+<section id="other">
+  <h2>Other entry points</h2>
+  <div class="stages">
+
+  <article class="card" id="oD">
+    <div class="card-head"><span class="num">D</span><h3>Inborn-error benchmark with the walk</h3><span class="where">python -m metaboenrich.benchmark --method walk [--walk-kappa K]</span></div>
+    <p>Same data and significance rules as the current-flow benchmark (<a href="pipeline.html#oD">pipeline.html D</a>).
+    <code>Ranker(model, graph, method="walk", kappa)</code> calls <code>absorbing_walk</code> with φ from the case's DAA, skips the
+    leave-one-out pass, and ranks genes on raw scores. Each case records <code>walk_success_fraction</code>; <code>run_info.json</code> records the method and κ.</p>
+  </article>
+
+  <article class="card" id="oT">
+    <div class="card-head"><span class="num">T</span><h3>Tests</h3><span class="where">python -m unittest tests.test_walk</span></div>
+    <p>Small hand-built networks, each checking one rule:</p>
+    <ul class="fn">
+      <li><code>test_chain_carries_everything</code> · <code>test_direction_is_respected</code><span>A chain carries 1.0; a reaction that only runs backward blocks the forward route and is used backward in reverse (<code>net_forward</code> = −1).</span></li>
+      <li><code>test_no_cosubstrate_hop</code> · <code>test_no_immediate_reversal</code><span>Current flow passes between co-substrates; the walk cannot, not even in two steps.</span></li>
+      <li><code>test_leaked_walks_are_not_scored</code> · <code>test_partial_absorption</code><span>Half the walkers leak and the dead-end branch scores 0; κ splits absorption between two targets as 1 − e<sup>−κφ</sup> predicts.</span></li>
+      <li><code>test_fold_change_weights_sources</code> · <code>test_one_sided_ground</code><span>φ = 3 vs 1 splits conductivity 0.75 / 0.25; the ground absorbs in one-sided data.</span></li>
+      <li><code>test_matches_monte_carlo</code><span>Branches, a reversible reaction, a directed cycle, a dead end and partial absorption, against 40,000 simulated walkers per source.</span></li>
+    </ul>
+  </article>
+
+  <article class="card" id="oR">
+    <div class="card-head"><span class="num">R</span><h3>Walk report</h3><span class="where">python tools/report/build_rw_report.py --out docs/rw_report.html</span></div>
+    <p>Builds <a href="rw_report.html">rw_report.html</a>, the walk-vs-flow benchmark comparison, from benchmark result files
+    (<code>results/</code> is not committed). Run these first on branch <code>directed-rw</code>:</p>
+    <pre class="cmd">python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
+python -m metaboenrich.benchmark --levels group --method walk --out results/bench_rw/walk_full
+python -m metaboenrich.benchmark --levels group --method walk --walk-kappa K --out results/bench_rw/walk_kK   # K = 0.5, 1, 2
+python -m metaboenrich.benchmark --levels patient --out results/bench_rw_p/flow
+python -m metaboenrich.benchmark --levels patient --method walk --out results/bench_rw_p/walk_full
+python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 --out results/bench_rw_p/walk_k1</pre>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>load()</code> · <code>build(out)</code><span>Reads the result TSVs and writes one self-contained page.</span></li>
+        <li><code>recall_chart</code> · <code>scatter_chart</code> · <code>dumbbell_chart</code><span>Inline SVG charts of causal-gene ranks.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk pandas">pandas · numpy</span><span>Result tables and summaries.</span></li>
+        <li><span class="pk std">html · json · subprocess</span><span>Escaping, page data, git commit label.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  <article class="card" id="oN">
+    <div class="card-head"><span class="num">N</span><h3>Network Explorer</h3><span class="where">python tools/report/build_network_report.py --out docs/network_report.html</span></div>
+    <p>Builds <a href="network_report.html">network_report.html</a>: for every group-level benchmark disorder, it reruns both
+    methods exactly as the benchmark does (walk with full absorption) and draws the current-carrying subnetwork, each picked pathway,
+    and the causal gene's neighbourhood. Both methods share one layout per view. Needs <code>results/bench_rw/{flow,walk_full}</code>
+    to cross-check ranks. A full build takes about 8 minutes; <code>--cases pku msud</code> runs a quick subset.</p>
+    <div class="cols">
+      <div><div class="label">Functions</div><ul class="fn">
+        <li><code>run_method(net, method, …)</code><span>Calls <code>current_flow</code> or <code>absorbing_walk</code>, then the scoring tables.</span></li>
+        <li><code>layout()</code> · <code>spread()</code><span><code>stage_diagrams.fruchterman_reingold</code> plus a label-overlap pass for small views.</span></li>
+        <li><code>build_case()</code><span>One disorder's views and data, written into <code>network_report_template.html</code>.</span></li>
+      </ul></div>
+      <div><div class="label">Packages</div><ul class="pkgs">
+        <li><span class="pk numpy">numpy · pandas</span><span>Layout and tables.</span></li>
+        <li><span class="pk ext">cytoscape.js 3.30.2</span><span>Downloaded once from cdnjs, SHA-256 checked, inlined in the page.</span></li>
+      </ul></div>
+    </div>
+  </article>
+
+  </div>
+</section>
+
+<section id="results">
+  <h2>Benchmark at a glance</h2>
+  <p class="small narrow">Rank of the causal gene among 2,302 network genes, raw scoring, full absorption (lower is better). Numbers
+  from <a href="decisions.md">decisions.md D17</a>; full tables and charts in <a href="rw_report.html">rw_report.html</a>.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Level</th><th>Measure</th><th class="num">Current flow</th><th class="num">Walk</th></tr></thead>
+    <tbody>
+      <tr class="group"><th colspan="4">Group level · 20 primary disorders</th></tr>
+      <tr><th>Group</th><td>Median rank</td><td class="num">88.5</td><td class="num">48</td></tr>
+      <tr><th>Group</th><td>Disorders in top 100</td><td class="num">11</td><td class="num">13</td></tr>
+      <tr><th>Group</th><td>Disorders in top 10</td><td class="num">3</td><td class="num">5</td></tr>
+      <tr class="group"><th colspan="4">Patient level · 159 primary patients</th></tr>
+      <tr><th>Patient</th><td>Median rank</td><td class="num">134</td><td class="num">67</td></tr>
+      <tr><th>Patient</th><td>In top 100</td><td class="num">47%</td><td class="num">55%</td></tr>
+      <tr><th>Patient</th><td>In top 10</td><td class="num">5%</td><td class="num">28%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <ul class="small narrow">
+    <li><strong>Largest gains (group):</strong> MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176, citrullinemia 82 → 20.</li>
+    <li><strong>Losses:</strong> AADC 88 → 1,317. The main source, 3-O-methyldopa, is made irreversibly <em>from</em> the blocked substrate,
+    so walkers cannot run back to the block. Homocystinuria 181 → 765: the only target is cortisol, which tells the walk nothing. In both, under 4% of walkers reach a target.</li>
+    <li><strong>κ:</strong> group medians 45.5–47 for K = 0.5, 1, 2 vs 48 with full absorption, so full absorption stays the default.</li>
+    <li><strong>Status:</strong> not the default. It changes protocol §2.3, the evidence is one benchmark, and the blind predictions (D14)
+    were made with current flow. To be decided before the next blind round.</li>
+  </ul>
+</section>
+
+<section id="deps">
+  <h2>Packages</h2>
+  <p class="small narrow">The walk adds no dependencies. It uses the same three packages as the main run.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Package</th><th>Used in the walk for</th></tr></thead>
+    <tbody>
+      <tr><th><span class="pk scipy">scipy</span></th><td><code>sparse.linalg.splu</code> (one LU of I − Q), <code>sparse.csr_matrix</code> / <code>csc_matrix</code> / <code>identity</code></td></tr>
+      <tr><th><span class="pk numpy">numpy</span></th><td>State and arc arrays, <code>bincount</code>, <code>isin</code>, <code>flatnonzero</code>, dense per-block solves, weighted sums</td></tr>
+      <tr><th><span class="pk std">stdlib</span></th><td><code>collections.deque</code> (reverse BFS), <code>dataclasses</code> (<code>WalkStates</code>, <code>FlowResult</code>)</td></tr>
+      <tr><th><span class="pk pandas">pandas</span></th><td>Not in <code>walk.py</code>; only the shared scoring and output steps</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>
+  <span>Written by hand from the code at commit 0f6c135 (branch directed-rw, v0.2.0.dev0). Not regenerated by a build script; update it when <code>walk.py</code> changes.</span>
+  <span>Related: <a href="pipeline.html">pipeline.html</a> (current-flow pipeline) · <a href="rw_report.html">rw_report.html</a> · <a href="network_report.html">network_report.html</a> · <a href="decisions.md">decisions.md</a> (D17)</span>
+</footer>
+
+</main>
+</body>
+</html>
