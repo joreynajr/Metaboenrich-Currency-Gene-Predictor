@@ -29,10 +29,13 @@ protocol leaves a choice open, the choice made here is listed under
 | [docs/report.html](docs/report.html) | Progress report: network, benchmark, version 0.2, blind predictions (download and open in a browser) |
 | [docs/pruning_atlas.html](docs/pruning_atlas.html) | Pruning Atlas: structural effect of each pruning step, with linked network diagrams (download and open) |
 | [docs/stage_diagrams/](docs/stage_diagrams/) | The pruning-stage diagrams as Cytoscape files, style and opening steps |
-| [docs/carbon_atlas.html](docs/carbon_atlas.html) | Carbon Channel Atlas: the experimental carbon-skeleton network compared with the current one (download and open) |
+| [docs/carbon_atlas.html](docs/carbon_atlas.html) | Carbon Channel Atlas: the carbon method (Rules 1 + 2) on its own, with the first method for reference (download and open) |
 | [docs/carbon_diagrams/](docs/carbon_diagrams/) | The carbon-network diagrams as Cytoscape files |
 | [docs/rw_report.html](docs/rw_report.html) | Absorbing-walk report: the experimental `--mode walk` against current flow on the inborn-error benchmark (download and open; rebuild with `python tools/report/build_rw_report.py`) |
 | [docs/network_report.html](docs/network_report.html) | Network Explorer: interactive cytoscape.js views of each benchmark disorder's current-carrying subnetwork and top pathways, for current flow and the walk (download and open; rebuild with `python tools/report/build_network_report.py`, about 8 minutes) |
+| [docs/3_rule_pruning_methods.md](docs/3_rule_pruning_methods.md) | 3-rule pruning: methods draft (every step, parameters, counts, benchmark, limitations) |
+| [docs/three_rule_atlas.html](docs/three_rule_atlas.html) | 3-Rule Pruning Atlas: the nine networks compared, with benchmark and linked diagrams (download and open) |
+| [docs/three_rule_diagrams/](docs/three_rule_diagrams/) | The 3-rule pruning networks as Cytoscape files |
 | [docs/benchmark.md](docs/benchmark.md) | Inborn-error benchmark: data, method, per-disorder results |
 | [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
 | [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |

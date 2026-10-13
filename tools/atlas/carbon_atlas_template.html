@@ -172,13 +172,15 @@
 
 <div class="wrap">
   <header>
-    <span class="eyebrow">Metaboenrich · carbon-skeleton network · Human-GEM __MODEL__</span>
+    <span class="eyebrow">Metaboenrich · carbon method · Human-GEM __MODEL__</span>
     <h1>Carbon Channel Atlas</h1>
-    <p class="lede">A second way to build the network. In the current network, each reaction links <em>every</em> substrate
-      to <em>every</em> product. Here each reaction is split into separate links that follow carbon atoms: a substrate is linked to a
-      product only if part of its carbon skeleton ends up in that product. Moving a phosphate, an amino group or electrons from one
-      molecule to another no longer creates a path. This page compares that network with the current one, using the same charts as
-      the Pruning Atlas.</p>
+    <p class="lede">A second, separate way to build the network, with no hand-made lists of currency metabolites. Human-GEM
+      links <em>every</em> substrate of a reaction to <em>every</em> product. Here each reaction is split into separate links that
+      follow carbon atoms, and two rules decide which links stay. <strong>Rule 1:</strong> a substrate is linked to a product only if
+      part of its carbon skeleton ends up in that product, so water, protons, phosphate, oxygen, ammonia and ions never link anything.
+      <strong>Rule 2:</strong> a carbon pair that turns up in many reactions (ATP and ADP, NAD<sup>+</sup> and NADH, ...) is a cofactor
+      doing bookkeeping, not a skeleton being rebuilt, and is removed everywhere. The cofactor couples are found from the network
+      itself. The first method (the Pruning Atlas) is shown only for reference.</p>
     <p class="lede">In the charts, each dot is one node. <strong>Across</strong> is its number of links. <strong>Up</strong> is how
       much current it carries when random metabolites act as sources and targets, with no data involved. <strong>Colour</strong> is
       how many metabolites would be cut off from the rest of the network without it.</p>
@@ -225,7 +227,7 @@
   <section class="diagram-block" id="diagrams" aria-label="Pruning diagrams">
     <div class="diagram-head">
       <h2>Pruning diagrams</h2>
-      <p class="desc-wide">One map for every network. A reaction split into carbon links is drawn as its links, side by side where the whole reaction sat. Each node keeps its place, so switching stages shows what pruning does:
+      <p class="desc-wide">One map for every network. A reaction split into carbon links is drawn as its links, side by side where the whole reaction sat. The map is laid out for the carbon method, so its links are short and join close neighbours; zoom in (+) to see them. The long lines in the raw and Rule 1 maps run to hubs that the carbon method removes. Each node keeps its place, so switching stages shows what pruning does:
         hubs fade out on the left once they are removed, blue pockets appear as bottlenecks form, and the islands on the right
         lose their last links to the main network. Only the nodes this page is about are drawn: pocket nodes and their pockets,
         the busiest hubs, and islands of four or more metabolites.</p>
@@ -381,16 +383,17 @@
   const INDEX = new Map(META.map((m, k) => [m[0], k]));
   const pocketOf = (key, id) => { const st = byKey[key]; const j = st.pos.get(INDEX.get(id)); return j == null ? "–" : st.pocket[j]; };
   const pctv = v => Math.round(v * 100) + "%";
-  const split = S[2].reactions_original - S[2].reactions_kept_whole - (S[2].reactions_dropped_no_carbon_pair || 0);
+  const sRaw = byKey.raw.summary, sMethod = byKey.carbon_method.summary, sFirst = byKey.first_method.summary, sMapped = byKey.carbon_mapped_only.summary;
+  const split = sMethod.reactions_original - sMethod.reactions_kept_whole - (sMethod.reactions_dropped_no_carbon_pair || 0);
   const findings = [
-    [`Largest hub: ${S[1].max_degree_metabolite} ${fmtInt(S[1].max_metabolite_degree)} → ${S[2].max_degree_metabolite} ${fmtInt(S[2].max_metabolite_degree)}`,
-     " links. Following carbon removes many false shortcuts through hub metabolites."],
-    [`${fmtInt(split)} of ${fmtInt(S[1].reactions)} reactions`,
-     ` are split into carbon links; ${fmtInt(S[2].reactions_kept_whole)} are kept whole because a structure or an atom map is missing.`],
-    [`${fmtInt(S[1].metabolites_outside_main)} → ${fmtInt(S[2].metabolites_outside_main)} metabolites`,
-     " cut off from the main network. Splitting reactions also removes some real connections, so more pieces break away."],
-    [`Carbon links alone: ${pctv(S[5].top1pct_flow_share)} of current`,
-     ` passes through the busiest 1% of nodes with no currency rules at all (raw network ${pctv(S[0].top1pct_flow_share)}, current network ${pctv(S[1].top1pct_flow_share)}). This tests whether following carbon is enough on its own.`],
+    [`Largest hub: ${sRaw.max_degree_metabolite} ${fmtInt(sRaw.max_metabolite_degree)} → ${sMethod.max_degree_metabolite} ${fmtInt(sMethod.max_metabolite_degree)}`,
+     ` links (raw network → carbon method). Rule 2 catches couples such as ATP/ADP, but CoA pairs with dozens of different acyl-CoAs, each pair too rare to count as a couple. The first method's largest hub is ${sFirst.max_degree_metabolite} (${fmtInt(sFirst.max_metabolite_degree)}).`],
+    [`Busiest 1% of nodes: ${pctv(sRaw.top1pct_flow_share)} → ${pctv(sMethod.top1pct_flow_share)} of current`,
+     ` (raw network → carbon method; first method ${pctv(sFirst.top1pct_flow_share)}). Lower means current is spread across more of the network instead of funnelling through a few hubs.`],
+    [`${fmtInt(split)} reactions split, ${fmtInt(sMethod.reactions_kept_whole)} kept whole`,
+     `, and ${fmtInt(sMethod.reactions_dropped_no_carbon_pair || 0)} dropped because every carbon pair they had was a cofactor couple (for example kinases that only move phosphate between ATP and ADP). Reactions kept whole have no structure or atom map; both rules are applied to them from chemical formulas.`],
+    [`${fmtInt(sMethod.metabolites_outside_main)} metabolites cut off`,
+     ` from the main network in the carbon method (first method ${fmtInt(sFirst.metabolites_outside_main)}; ${fmtInt(sMapped.metabolites_outside_main)} if unmapped reactions are dropped instead of kept whole).`],
   ];
   document.getElementById("findings").innerHTML = findings
     .map(([b, t]) => `<li><b>${b}</b>${t}</li>`).join("");
@@ -401,7 +404,7 @@
     { key: "reactions_pocket_ge5", title: "Reactions that alone cut off 5+ metabolites", fmt: fmtInt },
     { key: "top1pct_flow_share", title: "Share of current through the top 1% of nodes", fmt: v => Math.round(v * 100) + "%" },
   ];
-  const SHORT = ["1 Raw", "2 Current", "3 Carbon", "KEGG", "Atoms", "C only"];
+  const SHORT = ["1 Raw", "2 Rule 1", "3 Method", "Mapped", "First", "Both"];
   const N_MAIN = 3;
   function drawTrends() {
     const el = document.getElementById("trends");
@@ -435,7 +438,7 @@
   const panelsEl = document.getElementById("panels");
   const panels = STAGES.map((st, i) => {
     const div = document.createElement("article");
-    div.className = "panel" + (["carbon_kegg", "carbon_mapper", "carbon_only"].includes(st.key) ? " alt" : "");
+    div.className = "panel" + (["carbon_mapped_only", "first_method", "combined"].includes(st.key) ? " alt" : "");
     const s = st.summary;
     div.innerHTML = `<div class="panel-head"><h3>${st.title}</h3>
         <button type="button" class="linkbtn" data-dstage="${i}" aria-label="Open the diagram for ${st.title}">Diagram ↓</button></div>
@@ -446,7 +449,7 @@
     return { st, canvas: div.querySelector("canvas"), pts: [] };
   });
 
-  const M = { l: 46, r: 10, t: 10, b: 34 };
+  const M = { l: 60, r: 10, t: 10, b: 34 };
   function scales(w, h) {
     const d = DOM[state.type];
     const x1 = Math.log10(d.deg * 1.25);
@@ -508,6 +511,10 @@
     g.beginPath(); g.moveTo(M.l, sc.plotB + 0.5); g.lineTo(w - M.r, sc.plotB + 0.5); g.stroke();
     g.fillStyle = c.v("--muted"); g.font = `11.5px ${c.sans}`;
     g.fillText(state.type === "r" ? "metabolites per reaction (log)" : "reactions per metabolite (log)", (M.l + w - M.r) / 2, h - 14);
+    g.save(); g.translate(11, (M.t + sc.plotB) / 2); g.rotate(-Math.PI / 2);
+    g.textBaseline = "middle";
+    g.fillText(state.y === "flow" ? "structural current (log)" : "pocket size (log)", 0, 0);
+    g.restore();
 
     // points, pocket 0 first so larger pockets draw on top
     const idx = st.byType[state.type];
@@ -605,7 +612,7 @@
 
   // ---- table ----------------------------------------------------------------
   const sel = document.getElementById("table-stage");
-  sel.innerHTML = STAGES.map((st, i) => `<option value="${i}" ${st.key === "carbon_union" ? "selected" : ""}>${st.title}</option>`).join("");
+  sel.innerHTML = STAGES.map((st, i) => `<option value="${i}" ${st.key === "carbon_method" ? "selected" : ""}>${st.title}</option>`).join("");
   function drawTable() {
     const st = STAGES[+sel.value];
     const rows = st.node.map((_, j) => j).filter(j => st.pocket[j] > 0)
@@ -623,9 +630,9 @@
   const G = D.diagrams;                    // nodes: [id, name, type, genes, x, y]; stages: nodes [u, pocket, flow, deg, main, role], edges flat
   const GIDX = new Map(G.nodes.map((n, i) => [n[0], i]));
   const dCanvas = document.getElementById("diagram");
-  const DSHORT = ["1 Raw", "2 Current", "3 Carbon", "KEGG first", "Atoms first", "Carbon only"];
+  const DSHORT = ["1 Raw", "2 Rule 1", "3 Carbon method", "Mapped only", "First method", "First + carbon"];
   const view = { scale: 1, tx: 0, ty: 0, fitted: false };
-  let dStage = STAGES.findIndex(st => st.key === "carbon_union");
+  let dStage = STAGES.findIndex(st => st.key === "carbon_method");
   let dPts = [];
   const maxFlowG = Math.max(...G.stages.flatMap(s => s.nodes.map(n => n[2]))) || 1;
   for (const s of G.stages) s.byU = new Map(s.nodes.map(n => [n[0], n]));
@@ -694,12 +701,14 @@
 
     // edges
     const hub = u => { const n = s.byU.get(u); return n && n[5] === "hub"; };
-    g.lineWidth = 0.8;
+    // Carbon links are short (neighbours sit side by side on the map), so edges
+    // are drawn darker than in the Pruning Atlas and thicken as you zoom in.
+    g.lineWidth = Math.max(0.9, Math.min(3, 1.4 * Math.sqrt(view.scale)));
     for (let e = 0; e < s.edges.length; e += 2) {
       const a = s.edges[e], b = s.edges[e + 1];
       const [x1, y1] = toScreen(G.nodes[a][4], G.nodes[a][5]);
       const [x2, y2] = toScreen(G.nodes[b][4], G.nodes[b][5]);
-      g.strokeStyle = c.v("--axis"); g.globalAlpha = hub(a) || hub(b) ? 0.22 : 0.6;
+      g.strokeStyle = c.v("--ink-2"); g.globalAlpha = hub(a) || hub(b) ? 0.18 : 0.55;
       g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
     }
     g.globalAlpha = 1;

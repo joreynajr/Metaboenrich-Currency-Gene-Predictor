@@ -177,6 +177,29 @@ one benchmark, and the blind predictions (D14) were made with current flow.
 Decide before the next blind round. Not tried: biased steps (hook 3), unchanged
 metabolites as leaks (hook 4), the reverse "activation" orientation.
 
+### D18. 3-rule pruning (2026-10-02 to 2026-10-06; DM with Claude Code and Claude Science)
+A carbon-based network with no hand-made currency lists, replacing the carbon
+method of D15 as the candidate for publication (`docs/3_rule_pruning_methods.md`).
+Steps: drop pools (by label), biomass and transporters with carbon cargo; Rule 1
+carbon links; Rule 2 cofactor couples (pair in 10+ reactions); Rule 3 carriers
+found from structure (whole inside 10+ partners, always at the same atom, through
+a heteroatom: CoA, carnitine, glutathione, cholesterol); safeguard: a reaction
+emptied by the rules keeps its rarest link (never for membrane-crossing
+reactions). Evidence (group benchmark with the id_translation lookup, median
+rank / top 5% of 20): carbon method 130 / 9; + Step 1 118 / 10; + Rule 3
+114.5 / 10; + safeguard 112.5 / 10; first method 88 / 11. Rule 3 was found by
+tracing methylmalonic acidemia: CoA carried ~31% of all current and bypassed
+MMUT. Rejected along the way: the safeguard as first specified (would restore
+~510 ATP links from pumps, Step 0 review), and merging long acyl-CoAs (removes
+the CoA hub but does not help the benchmark). Open: false cross-links from tied
+atom maps in ~65 reactions; couple cutoff sensitivity.
+
+### D19. Benchmark uses the id_translation lookup (2026-10-02)
+`--id-translation` matches patient metabolite names through the lab's synonym
+table; without it propionylcarnitine (listed as O-propanoylcarnitine in
+Human-GEM) was missed in methylmalonic acidemia. All 3-rule pruning comparisons
+use it; earlier benchmark numbers (D15–D17) were without it.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.

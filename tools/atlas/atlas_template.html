@@ -436,7 +436,7 @@
     return { st, canvas: div.querySelector("canvas"), pts: [] };
   });
 
-  const M = { l: 46, r: 10, t: 10, b: 34 };
+  const M = { l: 60, r: 10, t: 10, b: 34 };
   function scales(w, h) {
     const d = DOM[state.type];
     const x1 = Math.log10(d.deg * 1.25);
@@ -498,6 +498,10 @@
     g.beginPath(); g.moveTo(M.l, sc.plotB + 0.5); g.lineTo(w - M.r, sc.plotB + 0.5); g.stroke();
     g.fillStyle = c.v("--muted"); g.font = `11.5px ${c.sans}`;
     g.fillText(state.type === "r" ? "metabolites per reaction (log)" : "reactions per metabolite (log)", (M.l + w - M.r) / 2, h - 14);
+    g.save(); g.translate(11, (M.t + sc.plotB) / 2); g.rotate(-Math.PI / 2);
+    g.textBaseline = "middle";
+    g.fillText(state.y === "flow" ? "structural current (log)" : "pocket size (log)", 0, 0);
+    g.restore();
 
     // points, pocket 0 first so larger pockets draw on top
     const idx = st.byType[state.type];

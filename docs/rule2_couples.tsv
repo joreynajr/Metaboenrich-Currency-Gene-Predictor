@@ -1,0 +1,49 @@
+partner_a	partner_b	reactions	reactions_between_after_rule2	example_reactions
+NADP+	NADPH	825	7	very-long-chain enoyl-CoA reductase; 4alpha-methylsterol monooxygenase
+ADP	ATP	776	2	ABC-type xenobiotic transporter; Transport (ATP-Dependent) into Extracellular Space
+NAD+	NADH	427	7	6-oxo-prostaglandin E1 reduction; dehydroepiandrosterone:NAD+ oxidoreductase
+AMP	ATP	243	2	medium-chain acyl-CoA ligase (hexanoic acid); long-chain-fatty-acid-CoA ligase (9-eicosenoic acid)
+FAD	FADH2	156	not connected	acyl-CoA oxidase (eicosanoyl-CoA); acyl-CoA oxidase ((6Z,9Z,12Z,15Z,18Z,21Z)-tetracosahexaenoyl-CoA)
+acetyl-CoA	CoA	137	2	acetyl-CoA C-acyltransferase (3-oxo-cis,cis-7,10-hexadecadienoyl-CoA); acetyl-CoA C-acyltransferase (3-oxomyrist-5-enoyl-CoA)
+SAH	SAM	77	3	catechol O-methyltransferase (hippurate); catechol O-methyltransferase (2-hydroxy-3-methoxy-17beta-estradiol)
+UDP	UDP-glucuronate	64	2	Glucuronosyltransferase; glucuronosyltransferase (reverse triiodthyronine)
+CoA	malonyl-CoA	54	3	ELOVL fatty acid elongase (linoleoyl-CoA); very-long-chain 3-oxoacyl-CoA synthase (malonyl-CoA)
+CO2	malonyl-CoA	50	2	ELOVL fatty acid elongase (linoleoyl-CoA); very-long-chain 3-oxoacyl-CoA synthase (malonyl-CoA)
+AKG	glutamate	41	2	L-Valine:2-oxoglutarate aminotransferase; Kynurenine-Oxoglutarate Transaminase
+UDP	UDP-galactose	39	2	UDP-alpha-D-galactose:N-acylsphingosine D-galactosyltransferase; glucosylceramide pool to LacCer pool conversion
+PAP	PAPS	33	5	sulfotransferase (3-monoiodo-L-thyronine); sulfotransferase (dehydroalanine)
+CoA	propanoyl-CoA	25	2	Formation of Propionyl-Glycine; palmitoyl-CoA hydrolase (propanoyl-CoA)
+GDP	GTP	23	2	GTP:cytidine 5'-phosphotransferase; ATP:GDP phosphotransferase
+CMP	CMP-N-acetylneuraminate	22	2	ST8 alpha-N-acetyl-neuraminide alpha-2,8-sialyltransferase (CMP-N-acetylneuraminate); ST8 alpha-N-acetyl-neuraminide alpha-2,8-sialyltransferase (CMP-N-acetylneuraminate)
+dADP	dATP	21	4	cytidine/uridine monophosphate kinase (dADP); adenylate kinase (dADP)
+ascorbate	dehydroascorbic acid	20	2	5,9-cyclo-6,8-cycloperoxy-12... to 5,9-cyclo-6,8,12-trihydroxy... conversion; 11-hydroperoxy-H4-neuroprostane to 11-hydroxy-E4-neuroprostane conversion
+CoA	palmitoyl-CoA	19	2	Palmitate:CoA ligase (AMP-forming); phosphatidylinositol glycan anchor biosynthesis class W
+UDP	UDP-N-acetyl-D-galactosamine	19	3	type I H glycolipid to G00042 conversion; UDP-N-acetyl-D-galactosamine to G00072 conversion
+GDP	GDP-L-fucose	18	3	4-galactosyl-N-acetylglucosaminide 3-alpha-L-fucosyltransferase (GDP-L-fucose); 4-galactosyl-N-acetylglucosaminide 3-alpha-L-fucosyltransferase (GDP-L-fucose)
+GSH	GSSG	17	3	glutathione:hydrogen-peroxide oxidoreductase; glutathione:NADP+ oxidoreductase
+CoA	acyl-CoA pool	17	not connected	Acyl-CoA:1-acyl-sn-glycero-3-phosphocholine O-acyltransferase; Acyl-CoA:1-acyl-sn-glycero-3-phosphoethanolamine O-acyltransferase
+oxidized thioredoxin	thioredoxin	16	not connected	2'-deoxycytidine diphosphate:oxidized-thioredoxin 2'-oxidoreductase; methionine sulfoxide reductase A (oxidized thioredoxin)
+UDP	UMP	16	2	cytidine/uridine monophosphate kinase (dADP); cytidine/uridine monophosphate kinase (CDP)
+UDP	UDP-N-acetylglucosamine	15	3	core 3 to core 4 conversion; UDP-N-acetyl-D-glucosamine 2-epimerase
+CDP	CMP	14	2	cytidine/uridine monophosphate kinase (CDP); cytidine/uridine monophosphate kinase (CDP)
+dGDP	dGTP	13	2	dGTP:pyruvate 2-O-phosphotransferase; ATP:dGDP phosphotransferase
+glutamate	glutamine	13	1	L-Glutamate:ammonia ligase (ADP-forming); L-glutamine:D-fructose-6-phosphate isomerase (deaminating)
+UDP	UTP	13	2	ATP:UDP phosphotransferase; cytidine/uridine monophosphate kinase (CDP)
+dCDP	dCMP	13	3	cytidine/uridine monophosphate kinase (dADP); UMP/CMP kinase (dCDP)
+FMN	FMNH2	12	not connected	MAR20029; MAR20024
+CoA	myristoyl-CoA	12	2	carnitine O-acetyltransferase (tetradecanoylcarnitine); carnitine O-acetyltransferase (tetradecanoylcarnitine)
+CoA	linoleoyl-CoA	12	2	glycerol-3-phosphate 1-O-acyltransferase (linoleoyl-CoA); Uptake of Linoleic Acid
+CoA	stearoyl-CoA	12	2	carnitine O-palmitoyltransferase (stearoylcarnitine); carnitine O-acetyltransferase (stearoylcarnitine)
+CDP	CTP	12	2	CTP phosphohydrolase; CTP:dolichol O-phosphotransferase
+arachidonyl-CoA	CoA	12	2	palmitoyl-CoA:L-carnitine O-palmitoyltransferase; Arachidonyl-CoA hydrolase
+AKG	CO2	11	2	gamma-butyrobetaine hydroxylase (AKG); Peptide-L-aspartate,2-oxoglutarate:oxygen oxidoreductase (3-hydroxylating)
+CoA	oleoyl-CoA	11	2	carnitine O-palmitoyltransferase (L-oleoylcarnitine); long-chain-fatty-acid-CoA ligase (oleate)
+CoA	eicosanoyl-CoA	11	3	carnitine O-acetyltransferase (eicosanoylcarnitine); palmitoyl-CoA hydrolase
+CoA	tetracosanoyl-CoA	10	3	carnitine O-palmitoyltransferase (tetracosanoylcarnitine); long-chain-fatty-acid-CoA ligase (lignocerate)
+AKG	succinate	10	4	gamma-butyrobetaine hydroxylase (AKG); Peptide-L-aspartate,2-oxoglutarate:oxygen oxidoreductase (3-hydroxylating)
+CoA	docosanoyl-CoA	10	3	Acyl-CoA:cholesterol O-acyltransferase; carnitine O-acetyltransferase (docosanoylcarnitine)
+chenodeoxycholoyl-CoA	CoA	10	2	palmitoyl-CoA hydrolase; 3alpha,7alpha-dihydroxy-5beta-cholanoyl-CoA:taurine N-choloyltransferase
+CoA	lauroyl-CoA	10	2	Lauroyl-CoA:acetyl-CoA C-acyltransferase; long-chain-fatty-acid-CoA ligase (lauric acid)
+IDP	ITP	10	2	ATP:IDP phosphotransferase; ITP phosphohydrolase
+CoA	palmitoleoyl-CoA	10	2	palmitoyl-CoA:L-carnitine O-palmitoyltransferase; long-chain-fatty-acid-CoA ligase (palmitolate)
+ferricytochrome C	ferrocytochrome C	10	not connected	Reduction of alpha-tocopheryl quinone by Complex III; CYOOm3i

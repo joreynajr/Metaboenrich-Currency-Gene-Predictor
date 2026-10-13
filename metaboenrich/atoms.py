@@ -278,9 +278,22 @@ def evaluate_rules(model, raw_mapped, kegg, excluded):
     return rows
 
 
-def combine_pairs(raw_mapped, kegg):
-    """{reaction id: {"pairs": [[sub, prod], ...], "source": "kegg" | "rxnmapper"}}:
-    KEGG RCLASS pairs where available, otherwise cleaned RXNMapper pairs."""
+def combine_pairs(raw_mapped, kegg, mode="kegg-first"):
+    """{reaction id: {"pairs": [[sub, prod], ...], "source": ...}}.
+
+    mode "kegg-first": KEGG RCLASS pairs where KEGG has the reaction, otherwise
+    cleaned RXNMapper pairs. mode "union" (used by 3-rule pruning): every pair
+    from either source, sorted, so minor carbon donors KEGG leaves out
+    (carbamoyl-phosphate -> citrulline) are kept."""
+    if mode == "union":
+        out = {}
+        for rid in sorted(set(raw_mapped) | set(kegg)):
+            v = raw_mapped.get(rid, {})
+            pairs = {tuple(p[:2]) for p in clean_pairs(v["pairs"])} if v.get("pairs") else set()
+            pairs |= {tuple(p) for p in kegg.get(rid, [])}
+            if pairs:
+                out[rid] = {"pairs": [list(p) for p in sorted(pairs)], "source": "union"}
+        return out
     out = {}
     for rid, v in raw_mapped.items():
         if "pairs" in v and v["pairs"]:
@@ -288,6 +301,262 @@ def combine_pairs(raw_mapped, kegg):
     for rid, pairs in kegg.items():
         out[rid] = {"pairs": [list(p) for p in pairs], "source": "kegg"}
     return out
+
+
+COUPLE_MIN_REACTIONS = 10
+
+
+def carbon_method_pairs(model, pairs, couple_min_reactions=COUPLE_MIN_REACTIONS, keep_rarest=False,
+                        no_rescue=frozenset(), log=None, merge=None, carriers=None):
+    """The standalone carbon method, with no hand-made currency lists.
+
+    Rule 1: keep a substrate-product pair only if both molecules contain
+    carbon (KEGG's curated pairs also include non-carbon pairs such as
+    H2O2/O2). Water, protons, phosphate, O2, NH3 and ions therefore never link.
+    Rule 2: a pair that recurs in `couple_min_reactions` or more reactions is a
+    cofactor couple doing bookkeeping (ATP/ADP, NAD+/NADH, CoA/acetyl-CoA,
+    glutamate/2-oxoglutarate, UDP/UDP-sugar ...) and is removed everywhere.
+
+    Keep-rarest safeguard (keep_rarest=True): a reaction whose carbon pairs
+    are all couples would lose every link and drop out with its genes
+    (glutamate dehydrogenase: glutamate/2-oxoglutarate and NAD+/NADH). There,
+    the couple found in the fewest reactions is kept, ties broken by
+    metabolite ids. Reactions in `no_rescue` (transport-coupled ones, whose
+    only pair is usually ATP/ADP) are never rescued. Each rescue is appended
+    to `log` (a list) when one is given. With keep_rarest=False the output
+    is exactly that of the two rules alone.
+
+    carriers: {(met, met) sorted: carrier} from find_carriers (Rule 3); these
+    carrier / loaded-form pairs are removed everywhere, like couples.
+
+    merge: {met_id: merged id} (acyl_coa_merge). Pairs are renamed first and
+    pairs within one merged node dropped, so couples are counted on the
+    merged network (CoA / long-chain acyl-CoA becomes one pair).
+
+    Returns ({reaction id: [(sub, prod), ...]}, {(met, met): n_reactions} of
+    the couples removed)."""
+    from .network import parse_formula
+    carbon = {}
+    for s in model.species.values():
+        carbon.setdefault(s.met_id, parse_formula(s.formula)["C"] > 0)
+    if merge:
+        carbon.update({v: True for v in merge.values()})
+        pairs = {rid: list(dict.fromkeys((merge.get(a, a), merge.get(b, b)) for a, b, *_ in ps
+                                         if merge.get(a, a) != merge.get(b, b)))
+                 for rid, ps in pairs.items()}
+    rule1 = {rid: [(a, b) for a, b in ps if carbon.get(a) and carbon.get(b)] for rid, ps in pairs.items()}
+    freq = {}
+    for ps in rule1.values():
+        for a, b in {tuple(sorted(p)) for p in ps}:
+            freq[(a, b)] = freq.get((a, b), 0) + 1
+    couples = {p: n for p, n in freq.items() if n >= couple_min_reactions}
+    drop = set(couples) | set(carriers or ())
+    out = {rid: [(a, b) for a, b in ps if tuple(sorted((a, b))) not in drop] for rid, ps in rule1.items()}
+    if keep_rarest:
+        for rid, ps in rule1.items():
+            if out[rid] or not ps or rid in no_rescue:
+                continue
+            candidates = sorted({tuple(sorted(p)) for p in ps})
+            best = min(candidates, key=lambda p: (freq[p], p))
+            out[rid] = [(a, b) for a, b in ps if tuple(sorted((a, b))) == best][:1]
+            if log is not None:
+                log.append({"reaction": rid, "kept_pair": best, "kept_pair_count": freq[best],
+                            "candidates": [(p, freq[p]) for p in candidates], "mapped": True})
+    return out, couples
+
+
+def carbon_rule1_pairs(model, pairs):
+    """Rule 1 only (see carbon_method_pairs): pairs whose partners both contain carbon."""
+    out, _ = carbon_method_pairs(model, pairs, couple_min_reactions=10 ** 9)
+    return out
+
+
+def carbon_method_rules(model, pairs, couples, pools=frozenset(), keep_rarest=False, no_rescue=frozenset(),
+                        log=None, merge=None, carriers=None):
+    """CurrencyRules applying the two rules to reactions with no atom map,
+    from formulas alone: metabolites without carbon are removed everywhere
+    (Rule 1), and in an unmapped reaction a detected couple is removed when
+    one partner is a substrate and the other a product (Rule 2). Mapped
+    reactions are filtered by their pairs in build_graph; these rules only
+    remove what their pairs already exclude there.
+
+    keep_rarest, no_rescue, log: the keep-rarest safeguard of
+    carbon_method_pairs, for unmapped reactions. Where removing couples would
+    leave fewer than two metabolites (so the reaction drops out), the rarest
+    couple present across the two sides is kept. Couple counts are the
+    network-wide counts from the mapped reactions (`couples`), not recomputed.
+
+    carriers: {carrier: {loaded forms}} from find_carriers (Rule 3). In an
+    unmapped reaction the carrier itself is removed when a loaded form of it
+    is on the other side; the loaded form keeps its links."""
+    from .network import CurrencyRules, parse_formula
+    removed = {}
+    for s in model.species.values():
+        if parse_formula(s.formula)["C"] == 0:
+            removed[s.met_id] = "no carbon"
+    partner = {}
+    for a, b in couples:
+        partner.setdefault(a, set()).add(b)
+        partner.setdefault(b, set()).add(a)
+    edits = {}
+    for rid, rxn in model.reactions.items():
+        if rid in pairs:
+            continue
+        subs = {model.species[s].met_id for s in rxn.substrates}
+        prods = {model.species[s].met_id for s in rxn.products}
+        if merge:
+            subs = {merge.get(m, m) for m in subs}
+            prods = {merge.get(m, m) for m in prods}
+        hit = {m for m in subs if partner.get(m, set()) & prods}
+        hit |= {m for m in prods if partner.get(m, set()) & subs}
+        if carriers:
+            hit |= {c for c in subs if carriers.get(c, set()) & prods}
+            hit |= {c for c in prods if carriers.get(c, set()) & subs}
+        if hit and keep_rarest and rid not in no_rescue:
+            both = subs & prods
+            if len((subs | prods) - both - set(removed) - hit) < 2:
+                present = sorted({tuple(sorted((a, b))) for a in subs - both for b in prods - both
+                                  if tuple(sorted((a, b))) in couples})
+                if present:
+                    best = min(present, key=lambda p: (couples[p], p))
+                    hit -= set(best)
+                    if log is not None:
+                        log.append({"reaction": rid, "kept_pair": best, "kept_pair_count": couples[best],
+                                    "candidates": [(p, couples[p]) for p in present], "mapped": False})
+        if hit:
+            edits[rid] = hit
+    return CurrencyRules(removed=removed, family_of={}, members={}, loaded_core={}, formulas={},
+                         pools=set(pools), edits=edits, names={}, loaded_tokens={})
+
+
+def transport_reactions(model, carbon_cargo=True):
+    """Reactions carrying the same metabolite on both sides before compartments
+    are merged (transporters). carbon_cargo=True: only where that metabolite
+    contains carbon, so proton-pumping enzymes (respiratory complexes,
+    transhydrogenase) and ion pumps are not counted as transporters."""
+    from .network import parse_formula
+    carbon = {s.met_id: parse_formula(s.formula)["C"] > 0 for s in model.species.values()}
+    out = set()
+    for rid, rxn in model.reactions.items():
+        shared = {model.species[s].met_id for s in rxn.substrates} & {model.species[s].met_id for s in rxn.products}
+        if shared and (not carbon_cargo or any(carbon[m] for m in shared)):
+            out.add(rid)
+    return out
+
+
+ACYL_COA_CLASSES = (  # (min acyl carbons, max, merged id, name); chain-length classes of fatty-acid biochemistry
+    (13, 21, "ACYLCOA_LC", "long-chain acyl-CoA (C13-C21)"),
+    (22, 999, "ACYLCOA_VLC", "very-long-chain acyl-CoA (C22+)"),
+)
+COA_CARBONS = 21
+
+
+def acyl_coa_merge(model, smiles_path="data/Human-GEM_metabolites.tsv", classes=ACYL_COA_CLASSES):
+    """Merge long acyl-CoAs into one node per chain-length class.
+
+    An acyl-CoA is found from its structure (Human-GEM SMILES): it contains the
+    CoA pantetheine-ADP substructure and a thioester. Its acyl chain length is
+    its carbon count minus CoA's 21. Short (C2-C5) and medium (C6-C12) acyl-CoAs,
+    including acetyl- and malonyl-CoA, stay individual; pool pseudo-metabolites
+    are never merged. Returns ({met_id: merged id}, {merged id: name},
+    {met_id: acyl carbons} for every acyl-CoA found)."""
+    from rdkit import Chem, RDLogger
+    RDLogger.DisableLog("rdApp.*")
+    coa = Chem.MolFromSmarts("SCCNC(=O)CCNC(=O)C(O)C(C)(C)COP(=O)(O)OP(=O)(O)OC")
+    thio = Chem.MolFromSmarts("[CX3](=O)S")
+    names = {s.met_id: s.name for s in model.species.values()}
+    lengths, merge = {}, {}
+    for mid, smi in load_smiles(smiles_path).items():
+        if mid not in names or "pool" in names[mid].lower():
+            continue
+        mol = Chem.MolFromSmiles(smi)
+        if mol is None or not (mol.HasSubstructMatch(coa) and mol.HasSubstructMatch(thio)):
+            continue
+        n = sum(a.GetSymbol() == "C" for a in mol.GetAtoms()) - COA_CARBONS
+        lengths[mid] = n
+        for lo, hi, new, _ in classes:
+            if lo <= n <= hi:
+                merge[mid] = new
+    return merge, {new: name for _, _, new, name in classes}, lengths
+
+
+CARRIER_MIN_LOADED = 10
+
+
+def _carrier_site(small, large):
+    """Symmetry classes (atoms of `small`) where `large` attaches extra carbon to a
+    whole copy of `small`, through heteroatom bonds only; None if `large` is
+    not `small` loaded that way. A bond between two carbons means the carbon
+    skeleton itself was extended (thiolase, ALA synthase), not a carrier loaded."""
+    from rdkit import Chem
+
+    def n_c(mol):
+        return sum(a.GetSymbol() == "C" for a in mol.GetAtoms())
+    if not (large.GetNumHeavyAtoms() > small.GetNumHeavyAtoms() and n_c(large) > n_c(small)):
+        return None
+    cls = list(Chem.CanonicalRankAtoms(small, breakTies=False))
+    for match in large.GetSubstructMatches(small, uniquify=False, maxMatches=200):
+        pos = {a: k for k, a in enumerate(match)}
+        sites, ok = set(), True
+        for b in large.GetBonds():
+            i, j = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
+            if (i in pos) != (j in pos):
+                if large.GetAtomWithIdx(i).GetSymbol() == "C" and large.GetAtomWithIdx(j).GetSymbol() == "C":
+                    ok = False
+                    break
+                sites.add(cls[pos[i] if i in pos else pos[j]])
+        if ok and sites:
+            return frozenset(sites)
+    return None
+
+
+def find_carriers(model, pairs, smiles_path="data/Human-GEM_metabolites.tsv", min_loaded=CARRIER_MIN_LOADED):
+    """Rule 3: carriers, from structure.
+
+    A carrier is a molecule found whole inside at least `min_loaded` of its
+    carbon pair partners, every one of them attached at the same atom of the
+    carrier and through a heteroatom (thioester, ester, amide): CoA in
+    acyl-CoAs, L-carnitine in acylcarnitines, glutathione in its conjugates.
+    The pair carrier / loaded form is loading or unloading, not a skeleton
+    change, and is removed everywhere (carbon_method_pairs, carriers=);
+    pairs between two loaded forms (acetyl-CoA -> acetoacetyl-CoA) are kept.
+
+    Returns ({carrier: {loaded forms}}, {(met, met) sorted: carrier} for the
+    pairs to remove)."""
+    from collections import Counter
+    from rdkit import Chem, RDLogger
+    from rdkit.Chem.MolStandardize import rdMolStandardize
+    RDLogger.DisableLog("rdApp.*")
+    smiles = load_smiles(smiles_path)
+    uncharge, mols = rdMolStandardize.Uncharger(), {}
+
+    def mol(x):
+        if x not in mols:
+            m = Chem.MolFromSmiles(smiles[x]) if x in smiles else None
+            if m is not None:
+                m = uncharge.uncharge(m)
+                Chem.RemoveStereochemistry(m)
+            mols[x] = m
+        return mols[x]
+    loaded = {}
+    for a, b in sorted({tuple(sorted(p[:2])) for ps in carbon_rule1_pairs(model, pairs).values() for p in ps}):
+        ma, mb = mol(a), mol(b)
+        if ma is None or mb is None:
+            continue
+        for small, large, ms, ml in ((a, b, ma, mb), (b, a, mb, ma)):
+            site = _carrier_site(ms, ml)
+            if site:
+                loaded.setdefault(small, {})[large] = site
+    carriers = {c: set(d) for c, d in loaded.items()
+                if len(d) >= min_loaded and len(Counter(d.values())) == 1}
+    remove = {tuple(sorted((c, x))): c for c, xs in carriers.items() for x in xs}
+    return carriers, remove
+
+
+def pool_metabolites(model):
+    """Lumped pseudo-metabolites: every species Human-GEM names a pool
+    ("acyl-CoA pool", "PI pool", "fatty acid-VLDL pool" ...)."""
+    return {s.met_id for s in model.species.values() if "pool" in s.name.lower()}
 
 
 def load_atom_pairs(path):
@@ -303,6 +572,9 @@ def main(argv=None):
     ap.add_argument("--raw", default="data/atom_pairs_raw.json",
                     help="RXNMapper output (computed if missing; ~10 min on CPU)")
     ap.add_argument("--out", default="data/atom_pairs.json")
+    ap.add_argument("--combine", choices=["kegg-first", "union"], default="kegg-first",
+                    help="kegg-first: KEGG pairs where available, else atom maps (data/atom_pairs.json); "
+                         "union: both, as used by 3-rule pruning (write to data/atom_pairs_union.json)")
     ap.add_argument("--limit", type=int, default=None, help="map only the first N reactions (for testing)")
     args = ap.parse_args(argv)
     model = load_sbml(args.model)
@@ -313,7 +585,7 @@ def main(argv=None):
         raw = map_model(model, load_smiles(), limit=args.limit)
         raw_path.write_text(json.dumps(raw), encoding="utf-8")
     kegg = kegg_pairs_for_model(model, args.model)
-    combined = combine_pairs(raw, kegg)
+    combined = combine_pairs(raw, kegg, args.combine)
     Path(args.out).write_text(json.dumps(combined), encoding="utf-8")
     src = pd.Series([v["source"] for v in combined.values()]).value_counts().to_dict()
     print(f"Wrote {args.out}: {len(combined)} reactions with carbon pairs {src}; "
