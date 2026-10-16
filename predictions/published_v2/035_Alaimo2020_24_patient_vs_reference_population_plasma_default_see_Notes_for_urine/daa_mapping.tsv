@@ -1,0 +1,7 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+hypoxanthine	-0.83	0.4065387836561368	MAM02159	metabolite	0.83	False	
+urate	0.83	0.4065387836561368	MAM03120	metabolite	0.83	False	
+alloisoleucine	0.7	0.483927304446146	MAM02184	metabolite via id_translation	0.7	False	
+xanthine	0.62	0.5352577869379662	MAM03148	metabolite	0.62	False	
+leucine	0.34	0.7338565279279439	MAM02360	metabolite	0.34	False	
+valine	-0.08	0.9362372559720252	MAM03135	metabolite	0.08	False	

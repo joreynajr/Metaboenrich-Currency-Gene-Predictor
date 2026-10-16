@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+pipecolate	-1.56	0.1187598811895861	MAM02413	metabolite via id_translation	1.56	False	
+S-adenosylhomocysteine	0.23	0.8180917697159883	MAM02871	metabolite via id_translation	0.23	False	

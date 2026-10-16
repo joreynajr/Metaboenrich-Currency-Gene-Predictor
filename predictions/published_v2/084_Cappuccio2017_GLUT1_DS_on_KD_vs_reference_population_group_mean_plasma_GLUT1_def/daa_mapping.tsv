@@ -1,0 +1,13 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+3-hydroxybutyrylcarnitine	1.993	0.0462614470826923	MAM03201	metabolite (loose name)	1.993	False	
+Succinylcarnitine	-1.911	0.0560045808954044	MAM03495	metabolite (loose name)	1.911	False	
+Propionylcarnitine	-1.796	0.0724945170303023	MAM02657	metabolite via id_translation	1.796	False	
+Isovalerylcarnitine	-1.716	0.0861620424214879	MAM03706	metabolite (loose name)	1.716	False	
+Carnitine	-1.537	0.1242933093721876	MAM02348	metabolite via id_translation	1.537	False	
+Stearoylcarnitine	1.387	0.1654417628334134	MAM02940	metabolite	1.387	False	
+Oleoylcarnitine	1.284	0.1991419554204484	MAM02410	metabolite (loose name)	1.284	False	
+Palmitoylcarnitine	0.93	0.3523710844905158	MAM02411	metabolite via id_translation	0.93	False	
+Glutarylcarnitine (C5)	-0.886	0.375617527204912	MAM03497	metabolite (loose name)	0.886	False	
+Acetylcarnitine	0.696	0.4864288297481086	MAM02634	metabolite (loose name)	0.696	False	
+Octanoylcarnitine	0.423	0.6722952610582149	MAM02409	metabolite via id_translation	0.423	False	
+Tiglylcarnitine	-0.347	0.7285913187713482	MAM03496	metabolite (loose name)	0.347	False	

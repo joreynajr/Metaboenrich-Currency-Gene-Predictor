@@ -1,0 +1,7 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+phenylpyruvate	1.9	0.0574331196320036	MAM02725	metabolite	1.9	False	
+phenylalanine	1.72	0.0854324415826578	MAM02724	metabolite	1.72	False	
+phenyllactate	1.69	0.0910279546430996	MAM03882	metabolite	1.69	False	
+xanthine	1.42	0.1556076810530928	MAM03148	metabolite	1.42	False	
+hypoxanthine	1.23	0.2186971048513838	MAM02159	metabolite	1.23	False	
+cholesterol	0.75	0.4532547047537364	MAM01450	metabolite	0.75	False	

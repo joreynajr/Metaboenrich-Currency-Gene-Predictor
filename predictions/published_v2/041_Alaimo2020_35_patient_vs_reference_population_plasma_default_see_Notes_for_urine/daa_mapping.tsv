@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+3-methylglutaconate	1.6	0.1095985833991159	MAM03245	metabolite (loose name)	1.6	False	
+alanine	1.25	0.2112995473337105	MAM01307	metabolite	1.25	False	
+lactate	-0.97	0.3320464921270592	MAM02403	metabolite via id_translation	0.97	False	

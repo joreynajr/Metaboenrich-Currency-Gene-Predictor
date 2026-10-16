@@ -1,0 +1,6 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+hexanoylglycine	1.71	0.0872658730480638	MAM03660	metabolite (loose name)	1.71	False	
+hexanoylcarnitine	1.41	0.1585396829067848	MAM03498	metabolite (loose name)	1.41	False	
+octanoylcarnitine	0.99	0.3221741190216619	MAM02409	metabolite via id_translation	0.99	False	
+suberate	0.52	0.6030635750939324	MAM03954	metabolite via id_translation	0.52	False	
+sebacate	0.01	0.9920212873707368	MAM03923	metabolite via id_translation	0.01	False	

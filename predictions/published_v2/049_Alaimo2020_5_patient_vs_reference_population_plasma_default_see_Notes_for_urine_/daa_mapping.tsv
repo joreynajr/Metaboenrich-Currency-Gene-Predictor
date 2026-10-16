@@ -1,0 +1,4 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+2-aminoadipate	1.59	0.1118348050389389	MAM02322	metabolite via id_translation	1.59	False	
+pipecolate	0.43	0.6671956411909153	MAM02413	metabolite via id_translation	0.43	False	
+methylmalonate	0.04	0.9680931262943384	MAM02479	metabolite	0.04	False	

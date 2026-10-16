@@ -1,0 +1,9 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+arginine	-1.07	0.2846193087118784	MAM01365	metabolite	1.07	False	
+palmitate	0.94	0.3472175606772492	MAM02674	metabolite	0.94	False	
+pipecolate	-0.86	0.3897890425036168	MAM02413	metabolite via id_translation	0.86	False	
+glutamine	-0.81	0.4179401757432032	MAM01975	metabolite	0.81	False	
+orotate	-0.53	0.5961119307897529	MAM02659	metabolite	0.53	False	
+stearate	0.5	0.6170750774519739	MAM02938	metabolite	0.5	False	
+uridine	0.47	0.6383550175651117	MAM03123	metabolite	0.47	False	
+3-ureidopropionate	0.26	0.794863773596479	MAM00923	metabolite	0.26	False	

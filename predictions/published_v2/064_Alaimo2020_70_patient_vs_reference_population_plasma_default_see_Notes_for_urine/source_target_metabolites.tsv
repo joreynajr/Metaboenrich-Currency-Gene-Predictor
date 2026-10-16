@@ -1,0 +1,2 @@
+input_id	met_id	name	role	log2fc	p	pairs	conductivity	bottleneck	conduit_current	exit_concentration	final_score
+MAM02657	MAM02657	O-propanoylcarnitine	target	3.65	0.0002622403088409	1	1.1106050644033754	0.0	0.0	0.3333333333333335	1.0

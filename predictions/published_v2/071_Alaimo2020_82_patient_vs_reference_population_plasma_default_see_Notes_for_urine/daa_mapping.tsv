@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+3-hydroxyisobutyrate	0.89	0.3734658860743453	MAM00784	metabolite	0.89	False	
+isobutyrylglycine	-0.16	0.8728810742171343	MAM02181	metabolite	0.16	False	

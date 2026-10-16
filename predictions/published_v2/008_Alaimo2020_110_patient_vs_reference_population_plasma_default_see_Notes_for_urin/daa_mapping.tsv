@@ -1,0 +1,3 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+3-methylcrotonylglycine	0.97	0.3320464921270592	MAM00825	metabolite via id_translation	0.97	False	
+beta-hydroxyisovalerate	0.87	0.3843004042073924	MAM01392	metabolite via id_translation	0.87	False	

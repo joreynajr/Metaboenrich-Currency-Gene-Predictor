@@ -1,0 +1,8 @@
+input_id	log2fc	p	met_id	matched_on	phi	significant	role
+3-ureidopropionate	1.57	0.116415111277106	MAM00923	metabolite	1.57	False	
+arginine	-1.16	0.2460488061026868	MAM01365	metabolite	1.16	False	
+glutamine	-1.11	0.2669990264854944	MAM01975	metabolite	1.11	False	
+urea	-0.9	0.368120250693519	MAM03121	metabolite	0.9	False	
+N-acetylglutamate	0.7	0.483927304446146	MAM02536	metabolite via id_translation	0.7	False	
+pipecolate	-0.36	0.7188471335640176	MAM02413	metabolite via id_translation	0.36	False	
+citrulline	0.02	0.984043372566196	MAM01588	metabolite	0.02	False	
