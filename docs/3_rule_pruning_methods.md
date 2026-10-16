@@ -8,9 +8,14 @@ regenerated with `python tools/reproduce_three_rule.py`. The per-reaction detail
 
 Metaboenrich ranks enzymes from untargeted metabolomics by running electrical current through a
 metabolic network:
-- significantly increased metabolites are current sources;
-- decreased metabolites are sinks;
+- significantly decreased metabolites are current sources;
+- significantly increased metabolites are sinks;
 - reactions and their genes are scored by the current they carry.
+
+This orientation is the default since decision D20 (2026-10-16). It departs from protocol §1.3,
+which makes increased metabolites the sources; `--sources increased` restores that. Current flow
+does not depend on the choice: swapping sources and sinks negates every current, and scores use
+the absolute current. No result in this note changes.
 
 Genome-scale models link every substrate of a reaction to every product. That creates false
 shortcuts through molecules that appear in thousands of reactions (H+, water, ATP, NAD(P)H, CoA), so

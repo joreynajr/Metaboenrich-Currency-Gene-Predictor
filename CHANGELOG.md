@@ -4,6 +4,40 @@ Network counts are for the analysis network (stage 5): metabolite nodes /
 reaction nodes / edges. The reasons behind each change are in
 [docs/decisions.md](docs/decisions.md).
 
+## flip-orientation branch (2026-10-16)
+
+Network unchanged (3,958 / 6,377 / 16,356; edge-list SHA-256 `942cd8ac…`).
+Significant decreases are now the sources by default (decision D20).
+
+- **Orientation option** `--sources {decreased,increased}` on
+  `python -m metaboenrich`, `python -m metaboenrich.benchmark` and
+  `benchmarks/published_predictions.py`. Default `decreased`: significant
+  log2FC < 0 are the sources, log2FC > 0 the targets. `increased` is the old
+  behaviour and the protocol's §1.3 definition. `summary.json` and
+  `run_info.json` record `"orientation"`; runs without it used `increased`.
+- **Current flow unchanged** (swapping sides only flips the sign of each
+  current). Example DAA: `genes.tsv` and `reactions.tsv` identical (max
+  difference 2e-15). Benchmark: raw and leave-one-out ranks identical for all
+  21 disorders; raw ranks identical for all 166 patients, one leave-one-out
+  rank differs by a float tie. Source/target counts are swapped. Directed
+  mode (`--mode directed`) is not symmetric and changes; no stored output
+  used it.
+- **Absorbing walk** changes and is much worse on the inborn-error benchmark:
+  group median 284 over the 19 disorders it can score (was 48), top 100 6 of
+  20 (was 13); patient median 459 (was 67), top 10 5.6% (was 28.1%).
+  Isovaleric aciduria can no longer be scored by the walk at group level.
+- **Blind predictions**: `predictions/published_v2` rebuilds the 111 units of
+  `published_v1` (sealed, unchanged) under the new orientation. All 66 run
+  units keep the diagnosed gene's rank; `units.tsv` gains `sources_are`,
+  `decreased` and `increased`.
+- **`--from-run DIR`** (`published_predictions.py`) rebuilds a previous run's
+  units from their saved `daa_mapping.tsv`.
+- **Report builders** read each run's orientation instead of assuming the
+  sources are the increased metabolites; `docs/rw_report.html` gains an
+  Orientation section.
+- **Tests**: `tests/test_daa.py::OrientationTest` (role assignment) and
+  `tests/test_flow.py::OrientationSymmetryTest` (current flow symmetric).
+
 ## 3_rule_pruning branch (2026-10-06)
 
 The analysis network (first method) is unchanged. New: 3-rule pruning, a

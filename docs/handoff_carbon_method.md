@@ -7,9 +7,14 @@ Repository: Metaboenrich-Currency-Gene-Predictor (public). No unpublished lab da
 
 Metaboenrich ranks enzymes (genes) from a metabolomics result. It runs electrical current flow
 (Kirchhoff/Ohm) on the Human-GEM v2.0.1 network, with compartments merged. Significantly
-increased metabolites are current sources and decreased ones are sinks. Reactions and genes are
+decreased metabolites are current sources and increased ones are sinks. Reactions and genes are
 ranked by how much current passes through them. Target data: bulk untargeted metabolomics of
 polar (methanol-soluble) metabolites, with no compartment information.
+
+Orientation (updated 2026-10-16): decreases as sources is the default since decision D20. It
+departs from protocol §1.3, which makes increased metabolites the sources. This note first
+followed the protocol; `--sources increased` restores it. Current flow does not depend on the
+choice: swapping sources and sinks negates every current, and scores use the absolute current.
 
 The main difficulty is currency metabolites (H2O, H+, ATP, NAD(P)H, CoA ...). Left in, they
 create false shortcuts: current flows glucose → ATP → anything.
@@ -147,7 +152,7 @@ directions.
 - `metaboenrich/benchmark.py`: `--stage carbon:carbon_method --couple-min N`.
 - `docs/carbon_atlas.html`: interactive report (charts, linked network diagrams, all tables above).
 - `docs/pruning_atlas.html`: the same for the first method.
-- `docs/decisions.md`: decision log (D15, D16 on carbon and pruning).
+- `docs/decisions.md`: decision log (D15, D16 on carbon and pruning; D20 on orientation).
 - `docs/benchmark.md`: benchmark method.
 - KEGG-derived pair files are not in the repository (licence). They regenerate with
   `python -m metaboenrich.atoms`.

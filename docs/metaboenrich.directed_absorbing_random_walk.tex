@@ -27,7 +27,8 @@
 \title{Metaboenrich step 5 (experimental):\\
 a directed absorbing random walk conditioned on absorption}
 \author{Metaboenrich methods note}
-\date{Code reference: \code{metaboenrich/walk.py}, commit \code{0f6c135} (branch \code{directed-rw}); option \code{--mode walk}}
+\date{Code reference: \code{metaboenrich/walk.py}, commit \code{0f6c135} (branch \code{directed-rw});
+orientation option from commit \code{98874fc} (branch \code{flip-orientation}); option \code{--mode walk}}
 
 \begin{document}
 \maketitle
@@ -36,10 +37,10 @@ a directed absorbing random walk conditioned on absorption}
 The default Metaboenrich scoring step, Ohm's-law current flow, solves an electrical
 problem on the \emph{undirected} metabolite--reaction graph. It ignores reaction
 directions and lets current pass between two substrates of the same reaction. This
-note describes the experimental alternative. Walkers are released at the metabolites
-that went up, in proportion to $|\log_2\mathrm{FC}|$, and step only along reaction
-directions until a metabolite that went down absorbs them. Walkers that reach a dead
-end are lost, and only walks that reach a target are scored, using Doob's
+note describes the experimental alternative. By default walkers are released at the
+metabolites that went down, in proportion to $|\log_2\mathrm{FC}|$, and step only along
+reaction directions until a metabolite that went up absorbs them. Walkers that reach a
+dead end are lost, and only walks that reach a target are scored, using Doob's
 $h$-transform. One sparse LU factorisation gives every quantity. The output has the
 same form as current flow, so ranking and outputs are shared. The method is an
 absorbing Markov chain. It is not a random walk with restart: walkers never jump back
@@ -80,8 +81,12 @@ with ``walkers per source, absorbed by whichever target they reach first''.
   \item Reaction directions from the Human-GEM flux bounds: $\rho$ can run forward if
         its upper bound is $>0$ and backward if its lower bound is $<0$. Reversible
         reactions can do both.
-  \item $\Sset\subset M$: sources (significant, $\log_2\mathrm{FC}>0$).
-        $\Tset\subset M$: targets (significant, $\log_2\mathrm{FC}<0$).
+  \item $\Sset\subset M$: sources (significant, $\log_2\mathrm{FC}<0$).
+        $\Tset\subset M$: targets (significant, $\log_2\mathrm{FC}>0$).
+        A $\log_2\mathrm{FC}$ of exactly 0 gets no role. This is the default,
+        \code{--sources decreased} (D20). Protocol \S1.3 uses the opposite
+        orientation (increases are the sources); \code{--sources increased}
+        restores it. The D17 results used that orientation.
   \item $\varphi_v = |\log_2\mathrm{FC}_v|$ for every source and target.
   \item $\kappa\ge 0$ (optional, \code{--walk-kappa}): partial-absorption strength.
 \end{itemize}
@@ -181,8 +186,8 @@ $\alpha=(t\mid d)$ with $t\in\Tset$,
   \end{cases}
   \label{eq:absorb}
 \end{equation}
-All other states have $a_u=0$. With partial absorption a deep drop catches almost
-every walker, while a mild one lets some walk on to targets further along.
+All other states have $a_u=0$. With partial absorption a target with a large change
+catches almost every walker, while a mild one lets some walk on to targets further along.
 
 \paragraph{Transitions.} From state $u$ with out-degree $\deg^{+}(u)$ in $\X$, a
 walker that is not absorbed moves along one of its arcs uniformly at random:
@@ -212,7 +217,8 @@ $h = a + Qh$, so
   \label{eq:h}
 \end{equation}
 For a source $s$, $h(s)$ is its \emph{reach probability}. Sources with $h(s)=0$ are
-excluded (``no directed path to a target'').
+excluded (``no directed path to a target''). In the example run every source reaches
+a target (with sources increased, one did not).
 
 \paragraph{Expected visits.} The fundamental matrix $N=(I-Q)^{-1}$ has $N_{su}$ =
 expected number of visits to $u$ by a walk started at $s$. Its row for $s$ is
@@ -227,9 +233,10 @@ Both \eqref{eq:h} and \eqref{eq:visits} use the same LU factorisation of $I-Q$:
 \section{Conditioning on success: Doob's \texorpdfstring{$h$}{h}-transform}
 %======================================================================
 
-Most released walkers never reach a target: in the example run only about $20\%$ do,
-the rest end in directed dead ends. Scoring all walkers would reward reactions that
-lead into dead ends. The walk therefore scores only the walks that are absorbed.
+Most released walkers never reach a target: in the example run only $26.5\%$ do
+($19.8\%$ with sources increased), the rest end in directed dead ends. Scoring all
+walkers would reward reactions that lead into dead ends. The walk therefore scores
+only the walks that are absorbed.
 
 \begin{proposition}
 Conditioned on absorption, the walk is again a Markov chain, with transitions
@@ -287,7 +294,8 @@ positive when $\rho$ is used forward on balance and negative when used backward.
 %======================================================================
 
 \paragraph{Source weights (where the DAA enters, hook 1).} Walkers are released at
-source $s$ in proportion to $\varphi_s$. The share of all \emph{successful} walkers
+source $s$ (by default a decreased metabolite) in proportion to $\varphi_s$, the size
+of its change. The share of all \emph{successful} walkers
 that came from $s$ is
 \begin{equation}
   w_s = \frac{\varphi_s\,h(s)}{\sum_{s'\in\Sset}\varphi_{s'}\,h(s')} ,
@@ -312,7 +320,8 @@ Leave-one-out scores are not defined for the walk; those columns are empty and
 share of successful walkers $\sum_s w_s p_s(t)$. A pair $(s,t)$ is ``reached'' if
 $p_s(t)>0$; others are excluded (``no walk reaches this target''). The run summary
 adds the success fraction $\sum_s\varphi_s h(s)/\sum_s\varphi_s$, the number of
-unreached sources, and the state, live-state and arc counts.
+unreached sources, and the state, live-state and arc counts. In the example run all
+72 pairs are reached (with sources increased, 63 of 72).
 
 %======================================================================
 \section{One-sided data}
@@ -320,7 +329,12 @@ unreached sources, and the state, live-state and arc counts.
 If only sources are significant, the measured but unchanged metabolites (the ground)
 absorb every walker ($a=1$ at their arrival states). If only targets are significant,
 walkers start evenly from the ground ($\varphi=1$ each). Ground nodes are not scored as
-endpoints.
+endpoints. The rule is symmetric, but which case applies depends on the orientation.
+With the default, data with only significant increases have only targets, so the
+ground releases the walkers; data with only decreases have only sources, and the
+ground absorbs. The one-sided example (\code{results/onesided.csv}, only increases)
+now has 0 sources and 8 targets; the ground releases walkers and $4.7\%$ of them reach
+a target. With sources increased the ground absorbed, and $6.8\%$ reached a target.
 
 %======================================================================
 \section{From node scores to ranked genes and pathways}
@@ -336,7 +350,7 @@ column. The Cytoscape subnetwork keeps edges with $F^{\max}_e\ge0.1$.
 %======================================================================
 \begin{enumerate}[nosep]
   \item Build $\X$ and its arcs once ($21{,}787$ states on Human-GEM).
-  \item Reverse BFS from absorbing states; keep live states ($16{,}951$ in the example run).
+  \item Reverse BFS from absorbing states; keep live states ($16{,}952$ in the example run).
   \item One sparse LU of $I-Q$ (\code{scipy.sparse.linalg.splu}), about $0.3$\,s.
   \item Solve \eqref{eq:h} once; solve \eqref{eq:visits} for blocks of 128 sources.
   \item Sparse products fold traffic onto edges and nodes.
@@ -363,6 +377,11 @@ That is $1+|\Sset|$ solves, against $|\Sset|+|\Tset|$ for current flow.
         in the wrong direction blocks every route through it. If the measured
         metabolites point away from the block, as with shunt products, walkers cannot
         reach it.
+  \item \textbf{Sensitive to orientation.} In current flow, swapping sources and
+        targets only negates the currents, and the scores do not change. The walk
+        follows reaction directions, so the swap changes its result. On the benchmark
+        the default orientation (sources decreased) does much worse than the
+        protocol's (Section~\ref{sec:benchmark}).
   \item \textbf{Only successful walks count.} When few walkers reach a target (low
         success fraction), scores rest on a small share of the released walkers.
 \end{itemize}
@@ -392,39 +411,90 @@ agrees with the exact solution (maximum difference $0.005$).
 
 %======================================================================
 \section{Benchmark}
+\label{sec:benchmark}
 %======================================================================
 Inborn errors of metabolism: rank of the causal gene among $2{,}302$ network genes,
-raw scoring, full absorption; lower is better. Source: \code{docs/decisions.md}, D17.
+raw scoring, full absorption; lower is better. The walk was run in both orientations:
+sources decreased (the default, D20) and sources increased (protocol \S1.3, D17).
+Current flow gives the same ranks in both. Source: \code{docs/decisions.md}, D17 and
+D20; runs in \code{results/bench\_rw}, \code{results/bench\_rw\_p} and
+\code{results/\_increased\_2026-10-01/}.
 
 \begin{center}
-\begin{tabular}{@{}llrr@{}}
+\begin{tabular}{@{}llrrr@{}}
 \toprule
-Level & Measure & Current flow & Absorbing walk\\
+ & & & \multicolumn{2}{c}{Absorbing walk, sources}\\
+\cmidrule(l){4-5}
+Level & Measure & Current flow & decreased & increased\\
 \midrule
-Group (20 primary disorders) & median rank & 88.5 & 48\\
- & in top 100 & 11 & 13\\
- & in top 10 & 3 & 5\\
-Patient (159 primary patients) & median rank & 134 & 67\\
- & in top 100 & 47\% & 55\%\\
- & in top 10 & 5\% & 28\%\\
+Group (20 primary disorders) & median rank & 88.5 & 284 & 48\\
+ & in top 100 & 11 & 6 & 13\\
+ & in top 10 & 3 & 0 & 5\\
+Patient (159 primary patients) & median rank & 145 & 459 & 67\\
+ & in top 500 & 79\% & 52\% & 79\%\\
+ & in top 100 & 47\% & 19\% & 55\%\\
+ & in top 10 & 5\% & 6\% & 28\%\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The walk ranks the causal gene better for $71\%$ of patients and in 14 of 20
-disorders. Largest group-level gains: MSUD $33\to1$, PKU $186\to16$, propionic
-acidaemia $1{,}187\to176$, citrullinaemia $82\to20$. Losses show where direction hurts.
-In AADC deficiency ($88\to1{,}317$) the main source, 3-O-methyldopa, is made
-irreversibly \emph{from} the blocked substrate L-DOPA, so walkers cannot run back to
-the block. In homocystinuria ($181\to765$) the only target is cortisol, which carries
-no information about the block. In both, fewer than $4\%$ of walkers reach a target.
-Partial absorption barely matters (group medians $45.5$--$47$ for
-$\kappa=0.5,1,2$, against $48$).
+With sources decreased the walk cannot score isovaleric aciduria, so its group median
+is over 19 disorders. Patient rows count the primary patients the walk can score.
+That is 159 in each orientation, but not the same 159: with sources decreased one
+isovaleric aciduria patient drops out, and with sources increased one OTC patient did.
+The current-flow median is $145$ over the first set, $134$ over the second and $140$ over all 160.
 
-\paragraph{Status.} Not the default. It changes protocol \S2.3, the evidence is one
-benchmark, and the blind predictions (D14) were made with current flow. To be decided
-before the next blind round. Not yet tried: biased steps (hook 3), unchanged
-metabolites as leaks (hook 4), and the reverse ``activation'' orientation.
+With sources decreased the walk falls well behind current flow. It ranks the causal
+gene better than current flow for $28\%$ of patients, and its median patient rank is
+better in 4 of 20 disorders (sources increased: $71\%$ and 14 of 20). At group level it
+is better in 7 of 20 disorders (sources increased: 13). It ranks the causal gene first
+for 4 patients (sources increased: 25; current flow: 0). The median share of released
+walkers that reach a target is $1.8\%$ per disorder and $2.1\%$ per patient (sources
+increased: $6.6\%$ and $3.8\%$). Isovaleric aciduria can no longer be scored: no walker
+reaches a target (sources increased: rank 64; current flow: 17).
+
+Largest group-level losses against current flow: TMLHE deficiency $4\to1{,}172$,
+thymidine phosphorylase deficiency $1\to212$, 3-methylcrotonyl-CoA carboxylase
+deficiency $23\to1{,}649$, argininaemia $89\to2{,}013$, HMG-CoA lyase deficiency
+$55\to1{,}001$, MSUD $33\to888$, PKU $186\to1{,}134$, GAMT deficiency $2\to85$.
+Largest gains: GABA-transaminase deficiency $282\to18$, propionic acidaemia
+$1{,}187\to170$, adenylosuccinate lyase deficiency $362\to71$, methylmalonic acidaemia
+$439\to106$. OTC deficiency ($168\to60$), citrullinaemia ($82\to56$) and holocarboxylase
+synthetase deficiency ($717\to284$) also improve. With sources increased the largest
+gains were MSUD $33\to1$, PKU $186\to16$, propionic acidaemia $1{,}187\to176$ and
+citrullinaemia $82\to20$.
+
+A reading of the losses, not a test: in an enzyme deficiency the substrate side usually
+rises and the product side falls. With decreased metabolites as sources, walkers start
+on the product side and must follow reaction directions to the increased metabolites.
+Those lie upstream of the block, so the faulty enzyme is seldom on a successful route.
+With sources increased, walkers went from the accumulated substrate through the blocked
+enzyme to the depleted product.
+
+The two D17 loss cases stay poor. In AADC deficiency (2 increased, 24 decreased)
+3-O-methyldopa is now a target. The walk ranks the causal gene $1{,}502$ (sources
+increased: $1{,}317$; current flow: 88), and $0.1\%$ of walkers reach a target. In
+homocystinuria (22 increased, 1 decreased) cortisol, the only significant decrease, is
+now the only source. The rank is 604 (sources increased: 765; current flow: 181), and
+$8.7\%$ of walkers reach a target. Four disorders are one-sided, with only increases,
+so they now have only targets and the ground releases the walkers: PKU
+($186\to1{,}134$), GABA-transaminase deficiency ($282\to18$), HMG-CoA lyase
+deficiency ($55\to1{,}001$) and holocarboxylase synthetase deficiency ($717\to284$)
+(current flow $\to$ walk).
+
+Partial absorption barely matters in either orientation. With sources decreased the
+group medians are $284$, $284$ and $285$ for $\kappa=0.5,1,2$, against $284$ with full
+absorption; the patient median is $467$ at $\kappa=1$, against $459$. With sources
+increased the group medians were $45.5$--$47$, against $48$.
+
+\paragraph{Status.} Not the default method. It changes protocol \S2.3, the evidence is
+one benchmark, and the blind predictions (D14) were made with current flow. To be
+decided before the next blind round. The reverse ``activation'' orientation, listed in
+D17 as not tried, is now the package default (D20). It leaves current flow unchanged
+and makes the walk much worse on this benchmark; the default was kept after this
+benchmark was seen. \code{--sources increased} gives the D17 orientation. Not yet
+tried: biased steps (hook 3), unchanged metabolites as leaks (hook 4), and the walk on
+data where a flux increase is expected (an activated pathway).
 
 %======================================================================
 \section{Implementation map}
@@ -448,8 +518,10 @@ Code (\code{metaboenrich/walk.py}) & What it computes\\
 \end{center}
 \noindent Command line and benchmark:
 \begin{quote}\small
-\code{python -m metaboenrich --daa \dots{} --mode walk [--walk-kappa K]}\\
-\code{python -m metaboenrich.benchmark --method walk [--walk-kappa K]}
+\code{python -m metaboenrich --daa \dots{} --mode walk}\\
+\code{\ \ \ \ [--walk-kappa K] [--sources increased]}\\
+\code{python -m metaboenrich.benchmark --method walk}\\
+\code{\ \ \ \ [--walk-kappa K] [--sources increased]}
 \end{quote}
 
 \section*{References}
@@ -462,7 +534,7 @@ Code (\code{metaboenrich/walk.py}) & What it computes\\
         walks. \emph{Social Networks} 27, 39--54.
   \item Doyle, P.\,G.\ and Snell, J.\,L. (1984). \emph{Random Walks and Electric
         Networks}. Mathematical Association of America.
-  \item Metaboenrich \code{docs/decisions.md}, D17.
+  \item Metaboenrich \code{docs/decisions.md}, D17 and D20.
 \end{itemize}
 
 \end{document}

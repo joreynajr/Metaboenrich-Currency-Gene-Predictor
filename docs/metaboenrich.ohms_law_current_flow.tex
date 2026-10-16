@@ -30,11 +30,12 @@ Ohm's-law current flow on the metabolite--reaction network}
 \begin{abstract}
 Metaboenrich ranks genes, reactions and pathways from a differential metabolite
 abundance (DAA) table. Its default scoring step treats the metabolic network as an
-electrical circuit. Every metabolite that went up is a current source and every
-metabolite that went down is a sink. For each source--sink pair, one unit of current
-is injected and Kirchhoff's and Ohm's laws give the current on every edge. Reactions
-that carry a large share of the current, or that are the only route for some pair,
-rank high. This note defines the method exactly as implemented, shows how it is
+electrical circuit. By default every metabolite that went down is a current source
+and every metabolite that went up is a sink. The protocol (\S1.3) uses the opposite
+orientation; for current flow the choice changes no score. For each source--sink
+pair, one unit of current is injected and Kirchhoff's and Ohm's laws give the
+current on every edge. Reactions that carry a large share of the current, or that
+are the only route for some pair, rank high. This note defines the method exactly as implemented, shows how it is
 solved efficiently, and lists its properties and limits. A companion note describes
 the experimental alternative, a directed absorbing random walk.
 \end{abstract}
@@ -58,7 +59,9 @@ The main run (\code{python -m metaboenrich}) has seven steps:
 Step 5 takes the graph from step 4 and the source and target lists from step 3, and
 returns per-node and per-edge arrays (a \code{FlowResult}) that step 6 turns into
 ranked tables. It corresponds to protocol \S1.4 (current flow) and \S2.2 (directed
-pair filter).
+pair filter). Step 3 makes the significant decreases the sources and the
+significant increases the targets (\code{--sources decreased}, the default;
+Section~\ref{sec:orientation}).
 
 %======================================================================
 \section{The network as a circuit}
@@ -96,7 +99,7 @@ indicator vectors of the connected components, so $L$ is singular.
 %======================================================================
 
 \subsection{Kirchhoff and Ohm}
-For a source $s$ (log$_2$FC $>0$) and a target $t$ (log$_2$FC $<0$) in the same
+For a source $s$ (log$_2$FC $<0$) and a target $t$ (log$_2$FC $>0$) in the same
 connected component, inject one ampere at $s$ and withdraw it at $t$:
 \begin{equation}
   L\,x^{st} = b^{st},\qquad b^{st} = e_s - e_t,
@@ -111,6 +114,27 @@ Ohm's law gives the edge currents
 \end{equation}
 Kirchhoff's current law holds by construction, $B^{\top}I^{st} = b^{st}$: one unit
 leaves $s$, one unit arrives at $t$, and current is conserved at every other node.
+
+\subsection{Which side is the source}\label{sec:orientation}
+Step 3 assigns the roles. With \code{--sources decreased} (the default since
+decision D20, 2026-10-16), significant metabolites with log$_2$FC $<0$ are sources
+and those with log$_2$FC $>0$ are targets. \code{--sources increased} restores the
+earlier behaviour, which is the protocol's definition (\S1.3: sources have a
+positive log$_2$ fold change, targets a negative one). By default the package
+therefore departs from protocol \S1.3. A log$_2$FC of exactly $0$ gets no role.
+
+For current flow the choice does not matter. Swapping $s$ and $t$ turns $b^{st}$
+into $-b^{st}$, so by linearity every potential difference and every edge current
+only changes sign. Throughput and the edge scores use $|I^{st}_e|$, $\Reff$ is
+symmetric, the leave-one-out minimum runs over sources and targets alike, and the
+pair weight $\tfrac12(\varphi_s+\varphi_t)$ is symmetric. Every score is therefore
+unchanged, up to rounding. Unit tests check this:
+\code{OrientationSymmetryTest} in \code{tests/test\_flow.py} and
+\code{OrientationTest} in \code{tests/test\_daa.py}. On the example DAA table the gene and
+reaction tables match the run under the old orientation to within $2\times10^{-15}$.
+Directed mode is not symmetric, because its filter asks for a directed path
+$s\to t$. The absorbing walk is directed too, and its results do change
+(Section~\ref{sec:benchmark}).
 
 \subsection{Throughput}
 The throughput of node $v$ for the pair $(s,t)$ is the current passing through it,
@@ -244,14 +268,17 @@ Laplacian, so current can still run against a reaction's direction. Directed
 current (protocol \S2.3) is not implemented; the directed absorbing random walk is
 the experimental alternative.
 
-\paragraph{One-sided data (\code{--one-sided auto}).} If only increases (or only
-decreases) are significant, the measured but unchanged metabolites form a ground set
-$\mathcal G$. Each source injects one unit withdrawn evenly across the ground nodes
-in its component,
+\paragraph{One-sided data (\code{--one-sided auto}).} If only decreases (or only
+increases) are significant, the measured but unchanged metabolites form a ground set
+$\mathcal G$. With only decreases there are only sources. Each source injects one
+unit withdrawn evenly across the ground nodes in its component,
 \[
-  b = e_s - \tfrac{1}{|\mathcal G_C|}\textstyle\sum_{g\in\mathcal G_C} e_g ,
+  b = e_s - \tfrac{1}{|\mathcal G_C|}\textstyle\sum_{g\in\mathcal G_C} e_g .
 \]
-and symmetrically when only targets exist. Ground nodes are sinks and are not scored.
+With only increases there are only targets, and the ground supplies the current
+symmetrically, $b = \tfrac{1}{|\mathcal G_C|}\sum_{g\in\mathcal G_C} e_g - e_t$.
+Ground nodes act as sinks in the first case and as sources in the second, and are
+not scored.
 
 %======================================================================
 \section{From node scores to ranked genes and pathways}
@@ -300,28 +327,44 @@ absorbing random walk changes exactly those three things.
 \end{remark}
 
 %======================================================================
-\section{Benchmark}
+\section{Benchmark}\label{sec:benchmark}
 %======================================================================
 Inborn errors of metabolism (plasma $z$-scores from Thistlethwaite et al.\ 2020 and
 Miller et al.\ 2015): rank of the known causal gene among the $2{,}302$ network genes,
-raw scoring; lower is better. Source: \code{docs/decisions.md}, D17.
+raw scoring; lower is better. Source: \code{docs/decisions.md}, D17 (current flow;
+walk with sources increased) and D20 (walk with sources decreased, rerun 2026-10-16).
+Current flow gives every disorder and every patient the same raw rank under both
+orientations.
 
 \begin{center}
-\begin{tabular}{@{}llrr@{}}
+\begin{tabular}{@{}llrrr@{}}
 \toprule
-Level & Measure & Current flow & Absorbing walk\\
+ & & & \multicolumn{2}{c@{}}{Absorbing walk, sources}\\
+\cmidrule(l){4-5}
+Level & Measure & Current flow & decreased & increased (old)\\
 \midrule
-Group (20 primary disorders) & median rank & 88.5 & 48\\
- & in top 100 & 11 & 13\\
- & in top 10 & 3 & 5\\
-Patient (159 primary patients) & median rank & 134 & 67\\
- & in top 100 & 47\% & 55\%\\
- & in top 10 & 5\% & 28\%\\
+Group (20 primary disorders) & median rank & 88.5 & 284 & 48\\
+ & in top 100 & 11 & 6 & 13\\
+ & in top 10 & 3 & 0 & 5\\
+Patient (159 primary patients) & median rank & 134 & 459 & 67\\
+ & in top 100 & 47\% & 19\% & 55\%\\
+ & in top 10 & 5\% & 6\% & 28\%\\
 \bottomrule
 \end{tabular}
 \end{center}
-Current flow remains the default: the blind predictions on published datasets (D14)
-were made with it, and the walk's gains come from one benchmark.
+The patient rows use the patients the walk can score: 159 under either
+orientation, but each orientation leaves out a different patient. Over the 159 of
+the new run, current flow has median rank 145 instead of 134; its top-100 and
+top-10 shares are the same at this precision.
+
+With decreases as sources the walk falls well behind current flow. It ranks the
+causal gene above current flow for 28\% of patients (71\% under the old
+orientation), and for isovaleric aciduria no walker reaches a target. In an enzyme
+deficiency the substrate side usually rises and the product side falls, so walkers
+now start downstream of the block and seldom pass through the faulty enzyme. This is
+a reading of the results, not a test. Current flow remains the default: the blind
+predictions on published datasets (D14) were made with it, and its ranks do not
+depend on the orientation.
 
 %======================================================================
 \section{Implementation map}
@@ -352,7 +395,7 @@ Code (\code{metaboenrich/}) & What it computes\\
         flow. \emph{STACS 2005}, LNCS 3404, 533--544.
   \item Doyle, P.\,G.\ and Snell, J.\,L. (1984). \emph{Random Walks and Electric
         Networks}. Mathematical Association of America.
-  \item Metaboenrich protocol, \S1.4 and \S2.2 (\code{Metaboenrich-Protocol.pdf}).
+  \item Metaboenrich protocol, \S1.3, \S1.4 and \S2.2 (\code{Metaboenrich-Protocol.pdf}).
 \end{itemize}
 
 \end{document}

@@ -42,6 +42,19 @@ lysinuric protein intolerance: transporter).
   information beyond "this enzyme's substrate changed".
 - One-sided flow is used when a disorder has significant changes in only one
   direction.
+- **Orientation**: since decision D20 (2026-10-16), significant decreases are
+  the sources and significant increases the targets by default
+  (`--sources decreased`). This departs from protocol §1.3. The run reported
+  here predates D20 and used the protocol's orientation (increases as sources).
+  Current flow is symmetric, so the ranks are the same under either
+  orientation. Two later reruns, one per orientation (2026-10-01 with
+  increases as sources, 2026-10-16 under D20), gave identical raw and
+  leave-one-out ranks for every disorder and identical raw ranks for every
+  patient. One patient's leave-one-out rank differs at the tail, a float tie
+  (HEP-GAMT-8: 1,887 under D20, 1,873 before, of 2,302). Source and target
+  counts swap. Both reruns differ from the tables below in a few ranks (for
+  example argininemia raw 89, not 88). The absorbing walk (`--mode walk`) is
+  not symmetric and does change; see `docs/rw_report.html`.
 
 ## Results
 

@@ -157,9 +157,11 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
 <section class="summary">
   <p><strong>In one paragraph.</strong> <code>--mode walk</code> keeps steps 1–4 of the main run and swaps step 5.
-  Instead of solving Kirchhoff's equations on the undirected graph, it releases walkers at the increased metabolites
-  (sources), in proportion to |log2FC|, and lets them step only along reaction directions until a decreased metabolite
-  (target) absorbs them. Walkers that hit a dead end are lost, and only walks that reach a target are scored. The maths is one
+  Instead of solving Kirchhoff's equations on the undirected graph, it releases walkers at the decreased metabolites
+  (sources), in proportion to |log2FC|, and lets them step only along reaction directions until an increased metabolite
+  (target) absorbs them. That is the default, <code>--sources decreased</code> (D20). It reverses protocol §1.3, which makes
+  the increased metabolites the sources; <code>--sources increased</code> restores the protocol's roles, which D17 used.
+  Unlike current flow, the walk gives different results under the two settings. Walkers that hit a dead end are lost, and only walks that reach a target are scored. The maths is one
   sparse LU of (I − Q) on the walk's state space (<code>scipy.sparse.linalg.splu</code>, about 0.3 s on Human-GEM).
   That one factorisation gives every source's chance of reaching a target and its expected traffic over every arc. The walk
   returns the same <code>FlowResult</code> as current flow, so scoring and outputs are shared. The result tables gain one column,
@@ -416,6 +418,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
       <tr><th>Reaction direction</th><td>Ignored. <code>--mode directed</code> only filters pairs; solved pairs still use the undirected Laplacian</td><td>Respected at every step; reversible reactions can be used either way</td></tr>
       <tr><th>Co-substrate hops</th><td>Allowed (substrate → reaction → other substrate)</td><td>Impossible: in through a substrate, out through a product, no immediate reversal</td></tr>
       <tr><th>Unit of analysis</th><td>Every source–target pair, one unit of current each</td><td>Every source; all targets absorb together</td></tr>
+      <tr><th>Orientation (<code>--sources</code>)</th><td>No effect on ranks: swapping sources and targets flips the sign of every current, and scores use |current|</td><td>Matters: walkers go from sources to targets along reaction directions, so swapping them changes every score</td></tr>
       <tr><th>Fold change</th><td>Not used unless <code>--pair-weight fc</code></td><td>Always: sources weighted by φ = |log2FC| (hook 1); with <code>--walk-kappa</code>, also absorption strength (hook 2)</td></tr>
       <tr><th>Dead ends</th><td>None: current must reach the sink</td><td>Walkers leak; only walks that reach a target are scored (Doob h-transform)</td></tr>
       <tr><th>Linear algebra</th><td>One LU per connected component of the Laplacian; |S| + |T| solves</td><td>One LU of I − Q on the live states (21,787 states on Human-GEM); 1 + |S| solves</td></tr>
@@ -483,15 +486,15 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
   <article class="card" id="s5b">
     <div class="card-head"><span class="num">5b</span><h3>Set absorption, prune dead states</h3><span class="where">walk.absorbing_walk · walk._can_reach</span></div>
     <p>Only <em>arrival</em> states of targets absorb: a walker has to get there through a reaction. With full absorption (default)
-    a<sub>t</sub> = 1. With <code>--walk-kappa κ</code>, a<sub>t</sub> = 1 − exp(−κ φ<sub>t</sub>): a deep drop catches nearly every walker,
-    a mild one lets some walk on to targets further along. A reverse breadth-first search from the absorbing states marks every state that
+    a<sub>t</sub> = 1. With <code>--walk-kappa κ</code>, a<sub>t</sub> = 1 − exp(−κ φ<sub>t</sub>): a target with a large fold change catches nearly every walker,
+    one with a mild change lets some walk on to targets further along. A reverse breadth-first search from the absorbing states marks every state that
     can still reach one (<em>live</em>). Transition probabilities use the full out-degree, so a step into a dead state is lost
     mass. That is how dead ends leak.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>_can_reach(n_states, arc_u, arc_v, goals)</code><span>Predecessor matrix in CSR, then BFS backwards from the goal states.</span></li>
         <li><code>q = (1 − absorb[au]) / outdeg[au]</code><span>Q<sub>uv</sub> on live → live arcs only.</span></li>
-        <li>One-sided data (<code>ground</code>)<span>If only sources are significant, the measured, unchanged metabolites absorb (a = 1). If only targets are, walkers start evenly from them.</span></li>
+        <li>One-sided data (<code>ground</code>)<span>If only sources are significant, the measured, unchanged metabolites absorb (a = 1). If only targets are, walkers start evenly from them. Under the default orientation, data with only significant increases have only targets, so the ground releases the walkers; data with only decreases have only sources, and the ground absorbs.</span></li>
       </ul></div>
       <div><div class="label">Packages</div><ul class="pkgs">
         <li><span class="pk scipy">scipy.sparse.csr_matrix</span><span>Predecessor lists for the reverse search.</span></li>
@@ -598,7 +601,8 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
       <tr><th><code>--scoring loo</code></th><td>Refused: "--scoring loo is not defined for --mode walk".</td></tr>
       <tr><th><code>--pair-weight</code></th><td>Ignored. Sources are always weighted by φ = |log2FC|.</td></tr>
       <tr><th><code>--bottleneck-tau</code></th><td>Threshold for <code>bottleneck_frac</code>, as in current flow.</td></tr>
-      <tr><th><code>--one-sided auto</code></th><td>With only sources significant, the unchanged measured metabolites absorb. With only targets, walkers start evenly from them.</td></tr>
+      <tr><th><code>--sources</code></th><td>Which significant metabolites the walkers start from. <code>decreased</code> (default, D20): log2FC &lt; 0 are sources, log2FC &gt; 0 targets. <code>increased</code>: the reverse, as in protocol §1.3 and D17. Recorded in summary.json as <code>orientation</code>.</td></tr>
+      <tr><th><code>--one-sided auto</code></th><td>With only sources significant, the unchanged measured metabolites absorb. With only targets, walkers start evenly from them. By default, data with only increases have only targets.</td></tr>
     </tbody>
   </table>
   </div>
@@ -614,7 +618,8 @@ python -m metaboenrich --daa my_daa.csv --out results/my_walk_k1 --mode walk --w
     <div class="card-head"><span class="num">D</span><h3>Inborn-error benchmark with the walk</h3><span class="where">python -m metaboenrich.benchmark --method walk [--walk-kappa K]</span></div>
     <p>Same data and significance rules as the current-flow benchmark (<a href="pipeline.html#oD">pipeline.html D</a>).
     <code>Ranker(model, graph, method="walk", kappa)</code> calls <code>absorbing_walk</code> with φ from the case's DAA, skips the
-    leave-one-out pass, and ranks genes on raw scores. Each case records <code>walk_success_fraction</code>; <code>run_info.json</code> records the method and κ.</p>
+    leave-one-out pass, and ranks genes on raw scores. Each case records <code>walk_success_fraction</code>; <code>run_info.json</code> records the method, κ and the orientation
+    (<code>--sources</code>, default <code>decreased</code>).</p>
   </article>
 
   <article class="card" id="oT">
@@ -639,6 +644,8 @@ python -m metaboenrich.benchmark --levels group --method walk --walk-kappa K --o
 python -m metaboenrich.benchmark --levels patient --out results/bench_rw_p/flow
 python -m metaboenrich.benchmark --levels patient --method walk --out results/bench_rw_p/walk_full
 python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 --out results/bench_rw_p/walk_k1</pre>
+    <p>These run under the default orientation. The report's <a href="rw_report.html#orientation">orientation section</a> compares them with the same runs under
+    <code>--sources increased</code>, kept in <code>results/_increased_2026-10-01/</code>, and skips it if that folder is absent.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>load()</code> · <code>build(out)</code><span>Reads the result TSVs and writes one self-contained page.</span></li>
@@ -675,30 +682,53 @@ python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 -
 
 <section id="results">
   <h2>Benchmark at a glance</h2>
-  <p class="small narrow">Rank of the causal gene among 2,302 network genes, raw scoring, full absorption (lower is better). Numbers
-  from <a href="decisions.md">decisions.md D17</a>; full tables and charts in <a href="rw_report.html">rw_report.html</a>.</p>
+  <p class="small narrow">Rank of the causal gene among 2,302 network genes, raw scoring, full absorption (lower is better). The
+  sources = decreased column is the default since D20 (runs of 2026-10-16); the sources = increased column is the old orientation,
+  from <a href="decisions.md">decisions.md D17</a> (runs kept in <code>results/_increased_2026-10-01/</code>). Current flow is the same
+  under both. Full tables and charts in <a href="rw_report.html">rw_report.html</a>.</p>
   <div class="tbl">
   <table>
-    <thead><tr><th>Level</th><th>Measure</th><th class="num">Current flow</th><th class="num">Walk</th></tr></thead>
+    <thead><tr><th>Level</th><th>Measure</th><th class="num">Current flow</th><th class="num">Walk, sources = decreased</th><th class="num">Walk, sources = increased (D17)</th></tr></thead>
     <tbody>
-      <tr class="group"><th colspan="4">Group level · 20 primary disorders</th></tr>
-      <tr><th>Group</th><td>Median rank</td><td class="num">88.5</td><td class="num">48</td></tr>
-      <tr><th>Group</th><td>Disorders in top 100</td><td class="num">11</td><td class="num">13</td></tr>
-      <tr><th>Group</th><td>Disorders in top 10</td><td class="num">3</td><td class="num">5</td></tr>
-      <tr class="group"><th colspan="4">Patient level · 159 primary patients</th></tr>
-      <tr><th>Patient</th><td>Median rank</td><td class="num">134</td><td class="num">67</td></tr>
-      <tr><th>Patient</th><td>In top 100</td><td class="num">47%</td><td class="num">55%</td></tr>
-      <tr><th>Patient</th><td>In top 10</td><td class="num">5%</td><td class="num">28%</td></tr>
+      <tr class="group"><th colspan="5">Group level · 20 primary disorders</th></tr>
+      <tr><th>Group</th><td>Median rank</td><td class="num">88.5</td><td class="num">284</td><td class="num">48</td></tr>
+      <tr><th>Group</th><td>Disorders in top 100</td><td class="num">11</td><td class="num">6</td><td class="num">13</td></tr>
+      <tr><th>Group</th><td>Disorders in top 10</td><td class="num">3</td><td class="num">0</td><td class="num">5</td></tr>
+      <tr class="group"><th colspan="5">Patient level · 160 primary patients</th></tr>
+      <tr><th>Patient</th><td>Median rank</td><td class="num">140</td><td class="num">459</td><td class="num">67</td></tr>
+      <tr><th>Patient</th><td>In top 500</td><td class="num">78.8%</td><td class="num">51.9%</td><td class="num">78.8%</td></tr>
+      <tr><th>Patient</th><td>In top 100</td><td class="num">46.9%</td><td class="num">18.8%</td><td class="num">55.0%</td></tr>
+      <tr><th>Patient</th><td>In top 10</td><td class="num">5.0%</td><td class="num">5.6%</td><td class="num">28.1%</td></tr>
     </tbody>
   </table>
   </div>
+  <p class="small narrow">Patient percentages are over all 160 primary patients; the one patient the walk cannot score counts as a miss.
+  Walk medians are over the 159 patients with a walk rank. Over those 159, the current-flow median is 145 under the new orientation and 134
+  under the old one (D17), because a different patient lacks a walk rank in each.</p>
   <ul class="small narrow">
-    <li><strong>Largest gains (group):</strong> MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176, citrullinemia 82 → 20.</li>
-    <li><strong>Losses:</strong> AADC 88 → 1,317. The main source, 3-O-methyldopa, is made irreversibly <em>from</em> the blocked substrate,
-    so walkers cannot run back to the block. Homocystinuria 181 → 765: the only target is cortisol, which tells the walk nothing. In both, under 4% of walkers reach a target.</li>
-    <li><strong>κ:</strong> group medians 45.5–47 for K = 0.5, 1, 2 vs 48 with full absorption, so full absorption stays the default.</li>
+    <li><strong>Sources = decreased (default):</strong> the walk is much worse than current flow. It ranks the causal gene above current
+    flow for 28% of patients (old orientation: 71%) and, by median patient rank, in 4 of 20 disorders (old: 14). At group level it does better in 7 of 20 (old: 13). It ranks the causal gene first for 4 patients (old: 25; current flow: 0).
+    The median share of released walkers that reach a target is 1.8% at group level (old 6.6%) and 2.1% at patient level (old 3.8%).</li>
+    <li><strong>Largest losses vs current flow (group, new orientation):</strong> TMLHE deficiency 4 → 1,172, 3-methylcrotonyl-CoA carboxylase
+    deficiency 23 → 1,649, argininemia 89 → 2,013, HMG-CoA lyase deficiency 55 → 1,001, MSUD 33 → 888, PKU 186 → 1,134, thymidine phosphorylase
+    deficiency 1 → 212, GAMT 2 → 85. Isovaleric aciduria can no longer be scored: no walker reaches a target (old: rank 64; current flow: 17).</li>
+    <li><strong>Largest gains vs current flow (group, new orientation):</strong> GABA-transaminase deficiency 282 → 18, PA 1,187 → 170,
+    adenylosuccinate lyase deficiency 362 → 71, MMA 439 → 106. Also better: OTC 168 → 60, citrullinemia 82 → 56, holocarboxylase synthetase deficiency 717 → 284.</li>
+    <li><strong>A reading, not a test:</strong> in an enzyme deficiency the substrate side usually rises and the product side falls. With decreased
+    metabolites as sources, walkers start on the product side and must follow reaction directions to the increased metabolites upstream of
+    the block, so the faulty enzyme is seldom on a successful route. Under the old orientation, walkers went from the accumulated substrate
+    through the blocked enzyme to the depleted product.</li>
+    <li><strong>Old orientation (D17), largest gains (group):</strong> MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176, citrullinemia 82 → 20.</li>
+    <li><strong>The two D17 losses, re-read:</strong> AADC deficiency (2 increased, 24 decreased): under D17, 3-O-methyldopa was the main source.
+    It is made irreversibly <em>from</em> the blocked substrate, so walkers could not run back to the block (88 → 1,317). Now 3-O-methyldopa is a
+    target, and the walk ranks the gene 1,502, with 0.1% of walkers reaching a target. Homocystinuria (22 increased, 1 decreased): under D17 the
+    only target was cortisol, which told the walk nothing (181 → 765). Now cortisol is the only source; the walk ranks the gene 604, and 8.7% of
+    walkers reach a target.</li>
+    <li><strong>κ:</strong> new orientation, group medians 284, 284 and 285 for K = 0.5, 1, 2 (top 10 = 0, top 100 = 6 for all) vs 284 with full
+    absorption; patient median 467 at K = 1. Old orientation: 45.5–47 vs 48. Full absorption stays the default.</li>
     <li><strong>Status:</strong> not the default. It changes protocol §2.3, the evidence is one benchmark, and the blind predictions (D14)
-    were made with current flow. To be decided before the next blind round.</li>
+    were made with current flow. To be decided before the next blind round. Under the default orientation (D20) the walk does worse than
+    current flow on this benchmark; <code>--sources increased</code> gives the D17 results.</li>
   </ul>
 </section>
 
@@ -720,7 +750,8 @@ python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 -
 
 <footer>
   <span>Written by hand from the code at commit 0f6c135 (branch directed-rw, v0.2.0.dev0). Not regenerated by a build script; update it when <code>walk.py</code> changes.</span>
-  <span>Related: <a href="pipeline.html">pipeline.html</a> (current-flow pipeline) · <a href="rw_report.html">rw_report.html</a> · <a href="network_report.html">network_report.html</a> · <a href="decisions.md">decisions.md</a> (D17)</span>
+  <span>Updated 2026-10-16 for the source/target orientation (decision D20, <code>--sources</code>, commit 98874fc); benchmark numbers from the runs of that day.</span>
+  <span>Related: <a href="pipeline.html">pipeline.html</a> (current-flow pipeline) · <a href="rw_report.html">rw_report.html</a> · <a href="network_report.html">network_report.html</a> · <a href="decisions.md">decisions.md</a> (D17, D20)</span>
 </footer>
 
 </main>

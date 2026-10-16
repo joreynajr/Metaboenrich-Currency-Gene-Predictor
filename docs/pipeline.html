@@ -128,8 +128,8 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 <section class="summary">
   <p><strong>In one paragraph.</strong> The main run (<code>python -m metaboenrich</code>) loads Human-GEM, removes
   currency metabolites, maps the DAA table onto model metabolites, and builds a metabolite–reaction graph. It then
-  treats increased metabolites as current sources and decreased ones as sinks and solves Kirchhoff's equations for every
-  source–target pair, then ranks reactions, genes and pathways by the current they carry. The heavy maths is three
+  treats decreased metabolites as current sources and increased ones as sinks (the default, <code>--sources decreased</code>)
+  and solves Kirchhoff's equations for every source–target pair, then ranks reactions, genes and pathways by the current they carry. The heavy maths is three
   calls: <code>scipy.sparse</code> to build the Laplacian, <code>scipy.sparse.linalg.splu</code> to factor it once per
   connected component, and numpy matrix products for the per-pair currents. Everything else is pandas tables
   and the Python standard library. Model parsing uses no SBML library, only <code>xml.etree</code>.</p>
@@ -383,11 +383,13 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     <div class="card-head"><span class="num">3</span><h3>Load and map the DAA table</h3><span class="where">metaboenrich/daa.py</span></div>
     <p>Reads the differential-abundance table and matches each row to a Human-GEM metabolite. It tries each <code>--id-col</code>
     in order, then the optional synonym table, then an unambiguous loose-name match. When several rows hit the same
-    metabolite, the most significant row is kept. Significant metabolites with log2FC &gt; 0 become <strong>sources</strong>
-    and those with log2FC &lt; 0 become <strong>targets</strong>; φ = |log2FC| is recorded.</p>
+    metabolite, the most significant row is kept. By default (<code>--sources decreased</code>), significant metabolites with
+    log2FC &lt; 0 become <strong>sources</strong> and those with log2FC &gt; 0 become <strong>targets</strong>.
+    <code>--sources increased</code> swaps the roles. That is the protocol's definition (§1.3), which the default now departs from
+    (decision D20). A log2FC of exactly 0 gets no role. φ = |log2FC| is recorded and does not depend on the orientation.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
-        <li><code>load_daa(path, model, id_cols, fc_col, p_col, alpha, …)</code><span>Returns the mapped table, the unmapped rows and the duplicates.</span></li>
+        <li><code>load_daa(path, model, id_cols, fc_col, p_col, alpha, …, sources="decreased")</code><span>Returns the mapped table, the unmapped rows and the duplicates.</span></li>
         <li><code>build_lookup(model)</code> · <code>map_identifier(raw, lookup)</code><span>Human-GEM id, HMDB (zero-padded), KEGG, ChEBI or exact name.</span></li>
         <li><code>load_name_bridge(path)</code><span>The lab's <code>id_translation.csv</code>: synonym → KEGG/HMDB.</span></li>
         <li><code>loose_key(name)</code> · <code>build_loose_index(model)</code><span>Strips stereo prefixes and unifies acid/salt forms; accepts only keys that match exactly one metabolite.</span></li>
@@ -398,7 +400,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
         <li><span class="pk std">re</span><span>Identifier and name normalisation.</span></li>
       </ul></div>
     </div>
-    <div class="io"><span><b>In</b>DAA .csv/.tsv, optional id_translation.csv</span><span><b>Out</b>daa table with <code>met_id</code>, <code>role</code>, <code>phi</code> → daa_mapping.tsv, daa_unmapped.tsv</span></div>
+    <div class="io"><span><b>In</b>DAA .csv/.tsv, optional id_translation.csv, <code>--sources</code></span><span><b>Out</b>daa table with <code>met_id</code>, <code>role</code>, <code>phi</code> → daa_mapping.tsv, daa_unmapped.tsv</span></div>
   </article>
 
   <article class="card" id="s4">
@@ -431,7 +433,9 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     <p>For every source–target pair (s, t), inject one unit of current at s, withdraw it at t, and solve Kirchhoff's equations.
     It never forms a pseudoinverse. Instead it grounds one node per connected component, LU-factorises that component's Laplacian
     <em>once</em>, and solves for a unit injection at each source and target. By linearity every pair's potentials are a difference
-    of two of those solutions, so |S| + |T| solves cover all |S| × |T| pairs.</p>
+    of two of those solutions, so |S| + |T| solves cover all |S| × |T| pairs. Swapping sources and targets only flips the sign
+    of every current. All scores use |current|, so the default undirected run gives the same ranks under either <code>--sources</code>
+    setting, up to float ties. <code>--mode directed</code> is not symmetric in this way.</p>
     <div class="math">L y<sub>v</sub> = e<sub>v</sub> (grounded, one LU per component) &nbsp;→&nbsp; x<sub>st</sub> = y<sub>s</sub> − y<sub>t</sub>
       &nbsp;→&nbsp; I = B x<sub>st</sub> (Ohm) &nbsp;→&nbsp; throughput = ½ |B|ᵀ |I|</div>
     <div class="cols">
@@ -440,7 +444,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
         <li><code>select_pairs(…)</code><span>Drops pairs in different components, or with no directed path in directed mode → excluded_pairs.tsv. Directed mode is <em>only</em> this filter: the pairs that survive are solved on the same undirected Laplacian, so current can still run against a reaction's direction. Protocol §2.3 (directed current) is not implemented.</span></li>
         <li><code>_potentials(graph, L, labels, nodes)</code><span>The grounded LU solves.</span></li>
         <li><code>_leave_one_out(…)</code><span>The lowest score after dropping any single source or target (<code>*_loo</code> columns).</span></li>
-        <li>One-sided mode (<code>GROUND</code>)<span>If only one direction is significant, current is exchanged evenly with the measured, unchanged metabolites.</span></li>
+        <li>One-sided mode (<code>GROUND</code>)<span>If only one direction is significant, current is exchanged evenly with the measured, unchanged metabolites. Under the default orientation, data with only significant increases have only targets, and the ground supplies the current.</span></li>
       </ul></div>
       <div><div class="label">Packages</div><ul class="pkgs">
         <li><span class="pk scipy">scipy.sparse.linalg.splu</span><span>The sparse LU factorisation. This is the core numerical step.</span></li>
@@ -565,7 +569,8 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     <div class="card-head"><span class="num">D</span><h3>Inborn-error benchmark</h3><span class="where">benchmarks/get_benchmark_data.py → python -m metaboenrich.benchmark</span></div>
     <p>Asks whether the known defective enzyme ranks near the top. Data are plasma metabolomics z-scores from Thistlethwaite et al. 2020 and
     Miller et al. 2015. At group level, a metabolite is significant if the z-test on mean z gives BH q &lt; 0.05 and |mean z| ≥ 1; at patient level, if |z| ≥ 2.
-    The causal gene's rank among the 2,302 network genes is compared against a neighbour baseline.</p>
+    The causal gene's rank among the 2,302 network genes is compared against a neighbour baseline. It takes the same
+    <code>--sources</code> option as the main run (default <code>decreased</code>) and records it in <code>run_info.json</code>.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>get_benchmark_data.main()</code><span>Downloads the CTD 1.3 R package from CRAN and exports its datasets with Rscript.</span></li>
@@ -585,10 +590,13 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
   <article class="card" id="oE">
     <div class="card-head"><span class="num">E</span><h3>Blind predictions on published datasets</h3><span class="where">python benchmarks/published_predictions.py --out predictions/published_v1</span></div>
     <p>Splits the lab's standardised master spreadsheet into analysis units, applies a significance rule fixed in advance,
-    and runs the unchanged command-line tool on each unit. The answer key is never read, and the outputs are trimmed and committed before anyone looks at it.</p>
+    and runs the unchanged command-line tool on each unit. The answer key is never read, and the outputs are trimmed and committed before anyone looks at it.
+    <code>--sources</code> is passed through to each run (default <code>decreased</code>). <code>--from-run DIR</code> rebuilds a previous run's units
+    from their saved <code>daa_mapping.tsv</code>; <code>predictions/published_v2</code> is published_v1's 111 units rebuilt this way under sources = decreased.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>units(master)</code> · <code>unit_daa(g)</code><span>One DAA per (study, comparison, matrix[, group]) with its own rule.</span></li>
+        <li><code>from_master(args, out, extra)</code> · <code>from_run(args, out, extra)</code><span>Build the units from the master spreadsheet, or from a previous run's daa_mapping.tsv files.</span></li>
         <li><code>metaboenrich.__main__.main([...])</code><span>The full steps 1–7, called as a function.</span></li>
       </ul></div>
       <div><div class="label">Packages</div><ul class="pkgs">
@@ -622,6 +630,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
 <footer>
   <span>Written by hand from the code at commit 48786d1 (v0.2.0.dev0). Unlike report.html, it is not regenerated by a build script; update it when modules change.</span>
+  <span>Updated 2026-10-16 for the source/target orientation (decision D20, <code>--sources</code>, commit 98874fc).</span>
   <span>Related: <a href="report.html">report.html</a> · <a href="pruning_atlas.html">pruning_atlas.html</a> · <a href="carbon_atlas.html">carbon_atlas.html</a> · <a href="decisions.md">decisions.md</a></span>
 </footer>
 

@@ -141,7 +141,7 @@ filtering cofactors. Dropping pools and the SCLY edit fix specific structural
 artifacts but do not change this benchmark. Role-based filtering (D3) matches
 removing cofactors everywhere while keeping 30 more metabolites.
 
-### D17. Absorbing random walk: built, kept optional (2026-10-01, Reyna: plainest version, hooks 1–2)
+### D17. Absorbing random walk: built, kept optional (2026-10-01, Reyna: plainest version, hooks 1–2) — orientation-dependent parts superseded by D20
 Direction-respecting alternative to current flow (`--mode walk`,
 `metaboenrich/walk.py`). Walkers start at the sources in proportion to
 |log2FC| (hook 1) and follow reaction directions from the flux bounds. All
@@ -176,6 +176,9 @@ Not adopted as default: it is a methods change to §2.3, the gain comes from
 one benchmark, and the blind predictions (D14) were made with current flow.
 Decide before the next blind round. Not tried: biased steps (hook 3), unchanged
 metabolites as leaks (hook 4), the reverse "activation" orientation.
+Superseded by D20: all walk numbers above, the two loss cases and the 20%
+figure were made with sources = increased. The activation orientation has now
+been tried and is the default.
 
 ### D18. 3-rule pruning (2026-10-02 to 2026-10-06; DM with Claude Code and Claude Science)
 A carbon-based network with no hand-made currency lists, replacing the carbon
@@ -200,12 +203,73 @@ table; without it propionylcarnitine (listed as O-propanoylcarnitine in
 Human-GEM) was missed in methylmalonic acidemia. All 3-rule pruning comparisons
 use it; earlier benchmark numbers (D15–D17) were without it.
 
+### D20. Significant decreases are the sources (2026-10-16, Reyna: the original orientation was backwards)
+New option `--sources {decreased,increased}` on `python -m metaboenrich`, the
+benchmark and `benchmarks/published_predictions.py`; default `decreased`.
+Significant metabolites with log2FC < 0 are the sources and log2FC > 0 the
+targets. A log2FC of exactly 0 gets no role, and phi = |log2FC| is unchanged.
+This departs from protocol §1.3, which makes increases the sources; the
+protocol PDF was not edited. `--sources increased` restores the protocol's
+orientation. `summary.json` and the benchmark's `run_info.json` record
+`"orientation"`; runs without that key used `increased`.
+Reyna judged the original assignment backwards. This is the
+"activation" orientation D17 listed as not tried. One-sided data (D10, rule
+unchanged): with only increases there are now only targets, and the measured,
+unchanged metabolites act as the missing sources.
+Current flow does not change. Swapping sources and targets negates every
+current, all scores use |current|, and the pair weight is symmetric. Checked:
+example DAA genes and reactions identical (max difference 2e-15); group
+benchmark raw and leave-one-out ranks identical for all 21 disorders; patient
+raw ranks identical for all 166 patients, and one leave-one-out rank differs
+at the tail (HEP-GAMT-8: 1,887 vs 1,873 of 2,302, a float tie). Unit tests
+lock this in. Directed mode (`--mode directed`) is not symmetric; no stored
+output used it.
+The absorbing walk changes and is much worse on the inborn-error benchmark
+(rank of the causal gene among 2,302 genes; 20 primary disorders, 159
+patients with a walk rank). Group level, median / top 10 / top 100: walk with
+sources decreased 284 (over the 19 disorders it can score) / 0 / 6; walk with
+sources increased (D17) 48 / 5 / 13; current flow 88.5 / 3 / 11. Patient
+level, median / top 10 / top 100 / top 500: walk decreased 459 / 5.6% /
+18.8% / 51.9%; walk increased 67 / 28.1% / 55.0% / 78.8%; current flow 140
+(145 over the 159) / 5.0% / 46.9% / 78.8%. The walk ranks the causal gene
+above current flow for 28% of patients (was 71%) and in 4 of 20 disorders by
+patient median (was 14); 4 patients have it first (was 25). Median share of
+walkers that reach a target: 1.8% group, 2.1% patient (was 6.6%, 3.8%).
+Partial absorption still changes almost nothing: group medians 284–285 for
+K = 0.5, 1 and 2; patient median 467 at K = 1 vs 459. Largest losses vs
+current flow (group): TMLHE deficiency 4 → 1,172, TYMP deficiency 1 → 212, MCC
+deficiency 23 → 1,649, argininemia 89 → 2,013, PKU 186 → 1,134. Largest
+gains: ABAT 282 → 18, PA 1,187 → 170, ADSL deficiency 362 → 71, MMA
+439 → 106. Isovaleric aciduria can no longer be scored at group level: no
+walker reaches a target (was 64; current flow 17). One of its two patients is
+also unscored.
+A reading, not a test: in an enzyme defect the substrate side usually rises and
+the product side falls. Walkers now start on the product side and must follow
+reaction directions to the increased metabolites, which lie upstream of the
+block, so the faulty enzyme is seldom on a successful route. The D17 loss
+cases read differently. AADC: 3-O-methyldopa is now a target; walk rank 1,502
+(was 1,317; current flow 88), 0.1% of walkers reach a target. Homocystinuria:
+cortisol, the only significant decrease, is now the only source; rank 604
+(was 765; current flow 181), 8.7% reach a target. On the synthetic example
+26.5% of walkers reach a target (was 19.8%) and all 72 pairs are reached (was
+63).
+Reyna kept `decreased` as the default after seeing these results. The blind
+predictions in `predictions/published_v1` stay sealed (D14).
+`predictions/published_v2` holds the same 111 units rebuilt under the new
+orientation from v1's `daa_mapping.tsv` (`--from-run`). All 66 run units keep
+the diagnosed gene's rank; 55 of 66 top-15 gene lists are identical and the
+other 11 reorder only within exact ties.
+Open: test the walk on data where a flux increase is expected (an activated
+pathway); directed mode under the new orientation is untested.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
 - Fold-change magnitude does not enter L x = b (`--pair-weight fc` exists).
 - Directed current (protocol §2.3): no directed Laplacian; the absorbing walk
   (D17) is an experimental alternative. Whether to make it the default is open.
+- Orientation (D20): the walk is much worse with decreases as sources on the
+  inborn-error benchmark; test it on data where a flux increase is expected.
 - Deoxynucleotides as cofactor families; RNA/DNA polymer nodes as carriers
   (likely source of HK1–3, PKM, RAD1/TREX1 recurring hits).
 - Organic acidurias (MMA, PA, GA) rank poorly with every method.

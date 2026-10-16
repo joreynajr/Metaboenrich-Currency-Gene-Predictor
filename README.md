@@ -2,10 +2,11 @@
 
 Kirchhoff–Ohm current-flow analysis of a metabolomics differential abundance
 analysis (DAA) on the [Human-GEM](https://github.com/SysBioChalmers/Human-GEM)
-metabolic network. Significantly increased metabolites act as current
-sources and significantly decreased metabolites as sinks. Reactions,
-metabolites and genes are then ranked by how much current they carry
-(*conductivity*) and how much they constrain it (*bottleneck*).
+metabolic network. Significantly decreased metabolites act as current
+sources and significantly increased metabolites as sinks (`--sources
+increased` swaps them, as in the protocol). Reactions, metabolites and genes
+are then ranked by how much current they carry (*conductivity*) and how much
+they constrain it (*bottleneck*).
 
 This implements the Metaboenrich protocol (Frasketi, Reyna, Montefusco,
 Aug 2026): §1 (undirected) fully, and §2 (directed) as a path filter. Where the
@@ -40,6 +41,7 @@ protocol leaves a choice open, the choice made here is listed under
 | [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
 | [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |
 | [predictions/published_v1/](predictions/published_v1/PREDICTIONS.md) | Sealed blind predictions on published datasets |
+| [predictions/published_v2/](predictions/published_v2/PREDICTIONS.md) | The same units rebuilt with sources = decreased (`python benchmarks/published_predictions.py --from-run predictions/published_v1 --out predictions/published_v2`) |
 
 Rebuild the report with `python tools/report/build_report.py --public` and the
 atlas with `python tools/atlas/build_atlas.py` (see each script's header).
@@ -80,9 +82,14 @@ command line:
 | `--fc-col` | `log2FC` | log2 fold change (add `--fc-linear` if the column is a plain fold change) |
 | `--p-col` | `padj` | p-value, compared with `--alpha` (default 0.05) |
 | `--min-log2fc` | `0` | sources/targets must also have \|log2FC\| ≥ this |
+| `--sources` | `decreased` | which significant metabolites are the sources: `decreased` or `increased` |
 
-Metabolites with p < alpha and log2FC > 0 are **sources**, and those with
-log2FC < 0 are **targets**.
+Metabolites with p < alpha and log2FC < 0 are **sources**, and those with
+log2FC > 0 are **targets**. A log2FC of exactly 0 gets no role. This departs
+from protocol §1.3, where increases are the sources (decision D20,
+2026-10-16). `--sources increased` restores the protocol's orientation
+(see step 4 for what it changes). `summary.json` records the choice under
+`orientation`.
 
 **MetaboAnalyst-style `statistic_analysis.csv`** files hold several
 comparisons. Pick one comparison with `--fc-col` and `--p-col`:
@@ -95,7 +102,7 @@ comparisons. Pick one comparison with `--fc-col` and `--p-col`:
 ```
 
 In those files `Fold_Change(A vs B)` is B / A, so sources are metabolites
-higher in B. For multi-group designs, use the Tukey HSD p-values; the t-test
+lower in B. For multi-group designs, use the Tukey HSD p-values; the t-test
 p-values are not corrected for multiple comparisons.
 
 ### Common options
@@ -167,7 +174,7 @@ attribute before reading direction into them. Useful mappings in the
 
 | visual property | column | mapping |
 |---|---|---|
-| Node fill colour | `role` | discrete: source = red, target = blue, reaction = grey, intermediate = white |
+| Node fill colour | `role` | discrete: source = blue, target = red, reaction = grey, intermediate = white (red = increased; swap the two after `--sources increased`) |
 | Node shape | `type` | discrete: metabolite = ellipse, reaction = rectangle |
 | Node size | `final_score` | continuous, e.g. 20 → 80 |
 | Node label | `label` (metabolites) or `genes` (reactions) | passthrough |
@@ -279,8 +286,11 @@ release URL and verified by hash.
    metabolites are listed in `excluded_pairs.tsv`.
 
 4. **Sources and targets (§1.2–1.3).** Significant DAA metabolites with
-   log2FC > 0 are sources and those with log2FC < 0 are targets. φ =
-   |log2FC| is recorded.
+   log2FC < 0 are sources and those with log2FC > 0 are targets. φ =
+   |log2FC| is recorded. Protocol §1.3 has it the other way round, and
+   `--sources increased` follows it (D20). Swapping sources and targets
+   negates every current, and every score uses |current|, so current-flow
+   results don't depend on this choice. Directed mode and the walk do.
 
 5. **Current flow (§1.4).** For every pair (s, t), solve L x = b with
    b_s = +1 and b_t = −1. Instead of forming the pseudoinverse, each
@@ -316,7 +326,13 @@ release URL and verified by hash.
    its walkers reach a target; for a target, the share of walkers it absorbs.
    Leave-one-out scoring isn't available. Directed cycles can circulate
    walkers, so throughput can exceed 1. See D17 in
-   [docs/decisions.md](docs/decisions.md) for the benchmark.
+   [docs/decisions.md](docs/decisions.md) for the benchmark. D17 was run
+   with sources = increased. Under the default `--sources decreased` the walk
+   does much worse on the inborn-error benchmark: over the 20 primary
+   disorders the causal gene's median group rank is 284 of 2,302 (48 with
+   sources = increased, 88.5 for current flow). A likely reason, not tested:
+   walkers now start on the product side of the enzyme block. See
+   D20 and [docs/rw_report.html](docs/rw_report.html).
 
 ## Decisions still open
 
@@ -361,8 +377,10 @@ These are placeholders for the three of us to settle, not settled methodology:
   HMDB id, and drugs, food compounds and predicted HMDB entries have no
   reactions. Check `daa_unmapped.tsv`.
 - **Dead ends.** Some metabolites are only produced or only consumed in
-  Human-GEM, e.g. (R)-2-hydroxyglutarate, so directed mode excludes all of
-  their pairs.
+  Human-GEM. Directed mode excludes all pairs of an only-produced source or
+  an only-consumed target. (R)-2-hydroxyglutarate is only produced, so its
+  pairs are all excluded when it is decreased (or, with `--sources
+  increased`, when it is increased).
 - **No statistics on scores yet**, e.g. permutation of DAA labels.
 
 ## Development
