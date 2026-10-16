@@ -261,7 +261,8 @@ def main(argv=None):
             print("  note: one-sided mode needs undirected flow; running without it")
         else:
             ground = on[on.role == ""].node.tolist()
-            side = f"sources ({args.sources})" if sources else                 f"targets ({'increased' if args.sources == 'decreased' else 'decreased'})"
+            other = "increased" if args.sources == "decreased" else "decreased"
+            side = f"sources ({args.sources})" if sources else f"targets ({other})"
             print(f"One-sided: only {side} are significant; {'walkers are' if walk else 'current is'} "
                   f"exchanged with {len(ground)} measured, unchanged metabolites (the ground)")
     if walk:

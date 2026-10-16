@@ -20,7 +20,9 @@ Units and significance rules (fixed before any results were seen):
                 one subject: |z| >= 2
   Alaimo 2020   one unit per patient (each has a different disorder), |z| >= 2
 
-    python benchmarks/published_predictions.py --out predictions/published_v1
+    python benchmarks/published_predictions.py --out predictions/published_v1 --sources increased
+
+(v1 was made before D20, when the increased metabolites were the sources.)
 
 Rebuild a previous run's units from their saved daa_mapping.tsv (the same
 mapped metabolites, log2FC and p, and the unit's significance rule), e.g.
@@ -256,11 +258,13 @@ def main():
                     help="rebuild the units of a previous run from their daa_mapping.tsv instead of reading --master")
     ap.add_argument("--sources", choices=["decreased", "increased"], default="decreased",
                     help="which significant metabolites act as sources (default: %(default)s; D20)")
-    ap.add_argument("--out", default="predictions/published_v1")
+    ap.add_argument("--out", required=True, help="new folder for this run; an existing run is never overwritten")
     args = ap.parse_args()
     out = Path(args.out)
     if args.from_run and Path(args.from_run).resolve() == out.resolve():
         raise SystemExit("--out must differ from --from-run")
+    if (out / "units.tsv").exists():
+        raise SystemExit(f"{out} already holds a run (units.tsv); sealed predictions are never overwritten (D14). Use a new --out.")
     out.mkdir(parents=True, exist_ok=True)
     extra = ["--sources", args.sources]
     rows, how = from_run(args, out, extra) if args.from_run else from_master(args, out, extra)

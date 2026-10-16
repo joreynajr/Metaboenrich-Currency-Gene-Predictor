@@ -118,7 +118,7 @@ def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5,
              source injects one unit that is withdrawn evenly across the ground
              nodes in its component (b = e_s - mean of e_g); with no sources,
              each target draws one unit supplied evenly by the ground. Ground
-             nodes are sinks, so their own throughput is not scored.
+             nodes are endpoints (sinks with only sources, sources with only targets), so their own throughput is not scored.
     """
     ground = [g for g in (ground or []) if g not in set(sources) | set(targets)]
     if ground and directed:
@@ -180,7 +180,7 @@ def current_flow(graph, sources, targets, weights=None, directed=False, tau=0.5,
             T[s_idx[real_s], k[real_s]] = 0.0             # endpoints trivially carry all current
             T[t_idx[real_t], k[real_t]] = 0.0
             if ground:
-                T[ground_idx, :] = 0.0                    # ground nodes are sinks
+                T[ground_idx, :] = 0.0                    # ground nodes are endpoints, not scored
             wt = lambda v: weights.get(v, 0.0) if v != GROUND else None
             w = (np.array([np.nanmean([x for x in (wt(s), wt(t)) if x is not None]) for s, t in block])
                  if weights else np.ones(len(block)))
