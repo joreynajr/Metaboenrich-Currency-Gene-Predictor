@@ -77,8 +77,9 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 <section>
   <h2>1. What the tool does</h2>
   <div class="prose">
-    <p>Following the protocol (§1), Human-GEM becomes a network of metabolite and reaction nodes. Significantly
-    increased metabolites are current sources and significantly decreased ones are sinks. For every
+    <p>Following the protocol (§1), Human-GEM becomes a network of metabolite and reaction nodes. Significant
+    metabolites become current sources and sinks: since D20 the decreased ones are sources and the increased ones sinks
+    (the protocol's §1.3 has it the other way round; for current flow the results are the same either way). For every
     source–sink pair the tool solves Kirchhoff's and Ohm's laws on the network, then scores each reaction by how
     much of the current it carries (<i>conductivity</i>) and how much it constrains it (<i>bottleneck</i>).
     Genes take the best score of their reactions. Outputs: ranked genes, reactions, pathways and transporters,
