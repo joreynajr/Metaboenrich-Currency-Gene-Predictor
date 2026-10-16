@@ -45,6 +45,8 @@ SRC = ORIENT                                              # "decreased" or "incr
 TGT = "increased" if ORIENT == "decreased" else "decreased"
 PATIENT = ROOT / "results" / "bench_rw_p"
 KAPPAS = ["0.5", "1", "2"]
+# Runs under the other orientation, for the comparison section (skipped if absent).
+COMPARE = ROOT / "results" / "_increased_2026-10-01"
 RANK = "rank_metaboenrich_raw"
 
 
@@ -112,6 +114,16 @@ def load():
     pat["walk"], pat["k1"] = p["walk"][RANK], p["1"][RANK]
     pat["success"] = p["walk"].walk_success_fraction
     return grp, pat, int(grp.universe.iloc[0])
+
+
+def load_compare(base):
+    """Walk and flow ranks from runs under another orientation, or None."""
+    try:
+        g = {c: pd.read_csv(base / "bench_rw" / c / "group_results.tsv", sep="\t") for c in ("flow", "walk_full")}
+        p = {c: pd.read_csv(base / "bench_rw_p" / c / "patient_results.tsv", sep="\t") for c in ("flow", "walk_full")}
+    except FileNotFoundError:
+        return None
+    return {"orient": sources_are(base / "bench_rw" / "walk_full"), "g": g, "p": p}
 
 
 def git_label():
@@ -224,17 +236,19 @@ def dumbbell_chart(grp, U):
     parts = [x_ticks(x0, w, U, top, top + row_h * len(rows), top + row_h * len(rows) + 18)]
     for i, (_, r) in enumerate(rows.iterrows()):
         yc = top + row_h * i + row_h / 2
-        xf, xw = log_x(r.flow, x0, w, U), log_x(r.walk, x0, w, U)
+        scored = not math.isnan(r.walk)                 # no walker reached a target: no walk rank
+        xf = log_x(r.flow, x0, w, U)
+        xw = log_x(r.walk, x0, w, U) if scored else xf
         name = r.disorder if len(r.disorder) <= 40 else r.disorder[:38] + "…"
         tip = (f"<b>{esc(r.disorder)}</b><br>causal: {esc(r.causal_in_network)}<br>current flow rank {fr(r.flow)}"
-               f"<br>walk rank {fr(r.walk)}<br>neighbour baseline {fr(r.nb)}<br>"
+               f"<br>walk rank {fr(r.walk) if scored else 'none (no walker reached a target)'}<br>neighbour baseline {fr(r.nb)}<br>"
                f"{int(r.up)} increased, {int(r.down)} decreased; {pct(r.success, 1)} of walkers reach a target")
         parts.append(f'<g class="row" data-tip="{esc(tip)}">'
                      f'<rect class="row-bg" x="0" y="{yc - row_h / 2:.1f}" width="{W}" height="{row_h}"/>'
                      f'<text class="row-label" x="{lab_w}" y="{yc + 4:.1f}" text-anchor="end">{esc(name)}</text>'
                      f'<line class="span" x1="{min(xf, xw):.1f}" x2="{max(xf, xw):.1f}" y1="{yc:.1f}" y2="{yc:.1f}"/>'
                      f'<circle class="m-flow" cx="{xf:.1f}" cy="{yc:.1f}" r="5.5"/>'
-                     f'<circle class="m-walk" cx="{xw:.1f}" cy="{yc:.1f}" r="5.5"/>'
+                     + (f'<circle class="m-walk" cx="{xw:.1f}" cy="{yc:.1f}" r="5.5"/>' if scored else "") +
                      f'<text class="row-value" x="{x0 + w + 16}" y="{yc + 4:.1f}">{fr(r.flow)} → {fr(r.walk)}</text>'
                      f'</g>')
     parts.append(f'<text class="axis-label" x="{x0 + w / 2}" y="{H - 6}" text-anchor="middle">'
@@ -407,7 +421,42 @@ def build(out):
                  for _, r in losses.iterrows()]
     sec = grp_all[grp_all.status == "secondary"]
     sec_note = "; ".join(f"{esc(r.disorder)}: {fr(r.flow)} → {fr(r.walk)}" for _, r in sec.iterrows())
-    corr = float(np.corrcoef(np.log10(grp.success.clip(lower=1e-4)), np.log10(grp.flow / grp.walk))[0, 1])
+    ok_g = grp.dropna(subset=["walk"])
+    corr = float(np.corrcoef(np.log10(ok_g.success.clip(lower=1e-4)), np.log10(ok_g.flow / ok_g.walk))[0, 1])
+    kappa_shift = fr(max(abs(grp[f"k{k}"].median() - gm_w) for k in KAPPAS))
+    unscored = grp[grp.walk.isna()]
+    one_sided = grp[(grp.up == 0) | (grp.down == 0)]
+
+    cmp = load_compare(COMPARE) if COMPARE.exists() else None
+    cmp_bullet, cmp_html = "", ""
+    if cmp and cmp["orient"] != ORIENT:
+        cg = cmp["g"]["walk_full"][cmp["g"]["walk_full"].status == "primary"][RANK]
+        cpat = cmp["p"]["walk_full"][cmp["p"]["walk_full"].status == "primary"][RANK].dropna()
+        other = cmp["orient"]
+        cmp_bullet = (f"<li>With the other orientation (sources = {other}, the protocol's §1.3) the same walk had a group median of "
+                      f"{fr(cg.median())} and put {pct(top(cpat, 10))} of patients' causal genes in the top 10 "
+                      f"(see <a href=\"#orientation\">orientation</a>).</li>")
+        cur_pat = pat_p.walk.dropna()
+        rows_o = [[f"walk, sources = {ORIENT} (this report)", fr(gm_w), int((grp.walk <= 10).sum()), int((grp.walk <= 100).sum()),
+                   fr(cur_pat.median()), pct(top(cur_pat, 10)), pct(top(cur_pat, 100))],
+                  [f"walk, sources = {other}", fr(cg.median()), int((cg <= 10).sum()), int((cg <= 100).sum()),
+                   fr(cpat.median()), pct(top(cpat, 10)), pct(top(cpat, 100))],
+                  ["<i>current flow (either orientation)</i>", fr(gm_f), int((grp.flow <= 10).sum()), int((grp.flow <= 100).sum()),
+                   fr(pm_f), pct(top(pat.flow, 10)), pct(top(pat.flow, 100))]]
+        by_dis = pd.DataFrame({"disorder": grp.disorder.values, "flow": grp.flow.values, "now": grp.walk.values,
+                               "other": cmp["g"]["walk_full"].set_index("case").loc[grp.case, RANK].values})
+        dis_rows = [[esc(r.disorder), fr(r.flow), fr(r.other), fr(r.now)] for r in by_dis.sort_values("now").itertuples()]
+        cmp_html = f"""
+<section id="orientation">
+  <h2>Orientation: which metabolites the walkers start from</h2>
+  <p class="prose">Current flow is symmetric: swapping sources and targets only reverses the current, so its ranks are identical
+  under both orientations (checked on every disorder and patient). The walk follows reaction directions, so the orientation
+  matters. Same network, data and settings; only the role of the significant metabolites differs.</p>
+  {table(["Method", "Group median", "Group top 10", "Group top 100", "Patient median", "Patients top 10", "Patients top 100"],
+         rows_o, num=(1, 2, 3, 4, 5, 6))}
+  {table(["Disorder", "Current flow", f"Walk, sources = {other}", f"Walk, sources = {ORIENT}"], dis_rows, num=(1, 2, 3))}
+  <p class="small">The comparison runs are in <code>{esc(COMPARE.relative_to(ROOT).as_posix())}/</code>.</p>
+</section>"""
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -425,13 +474,17 @@ def build(out):
 
 <section class="summary">
   <ul>
+    <li>Sources are the significantly <b>{SRC}</b> metabolites and targets the significantly <b>{TGT}</b> ones (decision
+      D20). Current flow gives the same ranks either way; the walk does not.</li>
     <li>Across {len(pat)} patients, the walk puts the causal gene in the top 10 for {pct(top(pat.walk, 10))} of them,
-      against {pct(top(pat.flow, 10))} for current flow. The median rank halves, from {fr(pm_f)} to {fr(pm_w)} of {U:,} genes.</li>
-    <li>It ranks the causal gene higher than current flow for {pct(better)} of patients and in {dis_better} of
-      {len(per)} disorders. Largest group-level gains: {best}.</li>
-    <li>It loses badly in two disorders: {', '.join(f'{esc(r.disorder)} ({fr(r.flow)} → {fr(r.walk)})' for _, r in losses.head(2).iterrows())}.
-      Both have a recognisable cause (see <a href="#losses">where the walk loses</a>).</li>
-    <li>Partial absorption (hook 2, κ) changes almost nothing. Full absorption stays the default.</li>
+      against {pct(top(pat.flow, 10))} for current flow. Median rank: {fr(pm_f)} for current flow, {fr(pm_w)} for the walk,
+      of {U:,} genes.</li>
+    <li>The walk ranks the causal gene higher than current flow for {pct(better)} of patients and in {dis_better} of
+      {len(per)} disorders. Largest group-level gains: {best or "none"}.</li>
+    <li>Largest group-level losses: {', '.join(f'{esc(r.disorder)} ({fr(r.flow)} → {fr(r.walk)})' for _, r in losses.head(3).iterrows()) or "none"}
+      (see <a href="#losses">where the walk loses</a>).</li>
+    {cmp_bullet}
+    <li>Partial absorption (hook 2, κ) moves the group median by at most {kappa_shift} rank{'' if kappa_shift == '1' else 's'}. Full absorption stays the default.</li>
   </ul>
 </section>
 
@@ -509,23 +562,26 @@ def build(out):
   <h2>Where the walk loses</h2>
   {table(["Disorder", "Current flow", "Walk", "Up", "Down", "Walkers reaching a target"], loss_rows, num=(1, 2, 3, 4, 5))}
   <div class="prose">
-    <p><b>Aromatic L-amino acid decarboxylase deficiency: shunt products point away from the block.</b> The strongest increase is
-    3-O-methyldopa, which COMT makes from L-DOPA, the substrate DDC can't process. L-DOPA itself isn't among the significant
-    metabolites. COMT runs one way, so walkers starting at 3-O-methyldopa can never get back to L-DOPA and then through DDC.
-    Current flow ignores direction and uses exactly that route. Any disorder whose clearest signal is a shunt product will hit the same wall.</p>
-    <p><b>Homocystinuria: no informative sink.</b> The only significant decrease is cortisol, which is unrelated to CBS, so
-    walkers have nowhere meaningful to go. Few of them reach it.</p>
-    <p class="small">These explanations come from inspecting the two runs, not from a general test. Across the {len(grp)} disorders, the
-    share of walkers that reach a target doesn't predict the gain or loss (correlation of log shares {corr:+.2f}): MSUD gains most with
-    under 5% success.</p>
+    <p><b>Direction against the block.</b> In an enzyme deficiency the substrate side usually rises and the product side falls.
+    With sources = {SRC} metabolites, walkers start on the {"product" if SRC == "decreased" else "substrate"} side and must follow
+    reaction directions to the {TGT} ones{", which lie upstream of the block, so the faulty enzyme is seldom on a successful route" if SRC == "decreased" else ", which takes them through the faulty enzyme"}.
+    Current flow ignores direction, which is why its ranks do not depend on the orientation.</p>
+    <p><b>One-sided disorders.</b> {len(one_sided)} disorders have significant changes in one direction only
+    ({esc(", ".join(f"{r.disorder} ({fr(r.flow)} → {fr(r.walk)})" for _, r in one_sided.iterrows())) or "none"}). There the measured,
+    unchanged metabolites stand in for the missing side.</p>
+    {f'<p><b>Not scored.</b> No walker reaches a target in {esc(", ".join(unscored.disorder))}, so the walk gives no ranking there.</p>' if len(unscored) else ""}
+    <p class="small">These are readings of the runs, not a general test. Across the {len(ok_g)} scored disorders, the share of walkers
+    that reach a target doesn't predict the gain or loss well (correlation of log shares {corr:+.2f}).</p>
   </div>
 </section>
+
+{cmp_html}
 
 <section>
   <h2>Caveats</h2>
   <ul class="prose">
     <li>One benchmark, {len(grp)} disorders, {len(pat)} patients, all plasma. The settings were not tuned on it, but the walk was
-      designed after seeing current flow's results on the same data, so treat the gain as promising, not established.</li>
+      designed after seeing current flow's results on the same data, so treat any difference as provisional.</li>
     <li>The walk depends on Human-GEM's reversibility labels (from flux bounds). Wrong labels block or open routes.</li>
     <li>Leave-one-out scoring isn't defined for the walk; all comparisons here use raw scoring for both methods.</li>
     <li>The sealed blind predictions were made with current flow. Whether the walk becomes the default should be decided before the
@@ -535,7 +591,7 @@ def build(out):
 
 <footer>
   <span>Built by <code>tools/report/build_rw_report.py</code> from <code>results/bench_rw/</code> and <code>results/bench_rw_p/</code>.
-  Method: <code>metaboenrich/walk.py</code>; decision log entry D17.</span>
+  Method: <code>metaboenrich/walk.py</code>; decision log entries D17 and D20.</span>
 </footer>
 </main>
 <div class="tip" id="tip" hidden></div>
