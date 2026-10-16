@@ -479,7 +479,7 @@ def build(out):
     <li>Across {len(pat)} patients, the walk puts the causal gene in the top 10 for {pct(top(pat.walk, 10))} of them,
       against {pct(top(pat.flow, 10))} for current flow. Median rank: {fr(pm_f)} for current flow, {fr(pm_w)} for the walk,
       of {U:,} genes.</li>
-    <li>The walk ranks the causal gene higher than current flow for {pct(better)} of patients and in {dis_better} of
+    <li>The walk ranks the causal gene higher than current flow for {pct(better)} of patients and, by each disorder's median patient rank, in {dis_better} of
       {len(per)} disorders. Largest group-level gains: {best or "none"}.</li>
     <li>Largest group-level losses: {', '.join(f'{esc(r.disorder)} ({fr(r.flow)} → {fr(r.walk)})' for _, r in losses.head(3).iterrows()) or "none"}
       (see <a href="#losses">where the walk loses</a>).</li>
@@ -516,8 +516,9 @@ def build(out):
       <span><i class="sw-line"></i>Neighbour baseline</span></div>
     {recall_svg}
     <figcaption>Each line shows, for every cut-off k, the share of the {len(pat)} primary patients whose causal gene is within the top k.
-    Higher and further left is better. The walk's lead is at the top of the list; by the top 500 the two methods are level
-    ({pct(top(pat.walk, 500), 1)} vs {pct(top(pat.flow, 500), 1)}). The baseline's late jump is a tie: genes touched by no
+    Higher and further left is better. Within the top 10 the walk has {pct(top(pat.walk, 10), 1)} and current flow
+    {pct(top(pat.flow, 10), 1)}; within the top 100, {pct(top(pat.walk, 100), 1)} and {pct(top(pat.flow, 100), 1)}; within the
+    top 500, {pct(top(pat.walk, 500), 1)} and {pct(top(pat.flow, 500), 1)}. The baseline's late jump is a tie: genes touched by no
     significant metabolite all share the average of the remaining ranks. Hover for exact values.</figcaption>
   </figure>
   {table(["Cut-off", "Neighbour baseline", "Current flow", "Absorbing walk", "Walk, κ = 1"], recall_rows, num=(1, 2, 3, 4))}
