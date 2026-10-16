@@ -90,7 +90,9 @@ metabolite has transporters and they would crowd enzymes out of the top.
 ### D12. Benchmark: inborn errors with polar signatures (2026-09-29, DM: hard data only)
 Plasma z-scores from Miller et al. 2015 and Thistlethwaite et al. 2020
 (Baylor), via the CTD package on CRAN. Causal genes are standard assignments
-for each diagnosis. Excluded: Zellweger spectrum and RCDP (lipid), MCAD and
+for each diagnosis; sources (OMIM phenotype entries, GeneReviews chapters)
+were added to `benchmarks/cases.tsv` on 2026-10-16 and confirm every gene
+(TMLHE deficiency has no OMIM phenotype entry). Excluded: Zellweger spectrum and RCDP (lipid), MCAD and
 VLCAD (fatty-acid oxidation), lysinuric protein intolerance (transporter;
 now testable via D11). Cobalamin defects kept as secondary (many genes).
 Baseline: rank each enzyme by significant metabolites its reactions touch.

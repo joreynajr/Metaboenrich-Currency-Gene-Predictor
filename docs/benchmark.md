@@ -28,6 +28,15 @@ and their causal genes (standard assignments per diagnosis), one secondary
 (Zellweger spectrum and RCDP: lipid; MCAD and VLCAD: fatty-acid oxidation;
 lysinuric protein intolerance: transporter).
 
+Sources (added 2026-10-16): the gene assignments were first made without a
+recorded source. Each row now cites its OMIM phenotype entries
+(`omim_phenotype`) and GeneReviews chapter (`genereviews`, NBK accession and
+PMID; 20 of 26 have one), retrieved through NCBI E-utilities and Europe PMC.
+Every gene in `causal_genes` matches its OMIM phenotype entry, except TMLHE
+deficiency, which has no OMIM phenotype entry. `source_check` notes where OMIM
+lists further genes that the table leaves out (MSUD: DLD, PPM1K; isolated MMA:
+MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
+
 ## Method
 
 - **Group level**: all patients with a disorder. Mean z per metabolite; z-test

@@ -1,27 +1,27 @@
-case_id	disorder	dataset	cohort	causal_genes	category	status	note
-pku	Phenylketonuria	t2020	pku	PAH	amino acid	primary
-msud	Maple syrup urine disease	t2020	msud	BCKDHA;BCKDHB;DBT	amino acid	primary	BCKD complex subunits
-abat	GABA-transaminase deficiency	t2020	abat	ABAT	amino acid / neurotransmitter	primary
-aadc	Aromatic L-amino acid decarboxylase deficiency	t2020	aadc	DDC	amino acid / neurotransmitter	primary
-gamt	GAMT deficiency	t2020	gamt	GAMT	creatine synthesis	primary
-otc	Ornithine transcarbamylase deficiency	t2020	otc	OTC	urea cycle	primary
-cit	Citrullinemia type I	t2020	cit	ASS1	urea cycle	primary
-asld	Argininosuccinic aciduria	t2020	asld	ASL	urea cycle	primary
-arg	Argininemia	t2020	arg	ARG1	urea cycle	primary
-mma	Methylmalonic aciduria	t2020	mma	MMUT;MMAA;MMAB	organic acid	primary	isolated MMA: mutase or its cofactor-loading genes
-pa	Propionic aciduria	t2020	pa	PCCA;PCCB	organic acid	primary
-ga	Glutaric aciduria type I	t2020	ga	GCDH	organic acid	primary
-adsl	Adenylosuccinate lyase deficiency	t2020	adsl	ADSL	purine	primary
-mcc	3-Methylcrotonyl-CoA carboxylase deficiency	miller	3-methylcrotonyl CoA carboxylase	MCCC1;MCCC2	organic acid	primary	Miller2015 only
-tmlhe	TMLHE deficiency	miller	Trimethyllysine hydroxylase epsilon	TMLHE	carnitine synthesis	primary	Miller2015 only
-hmgcl	HMG-CoA lyase deficiency	miller	3-OH-3methylglutaryl (HMG) CoA lyase	HMGCL	organic acid	primary	Miller2015 only; 2 patients
-hcu	Homocystinuria	miller	Homocystinuria	CBS	amino acid	primary	Miller2015 only; 2 patients; classical (CBS) form assumed
-iva	Isovaleric aciduria	miller	Isovaleric aciduria	IVD	organic acid	primary	Miller2015 only; 2 patients
-tp	Thymidine phosphorylase deficiency	miller	Thymidine Phosphorylase	TYMP	pyrimidine	primary	Miller2015 only; 2 patients
-hlcs	Holocarboxylase synthetase deficiency	miller	Holocarboxylase	HLCS	organic acid	primary	Miller2015 only; 1 patient
-cob	Cobalamin biosynthesis defects	t2020	cob	MMACHC;MMADHC;MMAA;MMAB;MTR;MTRR;LMBRD1;ABCD4	organic acid	secondary	subtype not given; many possible genes
-zsd	Zellweger spectrum disorder	t2020	zsd	PEX1	peroxisomal	excluded	peroxisome biogenesis; mainly lipid signature (out of scope)
-rcdp	Rhizomelic chondrodysplasia punctata	t2020	rcdp	PEX7;GNPAT;AGPS	peroxisomal	excluded	plasmalogen (lipid) signature (out of scope)
-mcad	MCAD deficiency	miller	Medium chain acyl-CoA dehydrogenase	ACADM	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)
-vlcad	VLCAD deficiency	miller	Very-long chain acyl-CoA dehydrogenase	ACADVL	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)
-lpi	Lysinuric protein intolerance	miller	Lysinuric protein intolerance	SLC7A7	transport	excluded	transporter defect; the network drops transport reactions
+case_id	disorder	dataset	cohort	causal_genes	category	status	note	omim_phenotype	genereviews	source_check
+pku	Phenylketonuria	t2020	pku	PAH	amino acid	primary		261600	NBK1504 (PMID 20301677)	matches OMIM and GeneReviews
+msud	Maple syrup urine disease	t2020	msud	BCKDHA;BCKDHB;DBT	amino acid	primary	BCKD complex subunits	248600;620698;620699	NBK1319 (PMID 20301495)	matches OMIM MSUD types IA/IB/II; OMIM also has DLD deficiency (246900, E3 subunit) and a mild variant from PPM1K (615135), not included
+abat	GABA-transaminase deficiency	t2020	abat	ABAT	amino acid / neurotransmitter	primary		613163		matches OMIM; no GeneReviews chapter
+aadc	Aromatic L-amino acid decarboxylase deficiency	t2020	aadc	DDC	amino acid / neurotransmitter	primary		608643	NBK595821 (PMID 37824694)	matches OMIM and GeneReviews
+gamt	GAMT deficiency	t2020	gamt	GAMT	creatine synthesis	primary		612736	NBK3794 (PMID 20301745)	matches cerebral creatine deficiency syndrome 2 (GAMT); the GeneReviews chapter covers all three creatine deficiency disorders
+otc	Ornithine transcarbamylase deficiency	t2020	otc	OTC	urea cycle	primary		311250	NBK154378 (PMID 24006547)	matches OMIM and GeneReviews
+cit	Citrullinemia type I	t2020	cit	ASS1	urea cycle	primary		215700	NBK1458 (PMID 20301631)	matches classic citrullinemia (ASS1); citrin deficiency (SLC25A13) is a separate disorder
+asld	Argininosuccinic aciduria	t2020	asld	ASL	urea cycle	primary		207900	NBK51784 (PMID 21290785)	matches OMIM and GeneReviews
+arg	Argininemia	t2020	arg	ARG1	urea cycle	primary		207800	NBK1159 (PMID 20301338)	matches OMIM and GeneReviews
+mma	Methylmalonic aciduria	t2020	mma	MMUT;MMAA;MMAB	organic acid	primary	isolated MMA: mutase or its cofactor-loading genes	251000;251100;251110	NBK1231 (PMID 20301409)	matches isolated MMA mut/cblA/cblB; OMIM also lists isolated MMA from MCEE (251120) and MMADHC (cblD variant 2, 620953), not included
+pa	Propionic aciduria	t2020	pa	PCCA;PCCB	organic acid	primary		606054	NBK92946 (PMID 22593918)	matches OMIM and GeneReviews
+ga	Glutaric aciduria type I	t2020	ga	GCDH	organic acid	primary		231670	NBK546575 (PMID 31536184)	matches OMIM and GeneReviews
+adsl	Adenylosuccinate lyase deficiency	t2020	adsl	ADSL	purine	primary		103050		matches OMIM; no GeneReviews chapter
+mcc	3-Methylcrotonyl-CoA carboxylase deficiency	miller	3-methylcrotonyl CoA carboxylase	MCCC1;MCCC2	organic acid	primary	Miller2015 only	210200;210210		matches OMIM; no GeneReviews chapter
+tmlhe	TMLHE deficiency	miller	Trimethyllysine hydroxylase epsilon	TMLHE	carnitine synthesis	primary	Miller2015 only			no OMIM phenotype entry for TMLHE deficiency: gene entry 300777; the only phenotype entry is autism susceptibility X-linked 6 (300872); no GeneReviews chapter
+hmgcl	HMG-CoA lyase deficiency	miller	3-OH-3methylglutaryl (HMG) CoA lyase	HMGCL	organic acid	primary	Miller2015 only; 2 patients	246450		matches OMIM; no GeneReviews chapter
+hcu	Homocystinuria	miller	Homocystinuria	CBS	amino acid	primary	Miller2015 only; 2 patients; classical (CBS) form assumed	236200	NBK1524 (PMID 20301697)	CBS is the classical form (OMIM 236200); OMIM also has homocystinuria from MTHFR (236250) and cobalamin defects (MTR, MTRR, MMADHC), not included
+iva	Isovaleric aciduria	miller	Isovaleric aciduria	IVD	organic acid	primary	Miller2015 only; 2 patients	243500	NBK601614 (PMID 38484105)	matches OMIM and GeneReviews
+tp	Thymidine phosphorylase deficiency	miller	Thymidine Phosphorylase	TYMP	pyrimidine	primary	Miller2015 only; 2 patients	603041	NBK1179 (PMID 20301358)	matches OMIM and GeneReviews
+hlcs	Holocarboxylase synthetase deficiency	miller	Holocarboxylase	HLCS	organic acid	primary	Miller2015 only; 1 patient	253270		matches OMIM; no GeneReviews chapter
+cob	Cobalamin biosynthesis defects	t2020	cob	MMACHC;MMADHC;MMAA;MMAB;MTR;MTRR;LMBRD1;ABCD4	organic acid	secondary	subtype not given; many possible genes	277400;277410;277380;614857;236270;250940;251100;251110	NBK1328 (PMID 20301503)	union of intracellular cobalamin defects: cblC/D/F/J (combined MMA+HCU), cblE/G (HCU), cblA/B (isolated MMA); OMIM also has cblX (HCFC1, 309541) and cblL (THAP11, 620940), not included
+zsd	Zellweger spectrum disorder	t2020	zsd	PEX1	peroxisomal	excluded	peroxisome biogenesis; mainly lipid signature (out of scope)	214100	NBK1448 (PMID 20301621)	PEX1 is the most common cause; OMIM lists 12 more PEX genes for Zellweger spectrum (peroxisome biogenesis disorders), not included (case excluded)
+rcdp	Rhizomelic chondrodysplasia punctata	t2020	rcdp	PEX7;GNPAT;AGPS	peroxisomal	excluded	plasmalogen (lipid) signature (out of scope)	215100;222765;600121	NBK1270 (PMID 20301447)	matches RCDP types 1-3; OMIM also has type 5 from PEX5 (616716), not included (case excluded)
+mcad	MCAD deficiency	miller	Medium chain acyl-CoA dehydrogenase	ACADM	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)	201450	NBK1424 (PMID 20301597)	matches OMIM and GeneReviews
+vlcad	VLCAD deficiency	miller	Very-long chain acyl-CoA dehydrogenase	ACADVL	fatty-acid oxidation	excluded	acylcarnitine/lipid signature (out of scope)	201475	NBK6816 (PMID 20301763)	matches OMIM and GeneReviews
+lpi	Lysinuric protein intolerance	miller	Lysinuric protein intolerance	SLC7A7	transport	excluded	transporter defect; the network drops transport reactions	222700	NBK1361 (PMID 20301535)	matches OMIM and GeneReviews
