@@ -16,7 +16,7 @@ The targets absorb walkers. The DAA enters in two places:
   phi_s = |log2FC_s|
 * hook 2, partial absorption (optional, kappa): a walker arriving at target t
   is absorbed with probability a_t = 1 - exp(-kappa * phi_t) and otherwise
-  walks on, so a deep drop catches nearly everything and a mild one lets
+  walks on, so a large change catches nearly everything and a mild one lets
   walkers through to targets further along. kappa=None absorbs every walker.
 
 A walker with no way out (a dead end) leaks: it is lost. Scores use only

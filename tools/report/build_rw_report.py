@@ -4,7 +4,8 @@ Every number comes from benchmark result files (results/ is not committed):
     results/bench_rw/<cfg>/group_results.tsv       cfg = flow, walk_full, walk_k0.5, walk_k1, walk_k2
     results/bench_rw_p/<cfg>/patient_results.tsv   cfg = flow, walk_full, walk_k1
 
-Produce them on branch directed-rw with
+Produce them (sources = decreased metabolites by default, D20; add
+--sources increased for the protocol's orientation) with
     python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
     python -m metaboenrich.benchmark --levels group --method walk --out results/bench_rw/walk_full
     python -m metaboenrich.benchmark --levels group --method walk --walk-kappa K --out results/bench_rw/walk_kK
@@ -28,6 +29,20 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 GROUP = ROOT / "results" / "bench_rw"
+
+
+def sources_are(run_dir):
+    """Which significant metabolites a run used as sources (D20); runs made
+    before the option existed used the increased ones."""
+    try:
+        return json.loads((Path(run_dir) / "run_info.json").read_text())["orientation"]["sources"]
+    except (FileNotFoundError, KeyError):
+        return "increased"
+
+
+ORIENT = sources_are(GROUP / "flow")
+SRC = ORIENT                                              # "decreased" or "increased"
+TGT = "increased" if ORIENT == "decreased" else "decreased"
 PATIENT = ROOT / "results" / "bench_rw_p"
 KAPPAS = ["0.5", "1", "2"]
 RANK = "rank_metaboenrich_raw"
@@ -79,7 +94,12 @@ def load():
             assert (df.case.values == d["flow"].case.values).all(), f"row order differs in {k}"
     assert (p["flow"]["sample"].values == p["walk"]["sample"].values).all()
 
+    for name, d in (("bench_rw", GROUP), ("bench_rw_p", PATIENT)):
+        seen = {sources_are(d / c) for c in (["flow", "walk_full"] + [f"walk_k{k}" for k in KAPPAS] if d == GROUP
+                                              else ["flow", "walk_full", "walk_k1"])}
+        assert seen == {ORIENT}, f"{name}: runs use different orientations {seen}"
     grp = g["flow"][["case", "disorder", "status", "causal_in_network", "sources", "targets", "universe"]].copy()
+    grp["up"], grp["down"] = (grp.targets, grp.sources) if ORIENT == "decreased" else (grp.sources, grp.targets)
     grp["nb"] = g["flow"].rank_neighbour
     grp["flow"] = g["flow"][RANK]
     grp["walk"] = g["walk"][RANK]
@@ -208,7 +228,7 @@ def dumbbell_chart(grp, U):
         name = r.disorder if len(r.disorder) <= 40 else r.disorder[:38] + "…"
         tip = (f"<b>{esc(r.disorder)}</b><br>causal: {esc(r.causal_in_network)}<br>current flow rank {fr(r.flow)}"
                f"<br>walk rank {fr(r.walk)}<br>neighbour baseline {fr(r.nb)}<br>"
-               f"{int(r.sources)} up, {int(r.targets)} down; {pct(r.success, 1)} of walkers reach a target")
+               f"{int(r.up)} increased, {int(r.down)} decreased; {pct(r.success, 1)} of walkers reach a target")
         parts.append(f'<g class="row" data-tip="{esc(tip)}">'
                      f'<rect class="row-bg" x="0" y="{yc - row_h / 2:.1f}" width="{W}" height="{row_h}"/>'
                      f'<text class="row-label" x="{lab_w}" y="{yc + 4:.1f}" text-anchor="end">{esc(name)}</text>'
@@ -367,7 +387,7 @@ def build(out):
 
     group_rows = []
     for _, r in grp.sort_values("walk").iterrows():
-        group_rows.append([esc(r.disorder), f"<code>{esc(r.causal_in_network)}</code>", int(r.sources), int(r.targets),
+        group_rows.append([esc(r.disorder), f"<code>{esc(r.causal_in_network)}</code>", int(r.up), int(r.down),
                            fr(r.nb), fr(r.flow), f"{fr(r.walk)} {change(r.flow, r.walk)}", pct(r.success, 1)])
     per_rows = [[esc(r.disorder), r.n, fr(r.flow), f"{fr(r.walk)} {change(r.flow, r.walk)}", pct(r.wins)]
                 for _, r in per.sort_values("walk").iterrows()]
@@ -383,7 +403,7 @@ def build(out):
     kappa_rows.append(["<i>current flow, for reference</i>", fr(gm_f), int((grp.flow <= 100).sum()),
                        int((grp.flow <= 10).sum()), fr(pm_f), pct(top(pat.flow, 10))])
 
-    loss_rows = [[esc(r.disorder), fr(r.flow), fr(r.walk), int(r.sources), int(r.targets), pct(r.success, 1)]
+    loss_rows = [[esc(r.disorder), fr(r.flow), fr(r.walk), int(r.up), int(r.down), pct(r.success, 1)]
                  for _, r in losses.iterrows()]
     sec = grp_all[grp_all.status == "secondary"]
     sec_note = "; ".join(f"{esc(r.disorder)}: {fr(r.flow)} → {fr(r.walk)}" for _, r in sec.iterrows())
@@ -424,9 +444,10 @@ def build(out):
     2020, Miller et al. 2015). Each run goes from the patient's metabolite changes to a ranked gene list. The score is where the
     known causal gene lands among the {U:,} genes on network reactions (1 = top). <b>Group level</b> pools each disorder's
     patients (BH q &lt; 0.05 and |mean z| ≥ 1); <b>patient level</b> runs each patient alone (|z| ≥ 2).</p>
-    <p><b>Current flow</b> is the method used in the sealed blind predictions: Kirchhoff current from every increased to every
-    decreased metabolite on the undirected network, raw scoring. <b>Absorbing walk</b>: walkers start at increased metabolites in
-    proportion to |log2FC|, follow reaction directions, and stop at decreased ones. Reversible reactions are split in two, a
+    <p><b>Current flow</b> is the method used in the sealed blind predictions: Kirchhoff current between every significantly
+    {SRC} metabolite (source) and every significantly {TGT} one (target) on the undirected network, raw scoring; on an undirected
+    network the orientation doesn't change it. <b>Absorbing walk</b>: walkers start at the {SRC} metabolites in
+    proportion to |log2FC|, follow reaction directions, and stop at the {TGT} ones. Reversible reactions are split in two, a
     walker can't undo its last step, dead ends leak, and only walks that reach a target are scored (decision D17).
     <b>Neighbour baseline</b> ranks each enzyme by how many significant metabolites its own reactions touch.</p>
     <p class="small">Same network (3,958 metabolites, 6,377 reactions), same mapping and significance rules for every method;
@@ -478,7 +499,7 @@ def build(out):
 
 <section>
   <h2>Partial absorption (hook 2)</h2>
-  <p class="prose">With κ set, a decreased metabolite absorbs a walker with probability 1 − exp(−κ·|log2FC|) and lets the rest walk on
+  <p class="prose">With κ set, a target ({TGT} metabolite) absorbs a walker with probability 1 − exp(−κ·|log2FC|) and lets the rest walk on
   to targets further along. On this benchmark it barely moves anything, so the simpler full absorption stays the default.</p>
   {table(["Setting", "Group median", "Group top 100", "Group top 10", "Patient median", "Patients in top 10"], kappa_rows,
          num=(1, 2, 3, 4, 5))}

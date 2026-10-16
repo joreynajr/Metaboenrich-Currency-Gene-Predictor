@@ -5,7 +5,7 @@ Two collections:
   1. Inborn-error benchmark (answer key known): plasma z-scores from the CTD R
      package (Thistlethwaite 2020 dataset, Miller 2015), cases in benchmarks/cases.tsv.
   2. Blind published datasets (answer key withheld, decision D14): the analysis
-     units in predictions/published_v1/units.tsv. Only the data description is
+     units in predictions/published_v2/units.tsv. Only the data description is
      used; prediction ranks are left out, and the answer key is never read.
 
 Inputs (data/ and results/ are not committed):
@@ -13,12 +13,13 @@ Inputs (data/ and results/ are not committed):
     benchmarks/cases.tsv
     results/bench_rw/flow/group_results.tsv        python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
     results/bench_rw_p/flow/patient_results.tsv    python -m metaboenrich.benchmark --levels patient --out results/bench_rw_p/flow
-    predictions/published_v1/units.tsv
+    predictions/published_v2/units.tsv
 
     python tools/report/build_testing_data_report.py --out docs/testing_data.html
 """
 import argparse
 import html
+import json
 import re
 import subprocess
 import sys
@@ -34,7 +35,26 @@ from metaboenrich.benchmark import load_miller, load_t2020   # noqa: E402
 
 GROUP = ROOT / "results" / "bench_rw" / "flow" / "group_results.tsv"
 PATIENT = ROOT / "results" / "bench_rw_p" / "flow" / "patient_results.tsv"
-UNITS = ROOT / "predictions" / "published_v1" / "units.tsv"
+UNITS = ROOT / "predictions" / "published_v2" / "units.tsv"
+
+
+def sources_are(run_dir):
+    """Which significant metabolites a run used as sources (D20). Runs made
+    before the option existed used the increased ones."""
+    try:
+        return json.loads((Path(run_dir) / "run_info.json").read_text())["orientation"]["sources"]
+    except (FileNotFoundError, KeyError):
+        return "increased"
+
+
+def up_down(df, orient):
+    """(increased, decreased) count columns of a results table with sources/targets columns."""
+    return (df.targets, df.sources) if orient == "decreased" else (df.sources, df.targets)
+
+
+ORIENT = sources_are(GROUP.parent)
+ROLE_OF = {"decreased": "sources" if ORIENT == "decreased" else "targets",
+           "increased": "targets" if ORIENT == "decreased" else "sources"}
 CASES = ROOT / "benchmarks" / "cases.tsv"
 
 # Thistlethwaite 2020 cohorts that are not disorders.
@@ -113,10 +133,12 @@ def benchmark_data():
                "plasma": anticoagulant(samples) if c.dataset == "t2020" else "heparin (Miller 2015)"}
         if c.case_id in grp.index:
             g = grp.loc[c.case_id]
-            row.update(mapped=g.mapped, sig=g.sig_mapped, up=g.sources, down=g.targets, one_sided=bool(g.one_sided))
+            g_up, g_down = up_down(g, ORIENT)
+            row.update(mapped=g.mapped, sig=g.sig_mapped, up=g_up, down=g_down, one_sided=bool(g.one_sided))
         p = pat[pat.case == c.case_id]
         if len(p):
-            row.update(p_n=len(p), p_up=float(p.sources.median()), p_down=float(p.targets.median()),
+            p_up, p_down = up_down(p, sources_are(PATIENT.parent))
+            row.update(p_n=len(p), p_up=float(p_up.median()), p_down=float(p_down.median()),
                        p_none=int(((p.sources == 0) & (p.targets == 0)).sum()))
         rows.append(row)
     bench = pd.DataFrame(rows)
@@ -195,7 +217,7 @@ def patients_chart(bench):
 
 
 def signal_chart(bench):
-    """Diverging bars: significant metabolites on the network at group level, up (sources) vs down (targets)."""
+    """Diverging bars: significant metabolites on the network at group level, increased vs decreased."""
     b = bench[bench.status != "excluded"].dropna(subset=["up"]).sort_values("up", ascending=False)
     W, mid, bar, gap = 800, 560, 16, 6
     half = 200
@@ -208,8 +230,8 @@ def signal_chart(bench):
         for xx in {mid - s(t), mid + s(t)}:
             out.append(f'<line class="grid" x1="{xx:.1f}" x2="{xx:.1f}" y1="20" y2="{H - 26}"/>'
                        f'<text class="tick" x="{xx:.1f}" y="{H - 10}" text-anchor="middle">{t}</text>')
-    out.append(f'<text class="tick" x="{mid - half / 2:.0f}" y="14" text-anchor="middle">decreased (targets)</text>'
-               f'<text class="tick" x="{mid + half / 2:.0f}" y="14" text-anchor="middle">increased (sources)</text>')
+    out.append(f'<text class="tick" x="{mid - half / 2:.0f}" y="14" text-anchor="middle">decreased ({ROLE_OF["decreased"]})</text>'
+               f'<text class="tick" x="{mid + half / 2:.0f}" y="14" text-anchor="middle">increased ({ROLE_OF["increased"]})</text>')
     y = 24
     for _, r in b.iterrows():
         out.append(f'<text class="lab" x="{mid - half - 10}" y="{y + bar - 4}" text-anchor="end">{esc(r.disorder)}</text>'
@@ -423,7 +445,7 @@ def build(out):
         if is_alaimo:
             ok = g[g.ok]
             unit_rows = [[esc(r.Subject_ID), genes_html(r.gene), fint(r.metabolites), fint(r.mapped),
-                          f"{fint(r.sources)} / {fint(r.targets)}", '<span class="pill ok">run</span>']
+                          f"{fint(r.increased)} / {fint(r.decreased)}", '<span class="pill ok">run</span>']
                          for _, r in ok.sort_values("gene").iterrows()]
             skipped = g[~g.ok]
             skip_genes = ", ".join(sorted({x for x in skipped.gene if x}))
@@ -438,7 +460,7 @@ def build(out):
                 gene = genes_html(r.gene) + (' <span class="added">(added)</span>' if r.gene_added and r.gene else "")
                 unit_rows.append([esc(r.Comparison), esc(r.Disease_Group) or "–", esc(r.Matrix), gene,
                                   fint(r.subjects), fint(r.metabolites), fint(r.mapped),
-                                  f"{fint(r.sources)} / {fint(r.targets)}" if r.ok else "–", status])
+                                  f"{fint(r.increased)} / {fint(r.decreased)}" if r.ok else "–", status])
             unit_html = table(["Comparison", "Disease group", "Matrix", "Gene", "Subjects", "Metabolites", "Mapped",
                                "Up / down", "Status"], unit_rows, num=(4, 5, 6, 7))
         gene_txt = ", ".join(genes[:14]) + (f" and {len(genes) - 14} more" if len(genes) > 14 else "")
@@ -503,7 +525,7 @@ def build(out):
     <p><strong>2. Blind published datasets (answer withheld).</strong> Metabolite tables the lab collected from published
     papers, split into analysis units. Predictions were made and committed before anyone opened the answer key (each
     paper's conclusions and the "Expected tool prediction" sheet; decision D14). This page uses only the data description
-    in <code>predictions/published_v1/units.tsv</code>. It shows no prediction results and reads no answer key.</p>
+    in <code>predictions/published_v2/units.tsv</code>. It shows no prediction results and reads no answer key.</p>
   </div>
 </section>
 
@@ -519,8 +541,8 @@ def build(out):
   <p class="small">{len(prim)} primary disorders with a polar-metabolite signature and one known causal gene (or enzyme complex),
   one secondary (cobalamin defects, many possible genes), and {len(bench[bench.status == 'excluded'])} excluded with the reason given.
   <b>Metabolites tested</b>: measured in at least half of the disorder's patients (at least 2), the group-level rule's
-  requirement. <b>Up / down on network</b>: significant metabolites that map to a network node, increased (sources) and
-  decreased (targets); these drive the analysis.</p>
+  requirement. <b>Up / down on network</b>: significant metabolites that map to a network node, increased ({ROLE_OF["increased"]}) and
+  decreased ({ROLE_OF["decreased"]}); these drive the analysis.</p>
   {disease_table}
   <p class="small">¹ One-sided: only increases are significant, so the analysis exchanges current with the measured,
   unchanged metabolites. Significance at group level: z-test on the mean z, BH q &lt; 0.05 and |mean z| ≥ 1. At patient
@@ -534,8 +556,8 @@ def build(out):
     have 4 patients or fewer, which makes their group-level signal fragile.</figcaption>
   </figure>
   <figure>
-    <div class="legend"><span><i class="sw" style="background:var(--down)"></i>decreased (targets)</span>
-    <span><i class="sw" style="background:var(--up)"></i>increased (sources)</span></div>
+    <div class="legend"><span><i class="sw" style="background:var(--down)"></i>decreased ({ROLE_OF["decreased"]})</span>
+    <span><i class="sw" style="background:var(--up)"></i>increased ({ROLE_OF["increased"]})</span></div>
     <div class="scroll">{signal_chart(bench)}</div>
     <figcaption>Significant metabolites on the network at group level. Disorders with no decreases run one-sided.
     Fewest: {esc(', '.join(f"{r.disorder} ({int(r.up + r.down)})" for _, r in used.dropna(subset=['up']).assign(n=lambda d: d.up + d.down).nsmallest(3, 'n').iterrows()))}.</figcaption>
@@ -590,9 +612,9 @@ def build(out):
 
 <footer>
   <span>Built by <code>tools/report/build_testing_data_report.py</code> from the CTD data, <code>benchmarks/cases.tsv</code>,
-  the current-flow benchmark results and <code>predictions/published_v1/units.tsv</code> ({esc(git_label())}).</span>
+  the current-flow benchmark results and <code>predictions/published_v2/units.tsv</code> ({esc(git_label())}).</span>
   <span>Related: <a href="benchmark.md">benchmark.md</a> · <a href="rw_report.html">rw_report.html</a> ·
-  <a href="decisions.md">decisions.md</a> (D9, D14, D17) · <a href="../predictions/published_v1/PREDICTIONS.md">PREDICTIONS.md</a></span>
+  <a href="decisions.md">decisions.md</a> (D9, D14, D17) · <a href="../predictions/published_v2/PREDICTIONS.md">PREDICTIONS.md</a></span>
 </footer>
 </main>
 """

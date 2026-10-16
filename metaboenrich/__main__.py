@@ -13,7 +13,7 @@ import pandas as pd
 
 from .cytoscape import write_graphml
 from . import __version__
-from .daa import load_daa, load_name_bridge
+from .daa import ORIENTATIONS, load_daa, load_name_bridge
 from .flow import GROUND
 from .flow import current_flow
 from .gem import download_human_gem, load_sbml, load_subsystems
@@ -39,6 +39,10 @@ def parse_args(argv=None):
     p.add_argument("--fc-linear", action="store_true", help="--fc-col holds linear fold change, not log2")
     p.add_argument("--p-col", default="padj", help="p-value column (default: %(default)s)")
     p.add_argument("--alpha", type=float, default=0.05, help="significance cutoff (default: %(default)s)")
+    p.add_argument("--sources", choices=ORIENTATIONS, default="decreased",
+                   help="which significant metabolites act as sources: decreased (default since D20; the "
+                        "increased ones are then the targets) or increased (protocol §1.3, the original "
+                        "enzyme-block reading)")
     p.add_argument("--min-log2fc", type=float, default=0.0,
                    help="sources/targets also need |log2FC| >= this, e.g. 0.585 for 1.5-fold (default: %(default)s)")
     p.add_argument("--mode", choices=["undirected", "directed", "walk"], default="undirected",
@@ -74,8 +78,9 @@ def parse_args(argv=None):
                         "single source or target. Both are always written to reactions.tsv")
     p.add_argument("--no-leave-one-out", action="store_true", help=argparse.SUPPRESS)  # old spelling of --scoring raw
     p.add_argument("--one-sided", choices=["auto", "off"], default="auto",
-                   help="auto: if nothing significant goes down (or up), withdraw (or supply) current evenly "
-                        "through the measured, unchanged metabolites (default: %(default)s)")
+                   help="auto: if there are no significant targets (or sources), the measured, unchanged "
+                        "metabolites take their place: current is withdrawn (or supplied) evenly through "
+                        "them (default: %(default)s)")
     p.add_argument("--id-translation", default=None, metavar="CSV",
                    help="synonym table (KEGG, HMDB, NAME1..NAMEn) used to map metabolites given by name")
     p.add_argument("--subsystems", default="data/Human-GEM.yml",
@@ -184,10 +189,12 @@ def main(argv=None):
 
     bridge = load_name_bridge(args.id_translation) if args.id_translation else None
     daa, unmapped, dupes = load_daa(args.daa, model, args.id_col, args.fc_col, args.p_col,
-                                    args.alpha, args.fc_linear, args.min_log2fc, name_bridge=bridge)
+                                    args.alpha, args.fc_linear, args.min_log2fc, name_bridge=bridge,
+                                    sources=args.sources)
     via = daa.matched_on.str.contains("id_translation|loose").sum()
     print(f"DAA: {len(daa) + len(unmapped)} rows, {len(daa)} mapped ({via} by name lookup), {len(unmapped)} unmapped, "
-          f"{(daa.role == 'source').sum()} sources, {(daa.role == 'target').sum()} targets")
+          f"{(daa.role == 'source').sum()} sources, {(daa.role == 'target').sum()} targets "
+          f"(sources = significantly {args.sources})")
 
     lost = daa[daa.met_id.isin(rules.removed) & (daa.role != "")]
     if len(lost):
@@ -254,7 +261,7 @@ def main(argv=None):
             print("  note: one-sided mode needs undirected flow; running without it")
         else:
             ground = on[on.role == ""].node.tolist()
-            side = "sources" if sources else "targets"
+            side = f"sources ({args.sources})" if sources else                 f"targets ({'increased' if args.sources == 'decreased' else 'decreased'})"
             print(f"One-sided: only {side} are significant; {'walkers are' if walk else 'current is'} "
                   f"exchanged with {len(ground)} measured, unchanged metabolites (the ground)")
     if walk:
@@ -345,6 +352,7 @@ def main(argv=None):
         # sha256 of the sorted edge list; equals network/network_info.json's
         # edges_sha256 when the run used the locked network
         "network_edges_sha256": hashlib.sha256(edge_list.encode()).hexdigest(),
+        "orientation": {"sources": args.sources},
         "scoring": "leave-one-out" if use_loo else "raw", "one_sided": bool(ground),
         "id_translation": str(args.id_translation or ""),
         "atom_pairs": str(args.atom_pairs or ""),

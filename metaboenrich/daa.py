@@ -1,9 +1,15 @@
 """Load a differential abundance analysis (DAA) table and map it onto model
-metabolites (protocol §1.2-1.3)."""
+metabolites (protocol §1.2-1.3).
+
+Orientation (D20): by default the significantly *decreased* metabolites are
+the sources and the significantly *increased* ones the targets. The protocol
+(§1.3) defines it the other way round; `sources="increased"` restores that."""
 import re
 
 import numpy as np
 import pandas as pd
+
+ORIENTATIONS = ("decreased", "increased")   # which significant metabolites act as sources
 
 
 def _norm_hmdb(x):
@@ -109,11 +115,17 @@ def load_name_bridge(path):
 
 
 def load_daa(path, model, id_cols, fc_col, p_col, alpha, fc_is_linear=False, min_abs_log2fc=0.0,
-             name_bridge=None):
+             name_bridge=None, sources="decreased"):
     """id_cols: identifier columns tried in order (e.g. HMDB, then KEGG, then
     name); the first that maps to a model metabolite wins. Rows still unmapped
     are then looked up by name in `name_bridge` (see load_name_bridge), whose
-    KEGG/HMDB ids are mapped in turn. `path` may also be a DataFrame."""
+    KEGG/HMDB ids are mapped in turn. `path` may also be a DataFrame.
+
+    sources: "decreased" (default) makes significant metabolites with
+    log2FC < 0 the sources and log2FC > 0 the targets; "increased" swaps them
+    (protocol §1.3). A log2FC of exactly 0 gets no role."""
+    if sources not in ORIENTATIONS:
+        raise ValueError(f"sources must be one of {ORIENTATIONS}, not {sources!r}")
     if isinstance(id_cols, str):
         id_cols = [id_cols]
     if isinstance(path, pd.DataFrame):
@@ -169,6 +181,7 @@ def load_daa(path, model, id_cols, fc_col, p_col, alpha, fc_is_linear=False, min
 
     df["phi"] = df["log2fc"].abs()                     # §1.2 initial voltage
     df["significant"] = (df["p"] < alpha) & (df["log2fc"].abs() >= min_abs_log2fc)
-    df["role"] = np.where(~df["significant"], "",
-                          np.where(df["log2fc"] > 0, "source", np.where(df["log2fc"] < 0, "target", "")))
+    up, down = df["log2fc"] > 0, df["log2fc"] < 0
+    src, tgt = (down, up) if sources == "decreased" else (up, down)
+    df["role"] = np.where(~df["significant"], "", np.where(src, "source", np.where(tgt, "target", "")))
     return df.reset_index(drop=True), unmapped, duplicates

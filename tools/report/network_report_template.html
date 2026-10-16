@@ -203,9 +203,10 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     grey near zero, clipped at |z| = 4. The benchmark data are already standardised, so these are mean z-scores, not log2 fold
     changes. A <b>small hollow circle with a dashed outline</b> marks a metabolite that was not measured (or could not be
     mapped): an intermediate on the network with no value.</p>
-    <p><b>Dark ring</b>: a significant metabolite (BH q &lt; 0.05 and |mean z| ≥ 1). Increased ones are the <b>sources</b> of
-    current, decreased ones the <b>targets</b>. When a disorder has only increases (or only decreases), every other measured
-    metabolite on the network becomes a <b>ground</b>: current drains to it.</p>
+    <p><b>Dark ring</b>: a significant metabolite (BH q &lt; 0.05 and |mean z| ≥ 1). Decreased ones are the <b>sources</b>
+    (current enters, walkers start), increased ones the <b>targets</b> (decision D20; the protocol's §1.3 has it the other way
+    round, which leaves current flow unchanged but not the walk). When a disorder has only increases (or only decreases), every
+    other measured metabolite on the network becomes a <b>ground</b> that stands in for the missing side.</p>
     <p><b>Edge width</b> is current, on one absolute scale for both methods and every view, drawn at a fixed size on screen
     (zooming does not change it, so the legend always applies). <b>Current flow</b>: Kirchhoff current when one unit is
     pushed from a source to a target; <i>mean</i> averages over all source–target pairs, <i>max</i> takes the largest pair. It
@@ -351,8 +352,8 @@ const panelMethods = () => state.method === "compare" ? ["flow", "walk"] : [stat
 
 function roleText(c, mm) {
   if (!mm) return "unmeasured";
-  if (mm.role === "source") return "source (significantly increased)";
-  if (mm.role === "target") return "target (significantly decreased)";
+  if (mm.role === "source") return "source (significantly decreased)";
+  if (mm.role === "target") return "target (significantly increased)";
   return c.one_sided ? "ground (measured, not significant)" : "measured, not significant";
 }
 
@@ -659,7 +660,7 @@ function renderStrip() {
     tile("Causal gene", esc(genes), `${esc(c.disorder)} · ${plural(c.patients, "patient")} · ${esc(c.status)}`) +
     tile("Causal gene rank, flow", fmtRank(F.causal_rank), `of ${G} network genes`, shown("flow")) +
     tile("Causal gene rank, walk", fmtRank(W.causal_rank), `of ${G} network genes`, shown("walk")) +
-    tile("Sources / targets", `${c.sources} <small>up</small> · ${c.targets} <small>down</small>`, ep) +
+    tile("Sources / targets", `${c.sources} <small>decreased</small> · ${c.targets} <small>increased</small>`, ep) +
     tile("Pairs", `${F.pairs} <small>flow</small> · ${W.pairs} <small>walk</small>`,
          (c.one_sided ? "flow: source–ground runs" : "flow: source–target pairs") + `; walk: one per source that reaches a ${sink}`) +
     tile(c.one_sided ? "Walkers reaching a ground" : "Walkers reaching a target", pct(W.walk_success_fraction),

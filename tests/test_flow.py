@@ -126,5 +126,44 @@ class CurrentFlowTest(unittest.TestCase):
         self.assertEqual(len(current_flow(g, [1], [0], directed=False).pairs), 1)
 
 
+class OrientationSymmetryTest(unittest.TestCase):
+    """Swapping sources and targets only reverses every current, so undirected
+    scores do not depend on the orientation (D20)."""
+    FIELDS = ("accumulated", "conductivity", "bottleneck", "bottleneck_frac", "conductivity_loo", "bottleneck_loo",
+              "edge_current", "edge_max_current")
+
+    def graph(self):
+        rng = np.random.default_rng(7)
+        mets, rxns = 10, 12
+        edges = {(int(rng.integers(mets)), mets + r) for r in range(rxns) for _ in range(3)}
+        edges |= {(m, mets + m % rxns) for m in range(mets)}
+        return toy_graph(mets, rxns, sorted(edges))
+
+    def assert_same(self, a, b):
+        for f in self.FIELDS:
+            np.testing.assert_allclose(getattr(a, f), getattr(b, f), atol=1e-10, err_msg=f)
+
+    def test_two_sided_swap(self):
+        g = self.graph()
+        S, T = [0, 1, 2], [6, 7]
+        a, b = current_flow(g, S, T), current_flow(g, T, S)
+        self.assert_same(a, b)
+        for v in S + T:
+            np.testing.assert_allclose(a.endpoint[v]["eff_conductance"], b.endpoint[v]["eff_conductance"], atol=1e-10)
+
+    def test_fc_pair_weights_swap(self):
+        g = self.graph()
+        S, T = [0, 1, 2], [6, 7]
+        w = {0: 1.0, 1: 2.5, 2: 0.3, 6: 1.7, 7: 0.9}
+        self.assert_same(current_flow(g, S, T, weights=w), current_flow(g, T, S, weights=w))
+
+    def test_one_sided_swap(self):
+        g = self.graph()
+        if len(set(g.components())) > 1:
+            self.skipTest("random graph disconnected")
+        S, G = [0, 1], [5, 6, 7]
+        self.assert_same(current_flow(g, S, [], ground=G), current_flow(g, [], S, ground=G))
+
+
 if __name__ == "__main__":
     unittest.main()

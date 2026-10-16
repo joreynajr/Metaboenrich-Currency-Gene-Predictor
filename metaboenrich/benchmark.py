@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .daa import load_daa, load_name_bridge
+from .daa import ORIENTATIONS, load_daa, load_name_bridge
 from .flow import current_flow
 from .gem import load_sbml
 from .network import DEFAULT_REACTION_EDITS, build_graph, load_reaction_edits, resolve_currency
@@ -96,8 +96,9 @@ def patient_daa(z, ann, sample):
 
 # ---- one run ------------------------------------------------------------------
 class Ranker:
-    def __init__(self, model, graph, method="flow", kappa=None, name_bridge=None):
+    def __init__(self, model, graph, method="flow", kappa=None, name_bridge=None, sources="decreased"):
         self.model, self.graph, self.name_bridge = model, graph, name_bridge
+        self.sources = sources                       # which significant metabolites act as sources (D20)
         self.method, self.kappa = method, kappa      # "flow" (current flow) or "walk" (absorbing walk)
         self.universe = sorted(set().union(*graph.reaction_genes.values()))
         self._universe_set = set(self.universe)
@@ -112,7 +113,7 @@ class Ranker:
     def run(self, daa_df, tmp_csv, alpha, min_fc):
         daa_df.to_csv(tmp_csv, index=False)
         daa, _, _ = load_daa(tmp_csv, self.model, ["HMDB", "KEGG", "name"], "log2FC", "p", alpha, False, min_fc,
-                             name_bridge=self.name_bridge)
+                             name_bridge=self.name_bridge, sources=self.sources)
         daa["node"] = daa.met_id.map(self.graph.index)
         on = daa.dropna(subset=["node"]).astype({"node": int})
         sources = on[on.role == "source"].node.tolist()
@@ -188,6 +189,8 @@ def main(argv=None):
                    help="benchmark a named network from metaboenrich.structure, e.g. pruning:raw or carbon:carbon_method")
     p.add_argument("--atom-pairs", default=None, metavar="JSON",
                    help="carbon-channel network from metaboenrich.atoms (default: the standard network)")
+    p.add_argument("--sources", choices=ORIENTATIONS, default="decreased",
+                   help="which significant metabolites act as sources (default: %(default)s; D20)")
     p.add_argument("--method", choices=["flow", "walk"], default="flow",
                    help="flow: current flow (default); walk: absorbing random walk (experimental, raw scoring only)")
     p.add_argument("--walk-kappa", type=float, default=None,
@@ -218,7 +221,7 @@ def main(argv=None):
     else:
         graph = build_graph(model, rules, atom_pairs=atom_pairs)
     ranker = Ranker(model, graph, args.method, args.walk_kappa,
-                    load_name_bridge(args.id_translation) if args.id_translation else None)
+                    load_name_bridge(args.id_translation) if args.id_translation else None, sources=args.sources)
     U = len(ranker.universe)
     print(f"Network: {graph.n} nodes; {U} genes on network reactions (the ranking universe)")
 
@@ -274,6 +277,7 @@ def main(argv=None):
     (out / "run_info.json").write_text(json.dumps({
         "network_nodes": graph.n, "gene_universe": U, "atom_pairs": args.atom_pairs or "", "stage": args.stage or "", "couple_min": args.couple_min,
         "method": args.method, "walk_kappa": args.walk_kappa, "id_translation": bool(args.id_translation),
+        "orientation": {"sources": args.sources},
         "runtime_s": round(time.time() - t0, 1),
         "group_rule": "BH q < 0.05 on z-test of mean z, and |mean z| >= 1",
         "patient_rule": "|z| >= 2",

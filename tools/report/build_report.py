@@ -112,8 +112,14 @@ def lab_rows():
         gl = ", ".join((f"<u>{e(g)}</u>" if g in forced else e(g)) for g in genes.symbol.fillna(genes.ensembl_id))
         paths = pd.read_csv(d / "pathways.tsv", sep="\t").head(4)
         pl = "; ".join(f"{e(r.subsystem)} ({r.in_top}/{r.expected:g})" for r in paths.itertuples())
-        rows.append([e(d.name.replace("_vs_", " vs ")), f"{s['sources']} / {s['targets']}", gl, pl])
+        up, down = up_down(s["sources"], s["targets"], s.get("orientation", {}).get("sources", "increased"))
+        rows.append([e(d.name.replace("_vs_", " vs ")), f"{up} / {down}", gl, pl])
     return rows
+
+
+def up_down(sources, targets, orient):
+    """(increased, decreased) counts; runs before D20 used the increased metabolites as sources."""
+    return (targets, sources) if orient == "decreased" else (sources, targets)
 
 
 def prediction_rows():
@@ -130,7 +136,8 @@ def prediction_rows():
         gene = f"{e(str(r.diagnosed_gene_in_data))}: {e(rank)}" if isinstance(r.diagnosed_gene_in_data, str) and r.diagnosed_gene_in_data else "–"
         top = ", ".join(str(r.top_genes).split(", ")[:6]) if isinstance(r.top_genes, str) and r.top_genes else "no current flow (too few metabolites)"
         paths = "; ".join(p.split(" (")[0] for p in str(r.top_pathways).split("; ")[:3]) if isinstance(r.top_pathways, str) else ""
-        rows.append([e(name[:70]), f"{int(r.mapped)}", f"{int(r.sources)} / {int(r.targets)}{' ¹' if r.one_sided else ''}",
+        up, down = up_down(int(r.sources), int(r.targets), getattr(r, "sources_are", "increased"))
+        rows.append([e(name[:70]), f"{int(r.mapped)}", f"{up} / {down}{' ¹' if r.one_sided else ''}",
                      gene, e(top), e(paths)])
     alaimo = ok[ok.source.str.startswith("Alaimo")]
     return status, rows, len(alaimo), int((alaimo.signal > 0).sum())
@@ -225,8 +232,9 @@ def build(out, public=False):
 <section>
   <h2>1. What the tool does</h2>
   <div class="prose">
-    <p>Following the protocol (§1), Human-GEM becomes a network of metabolite and reaction nodes. Significantly
-    increased metabolites are current sources and significantly decreased ones are sinks. For every
+    <p>Following the protocol (§1), Human-GEM becomes a network of metabolite and reaction nodes. Significant
+    metabolites become current sources and sinks: since D20 the decreased ones are sources and the increased ones sinks
+    (the protocol's §1.3 has it the other way round; for current flow the results are the same either way). For every
     source–sink pair the tool solves Kirchhoff's and Ohm's laws on the network, then scores each reaction by how
     much of the current it carries (<i>conductivity</i>) and how much it constrains it (<i>bottleneck</i>).
     Genes take the best score of their reactions. Outputs: ranked genes, reactions, pathways and transporters,

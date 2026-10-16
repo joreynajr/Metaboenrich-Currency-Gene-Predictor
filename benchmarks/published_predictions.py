@@ -21,12 +21,20 @@ Units and significance rules (fixed before any results were seen):
   Alaimo 2020   one unit per patient (each has a different disorder), |z| >= 2
 
     python benchmarks/published_predictions.py --out predictions/published_v1
+
+Rebuild a previous run's units from their saved daa_mapping.tsv (the same
+mapped metabolites, log2FC and p, and the unit's significance rule), e.g.
+under a different source orientation, without the master table:
+
+    python benchmarks/published_predictions.py --from-run predictions/published_v1 --out predictions/published_v2
 """
 import argparse
 import json
 import math
 import re
+import shutil
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
@@ -119,16 +127,74 @@ def unit_daa(g):
     return ids.join(v, how="inner").reset_index(), 0.05, 1.0, f"mean z over {n_subj} subjects: BH q < 0.05 and |mean z| >= 1"
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--master", default=str(MASTER))
-    ap.add_argument("--id-translation", default=str(ID_TRANSLATION))
-    ap.add_argument("--out", default="predictions/published_v1")
-    args = ap.parse_args()
-    out = Path(args.out)
-    out.mkdir(parents=True, exist_ok=True)
-    master = pd.read_excel(args.master, sheet_name="metabolomics_master_standardize")
+RULES = {"p < 0.05": (0.05, 0.0), "|z| >= 2 (one subject)": (0.0456, 0.0)}   # rule -> (alpha, min |log2FC|)
 
+
+def rule_settings(rule):
+    """(alpha, min_fc) for a units.tsv rule string, as set by unit_daa."""
+    if rule in RULES:
+        return RULES[rule]
+    if rule.startswith("mean z over") and rule.endswith("BH q < 0.05 and |mean z| >= 1"):
+        return 0.05, 1.0
+    raise ValueError(f"unknown significance rule: {rule!r}")
+
+
+def run_unit(udir, daa, id_cols, alpha, min_fc, genes_given, extra_args):
+    """Run Metaboenrich on one unit's DAA table (columns: id_cols, effect, p).
+    Returns the result columns for units.tsv, or {"status": "error: ..."}."""
+    udir.mkdir(parents=True, exist_ok=True)
+    csv = udir / "_input.csv"
+    daa.to_csv(csv, index=False)
+    try:
+        metaboenrich(["--daa", str(csv), "--out", str(udir), "--id-col", *id_cols,
+                      "--fc-col", "effect", "--p-col", "p", "--alpha", str(alpha),
+                      "--min-log2fc", str(min_fc), *extra_args])
+    except SystemExit as err:
+        return {"status": f"error: {err}"}
+    finally:
+        csv.unlink(missing_ok=True)
+    s = json.loads((udir / "summary.json").read_text())
+    mapping = read_tsv(udir / "daa_mapping.tsv")
+    genes, paths, trans = (read_tsv(udir / f) for f in ("genes.tsv", "pathways.tsv", "transporters.tsv"))
+    rank = ""
+    if genes_given and len(genes):
+        syms = list(genes.symbol.fillna(""))
+        hits = [syms.index(gn) + 1 for gn in genes_given if gn in syms]
+        rank = min(hits) if hits else "not scored"
+    orient = s.get("orientation", {}).get("sources", "increased")
+    up, down = (s["targets"], s["sources"]) if orient == "decreased" else (s["sources"], s["targets"])
+    res = {"status": "ok", "mapped": len(mapping), "sources_are": orient, "sources": s["sources"], "targets": s["targets"],
+           "decreased": down, "increased": up, "one_sided": s["one_sided"], "pairs": s["pairs_retained"],
+           "rank_of_diagnosed_gene": rank,
+           "top_genes": ", ".join(genes.symbol.fillna(genes.ensembl_id).head(15)) if len(genes) else "",
+           "top_pathways": "; ".join(f"{r.subsystem} ({r.in_top}/{r.expected})" for r in paths.head(6).itertuples()) if len(paths) else "",
+           "top_transporters": ", ".join(trans.symbol.fillna("").head(10)) if len(trans) else ""}
+    # keep the prediction outputs small: top rows only; drop bulky files
+    for f, n in (("genes.tsv", 50), ("pathways.tsv", 30), ("transporters.tsv", 30), ("reactions.tsv", 50)):
+        tab = read_tsv(udir / f)
+        if len(tab):
+            tab.head(n).to_csv(udir / f, sep="\t", index=False)
+    for f in ("currency_metabolites.tsv", "currency_edges.tsv", "intermediate_metabolites.tsv"):
+        remove(udir / f)
+    for f in (udir / "cytoscape").glob("full_network.graphml"):
+        remove(f)
+    return res
+
+
+def remove(path, tries=10):
+    """Delete a file; on Windows a just-written file can stay locked for a
+    moment (indexer, antivirus), so retry before giving up with a warning."""
+    for i in range(tries):
+        try:
+            path.unlink(missing_ok=True)
+            return
+        except PermissionError:
+            time.sleep(0.5 * (i + 1))
+    print(f"  warning: could not delete {path}")
+
+
+def from_master(args, out, extra):
+    master = pd.read_excel(args.master, sheet_name="metabolomics_master_standardize")
     rows = []
     for n_unit, (src, key, g) in enumerate(units(master), start=1):
         # numbered so units stay distinct even when long names would collide
@@ -142,52 +208,74 @@ def main():
         if len(daa) < MIN_METABOLITES:
             rows.append({**row, "status": f"skipped: fewer than {MIN_METABOLITES} metabolites"})
             continue
-        udir = out / uid
-        udir.mkdir(exist_ok=True)
-        csv = udir / "_input.csv"
-        daa.rename(columns={"Metabolite": "metabolite"}).to_csv(csv, index=False)
-        try:
-            metaboenrich(["--daa", str(csv), "--out", str(udir), "--id-col", "HMDB", "KEGG", "metabolite",
-                          "--fc-col", "effect", "--p-col", "p", "--alpha", str(alpha),
-                          "--min-log2fc", str(min_fc), "--id-translation", args.id_translation])
-        except SystemExit as err:
-            rows.append({**row, "status": f"error: {err}"})
+        res = run_unit(out / uid, daa.rename(columns={"Metabolite": "metabolite"}), ["HMDB", "KEGG", "metabolite"],
+                       alpha, min_fc, genes_given, ["--id-translation", args.id_translation, *extra])
+        rows.append({**row, **res})
+    return rows, "id_translation name lookup"
+
+
+def from_run(args, out, extra):
+    """Rebuild each unit of a previous run from its daa_mapping.tsv. The mapped
+    metabolites (met_id), log2FC and p are reused as they are, so no name
+    lookup is needed; input ids, match notes and unmapped rows are copied."""
+    prev = Path(args.from_run)
+    old = pd.read_csv(prev / "units.tsv", sep="\t", dtype={"diagnosed_gene_in_data": str}).fillna("")
+    keep = [c for c in ("unit", "source", "Comparison", "Matrix", "Subject_ID", "Disease_Group", "species",
+                        "diagnosed_gene_in_data", "metabolites", "rule") if c in old.columns]
+    rows = []
+    for r in old.to_dict("records"):
+        row = {c: r[c] for c in keep}
+        if r["status"] != "ok":
+            rows.append({**row, "status": r["status"]})
             continue
-        finally:
-            csv.unlink(missing_ok=True)
-        s = json.loads((udir / "summary.json").read_text())
-        mapping = read_tsv(udir / "daa_mapping.tsv")
-        genes, paths, trans = (read_tsv(udir / f) for f in ("genes.tsv", "pathways.tsv", "transporters.tsv"))
-        rank = ""
-        if genes_given and len(genes):
-            syms = list(genes.symbol.fillna(""))
-            hits = [syms.index(gn) + 1 for gn in genes_given if gn in syms]
-            rank = min(hits) if hits else "not scored"
-        rows.append({**row, "status": "ok", "mapped": len(mapping), "sources": s["sources"], "targets": s["targets"],
-                     "one_sided": s["one_sided"], "pairs": s["pairs_retained"],
-                     "rank_of_diagnosed_gene": rank,
-                     "top_genes": ", ".join(genes.symbol.fillna(genes.ensembl_id).head(15)) if len(genes) else "",
-                     "top_pathways": "; ".join(f"{r.subsystem} ({r.in_top}/{r.expected})" for r in paths.head(6).itertuples()) if len(paths) else "",
-                     "top_transporters": ", ".join(trans.symbol.fillna("").head(10)) if len(trans) else ""})
-        # keep the prediction outputs small: top rows only; drop bulky files
-        for f, n in (("genes.tsv", 50), ("pathways.tsv", 30), ("transporters.tsv", 30), ("reactions.tsv", 50)):
-            t = read_tsv(udir / f)
-            if len(t):
-                t.head(n).to_csv(udir / f, sep="\t", index=False)
-        for f in ("currency_metabolites.tsv", "currency_edges.tsv", "intermediate_metabolites.tsv"):
-            (udir / f).unlink(missing_ok=True)
-        for f in (udir / "cytoscape").glob("full_network.graphml"):
-            f.unlink()
+        pdir, udir = prev / r["unit"], out / r["unit"]
+        m = pd.read_csv(pdir / "daa_mapping.tsv", sep="\t")
+        daa = pd.DataFrame({"metabolite": m.met_id, "effect": m.log2fc, "p": m.p})
+        alpha, min_fc = rule_settings(r["rule"])
+        genes_given = [g for g in str(r["diagnosed_gene_in_data"]).split(";") if g]
+        res = run_unit(udir, daa, ["metabolite"], alpha, min_fc, genes_given, extra)
+        if res["status"] == "ok":
+            new = pd.read_csv(udir / "daa_mapping.tsv", sep="\t")
+            if len(new) != len(m):
+                raise SystemExit(f"{r['unit']}: {len(new)} mapped metabolites, previous run had {len(m)}")
+            ids = m.set_index("met_id")[["input_id", "matched_on"]]
+            new["input_id"] = new.met_id.map(ids.input_id)
+            new["matched_on"] = new.met_id.map(ids.matched_on)
+            new.to_csv(udir / "daa_mapping.tsv", sep="\t", index=False)
+            if (pdir / "daa_unmapped.tsv").exists():
+                shutil.copy(pdir / "daa_unmapped.tsv", udir / "daa_unmapped.tsv")
+        rows.append({**row, **res})
+    return rows, f"rebuilt from {prev.as_posix()}/*/daa_mapping.tsv"
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--master", default=str(MASTER))
+    ap.add_argument("--id-translation", default=str(ID_TRANSLATION))
+    ap.add_argument("--from-run", default=None, metavar="DIR",
+                    help="rebuild the units of a previous run from their daa_mapping.tsv instead of reading --master")
+    ap.add_argument("--sources", choices=["decreased", "increased"], default="decreased",
+                    help="which significant metabolites act as sources (default: %(default)s; D20)")
+    ap.add_argument("--out", default="predictions/published_v1")
+    args = ap.parse_args()
+    out = Path(args.out)
+    if args.from_run and Path(args.from_run).resolve() == out.resolve():
+        raise SystemExit("--out must differ from --from-run")
+    out.mkdir(parents=True, exist_ok=True)
+    extra = ["--sources", args.sources]
+    rows, how = from_run(args, out, extra) if args.from_run else from_master(args, out, extra)
 
     table = pd.DataFrame(rows)
     table.to_csv(out / "units.tsv", sep="\t", index=False)
+    other = "increased" if args.sources == "decreased" else "decreased"
     lines = [f"# Blind predictions: published datasets ({out.name})", "",
-             f"Metaboenrich {__version__}; raw scoring; one-sided mode auto; id_translation name lookup.",
+             f"Metaboenrich {__version__}; raw scoring; one-sided mode auto; {how}.",
+             f"Sources are the significantly {args.sources} metabolites, targets the significantly {other} ones.",
              "Answer key not consulted. Rules per unit are in `units.tsv`.", ""]
     for r in table.itertuples(index=False):
         lines += [f"## {r.unit}", f"- Source: {r.source}; status: {r.status}; rule: {r.rule}"]
         if r.status == "ok":
-            lines += [f"- Mapped {r.mapped}/{r.metabolites} metabolites; {r.sources} up, {r.targets} down"
+            lines += [f"- Mapped {r.mapped}/{r.metabolites} metabolites; {r.decreased} decreased, {r.increased} increased"
                       f"{' (one-sided)' if r.one_sided else ''}; {r.pairs} pairs",
                       f"- Diagnosed gene in data: {r.diagnosed_gene_in_data or '-'}; its rank: {r.rank_of_diagnosed_gene or '-'}",
                       f"- Top genes: {r.top_genes}", f"- Top pathways (in top 100 / expected): {r.top_pathways}",

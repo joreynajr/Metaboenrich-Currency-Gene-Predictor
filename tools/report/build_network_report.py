@@ -77,6 +77,7 @@ CYTOSCAPE_URL = f"https://cdnjs.cloudflare.com/ajax/libs/cytoscape/{CYTOSCAPE_VE
 CYTOSCAPE_FILE = ROOT / "data" / "vendor" / f"cytoscape-{CYTOSCAPE_VERSION}.min.js"
 
 ALPHA, MIN_Z = 0.05, 1.0                 # group-level significance, as in the benchmark
+SOURCES = "decreased"                      # significant decreases are the sources (D20); the template text assumes it
 METHODS = ("flow", "walk")
 NET_THRESHOLDS = (0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
 NET_MAX_NODES = 500
@@ -157,7 +158,8 @@ def load_case_daa(net, daa_df, tmp_csv):
     """DAA -> mapped metabolites, exactly as benchmark.Ranker.run does it
     (through a CSV round trip, so empty identifiers read back as missing)."""
     daa_df.to_csv(tmp_csv, index=False)
-    daa, _, _ = load_daa(tmp_csv, net.model, ["HMDB", "KEGG", "name"], "log2FC", "p", ALPHA, False, MIN_Z)
+    daa, _, _ = load_daa(tmp_csv, net.model, ["HMDB", "KEGG", "name"], "log2FC", "p", ALPHA, False, MIN_Z,
+                         sources=SOURCES)
     daa["node"] = daa.met_id.map(net.graph.index)
     return daa
 
