@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metaboenrich Report Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a single reading column; a contents list, then one entry per report under four purpose-groups, each entry Title / Synopsis / Dataset. */
+:root{--page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--accent:#1f63b5;
+--ok:#1d7a52;--ok-bg:#e6f4ec;--neutral:#4a5360;--neutral-bg:#eceff3;--warn:#8a5a00;--warn-bg:#fbf1dc;
+--sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;
+--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--accent:#6ea6ec;--ok:#5cc596;--ok-bg:#15281f;--neutral:#b3bcc7;--neutral-bg:#20252c;
+--warn:#f1c48e;--warn-bg:#2a2016}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;
+--accent:#6ea6ec;--ok:#5cc596;--ok-bg:#15281f;--neutral:#b3bcc7;--neutral-bg:#20252c;--warn:#f1c48e;--warn-bg:#2a2016}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,4vw,40px);padding-block:40px 72px}
+main{max-width:920px;margin-inline:auto;display:grid;gap:44px}
+main>*{min-width:0}
+h1,h2,h3{margin:0;line-height:1.25;text-wrap:balance}
+h1{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.015em}
+h2{font-size:20px;font-weight:650;padding-top:12px;border-top:1px solid var(--rule)}
+h3{font-size:18px;font-weight:650}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:17px;color:var(--ink-2);max-width:70ch}
+header{display:grid;gap:12px}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px 28px}
+.toc div{display:grid;gap:4px;align-content:start}
+.toc ol{margin:0;padding-left:1.3em;display:grid;gap:2px;font-size:15px}
+.group{display:grid;gap:14px}
+.group>p{color:var(--ink-2);max-width:70ch}
+.entry{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 22px;display:grid;gap:10px;scroll-margin-top:16px}
+.entry .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap}
+.entry h3 a{text-decoration:none}
+.entry h3 a:hover{text-decoration:underline}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font:500 11px/1.7 var(--mono);letter-spacing:.04em;padding:0 8px;border-radius:999px;white-space:nowrap}
+.tag.ok{color:var(--ok);background:var(--ok-bg)}
+.tag.neutral{color:var(--neutral);background:var(--neutral-bg)}
+.tag.warn{color:var(--warn);background:var(--warn-bg)}
+dl{margin:0;display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:6px 14px}
+dt{font:500 12px/1.9 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+dd{margin:0;color:var(--ink);font-size:15px}
+dd.meta{color:var(--ink-2);font-size:14px}
+code{font-family:var(--mono);font-size:.86em}
+@media (max-width:560px){dl{grid-template-columns:1fr;gap:0 0}dd{margin-bottom:8px}}
+.notes{display:grid;gap:6px;font-size:15px;color:var(--ink-2)}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:12px}
+</style>
+
+<main>
+<header>
+  <div class="eyebrow">Metaboenrich · report library · 2026-10-16</div>
+  <h1>Metaboenrich report library</h1>
+  <p class="lede">Every HTML report for the Metaboenrich gene predictor in one place: what each one shows and what data it is
+  built on. Repository reports open from this folder; the two analyses from the 2026-10-16 session open on claude.ai (they are
+  private to their owner).</p>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <div><span class="eyebrow">How it works</span><ol>
+    <li><a href="#pipeline">Pipeline Map</a></li><li><a href="#walk-pipeline">Random Walk Pipeline</a></li></ol></div>
+  <div><span class="eyebrow">Results</span><ol start="3">
+    <li><a href="#report">Prototype Report</a></li><li><a href="#rw">Absorbing Walk Report</a></li>
+    <li><a href="#explorer">Network Explorer</a></li><li><a href="#testing">Testing Data</a></li></ol></div>
+  <div><span class="eyebrow">Network construction</span><ol start="7">
+    <li><a href="#pruning">Pruning Atlas</a></li><li><a href="#carbon">Carbon Channel Atlas</a></li>
+    <li><a href="#three-rule">3-Rule Pruning Atlas</a></li></ol></div>
+  <div><span class="eyebrow">Analyses from this session</span><ol start="10">
+    <li><a href="#traffic">Walk Traffic to Gene Scores</a></li><li><a href="#msud">MSUD Orientation Comparison</a></li></ol></div>
+</nav>
+
+<section class="group" aria-labelledby="g1">
+  <h2 id="g1">How it works</h2>
+  <p>Code maps of the two scoring engines: which module does what, in what order.</p>
+
+  <article class="entry" id="pipeline">
+    <div class="top"><h3><a href="pipeline.html">Pipeline Map</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">hand-written</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>A step-by-step code map of the default run (<code>python -m metaboenrich</code>): load Human-GEM, decide
+        currency metabolites, map the DAA table, build the metabolite–reaction graph, solve Kirchhoff current flow, score, write
+        outputs. Each step names its module, functions and library calls, and the page covers the other entry points (network
+        export, atlases, benchmark, blind predictions).</dd>
+      <dt>Dataset</dt><dd>Human-GEM 2.0.1, pruned to the locked network of 3,958 metabolites, 6,377 reactions and 16,356 edges; any
+        user DAA table. No data is embedded.</dd>
+      <dt>Method</dt><dd class="meta">Current flow (grounded sparse LU per component), currency rules, scoring, pathway test.</dd>
+      <dt>Built</dt><dd class="meta">Written by hand from commit 48786d1; updated 2026-10-16 for the orientation change (D20).</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="walk-pipeline">
+    <div class="top"><h3><a href="pipeline.random_walk.html">Random Walk Pipeline</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">hand-written</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>The same map for the experimental <code>--mode walk</code>, which replaces current flow with a directed,
+        non-backtracking absorbing random walk: state space, absorption, reach probability, successful traffic and folding back
+        to scores, with a state-space diagram and a walk-versus-current-flow comparison. Its benchmark summary shows the walk
+        does better than current flow with increased sources and much worse with decreased sources, the default since D20.</dd>
+      <dt>Dataset</dt><dd>Locked Human-GEM network (21,787 walk states); inborn-error benchmark summary (20 disorders, 160
+        patients, rank among 2,302 genes) from runs on 2026-10-16 and 2026-10-01.</dd>
+      <dt>Method</dt><dd class="meta">Absorbing random walk conditioned on absorption (Doob h-transform), compared with current flow.</dd>
+      <dt>Built</dt><dd class="meta">Written by hand from commit 0f6c135; updated 2026-10-16 with that day's benchmark numbers.</dd>
+    </dl>
+  </article>
+</section>
+
+<section class="group" aria-labelledby="g2">
+  <h2 id="g2">Results</h2>
+  <p>What the method finds: the first progress report, the walk benchmark, an interactive view of every benchmark disorder, and
+  a description of the test data.</p>
+
+  <article class="entry" id="report">
+    <div class="top"><h3><a href="report.html">Metaboenrich Prototype Report</a></h3>
+      <span class="tags"><span class="tag neutral">orientation-independent</span><span class="tag neutral">2026-09-29</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>Progress report on the first working prototype: how the network was built and pruned, the inborn-error
+        benchmark (raw scoring, leave-one-out and a neighbour baseline, per-disorder ranks), what changed in version 0.2, the
+        sealed blind predictions on the lab's 12 published datasets, and the open decisions.</dd>
+      <dt>Dataset</dt><dd>Human-GEM network v0.1.1; benchmark plasma metabolomics from Miller et al. 2015 and Thistlethwaite et al.
+        2022 (20 disorders as groups, 160 patients, rank among 2,302 genes); blind units from <code>predictions/published_v1</code>.</dd>
+      <dt>Method</dt><dd class="meta">Current flow only, so its numbers hold under either orientation.</dd>
+      <dt>Built</dt><dd class="meta">29 September 2026 by <code>tools/report/build_report.py</code>; one sentence edited on
+        2026-10-16 for D20 (it can't be rebuilt locally: lab inputs missing).</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="rw">
+    <div class="top"><h3><a href="rw_report.html">Absorbing Walk Report</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>Benchmarks the absorbing walk against current flow and a neighbour baseline: how high each ranks the known
+        causal gene, per disorder and per patient, with recall curves and a partial-absorption (κ) test. With decreased sources the
+        walk does worse than current flow overall (group median 284 against 88.5); its orientation section shows the walk with
+        increased sources at a median of 48.</dd>
+      <dt>Dataset</dt><dd>Plasma metabolomics from patients with a confirmed inborn error (Thistlethwaite et al. 2020, Miller et al.
+        2015): 20 primary disorders, 159 patients, 1 secondary case; network of 3,958 metabolites and 2,302 genes.</dd>
+      <dt>Method</dt><dd class="meta">Absorbing walk (full and partial absorption) vs current flow vs neighbour baseline.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-16, commit 7b4d0ce, by <code>tools/report/build_rw_report.py</code> from the benchmark runs of that day.</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="explorer">
+    <div class="top"><h3><a href="network_report.html">Network Explorer</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated · 3.9 MB</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>An interactive Cytoscape viewer of where current flow and the absorbing walk send traffic through Human-GEM
+        for each of the 21 benchmark disorders. Switch between the current-carrying subnetwork, pathway views and the causal gene's
+        neighbourhood, compare the two methods side by side, and see the causal gene's rank under each.</dd>
+      <dt>Dataset</dt><dd>21 group-level inborn-error cases (14 from Thistlethwaite et al. 2020, 7 from Miller et al. 2015) on Human-GEM
+        2.0.1; group mean z-scores only, no patient-level data.</dd>
+      <dt>Method</dt><dd class="meta">Current flow and absorbing walk, sources = decreased.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-16 by <code>tools/report/build_network_report.py</code>; its ranks match the benchmark (42 of 42).</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="testing">
+    <div class="top"><h3><a href="testing_data.html">Testing Data</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>Describes the two data collections the method is tested on: the inborn-error benchmark (20 primary disorders,
+        1 secondary, 5 excluded, with source paper, cohort, plasma type, patient count and significant changes) and the blind set of
+        12 published papers split into analysis units. Includes a crosswalk of disorders in both and a note on possible patient
+        overlap. It shows no prediction results.</dd>
+      <dt>Dataset</dt><dd>Thistlethwaite et al. 2022 (545 plasma samples, 1,364 metabolites) and Miller et al. 2015 (186 samples,
+        1,203 metabolites) via the CTD package; the blind units in <code>predictions/published_v2/units.tsv</code>.</dd>
+      <dt>Method</dt><dd class="meta">Data description; counts of increased and decreased metabolites per disorder.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-16 by <code>tools/report/build_testing_data_report.py</code>.</dd>
+    </dl>
+  </article>
+</section>
+
+<section class="group" aria-labelledby="g3">
+  <h2 id="g3">Network construction</h2>
+  <p>Structural checks of how Human-GEM is pruned into the network the analysis runs on. They use random sources and targets or
+  current flow only, so the orientation change does not affect them.</p>
+
+  <article class="entry" id="pruning">
+    <div class="top"><h3><a href="pruning_atlas.html">Human-GEM Pruning Atlas</a></h3>
+      <span class="tags"><span class="tag neutral">orientation-independent</span><span class="tag neutral">4.0 MB</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>How each pruning step (inorganics, cofactors, pools, reaction edits) changes the network, without any data:
+        per stage, each node's degree against its structural current and the pocket of metabolites it alone cuts off, with trend
+        charts, zoomable diagrams and search. Shows that pruning removes hubs but creates islands and single-reaction bottlenecks
+        (for example SCLY and vitamin B6).</dd>
+      <dt>Dataset</dt><dd>Human-GEM 2.0.1 at six stages, from raw (4,035 metabolites, 7,080 reactions, 38,766 edges) to the analysis
+        network (3,958 / 6,377 / 16,356), plus a cofactors-removed-everywhere alternative.</dd>
+      <dt>Method</dt><dd class="meta">Structural current with random source–target pairs.</dd>
+      <dt>Built</dt><dd class="meta">Last changed 2026-10-06 (commit 6c27895) by <code>tools/atlas/build_atlas.py</code>.</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="carbon">
+    <div class="top"><h3><a href="carbon_atlas.html">Carbon Channel Atlas</a></h3>
+      <span class="tags"><span class="tag warn">superseded by D18</span><span class="tag neutral">6.1 MB</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>A network built from carbon-atom links instead of hand-made currency lists: Rule 1 keeps substrate–product
+        links that share carbon, Rule 2 removes cofactor couples. Six networks are compared on structure and on the benchmark, with
+        an accuracy check of the carbon links against KEGG. The 3-rule pruning atlas replaced this method as the publication candidate.</dd>
+      <dt>Dataset</dt><dd>Human-GEM 2.0.1 with KEGG RCLASS pairs and RXNMapper atom maps (KEGG-checked on 2,019 reactions); 20-disorder
+        inborn-error benchmark.</dd>
+      <dt>Method</dt><dd class="meta">Structural current and current-flow benchmark.</dd>
+      <dt>Built</dt><dd class="meta">Last changed 2026-10-06 (commit 6c27895) by <code>tools/atlas/build_carbon_atlas.py</code>.</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="three-rule">
+    <div class="top"><h3><a href="three_rule_atlas.html">3-Rule Pruning Atlas</a></h3>
+      <span class="tags"><span class="tag neutral">orientation-independent</span><span class="tag neutral">6.8 MB</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>The 3-rule pruning of the carbon method: drop pools and carbon-carrying transporters, cut carrier-to-loaded
+        links (CoA, carnitine, glutathione, cholesterol), and keep each emptied reaction's rarest link. Nine networks with structure
+        charts, diagrams, the benchmark and the 216 rescued reactions. Rule 3 ends the CoA short circuit (median 130 to 112.5) but
+        still trails the first method (88).</dd>
+      <dt>Dataset</dt><dd>Human-GEM 2.0.1, 9 network variants (final 3,808 metabolites, 7,676 reaction links); group-level benchmark of
+        20 disorders with the lab's name lookup (2026-10-02).</dd>
+      <dt>Method</dt><dd class="meta">Structural current and current-flow benchmark.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-06 (commit 6c27895) by <code>tools/atlas/build_three_rule_atlas.py</code>.</dd>
+    </dl>
+  </article>
+</section>
+
+<section class="group" aria-labelledby="g4">
+  <h2 id="g4">Analyses from this session</h2>
+  <p>Interactive pages made while working through the walk and the orientation change. They open in a new tab.</p>
+
+  <article class="entry" id="traffic">
+    <div class="top"><h3><a href="https://claude.ai/artifact/ExipKD91oGwPv69yLDHWVK" target="_blank" rel="noopener">Walk Traffic to Gene Scores</a></h3>
+      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">live page</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>The network right after the absorbing walk, with edges and reactions weighted by the traffic of successful
+        walkers, and a step-by-step account of how that traffic becomes <code>conductivity</code>, <code>bottleneck</code>,
+        <code>final_score</code> and a gene's <code>best_score</code>. Includes route tracing from a source to its targets and back,
+        subgraph focus and exclude, and several layouts.</dd>
+      <dt>Dataset</dt><dd>Adam et al. 2013, FH knockout vs control mouse kidney (blind unit 001): 94 mapped metabolites; on the network, 39 decreased
+        sources and 33 increased targets.</dd>
+      <dt>Method</dt><dd class="meta">Absorbing walk, sources = decreased; compared with the published current-flow genes.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-16.</dd>
+    </dl>
+  </article>
+
+  <article class="entry" id="msud">
+    <div class="top"><h3><a href="https://claude.ai/artifact/6j2p5UcbhEapkuMdK3HhZN" target="_blank" rel="noopener">MSUD Orientation Comparison</a></h3>
+      <span class="tags"><span class="tag neutral">both orientations</span><span class="tag neutral">live page</span></span></div>
+    <dl>
+      <dt>Synopsis</dt><dd>One dataset run with <code>--sources decreased</code> and <code>--sources increased</code>, each with the walk
+        and with current flow, drawn as two panels of the same graph and layout with each run's roles and traffic overlaid. The walk
+        ranks the causal gene 1 with increased sources and 888 with decreased sources; current flow ranks it 33 either way.</dd>
+      <dt>Dataset</dt><dd>Maple syrup urine disease, 18 patients, group level (Thistlethwaite et al. 2020); causal enzyme BCKDH
+        (BCKDHA, BCKDHB, DBT).</dd>
+      <dt>Method</dt><dd class="meta">Absorbing walk and current flow under both orientations.</dd>
+      <dt>Built</dt><dd class="meta">2026-10-16.</dd>
+    </dl>
+  </article>
+</section>
+
+<section class="group" aria-labelledby="g5">
+  <h2 id="g5">Reference notes</h2>
+  <div class="notes">
+    <p><a href="decisions.md">Decision log</a>: every methodological choice with its evidence, D1 to D20.</p>
+    <p><a href="benchmark.md">Benchmark notes</a>: the inborn-error benchmark's data, cases and method.</p>
+    <p><a href="../predictions/published_v2/PREDICTIONS.md">Blind predictions, v2</a>: the published-dataset units rebuilt under sources = decreased.</p>
+  </div>
+</section>
+
+<footer>Hand-written index of <code>docs/</code>; update it when a report is added. Open it from this folder so the links resolve.</footer>
+</main>
