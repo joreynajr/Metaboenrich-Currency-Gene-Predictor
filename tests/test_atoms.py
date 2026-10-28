@@ -29,6 +29,23 @@ class CleanPairsTest(unittest.TestCase):
         self.assertEqual(len(clean_pairs(raw)), 2)
 
 
+class CarbonBalanceTest(unittest.TestCase):
+    def test_stoichiometry_counts(self):
+        # alpha-mannosidase (MAR00055) releases two mannoses: balanced only if
+        # the coefficient is applied (26 = 14 + 2 x 6)
+        from types import SimpleNamespace as NS
+        from metaboenrich.atoms import carbon_balance, carbon_unbalanced
+        sp = {"tri": NS(formula="C26H45NO21"), "w": NS(formula="H2O"), "di": NS(formula="C14H25NO11"),
+              "man": NS(formula="C6H12O6"), "acyl": NS(formula="C52H92N3O27RCO")}
+        model = NS(species=sp, reactions={
+            "ok": NS(substrates={"tri": 1, "w": 2}, products={"di": 1, "man": 2}),
+            "off": NS(substrates={"tri": 1}, products={"di": 1, "man": 1}),
+            "rco": NS(substrates={"acyl": 1}, products={})})
+        self.assertEqual(carbon_balance(model)["ok"], (26, 26))
+        self.assertEqual(carbon_balance(model)["rco"], (53, 0))   # the C of 'RCO' is carbon too
+        self.assertEqual(carbon_unbalanced(model), {"off", "rco"})
+
+
 class CarbonChannelGraphTest(unittest.TestCase):
     def test_reaction_split_into_channels(self):
         model, ids = toy_model()

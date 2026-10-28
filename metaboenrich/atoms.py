@@ -444,6 +444,26 @@ def transport_reactions(model, carbon_cargo=True):
     return out
 
 
+def carbon_balance(model):
+    """{reaction id: (carbon in, carbon out)} from formulas and stoichiometry.
+
+    Every C in a formula counts, including the one in an acyl 'RCO'; the
+    unspecified R is not carbon, so a reaction moving an R group can look
+    balanced or not depending on how Human-GEM wrote it."""
+    from .network import parse_formula
+    carbons = {sid: parse_formula(s.formula)["C"] for sid, s in model.species.items()}
+    return {rid: (sum(n * carbons[s] for s, n in rxn.substrates.items()),
+                  sum(n * carbons[s] for s, n in rxn.products.items()))
+            for rid, rxn in model.reactions.items()}
+
+
+def carbon_unbalanced(model):
+    """Reactions whose carbon in and out differ (carbon_balance). In these,
+    "did carbon pass from A to B" has no well-defined answer, so a rule that
+    reasons from carbon counts must leave them out; the rules audit flags them."""
+    return {rid for rid, (c_in, c_out) in carbon_balance(model).items() if abs(c_in - c_out) > 1e-6}
+
+
 ACYL_COA_CLASSES = (  # (min acyl carbons, max, merged id, name); chain-length classes of fatty-acid biochemistry
     (13, 21, "ACYLCOA_LC", "long-chain acyl-CoA (C13-C21)"),
     (22, 999, "ACYLCOA_VLC", "very-long-chain acyl-CoA (C22+)"),

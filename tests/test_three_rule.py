@@ -135,6 +135,17 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         self.assertEqual(len(structure.CARRIERS_FOUND[ids["CoA"]]), 172)
         self.assertEqual(int((g.edges[:, 0] == g.index[ids["cholesterol"]]).sum()), 35)
 
+    def test_carbon_unbalanced(self):
+        # with stoichiometry, 21 of the network's reactions do not balance carbon;
+        # the sterol demethylations and peroxisomal thiolase that consume CO2 do
+        from metaboenrich.atoms import carbon_unbalanced
+        g, bad = self.g3, carbon_unbalanced(self.model)
+        rxns = {r for i in range(g.n) if g.is_reaction[i] for r in g.reactions_of(i)}
+        self.assertEqual(len(rxns & bad), 21)
+        self.assertIn("R_MAR08433", bad)            # dihydrolipoyl dehydrogenase, [protein] lipoyl-lysine
+        for rid in ("R_MAR00055", "R_MAR03536", "R_MAR03598", "R_MAR01711"):
+            self.assertNotIn(rid, bad)
+
     def test_compartment_copies_merged(self):
         # carbonic anhydrase is written three times (MAR03955, MAR03956, MAR05407);
         # merging the copies loses no gene, reaction or metabolite-to-metabolite step

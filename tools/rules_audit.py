@@ -30,8 +30,9 @@ from openpyxl.styles import Alignment
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from metaboenrich import structure                                   # noqa: E402
-from metaboenrich.atoms import (COUPLE_MIN_REACTIONS, carbon_method_pairs, find_carriers,  # noqa: E402
-                                load_atom_pairs, pool_metabolites, transport_reactions)
+from metaboenrich.atoms import (COUPLE_MIN_REACTIONS, carbon_balance, carbon_method_pairs,  # noqa: E402
+                                carbon_unbalanced, find_carriers, load_atom_pairs, pool_metabolites,
+                                transport_reactions)
 from metaboenrich.gem import load_sbml, load_subsystems              # noqa: E402
 from metaboenrich.network import build_graph, parse_formula          # noqa: E402
 
@@ -67,6 +68,7 @@ def main():
     carriers, carrier_pairs = find_carriers(model, union, ROOT / "data/Human-GEM_metabolites.tsv")
     pools = set(stages["carbon_cleaned"][3].pools) | pool_metabolites(model)
     cargo = transport_reactions(model, carbon_cargo=True)
+    balance, unbalanced = carbon_balance(model), carbon_unbalanced(model)
     partner = {}
     for a, b in couples:
         partner.setdefault(a, set()).add(b)
@@ -128,7 +130,9 @@ def main():
         saved = rid in rescued and rid in links_final and out_at != STEPS[0]
         row.update({"drops out at": out_at, "why": why, "kept by safeguard": saved,
                     "rarest link kept": label(rescued[rid]["kept_pair"]) if saved else "",
-                    "in 3-rule pruning": rid in links_final, "links in 3-rule pruning": links_final.get(rid, 0)})
+                    "in 3-rule pruning": rid in links_final, "links in 3-rule pruning": links_final.get(rid, 0),
+                    "carbon in": round(balance[rid][0], 4), "carbon out": round(balance[rid][1], 4),
+                    "carbon unbalanced": rid in unbalanced})
         row.update({f"left after {s}": counts[s] for s in STEPS[1:]})
         row.update({f"removed by {s}": "; ".join(removed_by[s]) for s in STEPS[1:]})
         if not row["in 3-rule pruning"] and (not out_at or rid in rescued):
@@ -343,7 +347,9 @@ def main():
             "acts on.",
             "Reactions: one row per reaction. 'drops out at' is the first step that leaves it with nothing; 'kept by "
             "safeguard' marks those saved anyway. 'left after' counts links for atom-mapped reactions and carbon "
-            "molecules for reactions with no atom map (kept whole).",
+            "molecules for reactions with no atom map (kept whole). 'carbon in' / 'carbon out' count carbons from "
+            "the formulas times the stoichiometry; 'carbon unbalanced' marks reactions where they differ, in which "
+            "carbon transfer between two molecules is not well defined.",
             "Links: every carbon pair of the atom-mapped reactions and the step that removes it.",
             "Genes lost: genes whose every reaction drops out, by step.",
             "Contains KEGG-derived pairs: do not post publicly."]})

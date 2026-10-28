@@ -20,6 +20,12 @@ Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
   genes and directions (`graph.merged_copies`). Genes, reactions and
   metabolite-to-metabolite steps unchanged. 3,808 metabolites / 6,099
   reaction nodes / 12,754 edges; largest hub CO2 (103).
+- **Carbon balance** (`carbon_balance`, `carbon_unbalanced`): carbon in and
+  out per reaction from formulas and stoichiometry; the rules audit flags the
+  unbalanced ones, and a carbon-count rule must exclude them. 21 of the
+  network's reactions, not the 301 in the audit's `carbon_balance_audit.csv`,
+  which counted every coefficient as 1 and only the first C of a formula.
+  Network unchanged.
 
 ## 3_rule_pruning branch (2026-10-06)
 

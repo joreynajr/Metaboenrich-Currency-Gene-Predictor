@@ -173,6 +173,15 @@ before and after.
 
 Merged: **1,577 reaction nodes**, into 1,268.
 
+### Carbon balance
+
+Carbon in and out of each reaction is counted from the formulas times the stoichiometry. 78 raw
+reactions do not balance, 21 of them in the final network: mostly protein, tRNA and DNA/RNA
+pseudo-reactions with unspecified R groups or average nucleotide formulas, and the lipoyl-protein
+reactions. They stay in the network, since nothing in Rules 1–3 depends on carbon counts, and are
+flagged in the workbook ('carbon unbalanced'). A rule that reasons from carbon counts must leave
+them out (`carbon_unbalanced`).
+
 ### Result
 
 | | Raw Human-GEM | 3-rule pruning |
