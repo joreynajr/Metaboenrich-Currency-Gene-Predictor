@@ -1,0 +1,217 @@
+reaction,name,genes,kept_pair,kept_pair_count,candidates,atom_mapped
+MAR04671,Production of 3-Hydroxybytyryl Carnitinec,CPT1A;CPT1C;CPT1B,(R)-3-hydroxybutanoyl-CoA / CoA,1,(R)-3-hydroxybutanoyl-CoA / CoA (1); L-carnitine / 3-Hydroxy Butyryl Carnitine (1),True
+MAR04707,Production of Isovalerylcarnitine,CPT1A;CPT1C;CPT1B,L-carnitine / Isovaleryl Carnitine,1,CoA / isovaleryl-CoA (3); L-carnitine / Isovaleryl Carnitine (1),True
+MAR04711,Production of Tiglylcarnitine,CPT1A;CPT1B,L-carnitine / Tiglyl Carnitine,1,CoA / tiglyl-CoA (2); L-carnitine / Tiglyl Carnitine (1),True
+MAR05991,Production of Glutaryl Carnitine,CPT1A;CPT1C;CPT1B,L-carnitine / Glutaryl Carnitine,1,CoA / glutaryl-CoA (2); L-carnitine / Glutaryl Carnitine (1),True
+MAR06278,(3-Hydroxyisovalerylcoa->3-Hydroxyisovalerylcarnitine),CPT1A;CPT1B,L-carnitine / 3-Hydroxy-Isovaleryl Carnitine,1,CoA / 3-hydroxyisovaleryl-CoA (2); L-carnitine / 3-Hydroxy-Isovaleryl Carnitine (1),True
+MAR04445,Production of Adipoyl Carnitine,CROT,L-carnitine / Adipoyl Carnitine,2,CoA / adipoyl-CoA (4); L-carnitine / Adipoyl Carnitine (2),True
+MAR04719,Production of Hexanoylcarnitine,CPT1A;CPT1C;CPT1B,L-carnitine / Hexanoyl Carnitine,2,CoA / hexanoyl-CoA (9); L-carnitine / Hexanoyl Carnitine (2),True
+MAR04722,Esterification of Of Hexanoylcoa for Transport into Cytosol,CROT,L-carnitine / Hexanoyl Carnitine,2,CoA / hexanoyl-CoA (9); L-carnitine / Hexanoyl Carnitine (2),True
+MAR04745,Production of Adipoylcarnitine,CPT1A;CPT1C;CPT1B,L-carnitine / Adipoyl Carnitine,2,CoA / adipoyl-CoA (4); L-carnitine / Adipoyl Carnitine (2),True
+MAR05456,Succ->C4Dcc,CPT1A;CPT1C;CPT1B,L-carnitine / Succinyl Carnitine,2,CoA / succinyl-CoA (9); L-carnitine / Succinyl Carnitine (2),True
+MAR06847,Production of Succinyl Carnitine,CROT,L-carnitine / Succinyl Carnitine,2,CoA / succinyl-CoA (9); L-carnitine / Succinyl Carnitine (2),True
+MAR00159,carnitine O-palmitoyltransferase (butyryl-CoA),CPT1A;CPT1C;CPT1B,L-carnitine / O-butanoylcarnitine,3,butyryl-CoA / CoA (8); L-carnitine / O-butanoylcarnitine (3),True
+MAR00161,carnitine O-acetyltransferase (O-butanoylcarnitine),CRAT;CPT2,L-carnitine / O-butanoylcarnitine,3,butyryl-CoA / CoA (8); L-carnitine / O-butanoylcarnitine (3),True
+MAR02594,carnitine O-palmitoyltransferase (O-propanoylcarnitine),CPT1A;CPT1C;CPT1B,L-carnitine / O-propanoylcarnitine,3,CoA / propanoyl-CoA (25); L-carnitine / O-propanoylcarnitine (3),True
+MAR02598,carnitine O-acetyltransferase (O-propanoylcarnitine),CRAT;CPT2,L-carnitine / O-propanoylcarnitine,3,CoA / propanoyl-CoA (25); L-carnitine / O-propanoylcarnitine (3),True
+MAR03037,carnitine O-acetyltransferase (O-propanoylcarnitine),CRAT,L-carnitine / O-propanoylcarnitine,3,CoA / propanoyl-CoA (25); L-carnitine / O-propanoylcarnitine (3),True
+MAR03625,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-laur,3,cholesterol / cholesterol-ester-laur (3); CoA / lauroyl-CoA (10),True
+MAR03627,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-myrist,3,cholesterol / cholesterol-ester-myrist (3); CoA / myristoyl-CoA (12),True
+MAR03628,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-9-tetrade,3,(9E)-tetradecenoyl-CoA / CoA (8); cholesterol / cholesterol-ester-9-tetrade (3),True
+MAR03632,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-palm,3,cholesterol / cholesterol-ester-palm (3); CoA / palmitoyl-CoA (19),True
+MAR03635,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-hepta,3,cholesterol / cholesterol-ester-hepta (3); CoA / heptadecanoyl-CoA (8),True
+MAR03638,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-stea,3,cholesterol / cholesterol-ester-stea (3); CoA / stearoyl-CoA (12),True
+MAR03641,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-ol,3,cholesterol / cholesterol-ester-ol (3); CoA / oleoyl-CoA (11),True
+MAR03645,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-nanode,3,cholesterol / cholesterol-ester-nanode (3); CoA / nonadecanoyl-CoA (8),True
+MAR03646,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-eico,3,cholesterol / cholesterol-ester-eico (3); CoA / eicosanoyl-CoA (11),True
+MAR03648,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-11-eico,3,(11Z)-eicosenoyl-CoA / CoA (8); cholesterol / cholesterol-ester-11-eico (3),True
+MAR03661,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-linolen,3,cholesterol / cholesterol-ester-linolen (3); CoA / linolenoyl-CoA (7),True
+MAR03664,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,"cholesterol / cholesterol-ester-5,8,11,14,17-eico",3,"(5Z,8Z,11Z,14Z,17Z)-eicosapentaenoyl-CoA / CoA (8); cholesterol / cholesterol-ester-5,8,11,14,17-eico (3)",True
+MAR03673,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-lin,3,cholesterol / cholesterol-ester-lin (3); CoA / linoleoyl-CoA (12),True
+MAR03675,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-dihomo-gamma,3,cholesterol / cholesterol-ester-dihomo-gamma (3); CoA / dihomo-gamma-linolenoyl-CoA (8),True
+MAR03676,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-arach,3,arachidonyl-CoA / CoA (12); cholesterol / cholesterol-ester-arach (3),True
+MAR03681,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,"cholesterol / cholesterol-ester-11,14-eicosa",3,"(11Z,14Z)-eicosadienoyl-CoA / CoA (9); cholesterol / cholesterol-ester-11,14-eicosa (3)",True
+MAR04678,Esterification of Butyrylcoa to Butyrylcarnitine for Transport,CROT,L-carnitine / O-butanoylcarnitine,3,butyryl-CoA / CoA (8); L-carnitine / O-butanoylcarnitine (3),True
+MAR02306,Sterol O-Acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-palmn,4,(2E)-hexadecenoyl-CoA / CoA (6); cholesterol / cholesterol-ester-palmn (4),True
+MAR02591,Acetyl-CoA:carnitine O-acetyltransferase,CPT1A;CPT1C;CPT1B,L-carnitine / O-acetylcarnitine,4,acetyl-CoA / CoA (137); L-carnitine / O-acetylcarnitine (4),True
+MAR02593,Acetyl-CoA:carnitine O-acetyltransferase,CRAT;CPT2,L-carnitine / O-acetylcarnitine,4,acetyl-CoA / CoA (137); L-carnitine / O-acetylcarnitine (4),True
+MAR02599,palmitoyl-CoA:L-carnitine O-palmitoyltransferase,CPT1A;CPT1C;CPT1B,L-carnitine / malonyl-carnitine,4,CoA / malonyl-CoA (54); L-carnitine / malonyl-carnitine (4),True
+MAR02601,palmitoyl-CoA:L-carnitine O-palmitoyltransferase,CRAT;CPT2,L-carnitine / malonyl-carnitine,4,CoA / malonyl-CoA (54); L-carnitine / malonyl-carnitine (4),True
+MAR02780,Acetyl-CoA:carnitine O-acetyltransferase,CRAT,L-carnitine / O-acetylcarnitine,4,acetyl-CoA / CoA (137); L-carnitine / O-acetylcarnitine (4),True
+MAR02785,palmitoyl-CoA:L-carnitine O-palmitoyltransferase,CRAT,L-carnitine / malonyl-carnitine,4,CoA / malonyl-CoA (54); L-carnitine / malonyl-carnitine (4),True
+MAR03028,palmitoyl-CoA:L-carnitine O-palmitoyltransferase,CPT1A;CPT1C;CPT1B,L-carnitine / malonyl-carnitine,4,CoA / malonyl-CoA (54); L-carnitine / malonyl-carnitine (4),True
+MAR03030,Acetyl-CoA:carnitine O-acetyltransferase,CRAT,L-carnitine / O-acetylcarnitine,4,acetyl-CoA / CoA (137); L-carnitine / O-acetylcarnitine (4),True
+MAR03634,Acyl-CoA:cholesterol O-acyltransferase,SOAT1;SOAT2,cholesterol / cholesterol-ester-palmn,4,cholesterol / cholesterol-ester-palmn (4); CoA / palmitoleoyl-CoA (10),True
+MAR01005,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,CoA / tetracosanoyl-CoA,10,acetyl-CoA / CoA (137); CoA / tetracosanoyl-CoA (10); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR01024,fatty-acyl-CoA synthase (N-C14:0CoA),,CoA / lauroyl-CoA,10,CO2 / malonyl-CoA (50); CoA / lauroyl-CoA (10); CoA / malonyl-CoA (54); NADP+ / NADPH (825),False
+MAR04184,sulfite:ferricytochrome-c oxidoreductase,SUOX,ferricytochrome C / ferrocytochrome C,10,ferricytochrome C / ferrocytochrome C (10),True
+MAR04290,ITP phosphohydrolase,ENTPD1;ENTPD3;ENTPD8,IDP / ITP,10,IDP / ITP (10),True
+MAR04291,ATP:IDP phosphotransferase,NME3;NME4;NME6;NME1;NME2,IDP / ITP,10,ADP / ATP (776); IDP / ITP (10),True
+MAR05179,"Fatty Acid Beta Oxidation (C14->C12), Mitochondrial",ACADVL;HADHA;HADHB,CoA / lauroyl-CoA,10,acetyl-CoA / CoA (137); CoA / lauroyl-CoA (10); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05180,"Fatty Acid Beta Oxidation (C14->C12), Peroxisomal",ACAA1;EHHADH;HSD17B4;ACOX1,CoA / lauroyl-CoA,10,acetyl-CoA / CoA (137); CoA / lauroyl-CoA (10); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05345,"Fatty Acid Beta Oxidation (C18:1->C16:1), Mitochondrial",ACADVL;HADHA;HADHB,CoA / palmitoleoyl-CoA,10,acetyl-CoA / CoA (137); CoA / palmitoleoyl-CoA (10); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05431,"Fatty Acid Beta Oxidation (C24->C22), Peroxisomal",ACAA1;EHHADH;HSD17B4;ACOX1,CoA / docosanoyl-CoA,10,acetyl-CoA / CoA (137); CoA / docosanoyl-CoA (10); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR07893,ATP:IDP phosphotransferase,NME1;NME2,IDP / ITP,10,ADP / ATP (776); IDP / ITP (10),True
+MAR07895,ATP:IDP phosphotransferase,NME3;NME4;AK9;NME6;NME1;NME2,IDP / ITP,10,ADP / ATP (776); IDP / ITP (10),True
+MAR09501,NADPH:ferricytochrome oxidoreductase,POR,ferricytochrome C / ferrocytochrome C,10,ferricytochrome C / ferrocytochrome C (10); NADP+ / NADPH (825),True
+MAR00974,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,CoA / eicosanoyl-CoA,11,acetyl-CoA / CoA (137); CoA / eicosanoyl-CoA (11); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00975,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,CoA / oleoyl-CoA,11,acetyl-CoA / CoA (137); CoA / oleoyl-CoA (11); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05421,"Fatty Acid Beta Oxidation (C22->C20), Peroxisomal",ACAA1;EHHADH;HSD17B4;ACOX1,CoA / eicosanoyl-CoA,11,acetyl-CoA / CoA (137); CoA / eicosanoyl-CoA (11); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00747,fatty-acyl-CoA elongation (N-C20:4CoA),ELOVL5;ELOVL4;ELOVL6;ELOVL2,arachidonyl-CoA / CoA,12,arachidonyl-CoA / CoA (12); CO2 / malonyl-CoA (50); CoA / malonyl-CoA (54); NADP+ / NADPH (825),False
+MAR00869,Beta Oxidation of Long Chain Fatty Acid,ACADM;ACADS,CoA / stearoyl-CoA,12,acetyl-CoA / CoA (137); CoA / stearoyl-CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00872,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,CoA / stearoyl-CoA,12,acetyl-CoA / CoA (137); CoA / stearoyl-CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00930,Beta Oxidation of Long Chain Fatty Acid,ACADM;ACADS,arachidonyl-CoA / CoA,12,acetyl-CoA / CoA (137); arachidonyl-CoA / CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00952,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,arachidonyl-CoA / CoA,12,acetyl-CoA / CoA (137); arachidonyl-CoA / CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR01031,fatty-acyl-CoA synthase (N-C16:0CoA),,CoA / myristoyl-CoA,12,CO2 / malonyl-CoA (50); CoA / malonyl-CoA (54); CoA / myristoyl-CoA (12); NADP+ / NADPH (825),False
+MAR04028,ATP:CDP phosphotransferase,NME3;NME4;NME6;NME1;NME2,CDP / CTP,12,ADP / ATP (776); CDP / CTP (12),True
+MAR04030,ATP:CDP phosphotransferase,NME3;NME4;NME6;NME1;NME2,CDP / CTP,12,ADP / ATP (776); CDP / CTP (12),True
+MAR04192,CTP phosphohydrolase,ENTPD1;ENTPD3;ENTPD8,CDP / CTP,12,CDP / CTP (12),True
+MAR05325,"Fatty Acid Beta Oxidation (C16->C14), Mitochondrial",ACADVL;HADHA;HADHB,CoA / myristoyl-CoA,12,acetyl-CoA / CoA (137); CoA / myristoyl-CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05327,"Fatty Acid Beta Oxidation (C16->C14), Peroxisomal",ACAA1;EHHADH;HSD17B4;ACOX1,CoA / myristoyl-CoA,12,acetyl-CoA / CoA (137); CoA / myristoyl-CoA (12); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR07863,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12); UDP / UMP (16),True
+MAR07864,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12); UDP / UMP (16),True
+MAR07885,ATP:CDP phosphotransferase,NME1;NME2,CDP / CTP,12,ADP / ATP (776); CDP / CTP (12),True
+MAR08460,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12); dCDP / dCMP (13),True
+MAR08463,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12); dCDP / dCMP (13),True
+MAR08465,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12),True
+MAR08466,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CTP,12,CDP / CTP (12),True
+MAR03890,L-Glutamate:ammonia ligase (ADP-forming),GLUL,glutamate / glutamine,13,ADP / ATP (776); glutamate / glutamine (13),True
+MAR03892,L-glutamine amidohydrolase,GLS,glutamate / glutamine,13,glutamate / glutamine (13),True
+MAR04006,ATP:UDP phosphotransferase,NME3;NME4;NME6;NME1;NME2,UDP / UTP,13,ADP / ATP (776); UDP / UTP (13),True
+MAR04061,UTP phosphohydrolase,ENTPD1;ENTPD3;ENTPD8,UDP / UTP,13,UDP / UTP (13),True
+MAR04512,ATP:dCMP phosphotransferase,CMPK1,dCDP / dCMP,13,ADP / ATP (776); dCDP / dCMP (13),True
+MAR04516,dCDP nucleotidohydrolase,DCTPP1,dCDP / dCMP,13,dCDP / dCMP (13),True
+MAR04570,ATP:dGDP phosphotransferase,NME3;NME4;NME7;NME6;NME1;NME2,dGDP / dGTP,13,ADP / ATP (776); dGDP / dGTP (13),True
+MAR04572,ATP:dGDP phosphotransferase,NME3;NME4;NME7;NME6;NME1;NME2,dGDP / dGTP,13,ADP / ATP (776); dGDP / dGTP (13),True
+MAR07865,cytidine/uridine monophosphate kinase (UDP),CMPK1,UDP / UTP,13,UDP / UTP (13),True
+MAR07866,cytidine/uridine monophosphate kinase (UDP),CMPK1,UDP / UTP,13,UDP / UTP (13),True
+MAR07873,cytidine/uridine monophosphate kinase (dGDP),CMPK1,dGDP / dGTP,13,dGDP / dGTP (13); UDP / UMP (16),True
+MAR07874,cytidine/uridine monophosphate kinase (dGDP),CMPK1,dGDP / dGTP,13,dGDP / dGTP (13); UDP / UMP (16),True
+MAR07883,ATP:UDP phosphotransferase,NME3;NME4;AK9;NME6;NME1;NME2,UDP / UTP,13,ADP / ATP (776); UDP / UTP (13),True
+MAR07884,ATP:UDP phosphotransferase,NME1;NME2,UDP / UTP,13,ADP / ATP (776); UDP / UTP (13),True
+MAR07888,ATP:dGDP phosphotransferase,NME1;NME2,dGDP / dGTP,13,ADP / ATP (776); dGDP / dGTP (13),True
+MAR08448,cytidine/uridine monophosphate kinase (CDP),CMPK1,dGDP / dGTP,13,CDP / CMP (14); dGDP / dGTP (13),True
+MAR08449,cytidine/uridine monophosphate kinase (CDP),CMPK1,dGDP / dGTP,13,CDP / CMP (14); dGDP / dGTP (13),True
+MAR08450,UMP/CMP kinase (dCDP),,dCDP / dCMP,13,dCDP / dCMP (13); dGDP / dGTP (13),True
+MAR08451,cytidine/uridine monophosphate kinase (dCDP),CMPK1,dCDP / dCMP,13,dCDP / dCMP (13); dGDP / dGTP (13),True
+MAR08454,cytidine/uridine monophosphate kinase (dADP),CMPK1,dCDP / dCMP,13,dADP / dATP (21); dCDP / dCMP (13),True
+MAR08455,cytidine/uridine monophosphate kinase (dADP),CMPK1,dCDP / dCMP,13,dADP / dATP (21); dCDP / dCMP (13),True
+MAR08456,cytidine/uridine monophosphate kinase (dCDP),CMPK1,dCDP / dCMP,13,dCDP / dCMP (13); UDP / UTP (13),True
+MAR08457,cytidine/uridine monophosphate kinase (dCDP),CMPK1,dCDP / dCMP,13,dCDP / dCMP (13); UDP / UTP (13),True
+MAR08459,ATP:dCMP phosphotransferase,CMPK1,dCDP / dCMP,13,ADP / ATP (776); dCDP / dCMP (13),True
+MAR08461,adenylate kinase (dCDP),AK5,dCDP / dCMP,13,dCDP / dCMP (13); GDP / GTP (23),True
+MAR08462,cytidine/uridine monophosphate kinase (dCDP),CMPK1,dCDP / dCMP,13,dCDP / dCMP (13); GDP / GTP (23),True
+MAR08467,cytidine/uridine monophosphate kinase (CDP),CMPK1,UDP / UTP,13,CDP / CMP (14); UDP / UTP (13),True
+MAR08468,cytidine/uridine monophosphate kinase (CDP),CMPK1,UDP / UTP,13,CDP / CMP (14); UDP / UTP (13),True
+MAR09802,L-glutamine amidohydrolase,CAD;GLS2,glutamate / glutamine,13,glutamate / glutamine (13),True
+MAR20191,L-Glutamate:ammonia ligase (ADP-forming),GLUL,glutamate / glutamine,13,ADP / ATP (776); glutamate / glutamine (13),True
+MAR03967,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CMP,14,CDP / CMP (14); GDP / GTP (23),True
+MAR04024,ATP:CMP phosphotransferase,CMPK1,CDP / CMP,14,ADP / ATP (776); CDP / CMP (14),True
+MAR04026,ATP:CMP phosphotransferase,CMPK2,CDP / CMP,14,ADP / ATP (776); CDP / CMP (14),True
+MAR04183,CDP phosphohydrolase,ENTPD1;ENTPD3;ENTPD8,CDP / CMP,14,CDP / CMP (14),True
+MAR08458,ATP:CMP phosphotransferase,CMPK1,CDP / CMP,14,ADP / ATP (776); CDP / CMP (14),True
+MAR08464,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CMP,14,CDP / CMP (14); GDP / GTP (23),True
+MAR08469,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CMP,14,CDP / CMP (14); dADP / dATP (21),True
+MAR08470,cytidine/uridine monophosphate kinase (CDP),CMPK1,CDP / CMP,14,CDP / CMP (14); dADP / dATP (21),True
+MAR03931,NADPH:oxidized-thioredoxin oxidoreductase,TXNRD3;TXNRD1,oxidized thioredoxin / thioredoxin,16,NADP+ / NADPH (825); oxidized thioredoxin / thioredoxin (16),True
+MAR04008,ATP:UMP phosphotransferase,CMPK1,UDP / UMP,16,ADP / ATP (776); UDP / UMP (16),True
+MAR04059,UDP phosphohydrolase,ENTPD2;ENTPD1;ENTPD3;CANT1;ENTPD5;ENTPD8;ENTPD4;ENTPD6,UDP / UMP,16,UDP / UMP (16),True
+MAR04060,UDP phosphohydrolase,ENTPD2;ENTPD1;ENTPD3;CANT1;ENTPD5;ENTPD8;ENTPD4;ENTPD6,UDP / UMP,16,UDP / UMP (16),True
+MAR05381,sulfotransferase (thioredoxin),SULT1A3,oxidized thioredoxin / thioredoxin,16,oxidized thioredoxin / thioredoxin (16); PAP / PAPS (33),True
+MAR07867,cytidine/uridine monophosphate kinase (GDP),CMPK1,UDP / UMP,16,GDP / GTP (23); UDP / UMP (16),True
+MAR07868,cytidine/uridine monophosphate kinase (GDP),CMPK1,UDP / UMP,16,GDP / GTP (23); UDP / UMP (16),True
+MAR07869,cytidine/uridine monophosphate kinase (dADP),CMPK1,UDP / UMP,16,dADP / dATP (21); UDP / UMP (16),True
+MAR07870,cytidine/uridine monophosphate kinase (dADP),CMPK1,UDP / UMP,16,dADP / dATP (21); UDP / UMP (16),True
+MAR07875,ATP:UMP phosphotransferase,CMPK2,UDP / UMP,16,ADP / ATP (776); UDP / UMP (16),True
+MAR07876,ATP:UMP phosphotransferase,CMPK1,UDP / UMP,16,ADP / ATP (776); UDP / UMP (16),True
+MAR08482,NADPH:oxidized-thioredoxin oxidoreductase,TXNRD2,oxidized thioredoxin / thioredoxin,16,NADP+ / NADPH (825); oxidized thioredoxin / thioredoxin (16),True
+MAR08485,UDP phosphohydrolase,CANT1;ENTPD4;ENTPD6,UDP / UMP,16,UDP / UMP (16),True
+MAR03868,glutathione:NAD+ oxidoreductase,GSR,GSH / GSSG,17,GSH / GSSG (17); NAD+ / NADH (427),True
+MAR03869,glutathione:NAD+ oxidoreductase,GSR,GSH / GSSG,17,GSH / GSSG (17); NAD+ / NADH (427),True
+MAR03870,glutathione:NADP+ oxidoreductase,GSR,GSH / GSSG,17,GSH / GSSG (17); NADP+ / NADPH (825),True
+MAR04116,glutathione:hydrogen-peroxide oxidoreductase,GPX7;PRDX1;PRDX6;PRDX5;GPX8;PRDX3;GPX4;PRDX2;GPX2;GPX6;GPX3;GPX5;GPX1,GSH / GSSG,17,GSH / GSSG (17),True
+MAR04118,glutathione:NADP+ oxidoreductase,GSR,GSH / GSSG,17,GSH / GSSG (17); NADP+ / NADPH (825),True
+MAR04120,glutathione:hydrogen-peroxide oxidoreductase,GPX7;PRDX1;PRDX6;PRDX5;GPX8;GPX4;PRDX2;GPX2;GPX6;GPX3;GPX5;GPX1,GSH / GSSG,17,GSH / GSSG (17),True
+MAR04121,glutathione:hydrogen-peroxide oxidoreductase,GPX7;PRDX1;PRDX6;PRDX5;GPX8;PRDX3;GPX4;PRDX2;GPX2;GPX6;GPX3;GPX5;GPX1,GSH / GSSG,17,GSH / GSSG (17),True
+MAR08620,glutathione:dehydroascorbate oxidoreductase,,GSH / GSSG,17,ascorbate / dehydroascorbic acid (20); GSH / GSSG (17),True
+MAR09806,glutathione:insulin oxidoreductase,PDIA5;PDIA6;PDIA4;TMX3;PDIA3;P4HB,GSH / GSSG,17,GSH / GSSG (17),True
+MAR10061,fatty acyl-CoA reduction,FAR2;FAR1,CoA / acyl-CoA pool,17,CoA / acyl-CoA pool (17); NADP+ / NADPH (825),False
+MAR00777,Beta Oxidation of Long Chain Fatty Acid,ACAA1;EHHADH;HSD17B4;ACOX1,CoA / palmitoyl-CoA,19,acetyl-CoA / CoA (137); CoA / palmitoyl-CoA (19); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR01032,fatty-acyl-CoA synthase (N-C18:0CoA),,CoA / palmitoyl-CoA,19,CO2 / malonyl-CoA (50); CoA / malonyl-CoA (54); CoA / palmitoyl-CoA (19); NADP+ / NADPH (825),False
+MAR01353,"Galnac Transferase, Golgi Apparatus",GALNT7;GALNT3;GALNT12;GALNT8;GALNT15;GALNT5;GALNT6;GALNT1;GALNT2;GALNT13;GALNT14;GALNT10;GALNT11;GALNT9;GALNT4,UDP / UDP-N-acetyl-D-galactosamine,19,UDP / UDP-N-acetyl-D-galactosamine (19),False
+MAR01524,"N-Acetylgalactosaminidase, Alpha-",NAGA,UDP / UDP-N-acetyl-D-galactosamine,19,UDP / UDP-N-acetyl-D-galactosamine (19),False
+MAR07187,phosphatidylinositol glycan anchor biosynthesis class W,PIGW,CoA / palmitoyl-CoA,19,CoA / palmitoyl-CoA (19),True
+MAR08381,phosphatidylinositol glycan anchor biosynthesis class W,PIGW,CoA / palmitoyl-CoA,19,CoA / palmitoyl-CoA (19),True
+MAR06395,cytochrome b reductase (ascorbate),CYBRD1,ascorbate / dehydroascorbic acid,20,ascorbate / dehydroascorbic acid (20),True
+MAR06396,glutaredoxin (dehydroascorbic acid),GLRX2;GLRX,ascorbate / dehydroascorbic acid,20,ascorbate / dehydroascorbic acid (20); NADP+ / NADPH (825),True
+MAR08619,ascorbate to dehydroascorbic acid conversion,,ascorbate / dehydroascorbic acid,20,ascorbate / dehydroascorbic acid (20),True
+MAR04044,ATP:dADP phosphotransferase,NME3;NME4;NME6;NME1;NME2,dADP / dATP,21,ADP / ATP (776); dADP / dATP (21),True
+MAR04420,ATP:dADP phosphotransferase,NME3;NME4;NME7;NME6;NME1;NME2,dADP / dATP,21,ADP / ATP (776); dADP / dATP (21),True
+MAR07892,ATP:dADP phosphotransferase,NME1;NME2,dADP / dATP,21,ADP / ATP (776); dADP / dATP (21),True
+MAR04016,ATP:GDP phosphotransferase,NME3;NME4;NME7;NME6;NME1;NME2,GDP / GTP,23,ADP / ATP (776); GDP / GTP (23),True
+MAR04018,ATP:GDP phosphotransferase,NME3;NME4;NME7;NME6;NME1;NME2,GDP / GTP,23,ADP / ATP (776); GDP / GTP (23),True
+MAR04136,GTP phosphohydrolase,ENTPD2;DNM2;DNM1L;DNM1;ENTPD1;EFL1;EEF1A1;GFM2;EEF2;ENTPD3;GFM1;CANT1;ENTPD5;ENTPD8;ENTPD4;ENTPD6;DNM3,GDP / GTP,23,GDP / GTP (23),True
+MAR07882,ATP:GDP phosphotransferase,NME1;NME2,GDP / GTP,23,ADP / ATP (776); GDP / GTP (23),True
+MAR00755,Beta Oxidation of Long Chain Fatty Acid (Odd Chain),ACADM;ACADS,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00774,Beta Oxidation of Long Chain Fatty Acid (Odd Chain),ACADM,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03056,tricosanoyl-CoA oxidation,,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03396,(10Z)-heptadecenoyl-CoA oxidation,,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03397,9-heptadecenoyl-CoA oxidation,,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR05988,"Fatty Acid Beta Oxidation (C5->C3), Mitochondrial",ACADS;ECHS1;HADH;ACAA2,CoA / propanoyl-CoA,25,acetyl-CoA / CoA (137); CoA / propanoyl-CoA (25); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR04188,H+ reduction,,PAP / PAPS,33,NADP+ / NADPH (825); PAP / PAPS (33),False
+MAR03802,L-glutamate:NAD+ oxidoreductase (deaminating),GLUD1;GLUD2,AKG / glutamate,41,AKG / glutamate (41); NAD+ / NADH (427),True
+MAR03804,L-glutamate:NADP+ oxidoreductase (deaminating),GLUD1;GLUD2,AKG / glutamate,41,AKG / glutamate (41); NADP+ / NADPH (825),True
+MAR01036,"fatty acyl-CoA synthase (N-C8:0CoA), lumped reaction",FASN,CO2 / malonyl-CoA,50,acetyl-CoA / CoA (137); CO2 / malonyl-CoA (50); CoA / malonyl-CoA (54); NADP+ / NADPH (825),False
+MAR03031,Glucuronosyltransferase,UGT1A1,UDP / UDP-glucuronate,64,UDP / UDP-glucuronate (64),True
+MAR06685,"glucuronosyltransferase (5,6-epoxy-13-cis-retinoate)",UGT2B10;UGT2A3;UGT2B28;UGT3A1;UGT2B4;UGT1A6;UGT3A2;UGT2B7;UGT2A1;UGT2B15;UGT2B17;UGT2B11;UGT1A9;UGT1A1;UGT1A8;UGT1A10;UGT1A7;UGT1A4;UGT1A3;UGT1A5,UDP / UDP-glucuronate,64,UDP / UDP-glucuronate (64),True
+MAR06686,"glucuronosyltransferase (5,6-epoxy-13-cis-retinoate)",UGT2B10;UGT2A3;UGT2B28;UGT3A1;UGT2B4;UGT1A6;UGT3A2;UGT2B7;UGT2A1;UGT2B15;UGT2B17;UGT2B11;UGT1A9;UGT1A1;UGT1A8;UGT1A10;UGT1A7;UGT1A4;UGT1A3;UGT1A5,UDP / UDP-glucuronate,64,UDP / UDP-glucuronate (64),True
+MAR11309,Band Membrane Protein-Methyltransferase,,SAH / SAM,77,SAH / SAM (77),False
+MAR00752,Beta Oxidation of Long Chain Fatty Acid,ACADM;ACADS,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00756,Beta Oxidation of Long Chain Fatty Acid,ACADM;ACADS,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR00916,Beta Oxidation of Long Chain Fatty Acid,ACADM;ACADS,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03053,"12,15,18,21-tetracosatetraenoyl-CoA oxidation",,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03054,"(9Z,12Z,15Z,18Z,21Z)-tetracosapentaenoyl-CoA oxidation",,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03055,"(9Z,12Z,15Z,18Z)-tetracosatetraenoyl-CoA oxidation",,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03398,enoyl-CoA hydratase ((9E)-tetradecenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03406,enoyl-CoA hydratase ((13Z)-octadecenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03407,enoyl-CoA hydratase ((9E)-octadecenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03408,enoyl-CoA hydratase ((7Z)-octadecenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03409,"enoyl-CoA hydratase ((6Z,9Z)-octadecadienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03411,enoyl-CoA hydratase (9-eicosenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03413,"enoyl-CoA hydratase ((8Z,11Z)-eicosadienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03414,"enoyl-CoA hydratase ((5Z,8Z,11Z)-eicosatrienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03416,enoyl-CoA hydratase ((11Z)-docosenoyl-CoA),ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03421,"enoyl-CoA hydratase ((7Z,10Z,13Z,16Z)-docosatetraenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03423,"enoyl-CoA hydratase ((11Z,14Z)-eicosadienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03424,"enoyl-CoA hydratase ((13Z,16Z)-docosadienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03425,"enoyl-CoA hydratase (10,13,16-docosatrienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03427,"enoyl-CoA hydratase ((8Z,11Z,14Z,17Z)-eicosatetraenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03428,"enoyl-CoA hydratase ((5Z,8Z,11Z,14Z,17Z)-eicosapentaenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03429,"enoyl-CoA hydratase ((7Z,10Z,13Z,16Z,19Z)-docosapentaenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03430,"enoyl-CoA hydratase ((4Z,7Z,10Z,13Z,16Z,19Z)-docosahexaenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03431,"enoyl-CoA hydratase ((11Z,14Z,17Z)-eicosatrienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03432,"enoyl-CoA hydratase (13,16,19-docosatrienoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR03433,"enoyl-CoA hydratase (10,13,16,19-docosatetraenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR09719,"enoyl-CoA hydratase ((6Z,9Z,12Z,15Z)-octadecatetraenoyl-CoA)",ACAA1;HSD17B10;ACADVL;HADHA;ACADL;ACADM;ECHS1;HADHB;HADH;ACAA2;ACAD9,acetyl-CoA / CoA,137,acetyl-CoA / CoA (137); FAD / FADH2 (156); NAD+ / NADH (427),False
+MAR06510,FADH2:NAD+ oxidoreductase,,FAD / FADH2,156,FAD / FADH2 (156); NAD+ / NADH (427),True
+MAR06511,FADH2:NADP+ oxidoreductase,BLVRB,FAD / FADH2,156,FAD / FADH2 (156); NADP+ / NADPH (825),True
+MAR20114,MAR20014,NOS2;ACOX3;DAO;PAOX;XDH;ACOX1;ACOX2;PIPOX;DDO,FAD / FADH2,156,FAD / FADH2 (156),True
+MAR03966,ATP diphosphohydrolase (diphosphate-forming),,AMP / ATP,243,AMP / ATP (243),True
+MAR07132,"ATP:selenide, water phosphotransferase",SEPHS1;SEPHS2,AMP / ATP,243,AMP / ATP (243),True
+MAR08474,ATP diphosphohydrolase (phosphate-forming),ENTPD2;ENTPD1;ENTPD3;ENTPD5;ENTPD8;ENTPD4;ENTPD6,AMP / ATP,243,AMP / ATP (243),True
+MAR03992,NADH:ferricytochrome-b5 oxidoreductase,CYB5R4;CYB5R3;CYB5R1;CYB5R2;CYB5RL,NAD+ / NADH,427,NAD+ / NADH (427),True
+MAR03964,ATP phosphohydrolase,,ADP / ATP,776,ADP / ATP (776),True
+MAR05266,apo-[ACP] phosphorylation,,ADP / ATP,776,ADP / ATP (776),True
+MAR05267,mitoApo-[ACP] phosphorylation,,ADP / ATP,776,ADP / ATP (776),True
+MAR05287,apocytochrome-C phosphorylation,CTSA;CTSG;LGMN;CTSZ;CTSH;CTSC;CTSD;CTSL;CTSV;CTSK;CTSS;CTSB;TPP1;CTSW;CTSF;CTSE;CTSO,ADP / ATP,776,ADP / ATP (776),True
+MAR05392,Tetrahydrofolate:L-glutamate gamma-ligase (ADP-forming),FPGS,ADP / ATP,776,ADP / ATP (776),True
+MAR09488,ATP:phosphorylase-b phosphotransferase,PHKA2;PHKA1;PHKB;CALM2;PHKG2;CALM3;PHKG1;CALM1,ADP / ATP,776,ADP / ATP (776),True
+MAR09503,ATP:rhodopsin phosphotransferase,GRK7;GRK1,ADP / ATP,776,ADP / ATP (776),True
+MAR20184,Synthesis of 4Fe4S from 2Fe2S,HSCB;HSPA9;ISCA1;FDXR;ISCA2;IBA57;GLRX5;FDX2,ADP / ATP,776,ADP / ATP (776); NADP+ / NADPH (825),False
+MAR06441,leukotriene-B4 20-monooxygenase (gamma-tocotrienol),CYP4F11;CYP4F22;CYP4F2;CYP4F8;CYP4F3,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR06442,leukotriene-B4 20-monooxygenase (gamma-tocotrienol),CYP4F11;CYP4F22;CYP4F2;CYP4F8;CYP4F3,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR06443,leukotriene-B4 20-monooxygenase (13-hydroxy-gamma-tocotrienol),CYP4F11;CYP4F22;CYP4F2;CYP4F8;CYP4F3,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR06444,leukotriene-B4 20-monooxygenase (13-hydroxy-gamma-tocotrienol),CYP4F11;CYP4F22;CYP4F2;CYP4F8;CYP4F3,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR07131,hydrogen selenide:NADP+ oxidoreductase,TXNRD2;TXNRD3;TXNRD1,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR07701,NADPH:oxygen oxidoreductase,DUOX1;DUOX2,NADP+ / NADPH,825,NADP+ / NADPH (825),True
+MAR07741,Ferredoxin:NADP+ oxidoreductase,FDXR,NADP+ / NADPH,825,NADP+ / NADPH (825),True

@@ -1,0 +1,145 @@
+node,role,partner,reaction,partner_is_ester,ester_has_structure
+MAR00222,product,desmosterol,24-Dehydrocholesterol Reductase [Precurs,False,True
+MAR00228,product,provitamin D3,7-Dehydrocholesterol Reductase,False,True
+MAR01526,product,desmosterol,cholesterol:NADP+ Delta24-oxidoreductase,False,True
+MAR01565,product,provitamin D3,cholesterol:NADP+ delta7-oxidoreductase,False,True
+MAR01571,substrate,24-hydroxycholesterol,"Cytochrome P450, Family 46, Subfamily A,",False,True
+MAR01578,substrate,20-hydroxycholesterol,Cholesterol Monooxygenase,False,True
+MAR01581,substrate,7alpha-hydroxycholesterol,cytochrome P450 (cholesterol),False,True
+MAR01735,substrate,24-hydroxycholesterol,"cholesterol,NADPH-hemoprotein reductase:",False,True
+MAR01762,substrate,27-hydroxycholesterol,"cholesterol,NADPH:oxygen oxidoreductase ",False,True
+MAR01776,substrate,25-hydroxycholesterol,cholesterol 25-hydroxylase (cholesterol),False,True
+MAR01781,substrate,20-hydroxycholesterol,cholesterol 25-hydroxylase (cholesterol),False,True
+MAR01784,substrate,26-hydroxycholesterol,cholesterol 26-hydroxylase,False,True
+MAR01785,substrate,26-hydroxycholesterol,cholesterol 26-hydroxylase,False,True
+MAR01786,substrate,26-hydroxycholesterol,cholesterol 26-hydroxylase,False,True
+MAR01919,substrate,cholesterol-sulfate,3'-phosphoadenylyl-sulfate:cholesterol s,False,True
+MAR01920,product,cholesterol-sulfate,Cholesterol-sulfate sulfohydrolase,False,True
+MAR01924,substrate,STAR; cholesterol-STAR,StAR related lipid transfer domain conta,False,True
+MAR01926,product,cholesterol-STAR; STAR,cholesterol-STAR to cholesterol conversi,False,True
+MAR01927,substrate,22beta-hydroxycholesterol,cytochrome P450 (cholesterol),False,True
+MAR01932,substrate,20-hydroxycholesterol,Cholesterol:oxygen oxidoreductase (side-,False,True
+MAR02306,substrate,cholesterol-ester-palmn,Sterol O-Acyltransferase,True,True
+MAR02747,product,cholesterol-sulfate,Steryl-Sulfatase,False,True
+MAR02749,product,cholesterol-sulfate,Steryl-Sulfatase,False,True
+MAR03419,product,desmosterol,3-hydroxyacyl-CoA dehydrogenase (desmost,False,True
+MAR03539,product,cholesterol-ester-tridec; tridecylic acid,Steryl-ester acylhydrolase,True,False
+MAR03542,product,cholesterol-ester-7-tetrade; (7Z)-tetradecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03543,product,cholesterol-ester-5-tetra; physeteric acid,Steryl-ester acylhydrolase,True,False
+MAR03546,product,cholesterol-ester-7-hexa; 7-palmitoleic acid,Steryl-ester acylhydrolase,True,False
+MAR03550,product,cholesterol-ester-9-heptade; 9-heptadecylenic acid,Steryl-ester acylhydrolase,True,False
+MAR03553,product,cholesterol-ester-13-octade; (13Z)-octadecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03554,product,cholesterol-ester-cis-vac; cis-vaccenic acid,Steryl-ester acylhydrolase,True,False
+MAR03555,product,cholesterol-ester-9-octa; elaidate,Steryl-ester acylhydrolase,True,False
+MAR03556,product,cholesterol-ester-7-octade; (7Z)-octadecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03557,product,"cholesterol-ester-6,9-octa; (6Z,9Z)-octadecadienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03560,product,cholesterol-ester-13-eicose; (13Z)-eicosenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03562,product,cholesterol-ester-9-eicose; 9-eicosenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03563,product,"cholesterol-ester-8,11-eico; 8,11-eicosadienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03564,product,"cholesterol-ester-5,8,11-eico; mead acid",Steryl-ester acylhydrolase,True,False
+MAR03565,product,cholesterol-ester-heneico; heneicosanoic acid,Steryl-ester acylhydrolase,True,False
+MAR03568,product,cholesterol-ester-11-docose; cis-cetoleic acid,Steryl-ester acylhydrolase,True,False
+MAR03569,product,cholesterol-ester-trico; tricosanoic acid,Steryl-ester acylhydrolase,True,False
+MAR03570,product,cholesterol-ester-tetraco; lignocerate,Steryl-ester acylhydrolase,True,False
+MAR03572,product,cholesterol-ester-hexacosa; cerotic acid,Steryl-ester acylhydrolase,True,False
+MAR03573,product,cholesterol-ester-hexecose; ximenic acid,Steryl-ester acylhydrolase,True,False
+MAR03575,product,"cholesterol-ester-6,9,12,15-octa; stearidonic acid",Steryl-ester acylhydrolase,True,False
+MAR03576,product,"cholesterol-ester-8,11,14,17-eico; omega-3-arachidonic acid",Steryl-ester acylhydrolase,True,False
+MAR03579,product,"cholesterol-ester-9,12,15,18,21-tetra; (9Z,12Z,15Z,18Z,21Z)-TPA",Steryl-ester acylhydrolase,True,False
+MAR03580,product,"cholesterol-ester-6,9,12,15,18,21-tetra; (6Z,9Z,12Z,15Z,18Z,21Z)-THA",Steryl-ester acylhydrolase,True,False
+MAR03582,product,"cholesterol-ester-11,14,17-eico; (11Z,14Z,17Z)-eicosatrienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03583,product,"cholesterol-ester-13,16,19-doco; 13,16,19-docosatrienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03584,product,"cholesterol-ester-10,13,16,19-docosa; 10,13,16,19-docosatetraenoic acid",Steryl-ester acylhydrolase,True,False
+MAR03585,product,"cholesterol-ester-12,15,18,21-tetracosa; 12,15,18,21-tetracosatetraenoic acid",Steryl-ester acylhydrolase,True,False
+MAR03587,product,cholesterol-ester-gamma-lin; gamma-linolenate,Steryl-ester acylhydrolase,True,False
+MAR03591,product,"cholesterol-ester-9,12,15,18-tetraco; (9Z,12Z,15Z,18Z)-TTA",Steryl-ester acylhydrolase,True,False
+MAR03592,product,"cholesterol-ester-6,9,12,15,18-tetraco; (6Z,9Z,12Z,15Z,18Z)-TPA",Steryl-ester acylhydrolase,True,False
+MAR03593,product,"cholesterol-ester-4,7,10,13,16-docosa; (4Z,7Z,10Z,13Z,16Z)-DPA",Steryl-ester acylhydrolase,True,False
+MAR03596,product,"cholesterol-ester-10,13,16-docosa; 10,13,16-docosatriynoic acid",Steryl-ester acylhydrolase,True,False
+MAR03625,substrate,cholesterol-ester-laur,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03626,substrate,tridecanoyl-CoA; cholesterol-ester-tridec,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03627,substrate,cholesterol-ester-myrist,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03628,substrate,cholesterol-ester-9-tetrade,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03629,substrate,(7Z)-tetradecenoyl-CoA; cholesterol-ester-7-tetrade,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03630,substrate,5-tetradecenoyl-CoA; cholesterol-ester-5-tetra,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03632,substrate,cholesterol-ester-palm,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03633,substrate,7-hexadecenoyl-CoA; cholesterol-ester-7-hexa,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03634,substrate,cholesterol-ester-palmn,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03635,substrate,cholesterol-ester-hepta,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03637,substrate,9-heptadecenoyl-CoA; cholesterol-ester-9-heptade,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03638,substrate,cholesterol-ester-stea,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03639,substrate,(13Z)-octadecenoyl-CoA; cholesterol-ester-13-octade,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03640,substrate,cis-vaccenoyl-CoA; cholesterol-ester-cis-vac,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03641,substrate,cholesterol-ester-ol,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03642,substrate,(9E)-octadecenoyl-CoA; cholesterol-ester-9-octa; CoA,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03643,substrate,(7Z)-octadecenoyl-CoA; cholesterol-ester-7-octade,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03644,substrate,"(6Z,9Z)-octadecadienoyl-CoA; cholesterol-ester-6,9-octa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03645,substrate,cholesterol-ester-nanode,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03646,substrate,cholesterol-ester-eico,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03647,substrate,(13Z)-eicosenoyl-CoA; cholesterol-ester-13-eicose,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03648,substrate,cholesterol-ester-11-eico,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03649,substrate,9-eicosenoyl-CoA; cholesterol-ester-9-eicose,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03650,substrate,"(8Z,11Z)-eicosadienoyl-CoA; cholesterol-ester-8,11-eico",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03651,substrate,"(5Z,8Z,11Z)-eicosatrienoyl-CoA; cholesterol-ester-5,8,11-eico",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03652,substrate,heneicosanoyl-CoA; cholesterol-ester-heneico,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03655,substrate,(11Z)-docosenoyl-CoA; cholesterol-ester-11-docose,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03656,substrate,tricosanoyl-CoA; cholesterol-ester-trico,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03657,substrate,cholesterol-ester-tetraco,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03659,substrate,hexacosanoyl-CoA; cholesterol-ester-hexacosa,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03660,substrate,hexacosenoyl-CoA; cholesterol-ester-hexecose,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03661,substrate,cholesterol-ester-linolen,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03662,substrate,"(6Z,9Z,12Z,15Z)-octadecatetraenoyl-CoA; cholesterol-ester-6,9,12,15-octa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03663,substrate,"(8Z,11Z,14Z,17Z)-eicosatetraenoyl-CoA; cholesterol-ester-8,11,14,17-eico",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03664,substrate,"cholesterol-ester-5,8,11,14,17-eico",Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03666,substrate,"(9Z,12Z,15Z,18Z,21Z)-tetracosapentaenoyl; cholesterol-ester-9,12,15,18,21-tetra",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03667,substrate,"(6Z,9Z,12Z,15Z,18Z,21Z)-tetracosahexaeno; cholesterol-ester-6,9,12,15,18,21-tetra",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03669,substrate,"(11Z,14Z,17Z)-eicosatrienoyl-CoA; cholesterol-ester-11,14,17-eico",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03670,substrate,"13,16,19-docosatrienoyl-CoA; cholesterol-ester-13,16,19-doco",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03671,substrate,"10,13,16,19-docosatetraenoyl-CoA; cholesterol-ester-10,13,16,19-docosa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03672,substrate,"12,15,18,21-tetracosatetraenoyl-CoA; cholesterol-ester-12,15,18,21-tetracosa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03673,substrate,cholesterol-ester-lin,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03674,substrate,gamma-linolenoyl-CoA; cholesterol-ester-gamma-lin,Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03675,substrate,cholesterol-ester-dihomo-gamma,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03676,substrate,cholesterol-ester-arach,Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03678,substrate,"(9Z,12Z,15Z,18Z)-tetracosatetraenoyl-CoA; cholesterol-ester-9,12,15,18-tetraco",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03679,substrate,"(6Z,9Z,12Z,15Z,18Z)-tetracosapentaenoyl-; cholesterol-ester-6,9,12,15,18-tetraco",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03680,substrate,"(4Z,7Z,10Z,13Z,16Z)-docosapentaenoyl-CoA; cholesterol-ester-4,7,10,13,16-docosa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03681,substrate,"cholesterol-ester-11,14-eicosa",Acyl-CoA:cholesterol O-acyltransferase,True,True
+MAR03683,substrate,"10,13,16-docosatrienoyl-CoA; cholesterol-ester-10,13,16-docosa",Acyl-CoA:cholesterol O-acyltransferase,True,False
+MAR03685,product,cholesterol-ester-tridec; tridecylic acid,Steryl-ester acylhydrolase,True,False
+MAR03688,product,cholesterol-ester-7-tetrade; (7Z)-tetradecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03689,product,cholesterol-ester-5-tetra; physeteric acid,Steryl-ester acylhydrolase,True,False
+MAR03692,product,cholesterol-ester-7-hexa; 7-palmitoleic acid,Steryl-ester acylhydrolase,True,False
+MAR03696,product,cholesterol-ester-9-heptade; 9-heptadecylenic acid,Steryl-ester acylhydrolase,True,False
+MAR03698,product,cholesterol-ester-13-octade; (13Z)-octadecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03699,product,cholesterol-ester-cis-vac; cis-vaccenic acid,Steryl-ester acylhydrolase,True,False
+MAR03701,product,cholesterol-ester-9-octa; elaidate,Steryl-ester acylhydrolase,True,False
+MAR03702,product,cholesterol-ester-7-octade; (7Z)-octadecenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03703,product,"cholesterol-ester-6,9-octa; (6Z,9Z)-octadecadienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03706,product,cholesterol-ester-13-eicose; (13Z)-eicosenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03708,product,cholesterol-ester-9-eicose; 9-eicosenoic acid,Steryl-ester acylhydrolase,True,False
+MAR03709,product,"cholesterol-ester-8,11-eico; 8,11-eicosadienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03710,product,"cholesterol-ester-5,8,11-eico; mead acid",Steryl-ester acylhydrolase,True,False
+MAR03711,product,cholesterol-ester-heneico; heneicosanoic acid,Steryl-ester acylhydrolase,True,False
+MAR03714,product,cholesterol-ester-11-docose; cis-cetoleic acid,Steryl-ester acylhydrolase,True,False
+MAR03715,product,cholesterol-ester-trico; tricosanoic acid,Steryl-ester acylhydrolase,True,False
+MAR03716,product,cholesterol-ester-tetraco; lignocerate,Steryl-ester acylhydrolase,True,False
+MAR03718,product,cholesterol-ester-hexacosa; cerotic acid,Steryl-ester acylhydrolase,True,False
+MAR03719,product,cholesterol-ester-hexecose; ximenic acid,Steryl-ester acylhydrolase,True,False
+MAR03721,product,"cholesterol-ester-6,9,12,15-octa; stearidonic acid",Steryl-ester acylhydrolase,True,False
+MAR03722,product,"cholesterol-ester-8,11,14,17-eico; omega-3-arachidonic acid",Steryl-ester acylhydrolase,True,False
+MAR03725,product,"cholesterol-ester-9,12,15,18,21-tetra; (9Z,12Z,15Z,18Z,21Z)-TPA",Steryl-ester acylhydrolase,True,False
+MAR03726,product,"cholesterol-ester-6,9,12,15,18,21-tetra; (6Z,9Z,12Z,15Z,18Z,21Z)-THA",Steryl-ester acylhydrolase,True,False
+MAR03728,product,"cholesterol-ester-11,14,17-eico; (11Z,14Z,17Z)-eicosatrienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03729,product,"cholesterol-ester-13,16,19-doco; 13,16,19-docosatrienoic acid",Steryl-ester acylhydrolase,True,False
+MAR03730,product,"cholesterol-ester-10,13,16,19-docosa; 10,13,16,19-docosatetraenoic acid",Steryl-ester acylhydrolase,True,False
+MAR03731,product,"cholesterol-ester-12,15,18,21-tetracosa; 12,15,18,21-tetracosatetraenoic acid",Steryl-ester acylhydrolase,True,False
+MAR03733,product,cholesterol-ester-gamma-lin; gamma-linolenate,Steryl-ester acylhydrolase,True,False
+MAR03737,product,"cholesterol-ester-9,12,15,18-tetraco; (9Z,12Z,15Z,18Z)-TTA",Steryl-ester acylhydrolase,True,False
+MAR03738,product,"cholesterol-ester-6,9,12,15,18-tetraco; (6Z,9Z,12Z,15Z,18Z)-TPA",Steryl-ester acylhydrolase,True,False
+MAR03739,product,"cholesterol-ester-4,7,10,13,16-docosa; (4Z,7Z,10Z,13Z,16Z)-DPA",Steryl-ester acylhydrolase,True,False
+MAR03742,product,"cholesterol-ester-10,13,16-docosa; 10,13,16-docosatriynoic acid",Steryl-ester acylhydrolase,True,False
+MAR07935#1,substrate,isocaproic-aldehyde,cytochrome P450 (cholesterol),False,True
+MAR07935#2,substrate,pregnenolone,cytochrome P450 (cholesterol),False,True
+MAR07950,product,cholesterol-sulfate,Cholesterol-sulfate sulfohydrolase,False,True
+MAR08218,product,desmosterol,Desmosterol Reductase,False,True
