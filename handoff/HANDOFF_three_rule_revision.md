@@ -1,5 +1,36 @@
 # Handoff: 3-rule pruning revision
 
+> **Corrections (28 Oct 2026, after steps 1–3 were implemented on `three-rule-revision`).**
+> The handoff below is left as written; where it disagrees with this box, this box is right.
+>
+> 1. **Step 3 is wrong by an order of magnitude.** `carbon_balance_audit.csv` counts every
+>    stoichiometric coefficient as 1 and only the first `C` of a formula (it reproduces that way for
+>    99.94% of reactions). With stoichiometry, **21** of the 6,219 pruned reactions are unbalanced,
+>    not 301 (78 of the raw 7,080). The "+6" cluster is mostly two-hexose releases such as
+>    alpha-mannosidase. `MAR03536`, `MAR03598` and `MAR01711`, named below as CO₂ artefacts,
+>    **balance**. Use `metaboenrich.atoms.carbon_unbalanced`, not the CSV.
+> 2. **Step 4 inherits the error.** `reaction_participants.tsv`, Rule 4's only input, has no
+>    stoichiometry column, so the 88 impossible links and the ATP validation table must be
+>    recomputed with coefficients before any hand review.
+> 3. **Step 6's CO₂ estimate** (out-degree 8 → ~2, shortcuts 904 → ~230) counted those three
+>    reactions as fixed by step 3. Re-measure.
+> 4. **Baseline gate.** `3_rule_pruning` has **33** tests, all of which run with `data/` present
+>    (none skipped); the 49 are on `flip-orientation`. That branch is not two documentation
+>    commits: it merges `3_rule_pruning` into `directed-rw` and adds ~10 commits (`walk.py`,
+>    `--sources`, tests). Pruning code (`atoms.py`, `network.py`, `structure.py`) is identical on
+>    both; the final benchmark re-run will likely need `flip-orientation`'s scoring code.
+> 5. **The `.venv` works** on this machine (Python 3.9.10 is installed).
+> 6. **Step 1** reproduced every number in its table, but the keep-rarest safeguard fires **once**
+>    (216 → 217: ACAT `MAR03657`, both carrier links now removed, CoA / tetracosanoyl-CoA restored).
+>    No node is lost. 14 pravastatin metabolites become cut off (395 → 409), since they reached the
+>    network only through the pravastatin-CoAs. "157 → 190 for CoA is wrong" in step 1 is garbled;
+>    the table (CoA 157 → 172, cholesterol 33 → 66) is right.
+> 7. **Step 2** merges link-level, not one copy per group: 2 groups' copies have different atom
+>    maps, 121 mix directions, 573 differ in genes. Result 6,099 reaction nodes, 12,754 edges,
+>    largest hub CO₂ (103); genes, reactions and every metabolite-to-metabolite step unchanged.
+> 8. The methods doc's baseline figures "212 kept by safeguard" and "84 that Rule 3 separates"
+>    measure 216 and 82 on the delivered code.
+
 Repo: `C:\Users\dmontefusco\Documents\Github\Metaboenrich-Currency-Gene-Predictor`
 Target branch: **`three-rule-revision`**, to be created off `3_rule_pruning`.
 
