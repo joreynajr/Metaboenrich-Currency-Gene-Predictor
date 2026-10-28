@@ -46,6 +46,41 @@ class CarbonBalanceTest(unittest.TestCase):
         self.assertEqual(carbon_unbalanced(model), {"off", "rco"})
 
 
+class CarbonBudgetTest(unittest.TestCase):
+    @staticmethod
+    def model(subs, prods, formula):
+        from types import SimpleNamespace as NS
+        sp = {m: NS(met_id=m, formula=f) for m, f in formula.items()}
+        return NS(species=sp, reactions={"r": NS(substrates=subs, products=prods)})
+
+    def test_trna_ligase(self):
+        # ATP's ten carbons all go to AMP; none is left for alanyl-tRNA
+        from metaboenrich.atoms import carbon_budget
+        m = self.model({"ala": 1, "atp": 1, "trna": 1}, {"amp": 1, "altrna": 1, "ppi": 1},
+                       {"ala": "C3H7NO2", "atp": "C10H16N5O13P3", "trna": "RH", "amp": "C10H14N5O7P",
+                        "altrna": "C3H7NOR", "ppi": "H4O7P2"})
+        v = carbon_budget(m, "r", [("atp", "altrna"), ("ala", "altrna"), ("atp", "amp")])
+        self.assertEqual(v, {("atp", "altrna"): "impossible", ("ala", "altrna"): "possible",
+                             ("atp", "amp"): "possible"})
+
+    def test_split_substrate_inconclusive(self):
+        # citrulline split into ornithine + carbamoyl-phosphate: no whole assignment
+        from metaboenrich.atoms import carbon_budget
+        m = self.model({"cit": 1, "pi": 1}, {"orn": 1, "cp": 1},
+                       {"cit": "C6H13N3O3", "pi": "HO4P", "orn": "C5H12N2O2", "cp": "CH2NO5P"})
+        self.assertEqual(carbon_budget(m, "r", [("cit", "cp")]), {("cit", "cp"): "inconclusive"})
+        self.assertEqual(carbon_budget(m, "r", [("cit", "cp")], unbalanced={"r"}), {("cit", "cp"): "unbalanced"})
+
+    def test_group_transfer_is_a_known_failure(self):
+        # SCOT moves CoA: the real links (acetoacetate -> acetoacetyl-CoA) come out
+        # 'impossible' because whole molecules would have to swap (rule 4 review)
+        from metaboenrich.atoms import carbon_budget
+        m = self.model({"acac": 1, "succoa": 1}, {"acacoa": 1, "succ": 1},
+                       {"acac": "C4H5O3", "succoa": "C25H35N7O19P3S", "acacoa": "C25H36N7O18P3S",
+                        "succ": "C4H4O4"})
+        self.assertEqual(carbon_budget(m, "r", [("acac", "acacoa")]), {("acac", "acacoa"): "impossible"})
+
+
 class CarbonChannelGraphTest(unittest.TestCase):
     def test_reaction_split_into_channels(self):
         model, ids = toy_model()

@@ -464,6 +464,89 @@ def carbon_unbalanced(model):
     return {rid for rid, (c_in, c_out) in carbon_balance(model).items() if abs(c_in - c_out) > 1e-6}
 
 
+CARBON_BUDGET_MAX_MOLECULES = 16
+
+
+def carbon_budget(model, rid, links, unbalanced=frozenset(), max_molecules=CARBON_BUDGET_MAX_MOLECULES):
+    """Rule 4 (candidate): can carbon pass from substrate s to product p, by carbon counts alone?
+
+    Counting alone never rules a link out (carbon could always be split in
+    proportion), so the test assumes each substrate molecule's carbon goes
+    whole into one product molecule. It looks for complete assignments of
+    every substrate molecule (stoichiometry counted, compartments merged) to
+    product molecules whose carbon sums match exactly. A link no such
+    assignment uses is 'impossible'; one some assignment uses is 'possible'.
+    'inconclusive' when no assignment exists (some substrate must split, as
+    in ornithine transcarbamylase written in reverse), stoichiometry is not
+    whole, a partner has no carbon, or the reaction has more than
+    `max_molecules` carbon molecules; 'unbalanced' for reactions in
+    `unbalanced` (carbon_unbalanced). It proves impossibility only under
+    that assumption and never certifies a link.
+
+    links: [(s, p)] met_ids, s on the substrate side as written.
+    Returns {(s, p): verdict}."""
+    from .network import parse_formula
+    if rid in unbalanced:
+        return {lk: "unbalanced" for lk in links}
+    rxn = model.reactions[rid]
+    carbons, side = {}, {}
+    for sign, refs in ((-1, rxn.substrates), (1, rxn.products)):
+        for s, n in refs.items():
+            m = model.species[s].met_id
+            carbons[m] = parse_formula(model.species[s].formula)["C"]
+            side[m] = side.get(m, 0) + sign * n
+    subs = {m: -n for m, n in side.items() if n < 0 and carbons[m] > 0}
+    prods = {m: n for m, n in side.items() if n > 0 and carbons[m] > 0}
+    counts = list(subs.values()) + list(prods.values())
+    if (any(abs(n - round(n)) > 1e-6 for n in counts) or sum(round(n) for n in counts) > max_molecules
+            or not subs or not prods):
+        return {lk: "inconclusive" for lk in links}
+    pieces = sorted((carbons[m] for m, n in subs.items() for _ in range(round(n))), reverse=True)
+
+    def caps_of(extra=None):
+        caps = [carbons[m] for m, n in prods.items() for _ in range(round(n))]
+        if extra:
+            s, p = extra
+            k = caps.index(carbons[p])
+            if caps[k] < carbons[s]:
+                return None
+            caps[k] -= carbons[s]
+        return tuple(sorted(caps))
+
+    if not _fits_pieces(pieces, caps_of()):
+        return {lk: "inconclusive" for lk in links}
+    out = {}
+    for s, p in links:
+        if s not in subs or p not in prods:
+            out[(s, p)] = "inconclusive"
+            continue
+        caps = caps_of((s, p))
+        if caps is None:
+            out[(s, p)] = "impossible"
+            continue
+        i = pieces.index(carbons[s])
+        rest = pieces[:i] + pieces[i + 1:]
+        out[(s, p)] = "possible" if _fits_pieces(rest, caps) else "impossible"
+    return out
+
+
+def _fits_pieces(pieces, caps):
+    """Whether substrate molecules of `pieces` carbons (largest first) can each go whole
+    into a product molecule so that every product's remaining carbon `caps` is filled exactly."""
+    from functools import lru_cache
+
+    @lru_cache(maxsize=None)
+    def fits(i, caps):
+        if i == len(pieces):
+            return not any(caps)
+        for k, c in enumerate(caps):
+            if c >= pieces[i] and (k == 0 or caps[k - 1] != c):     # equal capacities are interchangeable
+                if fits(i + 1, tuple(sorted(caps[:k] + (c - pieces[i],) + caps[k + 1:]))):
+                    return True
+        return False
+    return fits(0, caps)
+
+
 ACYL_COA_CLASSES = (  # (min acyl carbons, max, merged id, name); chain-length classes of fatty-acid biochemistry
     (13, 21, "ACYLCOA_LC", "long-chain acyl-CoA (C13-C21)"),
     (22, 999, "ACYLCOA_VLC", "very-long-chain acyl-CoA (C22+)"),
