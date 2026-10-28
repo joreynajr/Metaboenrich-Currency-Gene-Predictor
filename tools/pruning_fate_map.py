@@ -20,8 +20,8 @@ count links (metabolite-reaction pairs, compartment copies counted apart), so
 a hub that is kept but lost most links shows a low links_kept_pct.
 
 Opens with the existing style (docs/three_rule_diagrams/metaboenrich_pruning_style.xml).
-No positions are stored: run a layout in Cytoscape. Also writes
-pruning_fate_nodes.tsv and pruning_fate_summary.tsv.
+Positions are stored (see layout); do not run a layout in Cytoscape. Also
+writes pruning_fate_nodes.tsv and pruning_fate_summary.tsv.
 """
 import argparse
 import json
@@ -109,6 +109,42 @@ def networks(model, data):
     ]
 
 
+def layout(ids, links, degree, hub_degree=100, width=6000.0):
+    """{node id: (x, y)}. Metabolites in more than `hub_degree` links (H+, H2O,
+    ATP, CoA ...) would pull everything into one knot, so the rest is laid out
+    without them: the largest piece force-directed in the centre, the pieces
+    that fall away from it packed in rows to its right. Each hub then sits at
+    the centre of its neighbours in the largest piece. Takes a few minutes for
+    raw Human-GEM."""
+    import networkx as nx
+    hubs = {n for n in ids if degree[n] > hub_degree and not n.startswith("R_")}
+    g = nx.Graph()
+    g.add_nodes_from(n for n in ids if n not in hubs)
+    g.add_edges_from((a, b) for a, b in links if a not in hubs and b not in hubs)
+    pieces = sorted(nx.connected_components(g), key=len, reverse=True)
+    pos = {n: (x * width / 2, y * width / 2)
+           for n, (x, y) in nx.spring_layout(g.subgraph(pieces[0]), iterations=40, seed=0).items()}
+    x0, y, row_h, x = width / 2 + 400, -width / 2, 0.0, width / 2 + 400
+    for piece in pieces[1:]:
+        size = 40.0 * math.sqrt(len(piece))
+        sub = nx.spring_layout(g.subgraph(piece), seed=0) if len(piece) > 1 else {next(iter(piece)): (0.0, 0.0)}
+        if x + size > x0 + width:
+            x, y, row_h = x0, y + row_h + 60, 0.0
+        for n, (px, py) in sub.items():
+            pos[n] = (x + size / 2 + px * size / 2, y + size / 2 + py * size / 2)
+        x, row_h = x + size + 60, max(row_h, size)
+    main_piece, nbrs = pieces[0], {}
+    for a, b in links:
+        if a in hubs and b in main_piece:        # the packed pieces would pull hubs out of the centre
+            nbrs.setdefault(a, []).append(pos[b])
+    centre = np.mean([np.mean(v, axis=0) for v in nbrs.values()], axis=0) if nbrs else np.zeros(2)
+    for k, h in enumerate(sorted(hubs, key=lambda n: -degree[n])):
+        # hubs all sit near the middle; spread them on a sunflower spiral so their labels can be read
+        r, a = 120 * math.sqrt(k + 1), k * 2.39996
+        pos[h] = (float(centre[0]) + r * math.cos(a), float(centre[1]) + r * math.sin(a))
+    return pos
+
+
 def fate(present):
     """present: [bool] per network in networks() order, raw first. The step after which it never returns."""
     order = ["step1", "rule1", "rule2", "rule3", "safeguard", "rule4", "size"]
@@ -176,6 +212,11 @@ def main(argv=None):
         edges.append({"data": {"id": f"{key[0]}__{key[1]}", "source": key[0], "target": key[1], "side": side,
                                "pruned_at": LABEL[f], "fate": f, "color": COLOUR[f],
                                "opacity": 230 if f in ("kept", "safeguard", "merged") else 150}})
+
+    pos = layout(raw.node_ids, [(e["data"]["source"], e["data"]["target"]) for e in edges], raw_deg)
+    for n in nodes:
+        x, y = pos[n["data"]["id"]]
+        n["position"] = {"x": round(x, 1), "y": round(y, 1)}
 
     doc = {"format_version": "1.0", "generated_by": "metaboenrich tools/pruning_fate_map.py",
            "data": {"name": "Raw Human-GEM, coloured by pruning step",
