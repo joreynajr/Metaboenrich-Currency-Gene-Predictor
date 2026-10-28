@@ -60,7 +60,7 @@ def main():
 
     raw, final = graph("raw"), graph("three_rule")
     in_raw = set(raw.base_reaction.values())
-    links_final = Counter(final.base_reaction[i] for i in range(final.n) if final.is_reaction[i])
+    links_final = Counter(r for i in range(final.n) if final.is_reaction[i] for r in final.reactions_of(i))
 
     union = load_atom_pairs(ROOT / "data/atom_pairs_union.json")
     _, couples = carbon_method_pairs(model, union, COUPLE_MIN_REACTIONS)
@@ -244,16 +244,17 @@ def main():
         per_rxn = {}
         for r_i in rxn_nodes:
             s = sides.get(r_i, {"substrate": [], "product": []})
-            per_rxn.setdefault(g.base_reaction[r_i], []).append(
-                " + ".join(sorted(s["substrate"])) + " -> " + " + ".join(sorted(s["product"])))
+            for rid in g.reactions_of(r_i):
+                per_rxn.setdefault(rid, []).append(
+                    " + ".join(sorted(s["substrate"])) + " -> " + " + ".join(sorted(s["product"])))
         met_rxns = {}
         for a_i, b_i in g.edges:
             m_i, r_i = (a_i, b_i) if g.is_reaction[b_i] else (b_i, a_i)
-            met_rxns.setdefault(g.node_ids[m_i], set()).add(g.base_reaction[r_i])
+            met_rxns.setdefault(g.node_ids[m_i], set()).update(g.reactions_of(r_i))
         gene_rxns = {}
         for r_i in rxn_nodes:
             for gg in g.reaction_genes[r_i]:
-                gene_rxns.setdefault(sym.get(gg, gg), set()).add(g.base_reaction[r_i])
+                gene_rxns.setdefault(sym.get(gg, gg), set()).update(g.reactions_of(r_i))
         return {"deg": {k: v[0] for k, v in per_met.items()}, "main": {k: v[1] for k, v in per_met.items()},
                 "met_rxns": met_rxns, "rxn": per_rxn, "genes": gene_rxns, "n_edges": len(g.edges),
                 "n_rxn_nodes": len(rxn_nodes), "mets": len(mets)}

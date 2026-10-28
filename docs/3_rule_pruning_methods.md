@@ -160,18 +160,31 @@ nucleotide kinases.
 Reactions still listing more than 20 metabolites are dropped: 47 reactions, mostly protein
 synthesis pseudo-reactions built from tRNAs.
 
+### Compartment copies
+
+Human-GEM writes many reactions once per compartment. Once compartments are merged, 2,478 of the
+remaining reactions fall into 1,102 groups that list the same substrates and the same products
+(12-HPETE hydroxymutase six times; carbonic anhydrase three times, each adding its own
+CO2 ↔ HCO3- link). Each copy would add its own nodes and edges, inflating hub degrees by the
+model's multiplicity. Within a group, reaction nodes that carry the same links become one node with
+the union of the copies' genes and directions (81 become reversible because one copy runs each
+way). No gene, reaction, link or direction is lost: the metabolite-to-metabolite steps are the same
+before and after.
+
+Merged: **1,577 reaction nodes**, into 1,268.
+
 ### Result
 
 | | Raw Human-GEM | 3-rule pruning |
 |---|---|---|
 | Metabolites | 4,035 | 3,808 |
 | Human-GEM reactions represented | 7,080 | 6,219 |
-| Reaction nodes (one per carbon link) | 7,080 | 7,676 |
-| Edges | 38,766 | 15,938 |
+| Reaction nodes (one per carbon link) | 7,080 | 6,099 |
+| Edges | 38,766 | 12,754 |
 | Genes | 2,483 | 2,191 |
-| Metabolites in 100 or more reactions | 32 | 2 |
-| Largest hub | H+ (4,061 reactions) | glutamate (122) |
-| Share of structural current through the busiest 1% of nodes | 34.1% | 16.8% |
+| Metabolites in 100 or more reactions | 32 | 1 |
+| Largest hub | H+ (4,061 reactions) | CO2 (103) |
+| Share of structural current through the busiest 1% of nodes | 34.1% | 15.6% |
 | Metabolites cut off from the main network | 4 | 409 |
 
 Structural current is the mean current per node over 150 × 150 random source–sink pairs, with no

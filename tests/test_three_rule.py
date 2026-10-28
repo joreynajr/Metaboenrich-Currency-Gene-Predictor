@@ -133,7 +133,35 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         self.assertEqual(len(chol), 66)
         self.assertIn("MAM01452", chol)             # cholesterol-ester-10,13,16,19-docosa, no SMILES
         self.assertEqual(len(structure.CARRIERS_FOUND[ids["CoA"]]), 172)
-        self.assertEqual(int((g.edges[:, 0] == g.index[ids["cholesterol"]]).sum()), 45)
+        self.assertEqual(int((g.edges[:, 0] == g.index[ids["cholesterol"]]).sum()), 35)
+
+    def test_compartment_copies_merged(self):
+        # carbonic anhydrase is written three times (MAR03955, MAR03956, MAR05407);
+        # merging the copies loses no gene, reaction or metabolite-to-metabolite step
+        from metaboenrich import structure
+        g = self.g3
+        s = {x[0]: x for x in structure.stages(self.model, "three_rule", atom_dir=str(ROOT / "data"))}["three_rule"]
+        g0 = self.build(self.model, s[3], s[4], s[5], **{**s[6], "merge_duplicates": False})
+        k = g.index["R_MAR03955"]
+        self.assertEqual(sorted(g.merged_copies[k]), ["R_MAR03956", "R_MAR05407"])
+        self.assertNotIn("R_MAR03956", g.index)
+        self.assertLess(int(g.is_reaction.sum()), int(g0.is_reaction.sum()))
+
+        def genes(x):
+            return {y for v in x.reaction_genes.values() for y in v}
+
+        def reactions(x):
+            return set(x.base_reaction.values()) | {r for v in x.merged_copies.values() for r in v}
+
+        def steps(x):
+            succ = {}
+            for u, v in x.arcs.tolist():
+                succ.setdefault(u, []).append(v)
+            return {(x.node_ids[u], x.node_ids[w]) for u, rs in succ.items() if not x.is_reaction[u]
+                    for r in rs for w in succ.get(r, []) if w != u}
+        self.assertEqual(genes(g), genes(g0))
+        self.assertEqual(reactions(g), reactions(g0))
+        self.assertEqual(steps(g), steps(g0))
 
     def test_atp_not_a_hub_again(self):
         g = self.g

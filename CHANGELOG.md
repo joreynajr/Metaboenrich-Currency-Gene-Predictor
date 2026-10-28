@@ -14,6 +14,12 @@ Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
   named after the carrier. Cholesterol 33 → 66 loaded forms, CoA 157 → 172.
   3,808 metabolites / 7,676 reaction nodes / 15,938 edges; largest hub
   glutamate (122), cholesterol 144 → 45.
+- **Compartment copies merged** (`build_graph(merge_duplicates=True)`, on for
+  the 3-rule stages): 1,102 groups of reactions identical once compartments
+  are merged; nodes carrying the same links become one, with the union of
+  genes and directions (`graph.merged_copies`). Genes, reactions and
+  metabolite-to-metabolite steps unchanged. 3,808 metabolites / 6,099
+  reaction nodes / 12,754 edges; largest hub CO2 (103).
 
 ## 3_rule_pruning branch (2026-10-06)
 

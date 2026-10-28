@@ -114,7 +114,7 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
     pools = set(pr[4][3].pools) | pool_metabolites(model)
     cargo = transport_reactions(model, carbon_cargo=True)
     shared = transport_reactions(model, carbon_cargo=False)
-    drop = {"drop_reactions": cargo}
+    drop = {"drop_reactions": cargo, "merge_duplicates": True}
 
     method, couples = carbon_method_pairs(model, union, n_min)
     clean_rules = carbon_method_rules(model, method, couples, pools)
@@ -341,7 +341,7 @@ def main(argv=None):
             "top1pct_flow_share": round(concentration(flow), 4),
             "max_metabolite_degree": int(degree[top_m]),
             "max_degree_metabolite": g.node_names[top_m],
-            "reactions_original": len({g.base_reaction.get(i, g.node_ids[i]) for i in np.flatnonzero(is_rxn)}),
+            "reactions_original": len({r for i in np.flatnonzero(is_rxn) for r in g.reactions_of(i)}),
             "reactions_kept_whole": len(g.unmapped_reactions) if atom_pairs is not None else None,
             "reactions_dropped_no_carbon_pair": len(g.no_pair_reactions) if atom_pairs is not None else None,
         }

@@ -252,10 +252,17 @@ class Graph:
     base_reaction: dict = field(default_factory=dict)
     unmapped_reactions: list = field(default_factory=list)
     no_pair_reactions: list = field(default_factory=list)
+    # build_graph(merge_duplicates=True): kept reaction node -> ids of the
+    # compartment copies merged into it
+    merged_copies: dict = field(default_factory=dict)
 
     @property
     def n(self):
         return len(self.node_ids)
+
+    def reactions_of(self, i):
+        """Human-GEM reaction ids behind reaction node i, merged compartment copies included."""
+        return [self.base_reaction.get(i, self.node_ids[i])] + self.merged_copies.get(i, [])
 
     def incidence(self):
         """Signed edge-node incidence matrix B (m x n); Laplacian L = B^T B."""
@@ -358,7 +365,7 @@ def transport_genes(model, rules=None):
 
 
 def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pairs=None, drop_unmapped=False,
-                drop_reactions=frozenset(), merge=None, merge_names=None):
+                drop_reactions=frozenset(), merge=None, merge_names=None, merge_duplicates=False):
     """atom_pairs: optional {reaction id: [(substrate, product, n_carbons), ...]}
     (see metaboenrich.atoms). A mapped reaction becomes one channel node per
     carbon-sharing pair that survives the currency rules, so current can only
@@ -370,7 +377,7 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pa
     merge / merge_names: {met_id: merged id} and {merged id: name}; merged
     metabolites become one node (see metaboenrich.atoms.acyl_coa_merge).
     Pools are checked on the original ids; atom_pairs and rules.edits must
-    use the merged ids."""
+    use the merged ids. merge_duplicates: see _merge_duplicate_reactions."""
     met_names = {s.met_id: s.name for s in model.species.values()}
     met_names.update(merge_names or {})
     node_ids, node_names, is_rxn, index = [], [], [], {}
@@ -430,7 +437,7 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pa
             if rxn.backward:
                 arcs.append((m, r))
 
-    return Graph(
+    g = Graph(
         node_ids=node_ids,
         node_names=node_names,
         is_reaction=np.array(is_rxn, dtype=bool),
@@ -444,4 +451,72 @@ def build_graph(model, rules, max_reaction_size=20, drop_objective=True, atom_pa
         base_reaction=base,
         unmapped_reactions=unmapped,
         no_pair_reactions=no_pairs,
+    )
+    return _merge_duplicate_reactions(model, g) if merge_duplicates else g
+
+
+def _merge_duplicate_reactions(model, g):
+    """One node per link of reactions that are identical once compartments are merged.
+
+    Human-GEM writes many reactions once per compartment (12-HPETE
+    hydroxymutase six times, carbonic anhydrase three); after the merge each
+    copy would add its own node and links, inflating hub degrees by the
+    model's multiplicity. Copies are reactions listing the same metabolites on
+    the same sides before any rule; a copy's node merges into an earlier
+    one when both also carry the same links. The kept node gets the union of
+    the copies' genes and directions, so no gene, link or direction is lost.
+    The merged reaction ids are in graph.merged_copies (kept node -> ids)."""
+    def signature(rid):
+        r = model.reactions[rid]
+        return (frozenset(model.species[s].met_id for s in r.substrates),
+                frozenset(model.species[s].met_id for s in r.products))
+
+    inc = {}
+    for (m, r), side in zip(g.edges.tolist(), g.edge_side):
+        inc.setdefault(r, set()).add((m, side))
+    first, keep_of = {}, {}
+    for i in range(g.n):
+        if g.is_reaction[i]:
+            keep_of[i] = first.setdefault((signature(g.base_reaction[i]), frozenset(inc.get(i, ()))), i)
+    gone = {i for i, k in keep_of.items() if k != i}
+    if not gone:
+        return g
+
+    new = {}
+    for i in range(g.n):
+        if i not in gone:
+            new[i] = len(new)
+    to = {i: new[keep_of.get(i, i)] for i in range(g.n)}
+
+    genes, merged, dirs = {}, {}, {}
+    for i in sorted(keep_of):
+        k, r = to[i], model.reactions[g.base_reaction[i]]
+        genes.setdefault(k, [])
+        genes[k] += [x for x in g.reaction_genes[i] if x not in genes[k]]
+        dirs.setdefault(k, set()).update({"f"} if r.forward else set(), {"b"} if r.backward else set())
+        if i in gone:
+            merged.setdefault(k, []).append(g.base_reaction[i])
+    edges, sides = [], []
+    for (m, r), side in zip(g.edges.tolist(), g.edge_side):
+        if r not in gone:
+            edges.append((new[m], new[r]))
+            sides.append(side)
+    # a copy running the other way adds its arcs; an identical arc is kept once
+    arcs = list(dict.fromkeys((to[u], to[v]) for u, v in g.arcs.tolist()))
+    keep = [i for i in range(g.n) if i not in gone]
+    return Graph(
+        node_ids=[g.node_ids[i] for i in keep],
+        node_names=[g.node_names[i] for i in keep],
+        is_reaction=g.is_reaction[keep],
+        edges=np.array(edges, dtype=np.int64),
+        arcs=np.array(arcs, dtype=np.int64),
+        reaction_genes=genes,
+        index={g.node_ids[i]: new[i] for i in keep},
+        currency_audit=g.currency_audit,
+        edge_side=sides,
+        reversible={k: d == {"f", "b"} for k, d in dirs.items()},
+        base_reaction={new[i]: g.base_reaction[i] for i in keep if i in g.base_reaction},
+        unmapped_reactions=g.unmapped_reactions,
+        no_pair_reactions=g.no_pair_reactions,
+        merged_copies=merged,
     )
