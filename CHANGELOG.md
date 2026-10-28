@@ -4,6 +4,17 @@ Network counts are for the analysis network (stage 5): metabolite nodes /
 reaction nodes / edges. The reasons behind each change are in
 [docs/decisions.md](docs/decisions.md).
 
+## three-rule-revision branch (2026-10-28)
+
+Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
+
+- **Rule 3 formula fallback** (`formula_loaded_forms`): a partner with no
+  SMILES joins a carrier's loaded forms when its formula contains the
+  carrier's, the difference plus water is a metabolite in the model, and it is
+  named after the carrier. Cholesterol 33 → 66 loaded forms, CoA 157 → 172.
+  3,808 metabolites / 7,676 reaction nodes / 15,938 edges; largest hub
+  glutamate (122), cholesterol 144 → 45.
+
 ## 3_rule_pruning branch (2026-10-06)
 
 The analysis network (first method) is unchanged. New: 3-rule pruning, a

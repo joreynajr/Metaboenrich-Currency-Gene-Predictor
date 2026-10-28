@@ -70,6 +70,8 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         st = {s[0]: s for s in structure.stages(cls.model, "three_rule", atom_dir=str(ROOT / "data"))}
         s = st["rules12_keep_rarest"]
         cls.g = build_graph(cls.model, s[3], s[4], s[5], **s[6])
+        s = st["three_rule"]
+        cls.g3 = build_graph(cls.model, s[3], s[4], s[5], **s[6])
         cls.names = {sp.met_id: sp.name for sp in cls.model.species.values()}
 
     def links(self, gene):
@@ -121,6 +123,17 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         for a, b in (("acetyl-CoA", "acetoacetyl-CoA"), ("glycine", "5-aminolevulinate")):
             self.assertNotIn(tuple(sorted((ids[a], ids[b]))), remove, (a, b))
         self.assertIn(tuple(sorted((ids["CoA"], ids["(R)-methylmalonyl-CoA"]))), remove)
+
+    def test_structureless_loaded_forms(self):
+        # esters Human-GEM gives no SMILES join cholesterol by formula and name,
+        # so the carrier stops being the largest hub (144 links before)
+        from metaboenrich import structure
+        g, ids = self.g3, {n: m for m, n in self.names.items()}
+        chol = structure.CARRIERS_FOUND[ids["cholesterol"]]
+        self.assertEqual(len(chol), 66)
+        self.assertIn("MAM01452", chol)             # cholesterol-ester-10,13,16,19-docosa, no SMILES
+        self.assertEqual(len(structure.CARRIERS_FOUND[ids["CoA"]]), 172)
+        self.assertEqual(int((g.edges[:, 0] == g.index[ids["cholesterol"]]).sum()), 45)
 
     def test_atp_not_a_hub_again(self):
         g = self.g

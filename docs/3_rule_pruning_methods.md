@@ -123,8 +123,15 @@ carbon–carbon bond is an extension of the carbon skeleton, not a loaded carrie
 glycine → 5-aminolevulinate (heme synthesis) and acetyl-CoA → acetoacetyl-CoA (thiolase) are not
 carrier links.
 
-Carriers found: **CoA** (157 loaded forms), **L-carnitine** (74), **glutathione** (38) and
-**cholesterol** (33). Glycine just misses: 36 of its 37 conjugates attach at the nitrogen.
+Carriers found: **CoA** (172 loaded forms), **L-carnitine** (74), **glutathione** (38) and
+**cholesterol** (66). Glycine just misses: 36 of its 37 conjugates attach at the nitrogen.
+
+The substructure search cannot see a loaded form that Human-GEM gives no SMILES, and 51% of
+cholesterol's esters have none. Once the carriers are found, a partner with no structure is also
+counted as a loaded form when its formula contains the carrier's, the difference plus water is the
+formula of some metabolite in the model, and it is named after the carrier. Formulas are compared
+on heavy atoms only, so protonation does not matter. This adds 33 cholesterol esters and 15 CoA
+esters (mostly pravastatin-CoAs); it finds no new carriers.
 
 The links between a carrier and its loaded forms are removed everywhere. Examples are CoA /
 methylmalonyl-CoA and carnitine / propionylcarnitine. Links between two loaded forms, and the
@@ -145,7 +152,7 @@ example, glutamate dehydrogenase keeps glutamate/2-oxoglutarate (41) over NAD+/N
 Reactions that carry any metabolite across a membrane are never rescued, so ion pumps do not return
 ATP links.
 
-Reactions kept by the safeguard: **212**. Among them are GLUD1/2, GLS/GLS2, GLUL, GSR and the
+Reactions kept by the safeguard: **217**. Among them are GLUD1/2, GLS/GLS2, GLUL, GSR and the
 nucleotide kinases.
 
 ### Size limit
@@ -160,18 +167,19 @@ synthesis pseudo-reactions built from tRNAs.
 | Metabolites | 4,035 | 3,808 |
 | Human-GEM reactions represented | 7,080 | 6,219 |
 | Reaction nodes (one per carbon link) | 7,080 | 7,676 |
-| Edges | 38,766 | 16,060 |
+| Edges | 38,766 | 15,938 |
 | Genes | 2,483 | 2,191 |
-| Metabolites in 100 or more reactions | 32 | 4 |
-| Largest hub | H+ (4,061 reactions) | cholesterol (143) |
-| Share of structural current through the busiest 1% of nodes | 34.1% | 17.1% |
-| Metabolites cut off from the main network | 4 | 395 |
+| Metabolites in 100 or more reactions | 32 | 2 |
+| Largest hub | H+ (4,061 reactions) | glutamate (122) |
+| Share of structural current through the busiest 1% of nodes | 34.1% | 16.8% |
+| Metabolites cut off from the main network | 4 | 409 |
 
 Structural current is the mean current per node over 150 × 150 random source–sink pairs, with no
 data.
 
-The 395 cut-off metabolites include 84 that Rule 3 separates. Most of those are xenobiotics
-(naphthalene derivatives, halogenated solvents) and their glutathione conjugates.
+The 409 cut-off metabolites include 96 that Rule 3 separates. Most of those are xenobiotics
+(naphthalene derivatives, halogenated solvents) and their glutathione conjugates, plus pravastatin
+and its metabolites, which reach the network only through their CoA esters.
 
 ## Benchmark
 

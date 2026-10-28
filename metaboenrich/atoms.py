@@ -510,6 +510,56 @@ def _carrier_site(small, large):
     return None
 
 
+def formula_loaded_forms(model, carriers, smiles):
+    """Loaded forms Human-GEM gives no structure, found from formula and name.
+
+    find_carriers is a substructure search, so a loaded form with no SMILES is
+    invisible to it and keeps its link to the carrier (51% of cholesterol's
+    esters). A partner qualifies here only if it has no structure, its formula
+    contains the carrier's with the difference plus water matching some
+    metabolite in the model, and it is named after the carrier (CHANGELOG 0.1.1).
+    Carrier discovery is unchanged; this only extends membership. Formulas are
+    heavy-atom only (parse_formula), so protonation never gets in the way.
+
+    Returns {carrier: {extra loaded forms}}."""
+    from collections import Counter
+    from .network import parse_formula
+
+    form = {s.met_id: s.formula for s in model.species.values()}
+    name = {s.met_id: s.name for s in model.species.values()}
+    heavy = {tuple(sorted(parse_formula(f).items())) for f in form.values() if f}
+
+    add = {}
+    for c, known in carriers.items():
+        cf, cn = parse_formula(form.get(c, "")), str(name.get(c, "")).lower()
+        if not cf or not cn:
+            continue
+        for rxn in model.reactions.values():
+            subs = {model.species[s].met_id for s in rxn.substrates}
+            prods = {model.species[s].met_id for s in rxn.products}
+            if c in subs:
+                others = prods
+            elif c in prods:
+                others = subs
+            else:
+                continue
+            for x in others:
+                if x == c or x in smiles or x in known:
+                    continue
+                xf = parse_formula(form.get(x, ""))
+                # containment must be tested explicitly: Counter subtraction
+                # drops negative counts, so xf - cf alone would accept a
+                # partner smaller than the carrier
+                if not xf or any(xf[el] < n for el, n in cf.items()):
+                    continue
+                acyl = xf - cf
+                if not acyl or tuple(sorted((acyl + Counter({"O": 1})).items())) not in heavy:
+                    continue
+                if cn in str(name.get(x, "")).lower():
+                    add.setdefault(c, set()).add(x)
+    return add
+
+
 def find_carriers(model, pairs, smiles_path="data/Human-GEM_metabolites.tsv", min_loaded=CARRIER_MIN_LOADED):
     """Rule 3: carriers, from structure.
 
@@ -549,6 +599,8 @@ def find_carriers(model, pairs, smiles_path="data/Human-GEM_metabolites.tsv", mi
                 loaded.setdefault(small, {})[large] = site
     carriers = {c: set(d) for c, d in loaded.items()
                 if len(d) >= min_loaded and len(Counter(d.values())) == 1}
+    for c, extra in formula_loaded_forms(model, carriers, smiles).items():
+        carriers[c] |= extra
     remove = {tuple(sorted((c, x))): c for c, xs in carriers.items() for x in xs}
     return carriers, remove
 
