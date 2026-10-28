@@ -30,7 +30,7 @@ from openpyxl.styles import Alignment
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from metaboenrich import structure                                   # noqa: E402
-from metaboenrich.atoms import (COUPLE_MIN_REACTIONS, carbon_balance, carbon_method_pairs,  # noqa: E402
+from metaboenrich.atoms import (COUPLE_MIN_REACTIONS, carbon_balance, carbon_budget, carbon_method_pairs,  # noqa: E402
                                 carbon_unbalanced, find_carriers, load_atom_pairs, pool_metabolites,
                                 transport_reactions)
 from metaboenrich.gem import load_sbml, load_subsystems              # noqa: E402
@@ -38,6 +38,7 @@ from metaboenrich.network import build_graph, parse_formula          # noqa: E40
 
 STEPS = ["Step 1 (pools, biomass, transporters)", "Rule 1 (carbon)", "Rule 2 (couples)", "Rule 3 (carriers)"]
 SIZE = "Too large (over 20 metabolites)"
+RULE4 = "Rule 4 (carbon budget)"     # removes links only; a reaction never drops out at it
 
 
 def main():
@@ -69,6 +70,7 @@ def main():
     pools = set(stages["carbon_cleaned"][3].pools) | pool_metabolites(model)
     cargo = transport_reactions(model, carbon_cargo=True)
     balance, unbalanced = carbon_balance(model), carbon_unbalanced(model)
+    rule4 = {(x["reaction"], tuple(x["pair"])) for x in structure.CARBON_BUDGET_LOG}
     partner = {}
     for a, b in couples:
         partner.setdefault(a, set()).add(b)
@@ -101,16 +103,20 @@ def main():
                           STEPS[2]: [f"{label(p)} ({couples[tuple(sorted(p))]})" for p in r1 if p not in r2],
                           STEPS[3]: [f"{label(p)} (carrier: {names[carrier_pairs[tuple(sorted(p))]]})"
                                      for p in r2 if p not in r3]}
+            budget = carbon_budget(model, rid, pairs, unbalanced)
             for p in pairs:
                 sp = tuple(sorted(p))
-                fate = (STEPS[1] if p not in r1 else STEPS[2] if p not in r2 else STEPS[3] if p not in r3 else "kept")
+                fate = (STEPS[1] if p not in r1 else STEPS[2] if p not in r2 else STEPS[3] if p not in r3 else
+                        RULE4 if (rid, p) in rule4 else "kept")
                 links.append({"reaction": row["reaction"], "reaction_name": rxn.name, "substrate": names[p[0]],
                               "product": names[p[1]], "removed_by": fate,
                               "detail": (f"couple in {couples[sp]} reactions" if fate == STEPS[2] else
                                          f"carrier: {names[carrier_pairs[sp]]}" if fate == STEPS[3] else
-                                         "a partner has no carbon" if fate == STEPS[1] else ""),
+                                         "a partner has no carbon" if fate == STEPS[1] else
+                                         "carbon counts rule it out" if fate == RULE4 else ""),
                               "restored_by_safeguard": rid in rescued and rid in links_final
-                              and sp == tuple(rescued[rid]["kept_pair"])})
+                              and sp == tuple(rescued[rid]["kept_pair"]),
+                              "carbon budget": budget[p]})
         else:
             m1 = {m for m in subs | prods if carbon.get(m)}
             hit2 = {m for m in subs if partner.get(m, set()) & prods} | {m for m in prods if partner.get(m, set()) & subs}
@@ -350,7 +356,9 @@ def main():
             "molecules for reactions with no atom map (kept whole). 'carbon in' / 'carbon out' count carbons from "
             "the formulas times the stoichiometry; 'carbon unbalanced' marks reactions where they differ, in which "
             "carbon transfer between two molecules is not well defined.",
-            "Links: every carbon pair of the atom-mapped reactions and the step that removes it.",
+            "Links: every carbon pair of the atom-mapped reactions and the step that removes it. 'carbon budget' "
+            "is Rule 4's verdict (impossible / possible / inconclusive / unbalanced); Rule 4 removes an impossible "
+            "pair unless KEGG lists it or it is the reaction's last pair.",
             "Genes lost: genes whose every reaction drops out, by step.",
             "Contains KEGG-derived pairs: do not post publicly."]})
         notes.to_excel(xw, sheet_name="About", index=False)

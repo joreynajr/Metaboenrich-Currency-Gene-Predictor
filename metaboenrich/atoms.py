@@ -530,6 +530,35 @@ def carbon_budget(model, rid, links, unbalanced=frozenset(), max_molecules=CARBO
     return out
 
 
+def carbon_budget_pairs(model, pairs, protected=None, unbalanced=frozenset(), log=None):
+    """Rule 4: remove carbon pairs their reaction's carbon counts rule out (carbon_budget).
+
+    Catches the atom mapper's false links: transaminase cross-pairs, ATP to
+    the aminoacyl-tRNA, glutamine's amide nitrogen counted as carbon, hydride
+    donors. protected: {reaction id: {(s, p)}} never removed, the KEGG RCLASS
+    pairs (kegg_pairs_for_model). carbon_budget assumes molecules go whole,
+    so in a group transfer whose swapped molecules happen to match in carbon
+    (SCOT moving CoA, GALT moving UMP, BHMT moving a methyl) it rules out
+    exactly the real links; KEGG lists those. A reaction is never left with
+    no pair. Each removal is appended to `log` when one is given.
+
+    pairs: {reaction id: [(s, p), ...]}. Returns the pairs with Rule 4 applied."""
+    protected = protected or {}
+    out = {}
+    for rid, ps in pairs.items():
+        if not ps or rid not in model.reactions:
+            out[rid] = ps
+            continue
+        v = carbon_budget(model, rid, list(dict.fromkeys(ps)), unbalanced)
+        keep = [p for p in ps if v[p] != "impossible" or p in protected.get(rid, ())]
+        if not keep:
+            keep = ps
+        elif log is not None:
+            log += [{"reaction": rid, "pair": p} for p in dict.fromkeys(ps) if p not in keep]
+        out[rid] = keep
+    return out
+
+
 def _fits_pieces(pieces, caps):
     """Whether substrate molecules of `pieces` carbons (largest first) can each go whole
     into a product molecule so that every product's remaining carbon `caps` is filled exactly."""

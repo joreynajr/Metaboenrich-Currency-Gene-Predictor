@@ -155,6 +155,30 @@ ATP links.
 Reactions kept by the safeguard: **217**. Among them are GLUD1/2, GLS/GLS2, GLUL, GSR and the
 nucleotide kinases.
 
+### Rule 4: carbon budget
+
+Some pairs the atom maps assert are ruled out by the reaction's own carbon counts. Alanyl-tRNA
+ligase: ATP's ten carbons all go to AMP, and alanyl-tRNA's three come from alanine, so no carbon
+can pass from ATP to alanyl-tRNA.
+
+The test assumes each substrate molecule's carbon goes whole into one product molecule. It looks
+for every way to assign the substrate molecules (stoichiometry counted) to product molecules so
+that their carbon counts match exactly. A pair that no such assignment uses is impossible. Where
+no assignment exists (a substrate must split, as in ornithine transcarbamylase written in reverse),
+the test says nothing; carbon-unbalanced reactions are left out.
+
+The assumption fails for group transfers whose swapped molecules happen to match in carbon: in
+succinyl-CoA:acetoacetate CoA-transferase, UDP-glucose:galactose-1-phosphate uridylyltransferase and
+betaine-homocysteine methyltransferase it rules out exactly the real links. So a pair KEGG RCLASS
+lists is never removed, and a reaction is never left with no pair. Of the 48 pairs the test flags
+in this network, a chemistry review found 39 correct and 9 wrong (`handoff/rule4_reviewed.csv`);
+with these two guards, Rule 4 removes 33 of the correct ones and none of the wrong ones.
+
+Removed: **48 links** (33, plus the same links in compartment copies): transaminase cross-pairs,
+ATP → aminoacyl-tRNA in 7 tRNA ligases, CoA → AMP in acyl-CoA ligases, the queuine
+base-exchange cross-pairs. Dropped: none. Queuine and tRNA-queuine are cut off as a result: the
+atom map has only the cross-pairs for that reaction.
+
 ### Size limit
 
 Reactions still listing more than 20 metabolites are dropped: 47 reactions, mostly protein
@@ -188,18 +212,18 @@ them out (`carbon_unbalanced`).
 |---|---|---|
 | Metabolites | 4,035 | 3,808 |
 | Human-GEM reactions represented | 7,080 | 6,219 |
-| Reaction nodes (one per carbon link) | 7,080 | 6,099 |
-| Edges | 38,766 | 12,754 |
+| Reaction nodes (one per carbon link) | 7,080 | 6,066 |
+| Edges | 38,766 | 12,688 |
 | Genes | 2,483 | 2,191 |
 | Metabolites in 100 or more reactions | 32 | 1 |
 | Largest hub | H+ (4,061 reactions) | CO2 (103) |
-| Share of structural current through the busiest 1% of nodes | 34.1% | 15.6% |
-| Metabolites cut off from the main network | 4 | 409 |
+| Share of structural current through the busiest 1% of nodes | 34.1% | 15.5% |
+| Metabolites cut off from the main network | 4 | 411 |
 
 Structural current is the mean current per node over 150 × 150 random source–sink pairs, with no
 data.
 
-The 409 cut-off metabolites include 96 that Rule 3 separates. Most of those are xenobiotics
+The 411 cut-off metabolites include 96 that Rule 3 separates and 2 that Rule 4 does (queuine). Most of those are xenobiotics
 (naphthalene derivatives, halogenated solvents) and their glutathione conjugates, plus pravastatin
 and its metabolites, which reach the network only through their CoA esters.
 
@@ -240,9 +264,10 @@ With 20 disorders, differences of a few dozen ranks are within the noise.
 
 ## Known limitations
 
-1. **Cross-links from tied atom maps.** About 65 reactions keep false carbon links, for example
-   aspartate → glutamate in aspartate aminotransferase. The union adds RXNMapper pairs that the
-   mapper scored as tied with the correct ones. A fix is under evaluation.
+1. **Cross-links from tied atom maps.** The union adds RXNMapper pairs that the mapper scored as tied
+   with the correct ones, for example aspartate → glutamate in aspartate aminotransferase. Rule 4
+   removes those its carbon counts rule out; others remain where the counts allow them, where a
+   substrate must split, or where the false pair is a reaction's only one.
 2. **Couple cutoff.** The cutoff of 10 is a convention shared by Rules 2 and 3. On the carbon method
    (Rules 1 + 2, without name lookup) the benchmark median was 85.5 at a cutoff of 5, 129.5 at 10
    and 113.5 at 20, so results are sensitive to it.

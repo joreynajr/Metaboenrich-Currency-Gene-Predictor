@@ -92,10 +92,12 @@ def _carbon_stages(model, atom_dir, couple_min_reactions=None):
 # Filled by the most recent _three_rule_stages call: the rescues made by the
 # keep-rarest safeguard in 3-rule pruning (list of dicts, see
 # metaboenrich.atoms.carbon_method_pairs), the same without Rule 3, and the
-# carriers found by Rule 3 ({carrier: {loaded forms}}).
+# carriers found by Rule 3 ({carrier: {loaded forms}}), and the pairs Rule 4
+# removed (list of dicts, see metaboenrich.atoms.carbon_budget_pairs).
 KEPT_RAREST_LOG = []
 KEPT_RAREST_LOG_RULES12 = []
 CARRIERS_FOUND = {}
+CARBON_BUDGET_LOG = []
 
 
 def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
@@ -105,8 +107,9 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
     pairs were all removed keeps its rarest one instead of dropping out).
     The carbon method itself, earlier variants and the first method are shown
     for comparison; the carbon stage set is not changed."""
-    from .atoms import (COUPLE_MIN_REACTIONS, acyl_coa_merge, carbon_method_pairs, carbon_method_rules,
-                        find_carriers, load_atom_pairs, pool_metabolites, transport_reactions)
+    from .atoms import (COUPLE_MIN_REACTIONS, acyl_coa_merge, carbon_budget_pairs, carbon_method_pairs,
+                        carbon_method_rules, carbon_unbalanced, find_carriers, kegg_pairs_for_model,
+                        load_atom_pairs, pool_metabolites, transport_reactions)
     n_min = couple_min_reactions or COUPLE_MIN_REACTIONS
     carbon = {s[0]: s for s in _carbon_stages(model, atom_dir, couple_min_reactions)}
     pr = _pruning_stages(model)
@@ -127,6 +130,10 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
     c_rules = carbon_method_rules(model, c_pairs, couples, pools, carriers=carriers)
     log = []
     cl_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, log=log, **cr)
+    kegg = kegg_pairs_for_model(model, Path(atom_dir) / "Human-GEM.xml", Path(atom_dir) / "kegg_rclass_pairs.json")
+    CARBON_BUDGET_LOG.clear()
+    cl_pairs = carbon_budget_pairs(model, cl_pairs, {rid: {tuple(p) for p in ps} for rid, ps in kegg.items()},
+                                   carbon_unbalanced(model), CARBON_BUDGET_LOG)
     cl_rules = carbon_method_rules(model, cl_pairs, couples, pools, keep_rarest=True, no_rescue=shared, log=log,
                                    carriers=carriers)
     KEPT_RAREST_LOG[:] = log
@@ -166,7 +173,9 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
         ("three_rule", "5. 3-rule pruning (final)",
          "Network 4, but a reaction whose carbon pairs were all removed keeps the rarest one instead of dropping "
          "out (glutamate dehydrogenase keeps glutamate/2-oxoglutarate, 41 reactions, over NAD+/NADH, 427). "
-         "Reactions that carry anything across a membrane are never rescued.",
+         "Reactions that carry anything across a membrane are never rescued. Rule 4 then removes "
+         f"{len(CARBON_BUDGET_LOG)} carbon pairs the reaction's own carbon counts rule out (transaminase "
+         "cross-pairs, ATP to the aminoacyl-tRNA), never a pair KEGG lists.",
          cl_rules, 20, True, {"atom_pairs": cl_pairs, **drop}),
         ("rules12_keep_rarest", "Alternative: Rules 1-2 with the keep-rarest safeguard",
          "Network 3 with the keep-rarest safeguard but without removing carriers.",

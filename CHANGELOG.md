@@ -26,6 +26,14 @@ Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
   network's reactions, not the 301 in the audit's `carbon_balance_audit.csv`,
   which counted every coefficient as 1 and only the first C of a formula.
   Network unchanged.
+- **Rule 4, carbon budget** (`carbon_budget`, `carbon_budget_pairs`, applied
+  in the final stage after the safeguard): a pair no whole-molecule carbon
+  assignment of its reaction can use is removed, unless KEGG RCLASS lists it
+  or it is the reaction's last pair. 48 links (transaminase cross-pairs,
+  ATP → aminoacyl-tRNA, CoA → AMP); the 9 wrong flags in the chemistry
+  review (`handoff/rule4_reviewed.csv`) are all kept. Rules audit: Links tab
+  gains 'carbon budget' and the Rule 4 fate. 3,808 metabolites / 6,066
+  reaction nodes / 12,688 edges.
 
 ## 3_rule_pruning branch (2026-10-06)
 

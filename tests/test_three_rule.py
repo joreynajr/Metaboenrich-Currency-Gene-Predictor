@@ -146,6 +146,23 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         for rid in ("R_MAR00055", "R_MAR03536", "R_MAR03598", "R_MAR01711"):
             self.assertNotIn(rid, bad)
 
+    def test_carbon_budget(self):
+        # Rule 4 removes ATP -> alanyl-tRNA and the AST cross-pairs, keeps aspartate -> OAA
+        # (AKG -> glutamate is a Rule 2 couple) and SCOT's CoA-transfer links (KEGG-listed)
+        g = self.g3
+
+        def pairs(rid):
+            out = set()
+            for i in range(g.n):
+                if g.is_reaction[i] and rid in g.reactions_of(i):
+                    e = {side: g.node_ids[a] for (a, b), side in zip(g.edges.tolist(), g.edge_side) if b == i}
+                    out.add((self.names[e["substrate"]], self.names[e["product"]]))
+            return out
+        self.assertNotIn(("ATP", "L-alanyl-tRNA(ala)"), pairs("R_MAR05131"))
+        self.assertIn(("alanine", "L-alanyl-tRNA(ala)"), pairs("R_MAR05131"))
+        self.assertEqual(pairs("R_MAR03827"), {("aspartate", "OAA")})
+        self.assertIn(("acetoacetate", "acetoacetyl-CoA"), pairs("R_MAR03787"))
+
     def test_compartment_copies_merged(self):
         # carbonic anhydrase is written three times (MAR03955, MAR03956, MAR05407);
         # merging the copies loses no gene, reaction or metabolite-to-metabolite step
