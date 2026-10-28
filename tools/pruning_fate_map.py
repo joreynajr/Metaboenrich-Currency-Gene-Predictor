@@ -19,9 +19,10 @@ links. Final-network islands have a dotted border. raw_degree / final_degree
 count links (metabolite-reaction pairs, compartment copies counted apart), so
 a hub that is kept but lost most links shows a low links_kept_pct.
 
-Opens with the existing style (docs/three_rule_diagrams/metaboenrich_pruning_style.xml).
-Positions are stored (see layout); do not run a layout in Cytoscape. Also
-writes pruning_fate_nodes.tsv and pruning_fate_summary.tsv.
+Writes its own style, fate_map_style.xml ("Metaboenrich fate map": small
+nodes, hairline edges, large hub labels). Positions are stored (see layout);
+do not run a layout in Cytoscape. Also writes pruning_fate_nodes.tsv and
+pruning_fate_summary.tsv.
 """
 import argparse
 import json
@@ -57,6 +58,46 @@ FATES = [
 LABEL = {k: lab for k, lab, _ in FATES}
 COLOUR = {k: c for k, _, c in FATES}
 HUB_LABEL_DEGREE = 150      # metabolites with at least this many raw links are labelled
+
+
+def _passthrough(prop, column, col_type, default):
+    return (f'      <visualProperty name="{prop}" default="{default}">\n'
+            f'        <passthroughMapping attributeName="{column}" attributeType="{col_type}"/>\n'
+            f'      </visualProperty>\n')
+
+
+# The pruning style (metaboenrich.stage_diagrams) plus per-node label size and
+# per-edge width: 11,000 nodes need small marks and hairline edges to be read.
+STYLE_XML = (
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+    '<vizmap documentVersion="3.1" id="metaboenrich-fate-map">\n'
+    '  <visualStyle name="Metaboenrich fate map">\n'
+    '    <network>\n'
+    '      <visualProperty name="NETWORK_BACKGROUND_PAINT" default="#FBFCFD"/>\n'
+    '    </network>\n'
+    '    <node>\n'
+    '      <dependency name="nodeSizeLocked" value="true"/>\n'
+    + _passthrough("NODE_FILL_COLOR", "fill", "string", "#AAB2BD")
+    + _passthrough("NODE_SIZE", "size", "double", "4.0")
+    + _passthrough("NODE_SHAPE", "shape", "string", "ELLIPSE")
+    + _passthrough("NODE_BORDER_WIDTH", "border_width", "double", "0.0")
+    + _passthrough("NODE_BORDER_PAINT", "border_color", "string", "#12161B")
+    + _passthrough("NODE_BORDER_STROKE", "border_style", "string", "SOLID")
+    + _passthrough("NODE_TRANSPARENCY", "opacity", "integer", "255")
+    + _passthrough("NODE_LABEL", "label_text", "string", "")
+    + _passthrough("NODE_LABEL_FONT_SIZE", "label_size", "integer", "12")
+    + '      <visualProperty name="NODE_LABEL_COLOR" default="#12161B"/>\n'
+    '      <visualProperty name="NODE_LABEL_FONT_FACE" default="SansSerif.bold,bold,12"/>\n'
+    '      <visualProperty name="NODE_LABEL_POSITION" default="N,S,c,0.00,4.00"/>\n'
+    '    </node>\n'
+    '    <edge>\n'
+    + _passthrough("EDGE_STROKE_UNSELECTED_PAINT", "color", "string", "#B9C1CB")
+    + _passthrough("EDGE_TRANSPARENCY", "opacity", "integer", "100")
+    + _passthrough("EDGE_WIDTH", "width", "double", "0.3")
+    + '    </edge>\n'
+    '  </visualStyle>\n'
+    '</vizmap>\n'
+)
 
 
 def incidences(g):
@@ -194,8 +235,9 @@ def main(argv=None):
              "merged_into": merged.get(nid, ""),
              "in_main_network": (nid in in_main) if not is_rxn else None,
              "fill": COLOUR[f], "shape": "ROUND_RECTANGLE" if is_rxn else "ELLIPSE",
-             "size": 9.0 if is_rxn else round(10 + 5 * math.log2(1 + deg), 1),
-             "border_width": 2.0 if island else 0.0, "border_color": "#12161B",
+             "size": 3.0 if is_rxn else round(4 + 2 * math.log2(1 + deg), 1),
+             "label_size": 60 if deg >= HUB_LABEL_DEGREE else 12,
+             "border_width": 1.0 if island else 0.0, "border_color": "#12161B",
              "border_style": "DOT" if island else "SOLID", "opacity": 255,
              "label_text": raw.node_names[i] if not is_rxn and deg >= HUB_LABEL_DEGREE else ""}
         nodes.append({"data": d})
@@ -211,7 +253,8 @@ def main(argv=None):
         edge_fate[f] += 1
         edges.append({"data": {"id": f"{key[0]}__{key[1]}", "source": key[0], "target": key[1], "side": side,
                                "pruned_at": LABEL[f], "fate": f, "color": COLOUR[f],
-                               "opacity": 230 if f in ("kept", "safeguard", "merged") else 150}})
+                               "opacity": 140 if f in ("kept", "safeguard", "merged") else 60,
+                               "width": 0.4 if f in ("kept", "safeguard", "merged") else 0.25}})
 
     pos = layout(raw.node_ids, [(e["data"]["source"], e["data"]["target"]) for e in edges], raw_deg)
     for n in nodes:
@@ -223,6 +266,7 @@ def main(argv=None):
                     "legend": "; ".join(f"{lab} = {c}" for _, lab, c in FATES)},
            "elements": {"nodes": nodes, "edges": edges}}
     (out / "raw_pruning_fate.cyjs").write_text(json.dumps(doc), encoding="utf-8")
+    (out / "fate_map_style.xml").write_text(STYLE_XML, encoding="utf-8")
     table = pd.DataFrame(rows)
     table.to_csv(out / "pruning_fate_nodes.tsv", sep="\t", index=False)
 
