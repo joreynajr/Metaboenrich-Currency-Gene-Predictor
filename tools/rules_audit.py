@@ -31,14 +31,127 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from metaboenrich import structure                                   # noqa: E402
 from metaboenrich.atoms import (COUPLE_MIN_REACTIONS, carbon_balance, carbon_budget, carbon_method_pairs,  # noqa: E402
-                                carbon_unbalanced, find_carriers, load_atom_pairs, pool_metabolites,
-                                transport_reactions)
+                                carbon_unbalanced, find_carriers, kegg_pairs_for_model, load_atom_pairs,
+                                pool_metabolites, transport_reactions)
 from metaboenrich.gem import load_sbml, load_subsystems              # noqa: E402
 from metaboenrich.network import build_graph, parse_formula          # noqa: E402
 
 STEPS = ["Step 1 (pools, biomass, transporters)", "Rule 1 (carbon)", "Rule 2 (couples)", "Rule 3 (carriers)"]
 SIZE = "Too large (over 20 metabolites)"
 RULE4 = "Rule 4 (carbon budget)"     # removes links only; a reaction never drops out at it
+MERGE = "Compartment copies merged"  # removes nothing; identical reactions share a node
+
+
+def safeguard_tab(model, names, sym):
+    """One row per reaction the keep-rarest safeguard kept: every candidate pair with its count."""
+    rows = []
+    for x in structure.KEPT_RAREST_LOG:
+        r = model.reactions[x["reaction"]]
+        cands = sorted(x["candidates"], key=lambda c: (c[1], c[0]))
+        tied = [p for p, n in cands if n == x["kept_pair_count"]]
+        rows.append({"reaction": x["reaction"].replace("R_", ""), "name": r.name,
+                     "genes": ";".join(sym.get(g, g) for g in r.genes), "atom-mapped": x["mapped"],
+                     "link kept": f"{names[x['kept_pair'][0]]} / {names[x['kept_pair'][1]]}",
+                     "reactions that pair is found in": x["kept_pair_count"],
+                     "tie broken by metabolite id": len(tied) > 1,
+                     "candidates (pair: reactions found in), rarest first":
+                         "; ".join(f"{names[a]} / {names[b]}: {n}" for (a, b), n in cands)})
+    return pd.DataFrame(rows).sort_values(["reactions that pair is found in", "reaction"])
+
+
+def _equation(model, rxn, names):
+    """'2 ATP (10 C) + alanine (3 C) -> ...' with compartments merged and carbon per molecule."""
+    def side(refs):
+        out = {}
+        for s, n in refs.items():
+            m = model.species[s].met_id
+            out[m] = out.get(m, 0) + n
+        return " + ".join(f"{'' if n == 1 else f'{n:g} '}{names[m]} ({parse_formula(model.species[s].formula)['C']} C)"
+                          for (m, n), s in zip(out.items(), [next(s for s in refs if model.species[s].met_id == m)
+                                                            for m in out]))
+    return f"{side(rxn.substrates)} -> {side(rxn.products)}"
+
+
+def _assignment(model, rid, names, limit=16):
+    """One way of sending each carbon substrate molecule whole into a product molecule with
+    matching carbon counts (what carbon_budget searches for), or '' if there is none."""
+    rxn, carbons, net = model.reactions[rid], {}, {}
+    for sign, refs in ((-1, rxn.substrates), (1, rxn.products)):
+        for s, n in refs.items():
+            m = model.species[s].met_id
+            carbons[m] = parse_formula(model.species[s].formula)["C"]
+            net[m] = net.get(m, 0) + sign * n
+    subs = [m for m, n in net.items() if n < 0 and carbons[m] > 0 for _ in range(round(-n))]
+    prods = [m for m, n in net.items() if n > 0 and carbons[m] > 0 for _ in range(round(n))]
+    if len(subs) + len(prods) > limit:
+        return ""
+    subs.sort(key=lambda m: -carbons[m])
+    cap, into = [carbons[p] for p in prods], [None] * len(subs)
+
+    def go(i):
+        if i == len(subs):
+            return not any(cap)
+        for k in range(len(prods)):
+            if cap[k] >= carbons[subs[i]]:
+                cap[k] -= carbons[subs[i]]
+                into[i] = k
+                if go(i + 1):
+                    return True
+                cap[k] += carbons[subs[i]]
+        return False
+    if not go(0):
+        return ""
+    return "; ".join(f"{names[s]} ({carbons[s]} C) -> {names[prods[k]]}" for s, k in zip(subs, into))
+
+
+def rule4_tab(model, names, union, carrier_pairs, unbalanced, R, final):
+    """Every pair Rule 4 judged in a reaction of the final network, with the arithmetic and the decision."""
+    shared = transport_reactions(model, carbon_cargo=False)
+    pairs, _ = carbon_method_pairs(model, union, COUPLE_MIN_REACTIONS, keep_rarest=True, no_rescue=shared,
+                                   carriers=carrier_pairs)
+    kegg = {rid: {tuple(p) for p in ps} for rid, ps in kegg_pairs_for_model(model).items()}
+    removed = {(x["reaction"], tuple(x["pair"])) for x in structure.CARBON_BUDGET_LOG}
+    keep_rxn = set(R[R["in 3-rule pruning"] | (R["drops out at"] == SIZE)].reaction)
+    kept_node = {r: final.base_reaction[k] for k, rs in final.merged_copies.items() for r in rs}
+    review = {}
+    path = ROOT / "handoff/rule4_reviewed.csv"
+    if path.exists():
+        rv = pd.read_csv(path)
+        review = {("R_" + b, s, p): w for b, s, p, w in zip(rv.base, rv.substrate, rv["product"], rv.review)}
+    rows = []
+    for rid in sorted(pairs):
+        ps = list(dict.fromkeys(pairs[rid]))
+        if rid.replace("R_", "") not in keep_rxn or not ps:
+            continue
+        v = carbon_budget(model, rid, ps, unbalanced)
+        rxn = model.reactions[rid]
+        assign = _assignment(model, rid, names) if any(x == "impossible" for x in v.values()) else ""
+        for s, p in ps:
+            verdict, listed = v[(s, p)], (s, p) in kegg.get(rid, ())
+            action = ("removed by Rule 4" if (rid, (s, p)) in removed else
+                      "kept: KEGG lists the pair" if verdict == "impossible" and listed else
+                      "kept: every pair of the reaction is impossible (a reaction is never left with none)"
+                      if verdict == "impossible" else f"kept: {verdict}")
+            rows.append({"reaction": rid.replace("R_", ""), "name": rxn.name,
+                         "equation (compartments merged)": _equation(model, rxn, names),
+                         "substrate": names[s], "product": names[p], "verdict": verdict, "KEGG lists pair": listed,
+                         "decision": action,
+                         "a whole-molecule assignment that fits (shown for reactions with an impossible pair)": assign,
+                         "chemistry review": review.get((kept_node.get(rid, rid), s, p), "")})
+    return pd.DataFrame(rows)
+
+
+def copies_tab(model, names, sym, final):
+    """One row per merged compartment copy: the node it joined."""
+    rows = []
+    for k, rs in sorted(final.merged_copies.items(), key=lambda kv: final.node_ids[kv[0]]):
+        keep = final.base_reaction[k]
+        for r in rs:
+            rows.append({"kept node": final.node_ids[k].replace("R_", ""), "kept reaction": keep.replace("R_", ""),
+                         "name": model.reactions[keep].name, "merged copy": r.replace("R_", ""),
+                         "copy's genes": ";".join(sym.get(g, g) for g in model.reactions[r].genes),
+                         "kept node's genes (union)": ";".join(sym.get(g, g) for g in final.reaction_genes[k])})
+    return pd.DataFrame(rows)
 
 
 def main():
@@ -203,8 +316,13 @@ def main():
                        "Rule 2 couples"),
             STEPS[3]: ("Links between a carrier and its loaded forms (CoA and acyl-CoAs, carnitine and "
                        "acylcarnitines)", "Rule 3 carriers"),
+            RULE4: ("Links the reaction's own carbon counts rule out (transaminase cross-pairs, ATP to the "
+                    "aminoacyl-tRNA), unless KEGG lists the pair or it is the reaction's last pair",
+                    "Rule 4 carbon budget"),
             SIZE: ("Whole reactions still listing more than 20 metabolites after the rules (protein-synthesis "
-                   "pseudo-reactions)", "Reactions (filter 'drops out at')")}
+                   "pseudo-reactions)", "Reactions (filter 'drops out at')"),
+            MERGE: ("Nothing: reactions identical once compartments are merged share one node, with the union of "
+                    "their genes", "Compartment copies")}
     def links_removed(step):
         """Links (one per reaction and pair) the step removes from reactions that survived Step 1,
         not counting links the keep-rarest safeguard puts back."""
@@ -218,7 +336,7 @@ def main():
     summary = [{"step": "Start: raw Human-GEM", "what it removes": "", "reactions dropped": None,
                 "reactions saved by safeguard": None, "links removed": None, "genes that leave the network": None,
                 "reactions left": left, "details on tab": "Reactions"}]
-    for s in STEPS + [SIZE]:
+    for s in STEPS + [RULE4, SIZE]:
         out_s = R[(R["drops out at"] == s) & ~R["kept by safeguard"]]
         saved = R[(R["drops out at"] == s) & R["kept by safeguard"]]
         gone = set().union(*[set(g.split(";")) for g in out_s.genes if g]) if len(out_s) else set()
@@ -226,15 +344,24 @@ def main():
         left -= len(out_s)
         summary.append({"step": s, "what it removes": what[s][0], "reactions dropped": len(out_s),
                         "reactions saved by safeguard": len(saved) or None,
-                        "links removed": links_removed(s) if s in STEPS[1:] else None,
+                        "links removed": links_removed(s) if s in STEPS[1:] + [RULE4] else None,
                         "genes that leave the network": len(genes_at[s]), "reactions left": left,
                         "details on tab": what[s][1]})
     summary.append({"step": "End: 3-rule pruning", "what it removes": "", "reactions dropped": None,
                     "reactions saved by safeguard": int(R["kept by safeguard"].sum()), "links removed": None,
                     "genes that leave the network": None, "reactions left": int(R["in 3-rule pruning"].sum()),
                     "details on tab": "Reactions"})
+    n_merged = sum(len(v) for v in final.merged_copies.values())
+    summary.insert(-1, {"step": MERGE, "what it removes": what[MERGE][0], "reactions dropped": None,
+                        "reactions saved by safeguard": None, "links removed": None,
+                        "genes that leave the network": 0, "reactions left": int(R["in 3-rule pruning"].sum()),
+                        "details on tab": what[MERGE][1],
+                        "note": f"{n_merged} reaction nodes merged into {len(final.merged_copies)}; reactions "
+                                "still count as present"})
     S = pd.DataFrame(summary)
     G = pd.DataFrame([{"step": s, "gene": g} for s in genes_at for g in genes_at[s]])
+    SG, B4, CP = safeguard_tab(model, names, sym), rule4_tab(model, names, union, carrier_pairs, unbalanced,
+                                                            R, final), copies_tab(model, names, sym, final)
 
     # ---- before vs after: raw network against 3-rule pruning -------------
     def describe(g):
@@ -341,8 +468,9 @@ def main():
             "Every chemical reaction of raw Human-GEM (compartments merged, 7,080 reactions) followed through the "
             "revised carbon method. The steps run in order: Step 1 drops whole reactions (pools, biomass, "
             "transporters); Rules 1, 2 and 3 remove links inside reactions; a reaction left with no link drops out, "
-            "unless the keep-rarest safeguard keeps its rarest link; finally reactions still listing more than 20 "
-            "metabolites drop out.",
+            "unless the keep-rarest safeguard keeps its rarest link; Rule 4 removes links the carbon counts rule "
+            "out; reactions still listing more than 20 metabolites drop out; finally reactions identical once "
+            "compartments are merged share one node.",
             "Before vs after: the raw network and 3-rule pruning side by side (totals and the 25 biggest "
             "hubs). Metabolites / Reactions / Genes before-after: every member of the raw network, how many "
             "reactions it is in before and after, and what happened to it. Reactions before-after writes each "
@@ -359,6 +487,19 @@ def main():
             "Links: every carbon pair of the atom-mapped reactions and the step that removes it. 'carbon budget' "
             "is Rule 4's verdict (impossible / possible / inconclusive / unbalanced); Rule 4 removes an impossible "
             "pair unless KEGG lists it or it is the reaction's last pair.",
+            "Safeguard: every reaction Rules 2-3 left with no link and that the safeguard kept. It puts back one "
+            "of the reaction's removed pairs: the one found in the fewest reactions network-wide (the rarest, so "
+            "the least likely to be cofactor bookkeeping); ties go to the lower metabolite id. All candidates are "
+            "listed with their counts. Reactions that carry anything across a membrane are never rescued.",
+            "Rule 4 carbon budget: every pair Rule 4 judged in the final network. It assumes each substrate "
+            "molecule's carbon goes whole into one product molecule, and looks for ways to assign the substrates "
+            "(stoichiometry counted) to products so that carbon counts match exactly. A pair no such assignment "
+            "uses is 'impossible'; 'inconclusive' if no assignment exists at all (a substrate must split); "
+            "'unbalanced' if carbon in and out differ. For reactions with an impossible pair, one fitting "
+            "assignment is shown. 'chemistry review' is a by-hand judgement of the 48 flagged pairs: 9 are real "
+            "chemistry (group transfers: SCOT, GALT, BHMT, AGPS) and are kept by the two guards.",
+            "Compartment copies: reactions identical once compartments are merged; each copy joins the kept node, "
+            "whose genes are the union.",
             "Genes lost: genes whose every reaction drops out, by step.",
             "Contains KEGG-derived pairs: do not post publicly."]})
         notes.to_excel(xw, sheet_name="About", index=False)
@@ -374,6 +515,9 @@ def main():
         C.to_excel(xw, sheet_name="Rule 3 carriers", index=False)
         R.to_excel(xw, sheet_name="Reactions", index=False)
         L.to_excel(xw, sheet_name="Links", index=False)
+        SG.to_excel(xw, sheet_name="Safeguard", index=False)
+        B4.to_excel(xw, sheet_name="Rule 4 carbon budget", index=False)
+        CP.to_excel(xw, sheet_name="Compartment copies", index=False)
         G.to_excel(xw, sheet_name="Genes lost", index=False)
         for ws in xw.book.worksheets:
             ws.freeze_panes = "A2"

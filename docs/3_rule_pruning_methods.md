@@ -195,7 +195,7 @@ the union of the copies' genes and directions (81 become reversible because one 
 way). No gene, reaction, link or direction is lost: the metabolite-to-metabolite steps are the same
 before and after.
 
-Merged: **1,577 reaction nodes**, into 1,268.
+Merged: **1,562 reaction nodes**, into 1,253 (after Rule 4).
 
 ### Carbon balance
 
