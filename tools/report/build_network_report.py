@@ -1,20 +1,29 @@
 """Build the Network Explorer: an interactive cytoscape.js view of the current
 each method sends through the network for every group-level benchmark case
-(one self-contained HTML page).
+(one self-contained HTML page). Three methods: current flow, the absorbing walk
+with sources = down (significantly decreased metabolites are the sources,
+increased are the targets; the package default since D20) and the absorbing
+walk with sources = up (increased are the sources, decreased the targets;
+protocol section 1.3). Current flow gives the same ranks under both
+orientations, so it is shown once (run under sources = down).
 
 Everything is recomputed from the model and the benchmark data (data/ and
 results/ are not committed):
     data/Human-GEM.xml, data/Human-GEM.yml         network and subsystems (pathways)
     data/benchmark/{thistlethwaite2020.csv, miller2015.csv, cohorts_coded.tsv}
     benchmarks/cases.tsv                            cases (status primary + secondary) and causal genes
-    results/bench_rw/{flow,walk_full}/group_results.tsv
+    results/bench_rw/{flow,walk_full}/group_results.tsv      sources = down
+    results/bench_rw_up/{flow,walk_full}/group_results.tsv   sources = up
                                                     causal-gene ranks, checked against ours on every build
+                                                    (flow against both; each walk against its orientation)
     tools/report/network_report_template.html       the page (HTML/CSS/JS) with two placeholders
     data/vendor/cytoscape-<version>.min.js          downloaded once from cdnjs, SHA-256 checked, inlined
 
-Produce the benchmark results on branch directed-rw with
+Produce the benchmark results with
     python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
     python -m metaboenrich.benchmark --levels group --method walk --out results/bench_rw/walk_full
+    python -m metaboenrich.benchmark --levels group --sources increased --out results/bench_rw_up/flow
+    python -m metaboenrich.benchmark --levels group --method walk --sources increased --out results/bench_rw_up/walk_full
 
 Then:
     python tools/report/build_network_report.py --out docs/network_report.html
@@ -24,19 +33,19 @@ Then:
                                                     # re-render the page from saved data (no recomputation)
 
 Each case is one disorder at group level (mean z-score per metabolite, BH
-q < 0.05 and |mean z| >= 1), run exactly as the benchmark runs it, with both
-current flow and the absorbing walk (kappa = None). Views per case:
+q < 0.05 and |mean z| >= 1), run exactly as the benchmark runs it, with current
+flow and the absorbing walk (kappa = None) under both orientations. Views per case:
     net      the current-carrying subnetwork: every edge whose max current over
-             pairs is >= 0.1 under either method, plus every source and target
+             pairs is >= 0.1 under any method, plus every source and target
              (threshold raised until the view has <= 500 nodes)
-    pw-...   one view per Human-GEM subsystem picked by either method's
+    pw-...   one view per Human-GEM subsystem picked by any method's
              over-representation test among its top 100 reactions (a subsystem
              with more than 150 reactions on the network shows only the reactions
-             carrying current under either method)
+             carrying current under any method)
     causal   the causal gene's reactions, their metabolites and the reactions
              next to those metabolites that carry current (max >= 0.1), so the
              causal gene can always be found in the graph
-Both methods share one layout per view, so nodes stay put when switching. Small
+All methods share one layout per view, so nodes stay put when switching. Small
 views (<= 200 nodes) get a label-aware pass that pushes apart nodes whose labels
 would overlap at 100% zoom.
 """
@@ -69,16 +78,23 @@ from metaboenrich.stage_diagrams import fruchterman_reingold                    
 from metaboenrich.walk import absorbing_walk                                     # noqa: E402
 
 TEMPLATE = ROOT / "tools" / "report" / "network_report_template.html"
-BENCH = ROOT / "results" / "bench_rw"
-BENCH_DIRS = {"flow": "flow", "walk": "walk_full"}
+# Benchmark runs each method's ranks are checked against (current flow: both orientations).
+BENCH_DIRS = {"flow": ["results/bench_rw/flow", "results/bench_rw_up/flow"],
+              "walk_down": ["results/bench_rw/walk_full"], "walk_up": ["results/bench_rw_up/walk_full"]}
 CYTOSCAPE_VERSION = "3.30.2"
 CYTOSCAPE_SHA256 = "83e8c54a6bec655bfd81df07df605649c268af69aeca67a5ea2da54ea42dac81"
 CYTOSCAPE_URL = f"https://cdnjs.cloudflare.com/ajax/libs/cytoscape/{CYTOSCAPE_VERSION}/cytoscape.min.js"
 CYTOSCAPE_FILE = ROOT / "data" / "vendor" / f"cytoscape-{CYTOSCAPE_VERSION}.min.js"
 
 ALPHA, MIN_Z = 0.05, 1.0                 # group-level significance, as in the benchmark
-SOURCES = "decreased"                      # significant decreases are the sources (D20); the template text assumes it
-METHODS = ("flow", "walk")
+# Orientation labels -> load_daa's `sources`: "down" makes the significant decreases the
+# sources (D20, the default), "up" the significant increases (protocol section 1.3).
+ORIENTATIONS = {"down": "decreased", "up": "increased"}
+METHODS = ("flow", "walk_down", "walk_up")
+METHOD_KIND = {"flow": "flow", "walk_down": "walk", "walk_up": "walk"}
+METHOD_RUN_UNDER = {"flow": "down", "walk_down": "down", "walk_up": "up"}   # flow: same ranks either way
+METHOD_ORIENTATION = {"flow": None, "walk_down": "down", "walk_up": "up"}  # None: does not depend on it
+METHOD_LABEL = {"flow": "Current flow", "walk_down": "Walk, sources = down", "walk_up": "Walk, sources = up"}
 NET_THRESHOLDS = (0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
 NET_MAX_NODES = 500
 PW_TOP, PW_MIN, PW_TOP_N = 6, 3, 100     # pathways per method: top 6 with q < 0.05, else top 3 by p
@@ -154,21 +170,23 @@ class Network:
             self.edges_of.setdefault(r, []).append(e)
 
 
-def load_case_daa(net, daa_df, tmp_csv):
+def load_case_daa(net, daa_df, tmp_csv, orientation):
     """DAA -> mapped metabolites, exactly as benchmark.Ranker.run does it
-    (through a CSV round trip, so empty identifiers read back as missing)."""
+    (through a CSV round trip, so empty identifiers read back as missing).
+    orientation: "down" or "up" (see ORIENTATIONS)."""
     daa_df.to_csv(tmp_csv, index=False)
     daa, _, _ = load_daa(tmp_csv, net.model, ["HMDB", "KEGG", "name"], "log2FC", "p", ALPHA, False, MIN_Z,
-                         sources=SOURCES)
+                         sources=ORIENTATIONS[orientation])
     daa["node"] = daa.met_id.map(net.graph.index)
     return daa
 
 
-def run_method(net, method, on, sources, targets, ground, causal_ens):
-    """One method on one case: FlowResult, scored reactions, pathway table and
-    the causal gene's rank (computed exactly as the benchmark computes it)."""
+def run_method(net, kind, on, sources, targets, ground, causal_ens):
+    """One method ("flow" or "walk") on one case: FlowResult, scored reactions,
+    pathway table and the causal gene's rank (computed exactly as the benchmark
+    computes it)."""
     g = net.graph
-    if method == "walk":
+    if kind == "walk":
         flow = absorbing_walk(g, sources, targets, dict(zip(on.node, on.phi)), kappa=None, ground=ground)
     else:
         flow = current_flow(g, sources, targets, ground=ground)
@@ -315,10 +333,16 @@ def build_case(net, tables, c, data, tmp_csv):
     g = net.graph
     z, ann, cohorts = data[c.dataset]
     samples = [s for s in cohorts.get(c.cohort, []) if s in z.columns]
-    daa = load_case_daa(net, group_daa(z, ann, samples), tmp_csv)
-    on = daa.dropna(subset=["node"]).astype({"node": int})
-    sources = on[on.role == "source"].node.tolist()
-    targets = on[on.role == "target"].node.tolist()
+    group = group_daa(z, ann, samples)
+    daa = {o: load_case_daa(net, group, tmp_csv, o) for o in ORIENTATIONS}
+    on_all = {o: d.dropna(subset=["node"]).astype({"node": int}) for o, d in daa.items()}
+    # Same mapped metabolites under both orientations; only the roles swap.
+    assert on_all["down"].node.tolist() == on_all["up"].node.tolist() and len(daa["down"]) == len(daa["up"])
+    roles = {o: (d[d.role == "source"].node.tolist(), d[d.role == "target"].node.tolist()) for o, d in on_all.items()}
+    daa, on = daa["down"], on_all["down"]
+    sources, targets = roles["down"]
+    # One-sided data: the unchanged measured metabolites stand in for the missing side
+    # (the same nodes under both orientations).
     ground = on[on.role == ""].node.tolist() if bool(sources) != bool(targets) else None
 
     symbols = c.causal_genes.split(";")
@@ -327,9 +351,10 @@ def build_case(net, tables, c, data, tmp_csv):
     causal_set = set(causal_ens)
     causal_rxn = [int(i) for i in net.rxn_nodes if causal_set & set(g.reaction_genes[i])]
 
-    res = {m: run_method(net, m, on, sources, targets, ground, causal_ens) for m in METHODS}
+    res = {m: run_method(net, METHOD_KIND[m], on_all[METHOD_RUN_UNDER[m]], *roles[METHOD_RUN_UNDER[m]], ground,
+                         causal_ens) for m in METHODS}
     cond = {m: res[m]["flow"].conductivity for m in METHODS}
-    emax = np.maximum(*(res[m]["flow"].edge_max_current for m in METHODS))
+    emax = np.maximum.reduce([res[m]["flow"].edge_max_current for m in METHODS])
     rank_of = {}
     for m in METHODS:
         rxn = res[m]["rxn"]
@@ -343,7 +368,7 @@ def build_case(net, tables, c, data, tmp_csv):
         if len(nodes) <= NET_MAX_NODES:
             break
     views = [{"id": "net", "kind": "net", "title": "Current-carrying subnetwork", "threshold": thr,
-              "nodes": nodes, "note": f"edges with max current ≥ {thr:g} under either method, plus every "
+              "nodes": nodes, "note": f"edges with max current ≥ {thr:g} under any method, plus every "
                                       f"source and target"}]
 
     # -- pathway views: union of each method's picks, in order of best p
@@ -351,14 +376,14 @@ def build_case(net, tables, c, data, tmp_csv):
     pw_rows = {m: {r.subsystem: r for r in res[m]["pathways"].itertuples()} for m in METHODS}
     # ties in p (same hits and size) fall back to the name, so the order does not
     # depend on set iteration (string hashing differs between runs)
-    union = sorted(set(picks["flow"]) | set(picks["walk"]),
+    union = sorted(set().union(*picks.values()),
                    key=lambda s: (min(pw_rows[m][s].p for m in METHODS if s in pw_rows[m]), s))
     for sub in union:
         members = [int(i) for i in net.rxn_nodes if net.sub_of[int(i)] == sub]
         total, rule = len(members), ""
         if total > PW_MAX_REACTIONS:
             members = [i for i in members if any(cond[m][i] > 0 for m in METHODS)]
-            rule = "reactions carrying current under either method"
+            rule = "reactions carrying current under any method"
         mets = {int(g.edges[e, 0]) for i in members for e in net.edges_of.get(i, [])}
         if rule and len(members) == total:
             rule = ""                       # every reaction of the subsystem carries current
@@ -380,7 +405,7 @@ def build_case(net, tables, c, data, tmp_csv):
                 break
         note = (f"the causal gene's {len(causal_rxn)} reaction{'s' if len(causal_rxn) > 1 else ''} and "
                 f"{len(core_mets)} metabolites" +
-                (f", plus {len(near)} neighbouring reactions with max current ≥ {thr_c:g} under either method"
+                (f", plus {len(near)} neighbouring reactions with max current ≥ {thr_c:g} under any method"
                  if near else "; no neighbouring reaction carries max current ≥ 0.1"))
         views.append({"id": "causal", "kind": "causal", "title": "Causal-gene neighbourhood",
                       "nodes": sorted(nodes_c), "threshold": None if thr_c == math.inf else thr_c, "note": note})
@@ -399,9 +424,11 @@ def build_case(net, tables, c, data, tmp_csv):
         v["nodes"] = [tables.node(n) for n in v["nodes"]]
     case_edges, case_rxn = sorted(case_edges), sorted(case_rxn)
 
-    # -- metabolites: every mapped metabolite on the graph (others cannot be drawn)
+    # -- metabolites: every mapped metabolite on the graph (others cannot be drawn), with
+    #    its role under each orientation ("source", "target" or "" = not significant)
     mets = {"node": [tables.node(n) for n in on.node], "z": [sig(x) for x in on.log2fc],
-            "q": [sig(x) for x in on.p], "role": on.role.tolist(), "input": on.input_id.astype(str).tolist()}
+            "q": [sig(x) for x in on.p], "input": on.input_id.astype(str).tolist(),
+            **{f"role_{o}": d.role.tolist() for o, d in on_all.items()}}
 
     # -- per method
     methods = {}
@@ -421,13 +448,16 @@ def build_case(net, tables, c, data, tmp_csv):
                              "significant": bool(row.q < 0.05)})
         in_tbl = set() if rxn is None else set(rxn.index)
         get = lambda col, i: sig(rxn.at[i, col]) if i in in_tbl else None
+        wi = flow.walk_info
         methods[m] = {
+            "orientation": METHOD_ORIENTATION[m],
             "causal_rank": r["causal_rank"],
             "causal_gene_ranks": {net.model.genes[e]: v for e, v in r["gene_ranks"].items()},
             "pairs": len(flow.pairs),
             "reactions_scored": len(in_tbl),
-            "walk_success_fraction": sig(flow.walk_info["walk_success_fraction"]) if flow.walk_info else None,
-            "sources_unreached": flow.walk_info["walk_sources_unreached"] if flow.walk_info else None,
+            "walk_success_fraction": sig(wi["walk_success_fraction"]) if wi else None,
+            "sources_unreached": wi["walk_sources_unreached"] if wi else None,
+            "walk_one_sided": wi["walk_one_sided"] if wi else None,     # "", "ground absorbs" or "ground releases"
             "pathways": rows,
             "rxn": {"score": [get("final_score", i) for i in case_rxn],
                     "rank": [rank_of[m].get(i) for i in case_rxn],
@@ -444,7 +474,9 @@ def build_case(net, tables, c, data, tmp_csv):
         "causal_in_network": [net.model.genes[e] for e in causal_ens],
         "causal_rxn": [tables.node(i) for i in causal_rxn],
         "measured": int(len(daa)), "mapped_on_graph": int(len(on)),
-        "sources": len(sources), "targets": len(targets), "one_sided": bool(ground),
+        "decreased": len(roles["down"][0]), "increased": len(roles["down"][1]),
+        "roles": {o: {"sources": len(s), "targets": len(t)} for o, (s, t) in roles.items()},
+        "one_sided": bool(ground),
         "ground": len(ground or []),
         "rxn": [tables.node(i) for i in case_rxn],
         "edges": [tables.edge(e) for e in case_edges],
@@ -454,19 +486,21 @@ def build_case(net, tables, c, data, tmp_csv):
 
 
 def check_ranks(payload):
-    """The causal-gene ranks must equal the benchmark's (raw scoring)."""
+    """The causal-gene ranks must equal the benchmark's (raw scoring): current
+    flow against both orientations' runs, each walk against its own."""
     rows, bad = [], 0
-    for m, d in BENCH_DIRS.items():
-        tsv = BENCH / d / "group_results.tsv"
-        if not tsv.exists():
-            print(f"  (no {tsv.relative_to(ROOT)}; rank check skipped for {m})")
-            continue
-        ref = pd.read_csv(tsv, sep="\t").set_index("case").rank_metaboenrich_raw
-        for c in payload["cases"]:
-            ours, theirs = c["methods"][m]["causal_rank"], ref.get(c["id"])
-            ok = (ours is None and pd.isna(theirs)) or (ours is not None and abs(ours - theirs) < 1e-9)
-            bad += not ok
-            rows.append((c["id"], m, ours, theirs, ok))
+    for m, dirs in BENCH_DIRS.items():
+        for d in dirs:
+            tsv = ROOT / d / "group_results.tsv"
+            if not tsv.exists():
+                print(f"  (no {d}/group_results.tsv; rank check skipped for {m})")
+                continue
+            ref = pd.read_csv(tsv, sep="\t").set_index("case").rank_metaboenrich_raw
+            for c in payload["cases"]:
+                ours, theirs = c["methods"][m]["causal_rank"], ref.get(c["id"])
+                ok = (ours is None and pd.isna(theirs)) or (ours is not None and abs(ours - theirs) < 1e-9)
+                bad += not ok
+                rows.append((c["id"], f"{m} vs {d}", ours, theirs, ok))
     return rows, bad
 
 
@@ -489,9 +523,9 @@ def build_payload(case_ids=None, model="data/Human-GEM.xml", yml="data/Human-GEM
             t = time.time()
             out.append(build_case(net, tables, c, data, Path(tmp) / "daa.csv"))
             cs = out[-1]
-            print(f"  {c.case_id:6s} src={cs['sources']:3d} tgt={cs['targets']:3d} views={len(cs['views']):2d} "
-                  f"rank flow={cs['methods']['flow']['causal_rank']} walk={cs['methods']['walk']['causal_rank']} "
-                  f"({time.time() - t:.0f}s)")
+            print(f"  {c.case_id:6s} dec={cs['decreased']:3d} inc={cs['increased']:3d} views={len(cs['views']):2d} "
+                  f"rank flow={cs['methods']['flow']['causal_rank']} walk_down={cs['methods']['walk_down']['causal_rank']} "
+                  f"walk_up={cs['methods']['walk_up']['causal_rank']} ({time.time() - t:.0f}s)")
     payload = {
         "meta": {
             "generated": time.strftime("%Y-%m-%d"), "git": git_label(),
@@ -501,7 +535,8 @@ def build_payload(case_ids=None, model="data/Human-GEM.xml", yml="data/Human-GEM
             "pathway_rule": f"per method: top {PW_TOP} subsystems with q < 0.05 (by p), or the top {PW_MIN} by p "
                             f"if fewer than {PW_MIN} qualify; over-representation among the top {PW_TOP_N} reactions",
             "pathway_max_reactions": PW_MAX_REACTIONS, "zero_current": ZERO,
-            "methods": {"flow": "Current flow", "walk": "Absorbing walk"},
+            "methods": METHOD_LABEL, "method_orientation": METHOD_ORIENTATION,
+            "flow_run_under": METHOD_RUN_UNDER["flow"],
             "cytoscape": CYTOSCAPE_VERSION,
         },
         **tables.payload(),

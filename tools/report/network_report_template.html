@@ -56,10 +56,13 @@ select{width:100%}
 button{cursor:pointer}
 button:hover,select:hover{border-color:var(--muted)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.seg{display:inline-flex;border:1px solid var(--axis);border-radius:6px;overflow:hidden;background:var(--page)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--axis);border-radius:6px;overflow:hidden;background:var(--page)}
 .seg button{border:0;border-radius:0;background:transparent;min-height:32px;padding:4px 11px;white-space:nowrap;color:var(--ink-2)}
 .seg button+button{border-left:1px solid var(--axis)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);font-weight:600}
+.pairsel{display:flex;gap:6px;align-items:center}
+.pairsel select{width:auto;min-width:0}
+.pairsel span{font-size:13px;color:var(--ink-2)}
 .search form{display:flex;gap:6px}
 .search input{width:150px;min-width:0}
 .search{flex:1 1 180px;max-width:280px}
@@ -111,7 +114,7 @@ max-height:calc(clamp(380px,68vh,780px) + 36px);overflow:auto;align-content:star
 .side .empty{font-size:13.5px;color:var(--muted)}
 dl.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;margin:0;font-size:13.5px}
 dl.kv dt{color:var(--muted)}dl.kv dd{margin:0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.side table{font-size:12.5px}.side th,.side td{padding:4px 6px}
+.side table{font-size:12.5px}.side th,.side td{padding:4px 6px}.side th{white-space:normal}
 .linklist{display:grid;gap:6px;font-size:13px;padding:0;list-style:none}
 .linkbtn{background:none;border:0;padding:0;min-height:0;color:var(--accent);text-decoration:underline;text-underline-offset:2px;
 font-size:inherit;text-align:left}
@@ -146,7 +149,9 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
   .graphs.compare{grid-template-columns:minmax(0,1fr)}
   .graphs.compare .cy{height:clamp(300px,46vh,520px)}
   .cy{height:clamp(340px,62vh,640px)}
-  .ctl.case,.ctl.view,.search{max-width:none;flex-basis:100%}
+  .ctl.case,.ctl.view,.ctl.pair,.search{max-width:none;flex-basis:100%}
+  .seg{display:flex}.seg button{flex:1 1 auto}
+  .pairsel select{flex:1}
 }
 </style></head><body><main>
 
@@ -154,8 +159,8 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
   <div class="eyebrow" id="eyebrow">Metaboenrich</div>
   <h1>Network Explorer</h1>
   <p class="lede">Where each method sends current through Human-GEM for every benchmark disorder, drawn in place: the
-  current-carrying subnetwork and the pathways each method picks out. Node colour is the metabolite change; edge width is
-  the current.</p>
+  current-carrying subnetwork and the pathways each method picks out. Three methods: current flow, and the absorbing walk
+  under each orientation (sources = down, sources = up). Node colour is the metabolite change; edge width is the current.</p>
 </header>
 
 <section aria-label="Network viewer">
@@ -164,8 +169,10 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     <label class="ctl view"><span>View</span><select id="view"></select></label>
     <div class="ctl"><span id="method-l">Method</span>
       <div class="seg" id="method" role="group" aria-labelledby="method-l">
-        <button type="button" data-v="flow">Current flow</button><button type="button" data-v="walk">Absorbing walk</button><button type="button" data-v="compare">Compare</button>
+        <button type="button" data-v="flow">Current flow</button><button type="button" data-v="walk_down">Walk, sources = down</button><button type="button" data-v="walk_up">Walk, sources = up</button><button type="button" data-v="compare">Compare</button>
       </div></div>
+    <div class="ctl pair" id="pair" hidden><span>Side by side</span>
+      <div class="pairsel"><select id="cmpA" aria-label="Left panel"></select><span>vs</span><select id="cmpB" aria-label="Right panel"></select></div></div>
     <div class="ctl"><span id="metric-l">Edge width: current</span>
       <div class="seg" id="metric" role="group" aria-labelledby="metric-l">
         <button type="button" data-v="mean">Mean</button><button type="button" data-v="max">Max</button>
@@ -203,15 +210,24 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     grey near zero, clipped at |z| = 4. The benchmark data are already standardised, so these are mean z-scores, not log2 fold
     changes. A <b>small hollow circle with a dashed outline</b> marks a metabolite that was not measured (or could not be
     mapped): an intermediate on the network with no value.</p>
-    <p><b>Dark ring</b>: a significant metabolite (BH q &lt; 0.05 and |mean z| ≥ 1). Decreased ones are the <b>sources</b>
-    (current enters, walkers start), increased ones the <b>targets</b> (decision D20; the protocol's §1.3 has it the other way
-    round, which leaves current flow unchanged but not the walk). When a disorder has only increases (or only decreases), every
-    other measured metabolite on the network becomes a <b>ground</b> that stands in for the missing side.</p>
-    <p><b>Edge width</b> is current, on one absolute scale for both methods and every view, drawn at a fixed size on screen
+    <p><b>Dark ring</b>: a significant metabolite (BH q &lt; 0.05 and |mean z| ≥ 1). Which of them are the <b>sources</b>
+    (current enters, walkers start) and which the <b>targets</b> depends on the orientation. <b>Sources = down</b>: the
+    significantly decreased metabolites are the sources and the increased ones the targets (the package default since decision
+    D20). <b>Sources = up</b>: the significantly increased metabolites are the sources and the decreased ones the targets (the
+    protocol's §1.3, and the orientation used before D20). Current flow gives the same ranks under both, since swapping the two
+    sides only reverses the sign of every current, so it is shown once. The walk follows reaction direction and changes, so it
+    is shown under each. When a disorder has only increases (or only decreases), every other measured metabolite on the network
+    becomes a <b>ground</b> that stands in for the missing side.</p>
+    <p><b>Why the orientation matters for the walk</b> (a reading, not a test). In an enzyme defect the substrate side usually
+    rises and the product side falls. With sources = up, walkers start at the accumulated substrates and the blocked enzyme lies
+    on their way to the depleted products. With sources = down they start on the product side and must follow reaction
+    directions to the increased metabolites upstream of the block, so the faulty enzyme is seldom on a successful route.</p>
+    <p><b>Edge width</b> is current, on one absolute scale for all three methods and every view, drawn at a fixed size on screen
     (zooming does not change it, so the legend always applies). <b>Current flow</b>: Kirchhoff current when one unit is
     pushed from a source to a target; <i>mean</i> averages over all source–target pairs, <i>max</i> takes the largest pair. It
-    ignores reaction direction. <b>Absorbing walk</b>: net walker traffic across the edge per walker released (mean over sources,
-    or the largest source). It follows reaction direction, and directed cycles can push it above 1.</p>
+    ignores reaction direction. <b>Walk</b> (absorbing walk, under either orientation): net walker traffic across the edge per
+    walker released (mean over sources, or the largest source). It follows reaction direction, and directed cycles can push it
+    above 1.</p>
     <p><b>Arrows</b> show the reaction's direction in the model (substrate → reaction → product); no arrowhead means the reaction is
     reversible. <b>Squares</b> are reactions, labelled by gene symbols (the reaction id when no gene is known). A
     <b>violet ring</b> and bold label mark reactions of the disorder's causal gene. Labels are drawn at a fixed size; where two
@@ -221,7 +237,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     top 100 reactions (hypergeometric test, BH-adjusted; each reaction counts in its first subsystem). Each method contributes
     its top 6 subsystems with q &lt; 0.05 (or its top 3 by p, flagged <i>not significant</i>, if fewer qualify), and the menu
     lists the union with each picking method's p and q. A subsystem with more than 150 reactions on the network shows only the
-    reactions that carry current under either method. The <b>causal-gene neighbourhood</b> view shows the causal gene's
+    reactions that carry current under any method. The <b>causal-gene neighbourhood</b> view shows the causal gene's
     reactions, their metabolites and the neighbouring reactions that carry current, so the causal gene is always on a map.</p>
     <p><b>Ranks.</b> A reaction's rank is its place among all reactions that carry current under that method (1 = best, raw
     scoring). The causal-gene rank in the summary is the benchmark's: the gene's place among all genes on the network. Both are
@@ -243,7 +259,10 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 "use strict";
 const D = JSON.parse(document.getElementById("data").textContent);
 const N = D.nodes, E = D.edges, META = D.meta, CASES = D.cases;
-const NAME = META.methods;                       // {flow: "Current flow", walk: "Absorbing walk"}
+const NAME = META.methods;                       // {flow: "Current flow", walk_down: "Walk, sources = down", walk_up: ...}
+const METHODS = Object.keys(NAME);               // flow, walk_down, walk_up
+const ORI = META.method_orientation;             // walk_down: "down", walk_up: "up", flow: null (the same under both)
+const ORI_SRC = {down: "decreased", up: "increased"};   // which significant metabolites are the sources
 const Z_CLIP = META.z_clip;
 const W_CAP = 1.5;                               // currents above this draw at the widest stroke
 // Screen-constant drawing: edge widths, label sizes and the dashed outline are given in
@@ -253,7 +272,8 @@ const W_CAP = 1.5;                               // currents above this draw at 
 const NODE_MIN = 0.7, FIT_MAX = 1.7, MAX_ZOOM = 3;
 const LABEL_PX = {base: 10, sig: 11, causal: 11.5};
 const $ = id => document.getElementById(id);
-const state = {case: CASES[0].id, view: "net", method: "flow", metric: "mean", sel: null};
+// cmp: the two methods drawn side by side in compare mode (left, right)
+const state = {case: CASES[0].id, view: "net", method: "flow", cmp: ["walk_down", "walk_up"], metric: "mean", sel: null};
 let findQ = "";                                  // the active Find query (re-applied after every re-render)
 
 // ---- formatting ---------------------------------------------------------------
@@ -335,26 +355,30 @@ function readTheme() {
   }
 }
 const zColor = z => ZTAB[Math.round((Math.max(-Z_CLIP, Math.min(Z_CLIP, z)) + Z_CLIP) / 0.05)];
-// Edge width: square-root scale, fixed for both methods (0 -> 0.6 px, 1 -> 10 px).
+// Edge width: square-root scale, fixed for all methods (0 -> 0.6 px, 1 -> 10 px).
 const width = c => c > 0 ? 0.6 + 9.4 * Math.sqrt(Math.min(c, W_CAP)) : 0.6;
 
 // ---- per-case lookups ---------------------------------------------------------
 function prep(c) {
   if (c._p) return c._p;
   const met = new Map();
-  c.mets.node.forEach((g, i) => met.set(g, {z: c.mets.z[i], q: c.mets.q[i], role: c.mets.role[i], input: c.mets.input[i]}));
+  // role per orientation: "source", "target" or "" (not significant)
+  c.mets.node.forEach((g, i) => met.set(g, {z: c.mets.z[i], q: c.mets.q[i], input: c.mets.input[i],
+                                            role: {down: c.mets.role_down[i], up: c.mets.role_up[i]}}));
   return (c._p = {rxnIx: new Map(c.rxn.map((g, i) => [g, i])), edgeIx: new Map(c.edges.map((g, i) => [g, i])), met,
                   causal: new Set(c.causal_rxn), views: new Map(c.views.map(v => [v.id, v]))});
 }
 const curCase = () => CASES.find(c => c.id === state.case);
 const curView = () => prep(curCase()).views.get(state.view);
-const panelMethods = () => state.method === "compare" ? ["flow", "walk"] : [state.method];
+const panelMethods = () => state.method === "compare" ? state.cmp : [state.method];
 
-function roleText(c, mm) {
+// A metabolite's role under method m's orientation; current flow does not depend on it, so both are given.
+function roleText(c, mm, m) {
   if (!mm) return "unmeasured";
-  if (mm.role === "source") return "source (significantly decreased)";
-  if (mm.role === "target") return "target (significantly increased)";
-  return c.one_sided ? "ground (measured, not significant)" : "measured, not significant";
+  if (!mm.role.down) return c.one_sided ? "ground (measured, not significant)" : "measured, not significant";
+  const dir = mm.role.down === "source" ? "decreased" : "increased", o = ORI[m];
+  if (o) return `${mm.role[o]} under sources = ${o} (significantly ${dir})`;
+  return `significantly ${dir}: ${mm.role.down} under sources = down, ${mm.role.up} under sources = up`;
 }
 
 // ---- graph elements -----------------------------------------------------------
@@ -371,7 +395,7 @@ function elements(c, v, m) {
       d.label = metLabel(g, v);
       cls.push("met");
       if (!mm) cls.push("unmeas");
-      else { d.z = mm.z; if (mm.role) cls.push("sig"); }
+      else { d.z = mm.z; if (mm.role.down) cls.push("sig"); }
     }
     els.push({group: "nodes", data: d, position: {x: v.pos[2 * i], y: v.pos[2 * i + 1]}, classes: cls.join(" ")});
   });
@@ -595,20 +619,20 @@ function placeTip(ev) {
   t.style.left = Math.max(4, x) + "px"; t.style.top = Math.max(4, y) + "px";
 }
 function tipNode(cy, n) {
-  const c = curCase(), g = n.data("g");
+  const c = curCase(), g = n.data("g"), m = cy.scratch("method");
   if (N.kind[g]) {
-    const k = prep(c).rxnIx.get(g), m = cy.scratch("method"), M = c.methods[m];
+    const k = prep(c).rxnIx.get(g), M = c.methods[m];
     return `<b>${esc(rxnLabel(g))}</b>${prep(c).causal.has(g) ? " <span class='tag'>causal</span>" : ""}<br>` +
            `<span class="small">${esc(short(N.name[g], 60))}</span><br>${esc(NAME[m])}: rank ${fmtRank(M.rxn.rank[k])}, ` +
            `score ${fmtN(M.rxn.score[k])}`;
   }
   const mm = prep(c).met.get(g);
-  return `<b>${esc(metName(g, curView()))}</b><br>` + (mm ? `mean z ${fmtZ(mm.z)}, q ${fmtQ(mm.q)}<br>${esc(roleText(c, mm))}`
+  return `<b>${esc(metName(g, curView()))}</b><br>` + (mm ? `mean z ${fmtZ(mm.z)}, q ${fmtQ(mm.q)}<br>${esc(roleText(c, mm, m))}`
                                               : "unmeasured (no value)");
 }
 function tipEdge(e) {
   const c = curCase(), k = prep(c).edgeIx.get(e.data("ge")), ge = e.data("ge");
-  const rows = ["flow", "walk"].map(m => `${esc(NAME[m])}: mean ${fmtN(c.methods[m].edge_mean[k])}, max ${fmtN(c.methods[m].edge_max[k])}`);
+  const rows = METHODS.map(m => `${esc(NAME[m])}: mean ${fmtN(c.methods[m].edge_mean[k])}, max ${fmtN(c.methods[m].edge_max[k])}`);
   return `<b>${esc(short(N.name[E.m[ge]], 40))}</b> ${E.side[ge] ? "product of" : "substrate of"} <b>${esc(rxnLabel(E.r[ge]))}</b><br>` +
          rows.join("<br>");
 }
@@ -647,31 +671,43 @@ function tile(k, v, s, on) {
   return `<div class="tile${on ? " on" : ""}"><span class="k">${k}</span>` +
          `<span class="v">${v}</span><span class="s">${s}${on ? " · <b>shown</b>" : ""}</span></div>`;
 }
+// One walk's endpoints: one-sided data has no targets (the ground absorbs the walkers) or no
+// sources (walkers start at the ground), depending on the orientation.
+function walkNote(M) {
+  const os = M.walk_one_sided, un = M.sources_unreached;
+  if (os === "ground releases") return "no sources, walkers start at the ground";
+  const sink = os === "ground absorbs" ? "ground metabolite" : "target";
+  return (os ? "no targets, the ground absorbs; " : "") +
+         (un ? `${plural(un, "source")} reach${un === 1 ? "es" : ""} no ${sink}` : `every source reaches some ${sink}`);
+}
 function renderStrip() {
-  const c = curCase(), F = c.methods.flow, W = c.methods.walk, G = META.network.genes.toLocaleString("en");
-  const shown = m => state.method === m || state.method === "compare";
+  const c = curCase(), F = c.methods.flow, Wd = c.methods.walk_down, Wu = c.methods.walk_up;
+  const G = META.network.genes.toLocaleString("en"), ms = panelMethods(), shown = m => ms.includes(m);
   const genes = c.causal_in_network.length ? c.causal_in_network.join(", ") : c.causal_genes.join(", ") + " (not in network)";
-  const ep = c.one_sided ? `one-sided: current drains to ${plural(c.ground, "ground metabolite")}`
+  const ep = c.one_sided ? `One-sided: ${plural(c.ground, "ground metabolite")} stand${c.ground === 1 ? "s" : ""} in for the missing side`
                          : `${c.mapped_on_graph} of ${c.measured} measured metabolites on the network`;
-  // One-sided cases have no targets: walkers are absorbed at ground metabolites instead.
-  const sink = c.one_sided ? "ground metabolite" : "target";
-  const un = W.sources_unreached;
+  const os = [...new Set(ms.map(m => ORI[m]).filter(Boolean))];
+  const roles = os.length === 1 ? `Sources = ${os[0]}: the ${ORI_SRC[os[0]]} are the sources. ` : "";
   $("strip").innerHTML =
     tile("Causal gene", esc(genes), `${esc(c.disorder)} · ${plural(c.patients, "patient")} · ${esc(c.status)}`) +
-    tile("Causal gene rank, flow", fmtRank(F.causal_rank), `of ${G} network genes`, shown("flow")) +
-    tile("Causal gene rank, walk", fmtRank(W.causal_rank), `of ${G} network genes`, shown("walk")) +
-    tile("Sources / targets", `${c.sources} <small>decreased</small> · ${c.targets} <small>increased</small>`, ep) +
-    tile("Pairs", `${F.pairs} <small>flow</small> · ${W.pairs} <small>walk</small>`,
-         (c.one_sided ? "flow: source–ground runs" : "flow: source–target pairs") + `; walk: one per source that reaches a ${sink}`) +
-    tile(c.one_sided ? "Walkers reaching a ground" : "Walkers reaching a target", pct(W.walk_success_fraction),
-         un ? `${plural(un, "source")} reach${un === 1 ? "es" : ""} no ${sink}` : `every source reaches some ${sink}`);
+    METHODS.map(m => tile(`Causal gene rank, ${esc(NAME[m].replace(/^Current flow$/, "flow").replace(/^Walk/, "walk"))}`,
+      fmtRank(c.methods[m].causal_rank), `of ${G} network genes` + (ORI[m] ? "" : " · same under either orientation"),
+      shown(m))).join("") +
+    tile("Significant metabolites", `${c.decreased} <small>decreased</small> · ${c.increased} <small>increased</small>`, roles + ep) +
+    tile("Pairs", `${F.pairs} <small>flow</small> · ${Wd.pairs} <small>down</small> · ${Wu.pairs} <small>up</small>`,
+         (c.one_sided ? "flow: source–ground runs" : "flow: source–target pairs") +
+         (c.one_sided ? "; walk: one per significant metabolite the walkers connect to the ground"
+                      : "; walk: source–target pairs the walkers connect")) +
+    tile(c.one_sided ? "Walkers absorbed" : "Walkers reaching a target",
+         `${pct(Wd.walk_success_fraction)} <small>down</small> · ${pct(Wu.walk_success_fraction)} <small>up</small>`,
+         `Sources = down: ${walkNote(Wd)}. Sources = up: ${walkNote(Wu)}.`);
 }
 
 function pathwayRows(c, sub) {
-  return ["flow", "walk"].map(m => [m, c.methods[m].pathways.find(r => r.subsystem === sub)]);
+  return METHODS.map(m => [m, c.methods[m].pathways.find(r => r.subsystem === sub)]);
 }
 // Each picking method's own p and q; a top-3-by-p fallback pick is flagged "not significant".
-const pickText = (m, r) => `${m} (p ${fmtQ(r.p)}, q ${fmtQ(r.q)}${r.significant ? "" : ", not significant"})`;
+const pickText = (m, r) => `${NAME[m].toLowerCase()} (p ${fmtQ(r.p)}, q ${fmtQ(r.q)}${r.significant ? "" : ", not significant"})`;
 function viewLabel(c, v) {
   if (v.kind === "net") return `Current-carrying subnetwork (${v.nodes.length} nodes)`;
   if (v.kind === "causal") return `Causal-gene neighbourhood (${v.nodes.length} nodes)`;
@@ -708,7 +744,8 @@ function renderTop() {
   const c = curCase(), v = curView(), P = prep(c), cmp = state.method === "compare";
   const rx = v.nodes.filter(g => N.kind[g]).map(g => ({g, k: P.rxnIx.get(g)}));
   const rk = (m, o) => c.methods[m].rxn.rank[o.k];
-  const key = o => cmp ? Math.min(rk("flow", o) ?? Infinity, rk("walk", o) ?? Infinity) : (rk(state.method, o) ?? Infinity);
+  const [mA, mB] = state.cmp;
+  const key = o => cmp ? Math.min(rk(mA, o) ?? Infinity, rk(mB, o) ?? Infinity) : (rk(state.method, o) ?? Infinity);
   const list = rx.filter(o => key(o) < Infinity).sort((a, b) => key(a) - key(b));
   const LIMIT = 25, rows = list.slice(0, LIMIT);
   const gcell = o => `<button class="linkbtn" data-g="${o.g}" title="Show in the graph">${esc(rxnLabel(o.g))}</button>` +
@@ -716,13 +753,13 @@ function renderTop() {
   const sub = o => esc(D.subsystems[N.sub[o.g]] || "");
   let html;
   if (cmp) {
-    const F = c.methods.flow.rxn, W = c.methods.walk.rxn;
-    html = table(["Rank, flow", "Rank, walk", "Genes", "Reaction", "Score, flow", "Score, walk"],
-      rows.map(o => [fmtRank(F.rank[o.k]), fmtRank(W.rank[o.k]), gcell(o), esc(N.name[o.g]), fmtN(F.score[o.k]), fmtN(W.score[o.k])]),
+    const A = c.methods[mA].rxn, B = c.methods[mB].rxn, lc = m => esc(NAME[m].toLowerCase());
+    html = table([`Rank, ${lc(mA)}`, `Rank, ${lc(mB)}`, "Genes", "Reaction", `Score, ${lc(mA)}`, `Score, ${lc(mB)}`],
+      rows.map(o => [fmtRank(A.rank[o.k]), fmtRank(B.rank[o.k]), gcell(o), esc(N.name[o.g]), fmtN(A.score[o.k]), fmtN(B.score[o.k])]),
       [0, 1, 4, 5], j => ` class="click" data-g="${rows[j].g}"`);
   } else {
     // The pathway column only adds information in the subnetwork view (a pathway view is one subsystem).
-    const R = c.methods[state.method].rxn, walk = state.method === "walk", net = v.kind === "net";
+    const R = c.methods[state.method].rxn, walk = R.nf != null, net = v.kind === "net";
     const cols = [["Rank", o => fmtRank(R.rank[o.k]), 1], ["Genes", gcell, 0], ["Reaction", o => esc(N.name[o.g]), 0]]
       .concat(net ? [["Pathway", sub, 0]] : [])
       .concat([["Final score", o => fmtN(R.score[o.k]), 1], ["Conductivity", o => fmtN(R.cond[o.k]), 1],
@@ -731,9 +768,10 @@ function renderTop() {
     html = table(cols.map(x => x[0]), rows.map(o => cols.map(x => x[1](o))), cols.flatMap((x, i) => x[2] ? [i] : []),
       j => ` class="click" data-g="${rows[j].g}"`);
   }
-  const scored = cmp ? `${c.methods.flow.reactions_scored.toLocaleString("en")} (flow) and ${c.methods.walk.reactions_scored.toLocaleString("en")} (walk)`
-                     : c.methods[state.method].reactions_scored.toLocaleString("en");
-  $("top-h").textContent = cmp ? "Top reactions in this view, both methods" : `Top reactions in this view, ${NAME[state.method].toLowerCase()}`;
+  const nsc = m => c.methods[m].reactions_scored.toLocaleString("en");
+  const scored = cmp ? `${nsc(mA)} (${NAME[mA].toLowerCase()}) and ${nsc(mB)} (${NAME[mB].toLowerCase()})` : nsc(state.method);
+  $("top-h").textContent = cmp ? `Top reactions in this view, ${NAME[mA].toLowerCase()} vs ${NAME[mB].toLowerCase()}`
+                               : `Top reactions in this view, ${NAME[state.method].toLowerCase()}`;
   $("top-note").textContent = `${list.length} of ${rx.length} reactions in this view carry current` +
     (list.length > LIMIT ? `; the best ${LIMIT} are listed` : "") + `. Rank among the ${scored} reactions with current ` +
     `(1 = best${cmp ? "; sorted by the better of the two" : ""}). Click a row to find it in the graph.`;
@@ -750,7 +788,7 @@ function causalBlock(c) {
   const items = c.causal_rxn.map(g => {
     const k = P.rxnIx.get(g), here = v.nodes.includes(g), other = here ? null : viewsWith(c, g)[0];
     const r = m => c.methods[m].rxn.rank[k] == null ? "no current" : fmtRank(c.methods[m].rxn.rank[k]);
-    const rk = `flow ${r("flow")}, walk ${r("walk")}`;
+    const rk = METHODS.map(m => `${NAME[m].toLowerCase()}: ${r(m)}`).join("; ");
     const act = here ? `<button class="linkbtn" data-g="${g}">show</button>`
               : other ? `<button class="linkbtn" data-g="${g}" data-view="${esc(other.id)}">open in ${esc(short(other.kind === "net" ? "subnetwork" : other.kind === "causal" ? "causal-gene neighbourhood" : other.title, 34))}</button>`
               : `<span class="sub">in no view</span>`;
@@ -765,14 +803,15 @@ function edgeRows(c, g) {
   const es = v.edges.filter(ge => E.m[ge] === g || E.r[ge] === g).map(ge => ({ge, k: P.edgeIx.get(ge)}));
   const val = (m, o) => c.methods[m][mt === "mean" ? "edge_mean" : "edge_max"][o.k];
   es.sort((a, b) => Math.max(...ms.map(m => val(m, b))) - Math.max(...ms.map(m => val(m, a))));
-  const head = [N.kind[g] ? "Metabolite" : "Reaction", "Side"].concat(["flow", "walk"].map(m => m === "flow" ? "Flow" : "Walk"));
+  const head = [N.kind[g] ? "Metabolite" : "Reaction", "Side"].concat(METHODS.map(m => esc(NAME[m])));
   const rows = es.slice(0, 30).map(o => {
     const other = N.kind[g] ? E.m[o.ge] : E.r[o.ge];
-    return [`<button class="linkbtn" data-g="${other}">${esc(short(nodeTitle(other, v), 30))}</button>`,
-            E.side[o.ge] ? "product" : "substrate", fmtN(val("flow", o)), fmtN(val("walk", o))];
+    return [`<button class="linkbtn" data-g="${other}">${esc(short(nodeTitle(other, v), 24))}</button>`,
+            E.side[o.ge] ? "product" : "substrate", ...METHODS.map(m => fmtN(val(m, o)))];
   });
   return `<div><h3>Edges in this view (${es.length})</h3><p class="sub">${mt === "mean" ? "Mean" : "Max"} current per edge` +
-         `${es.length > 30 ? "; the 30 largest" : ""}.</p>${table(head, rows, [2, 3])}</div>`;
+         `${es.length > 30 ? "; the 30 largest" : ""}, sorted by the method${ms.length > 1 ? "s" : ""} shown.</p>` +
+         `${table(head, rows, [2, 3, 4])}</div>`;
 }
 function renderSide() {
   const c = curCase(), g = state.sel, P = prep(c);
@@ -780,25 +819,28 @@ function renderSide() {
   if (g == null) {
     h = `<p class="empty">Click or tap a node for its details. Hover for a summary.</p>`;
   } else if (N.kind[g]) {
-    const k = P.rxnIx.get(g), F = c.methods.flow.rxn, W = c.methods.walk.rxn;
-    const row = (lab, f, w) => `<tr><td>${lab}</td><td class="num">${f}</td><td class="num">${w}</td></tr>`;
+    const k = P.rxnIx.get(g), R = METHODS.map(m => c.methods[m].rxn);
+    const row = (lab, f) => `<tr><td>${lab}</td>${R.map(x => `<td class="num">${f(x)}</td>`).join("")}</tr>`;
     h = `<div><h3>${esc(rxnLabel(g))}${P.causal.has(g) ? " <span class='tag'>causal gene</span>" : ""}</h3>
          <p class="sub">${esc(N.name[g])}</p></div>
          <dl class="kv"><dt>Reaction</dt><dd class="mono">${esc(N.id[g])}</dd>
          <dt>Genes</dt><dd class="mono">${esc((N.genes[g] || "none known").split(";").join(", "))}</dd>
          <dt>Pathway</dt><dd>${esc(D.subsystems[N.sub[g]] || "–")}</dd>
          <dt>Direction</dt><dd>${N.rev[g] ? "reversible" : "irreversible"}</dd></dl>
-         <div class="tbl"><table><thead><tr><th></th><th class="num">Flow</th><th class="num">Walk</th></tr></thead><tbody>
-         ${row("Reaction rank", fmtRank(F.rank[k]), fmtRank(W.rank[k]))}
-         ${row("Final score", fmtN(F.score[k]), fmtN(W.score[k]))}
-         ${row("Conductivity", fmtN(F.cond[k]), fmtN(W.cond[k]))}
-         ${row("Bottleneck", fmtN(F.bott[k]), fmtN(W.bott[k]))}
-         ${row("Net forward", "–", fmtN(W.nf ? W.nf[k] : null))}</tbody></table></div>` + edgeRows(c, g);
+         <div class="tbl"><table><thead><tr><th></th>${METHODS.map(m => `<th class="num">${esc(NAME[m])}</th>`).join("")}</tr></thead><tbody>
+         ${row("Reaction rank", x => fmtRank(x.rank[k]))}
+         ${row("Final score", x => fmtN(x.score[k]))}
+         ${row("Conductivity", x => fmtN(x.cond[k]))}
+         ${row("Bottleneck", x => fmtN(x.bott[k]))}
+         ${row("Net forward", x => fmtN(x.nf ? x.nf[k] : null))}</tbody></table></div>` + edgeRows(c, g);
   } else {
     const mm = P.met.get(g);
-    h = `<div><h3>${esc(metName(g, curView()))}</h3><p class="sub">${esc(roleText(c, mm))}</p></div>
+    const ms = panelMethods(), m1 = ms.length === 1 ? ms[0] : (ORI[ms[0]] === ORI[ms[1]] ? ms[0] : "flow");
+    const roleDd = o => mm.role[o] || (c.one_sided ? "ground" : "not significant");
+    h = `<div><h3>${esc(metName(g, curView()))}</h3><p class="sub">${esc(roleText(c, mm, m1))}</p></div>
          <dl class="kv"><dt>Metabolite</dt><dd class="mono">${esc(N.id[g])}</dd>` +
-        (mm ? `<dt>Data id</dt><dd class="mono">${esc(mm.input)}</dd><dt>Mean z-score</dt><dd>${fmtZ(mm.z)}</dd><dt>q (BH)</dt><dd>${fmtQ(mm.q)}</dd>`
+        (mm ? `<dt>Data id</dt><dd class="mono">${esc(mm.input)}</dd><dt>Mean z-score</dt><dd>${fmtZ(mm.z)}</dd><dt>q (BH)</dt><dd>${fmtQ(mm.q)}</dd>` +
+              `<dt>Sources = down</dt><dd>${roleDd("down")}</dd><dt>Sources = up</dt><dd>${roleDd("up")}</dd>`
             : `<dt>Mean z-score</dt><dd>unmeasured</dd>`) + `</dl>` + edgeRows(c, g);
   }
   $("side").innerHTML = keyHtml() + h + causalBlock(c);
@@ -875,13 +917,17 @@ function readHash() {
   if (h.get("case") && CASES.some(c => c.id === h.get("case"))) state.case = h.get("case");
   const c = curCase();
   state.view = h.get("view") && prep(c).views.has(h.get("view")) ? h.get("view") : "net";
-  if (["flow", "walk", "compare"].includes(h.get("method"))) state.method = h.get("method");
+  const hm = h.get("method") === "walk" ? "walk_down" : h.get("method");   // "walk": links from before both orientations
+  if (METHODS.includes(hm) || hm === "compare") state.method = hm;
+  const cmp = (h.get("cmp") || "").split(",");
+  if (cmp.length === 2 && cmp.every(m => METHODS.includes(m)) && cmp[0] !== cmp[1]) state.cmp = cmp;
   if (["mean", "max"].includes(h.get("metric"))) state.metric = h.get("metric");
   const id = h.get("node"), v = curView();
   state.sel = id ? (v.nodes.find(g => N.id[g] === id) ?? null) : null;
 }
 function writeHash() {
   const h = new URLSearchParams({case: state.case, view: state.view, method: state.method, metric: state.metric});
+  if (state.method === "compare") h.set("cmp", state.cmp.join(","));
   if (state.sel != null) h.set("node", N.id[state.sel]);
   const s = "#" + h.toString();
   if (location.hash !== s) history.replaceState(null, "", s);
@@ -927,8 +973,13 @@ function renderLegend() {
     <line x1="8" x2="52" y1="12" y2="12" stroke="var(--edge)" stroke-width="2"/><path d="M60,12 l-10,-5 v10 z" fill="var(--edge)"/>
     <text x="70" y="16">reaction direction in the model</text>
     <line x1="8" x2="60" y1="36" y2="36" stroke="var(--edge)" stroke-width="2"/><text x="70" y="40">reversible (no arrowhead)</text>
-    </svg><span class="small" style="max-width:230px">Width uses one scale for both methods and every view, drawn at a fixed screen size at any zoom: per pair (flow) or per source (walk).</span></div>`;
-  $("legend").innerHTML = zbar + marks + wl + arrows;
+    </svg><span class="small" style="max-width:230px">Width uses one scale for all three methods and every view, drawn at a fixed screen size at any zoom: per pair (flow) or per source (walk).</span></div>`;
+  const ms = panelMethods(), on = o => ms.some(m => ORI[m] === o) ? " <span class='tag'>shown</span>" : "";
+  const roles = `<div class="lg" style="max-width:300px"><span class="k">Sources and targets</span>
+    <span class="small"><b>Sources = down</b>${on("down")}: the significant decreases (blue, ringed) are the sources and the
+    significant increases (red, ringed) the targets.<br><b>Sources = up</b>${on("up")}: the significant increases are the sources
+    and the decreases the targets.<br>Current flow gives the same ranks under both.</span></div>`;
+  $("legend").innerHTML = zbar + marks + roles + wl + arrows;
 }
 
 // A compact key at the top of the side panel, so the encodings are in view next to the graph
@@ -971,8 +1022,14 @@ function fillViews() {
   $("view").innerHTML = c.views.filter(v => v.kind !== "pathway").map(opt).join("") +
     `<optgroup label="Pathways picked by over-representation">` + pw.map(opt).join("") + "</optgroup>";
 }
+function fillPair() {
+  const opts = METHODS.map(m => `<option value="${m}">${esc(NAME[m])}</option>`).join("");
+  $("cmpA").innerHTML = opts; $("cmpB").innerHTML = opts;
+}
 function syncControls() {
   $("case").value = state.case; $("view").value = state.view;
+  $("pair").hidden = state.method !== "compare";
+  $("cmpA").value = state.cmp[0]; $("cmpB").value = state.cmp[1];
   document.querySelectorAll("#method button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.method)));
   document.querySelectorAll("#metric button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state.metric)));
 }
@@ -984,13 +1041,22 @@ function refresh(refit = true) {
 $("case").addEventListener("change", e => { state.case = e.target.value; state.view = "net"; state.sel = null; clearFind(); refresh(); });
 $("view").addEventListener("change", e => { state.view = e.target.value; if (state.sel != null && !curView().nodes.includes(state.sel)) state.sel = null; clearFind(); refresh(); });
 $("method").addEventListener("click", e => { const b = e.target.closest("button"); if (!b || b.dataset.v === state.method) return;
-  // flow <-> walk keeps the viewport (same canvas size); entering or leaving compare changes
-  // the panel width, so re-fit instead.
+  // switching between single methods keeps the viewport (same canvas size); entering or
+  // leaving compare changes the panel width, so re-fit instead.
   const vp = {zoom: CY.A.zoom(), pan: CY.A.pan()}, keep = state.method !== "compare" && b.dataset.v !== "compare";
   state.method = b.dataset.v; refresh(false);
   if (keep) { CY.A.viewport(vp); rescale(CY.A); } else fit(); });
 $("metric").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
   state.metric = b.dataset.v; syncControls(); Object.values(CY).forEach(setWidths); renderLegend(); renderSide(); writeHash(); });
+// Side-by-side pair: picking the method already in the other panel swaps the two. The
+// panels keep their size, so the viewport is kept.
+[["cmpA", 0], ["cmpB", 1]].forEach(([id, i]) => $(id).addEventListener("change", e => {
+  const m = e.target.value, j = 1 - i;
+  if (state.cmp[j] === m) state.cmp[j] = state.cmp[i];
+  state.cmp[i] = m;
+  const vp = {zoom: CY.A.zoom(), pan: CY.A.pan()};
+  refresh(false); CY.A.viewport(vp); Object.values(CY).forEach(rescale);
+}));
 $("fit").addEventListener("click", fit);
 $("find").addEventListener("submit", runFind);
 addEventListener("hashchange", () => {
@@ -1021,9 +1087,11 @@ addEventListener("resize", onResize);           // the height band depends on th
 $("eyebrow").textContent = "Metaboenrich · " + (META.git || "");
 $("foot").innerHTML = `Built ${esc(META.generated)} by <code>tools/report/build_network_report.py</code> (cytoscape.js ${esc(META.cytoscape)}, inlined).
   Network: ${META.network.nodes.toLocaleString("en")} nodes, ${META.network.genes.toLocaleString("en")} genes. ${CASES.length} group-level cases;
-  significance ${esc(META.significance)}. Pathway rule: ${esc(META.pathway_rule)}. Methods: <code>metaboenrich/flow.py</code>, <code>metaboenrich/walk.py</code>.`;
+  significance ${esc(META.significance)}. Pathway rule: ${esc(META.pathway_rule)}. Methods: <code>metaboenrich/flow.py</code>, <code>metaboenrich/walk.py</code>;
+  current flow run under sources = ${esc(META.flow_run_under)} (the same ranks under sources = up, checked against the benchmark on every build).`;
 readTheme();
 fillCases();
+fillPair();
 CY.A = makeCy("A");
 applyTouchLock();
 readHash();
