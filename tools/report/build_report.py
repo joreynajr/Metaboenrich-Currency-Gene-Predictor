@@ -2,7 +2,7 @@
 
 Every number comes from result files, not from hand-typed text:
     results/structure/structure.json                pruning stages
-    results/benchmark_v02/{group,patient}_results.tsv  inborn-error benchmark
+    results/benchmark_v02/group_results.tsv          inborn-error benchmark (group level only, D21)
     results/statistic_analysis_v02/<comparison>/    the lab's own (unpublished) comparisons; local only
     predictions/published_v1/units.tsv               sealed blind predictions
 
@@ -49,22 +49,20 @@ def stage_rows():
 
 
 def benchmark():
-    g = pd.read_csv(ROOT / "results/benchmark_v02/group_results.tsv", sep="\t")
-    p = pd.read_csv(ROOT / "results/benchmark_v02/patient_results.tsv", sep="\t")
-    return g, p
+    # Group level only (D21): a single patient's z-scores are not a differential analysis.
+    return pd.read_csv(ROOT / "results/benchmark_v02/group_results.tsv", sep="\t")
 
 
-def bench_summary(g, p):
+def bench_summary(g):
     rows = []
-    for label, d in (("Disorder groups", g[g.status == "primary"]), ("Individual patients", p[p.status == "primary"])):
-        d = d[d.rank_metaboenrich_raw.notna()]
-        for col, name in (("rank_metaboenrich_raw", "<b>Metaboenrich, raw</b>"),
-                          ("rank_metaboenrich", "Metaboenrich, leave-one-out"),
-                          ("rank_neighbour", "Neighbour baseline")):
-            r = d[col]
-            med = f"{r.median():,.1f}".rstrip("0").rstrip(".")
-            rows.append([f"{label} ({len(d)})", name, f"{med} ({100 * r.median() / U:.1f}%)",
-                         str(int((r <= 10).sum())), str(int((r <= 50).sum())), str(int((r <= 100).sum()))])
+    d = g[(g.status == "primary") & g.rank_metaboenrich_raw.notna()]
+    for col, name in (("rank_metaboenrich_raw", "<b>Metaboenrich, raw</b>"),
+                      ("rank_metaboenrich", "Metaboenrich, leave-one-out"),
+                      ("rank_neighbour", "Neighbour baseline")):
+        r = d[col]
+        med = f"{r.median():,.1f}".rstrip("0").rstrip(".")
+        rows.append([f"Disorder groups ({len(d)})", name, f"{med} ({100 * r.median() / U:.1f}%)",
+                     str(int((r <= 10).sum())), str(int((r <= 50).sum())), str(int((r <= 100).sum()))])
     return rows
 
 
@@ -196,7 +194,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
 
 def build(out, public=False):
-    g, p = benchmark()
+    g = benchmark()
     status, pred_rows, n_alaimo, n_alaimo_sig = prediction_rows()
     raw_g = g[(g.status == "primary")].rank_metaboenrich_raw
     ATLAS = "https://claude.ai/code/artifact/c72ab942-2d9c-4214-88ee-538f1977a440"
@@ -283,11 +281,11 @@ def build(out, public=False):
   <div class="prose">
     <p>To test the method against hard data, we used untargeted plasma metabolomics from patients with confirmed
     inborn errors (Miller et al. 2015; Thistlethwaite et al. 2022; z-scores from the CTD package on CRAN):
-    20 polar-signature disorders with known causal genes, run per disorder group and per patient. A
+    20 polar-signature disorders with known causal genes, each run once on its pooled patients. A
     <i>neighbour baseline</i> ranks each enzyme by how many significant metabolites its own reactions touch;
     current flow has to beat it to add anything.</p>
   </div>
-  {table(["Set", "Method", "Median rank (percentile)", "Top 10", "Top 50", "Top 100"], bench_summary(g, p), num_cols=(3, 4, 5))}
+  {table(["Set", "Method", "Median rank (percentile)", "Top 10", "Top 50", "Top 100"], bench_summary(g), num_cols=(3, 4, 5))}
   <figure>
     <div class="legend" aria-hidden="true">
       <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--raw)"/></svg>Metaboenrich, raw (default)</span>
