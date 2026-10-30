@@ -182,7 +182,10 @@ def main(argv=None):
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--model", default="data/Human-GEM.xml")
     p.add_argument("--out", default="results/benchmark")
-    p.add_argument("--levels", nargs="+", default=["group", "patient"], choices=["group", "patient"])
+    p.add_argument("--levels", nargs="+", default=["group"], choices=["group", "patient"],
+                   help="group (default): one run per disorder on the pooled patients. patient: one run per "
+                        "patient on their z-scores alone; not a differential analysis, kept only for "
+                        "reference (D21)")
     p.add_argument("--couple-min", type=int, default=None, metavar="N",
                    help="carbon stages: reactions a pair must recur in to count as a cofactor couple (default 10)")
     p.add_argument("--stage", default=None, metavar="SET:KEY",
