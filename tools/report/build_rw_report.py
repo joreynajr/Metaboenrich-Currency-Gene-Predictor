@@ -1,18 +1,27 @@
 """Build the absorbing-walk benchmark report (one self-contained HTML page).
 
-Every number comes from benchmark result files (results/ is not committed):
-    results/bench_rw/<cfg>/group_results.tsv       cfg = flow, walk_full, walk_k0.5, walk_k1, walk_k2
-    results/bench_rw_p/<cfg>/patient_results.tsv   cfg = flow, walk_full, walk_k1
+Group level only (decision D21): each disorder's patients are pooled. The walk
+is reported under both orientations (D20):
+    sources = up    significantly increased metabolites are the sources,
+                    decreased ones the targets (--sources increased; protocol §1.3)
+    sources = down  significantly decreased metabolites are the sources,
+                    increased ones the targets (--sources decreased; the default)
 
-Produce them (sources = decreased metabolites by default, D20; add
---sources increased for the protocol's orientation) with
+Every number comes from benchmark result files (results/ is not committed):
+    results/bench_rw/<cfg>/group_results.tsv      sources = down
+    results/bench_rw_up/<cfg>/group_results.tsv   sources = up
+    cfg = flow, walk_full, walk_k0.5, walk_k1, walk_k2
+Each run's run_info.json must record the orientation its folder claims.
+
+Produce them with
     python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
     python -m metaboenrich.benchmark --levels group --method walk --out results/bench_rw/walk_full
     python -m metaboenrich.benchmark --levels group --method walk --walk-kappa K --out results/bench_rw/walk_kK
         (K = 0.5, 1, 2)
-    python -m metaboenrich.benchmark --levels patient --out results/bench_rw_p/flow
-    python -m metaboenrich.benchmark --levels patient --method walk --out results/bench_rw_p/walk_full
-    python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 --out results/bench_rw_p/walk_k1
+and the same five commands with --sources increased and results/bench_rw_up/ in
+place of results/bench_rw/, for example
+    python -m metaboenrich.benchmark --levels group --sources increased --out results/bench_rw_up/flow
+    python -m metaboenrich.benchmark --levels group --sources increased --method walk --out results/bench_rw_up/walk_full
 
 Then:
     python tools/report/build_rw_report.py --out docs/rw_report.html
@@ -28,26 +37,13 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-GROUP = ROOT / "results" / "bench_rw"
-
-
-def sources_are(run_dir):
-    """Which significant metabolites a run used as sources (D20); runs made
-    before the option existed used the increased ones."""
-    try:
-        return json.loads((Path(run_dir) / "run_info.json").read_text())["orientation"]["sources"]
-    except (FileNotFoundError, KeyError):
-        return "increased"
-
-
-ORIENT = sources_are(GROUP / "flow")
-SRC = ORIENT                                              # "decreased" or "increased"
-TGT = "increased" if ORIENT == "decreased" else "decreased"
-PATIENT = ROOT / "results" / "bench_rw_p"
+# tag -> (folder, the orientation its runs must record)
+RUNS = {"up": (ROOT / "results" / "bench_rw_up", "increased"),
+        "down": (ROOT / "results" / "bench_rw", "decreased")}
 KAPPAS = ["0.5", "1", "2"]
-# Runs under the other orientation, for the comparison section (skipped if absent).
-COMPARE = ROOT / "results" / "_increased_2026-10-01"
+CFGS = ["flow", "walk_full"] + [f"walk_k{k}" for k in KAPPAS]
 RANK = "rank_metaboenrich_raw"
+LABEL = {"up": "sources = up", "down": "sources = down"}
 
 
 # ---- formatting -----------------------------------------------------------------
@@ -55,15 +51,29 @@ def esc(x):
     return html.escape(str(x))
 
 
+def isnan(x):
+    return x is None or (isinstance(x, float) and math.isnan(x))
+
+
 def fr(x):
-    """A rank: integer when whole, else one decimal (ties are averaged)."""
-    if x is None or (isinstance(x, float) and math.isnan(x)):
+    """A rank: integer when whole, else up to two decimals (ties are averaged,
+    and a median of averaged ranks can end in .25 or .75)."""
+    if isnan(x):
         return "–"
-    return f"{int(x):,}" if float(x).is_integer() else f"{x:,.1f}"
+    return f"{int(x):,}" if float(x).is_integer() else f"{x:,.2f}".rstrip("0")
 
 
-def pct(x, digits=0):
-    return f"{100 * x:.{digits}f}%"
+def fw(x):
+    """A walk rank; no rank means no walker reached a target."""
+    return "not scorable" if isnan(x) else fr(x)
+
+
+def share(x):
+    """A share of walkers: one decimal, two when one would read as 0.0%."""
+    if x == 0:
+        return "0%"
+    s = f"{100 * x:.1f}"
+    return f"{100 * x:.2f}%" if float(s) == 0 else f"{s}%"
 
 
 def table(headers, rows, num=(), cls=""):
@@ -74,56 +84,63 @@ def table(headers, rows, num=(), cls=""):
 
 
 def change(a, b):
-    """Glyph for a rank change a -> b (lower rank is better), so it never rests on colour."""
+    """Glyph for a rank change from current flow (a) to the walk (b); lower rank is better.
+    A glyph, so the direction never rests on colour."""
+    if isnan(b):
+        return ""
     if b < a:
-        return '<span class="up" title="walk ranks it higher">▲</span>'
+        return '<span class="up" title="walk ranks it higher than current flow">▲</span>'
     if b > a:
-        return '<span class="down" title="walk ranks it lower">▼</span>'
-    return '<span class="same" title="same rank">=</span>'
+        return '<span class="down" title="walk ranks it lower than current flow">▼</span>'
+    return '<span class="same" title="same rank as current flow">=</span>'
+
+
+def plural(n, word, many=None):
+    return f"{n} {word if n == 1 else (many or word + 's')}"
 
 
 # ---- data -----------------------------------------------------------------------
+def run_info(run_dir):
+    return json.loads((Path(run_dir) / "run_info.json").read_text())
+
+
+def check_cfg(info, cfg, where):
+    """The folder name must match the method and κ the run recorded."""
+    method = "flow" if cfg == "flow" else "walk"
+    kappa = None if cfg in ("flow", "walk_full") else float(cfg[len("walk_k"):])
+    assert info.get("method") == method, f"{where}: run_info says method = {info.get('method')}, expected {method}"
+    assert info.get("walk_kappa") == kappa, f"{where}: run_info says walk_kappa = {info.get('walk_kappa')}, expected {kappa}"
+
+
 def load():
-    g = {"flow": pd.read_csv(GROUP / "flow" / "group_results.tsv", sep="\t"),
-         "walk": pd.read_csv(GROUP / "walk_full" / "group_results.tsv", sep="\t")}
-    for k in KAPPAS:
-        g[k] = pd.read_csv(GROUP / f"walk_k{k}" / "group_results.tsv", sep="\t")
-    p = {"flow": pd.read_csv(PATIENT / "flow" / "patient_results.tsv", sep="\t"),
-         "walk": pd.read_csv(PATIENT / "walk_full" / "patient_results.tsv", sep="\t"),
-         "1": pd.read_csv(PATIENT / "walk_k1" / "patient_results.tsv", sep="\t")}
-    for d in (g, p):
-        for k, df in d.items():
-            assert (df.case.values == d["flow"].case.values).all(), f"row order differs in {k}"
-    assert (p["flow"]["sample"].values == p["walk"]["sample"].values).all()
+    raw = {}
+    for tag, (folder, expect) in RUNS.items():
+        for cfg in CFGS:
+            info = run_info(folder / cfg)
+            got = info["orientation"]["sources"]      # which significant metabolites were the sources (D20)
+            assert got == expect, f"{folder.name}/{cfg}: run_info says sources = {got}, expected {expect}"
+            check_cfg(info, cfg, f"{folder.name}/{cfg}")
+            raw[tag, cfg] = pd.read_csv(folder / cfg / "group_results.tsv", sep="\t")
+    ref = raw["down", "flow"]
+    for key, df in raw.items():
+        assert (df.case.values == ref.case.values).all(), f"row order differs in {key}"
 
-    for name, d in (("bench_rw", GROUP), ("bench_rw_p", PATIENT)):
-        seen = {sources_are(d / c) for c in (["flow", "walk_full"] + [f"walk_k{k}" for k in KAPPAS] if d == GROUP
-                                              else ["flow", "walk_full", "walk_k1"])}
-        assert seen == {ORIENT}, f"{name}: runs use different orientations {seen}"
-    grp = g["flow"][["case", "disorder", "status", "causal_in_network", "sources", "targets", "universe"]].copy()
-    grp["up"], grp["down"] = (grp.targets, grp.sources) if ORIENT == "decreased" else (grp.sources, grp.targets)
-    grp["nb"] = g["flow"].rank_neighbour
-    grp["flow"] = g["flow"][RANK]
-    grp["walk"] = g["walk"][RANK]
-    grp["success"] = g["walk"].walk_success_fraction
-    for k in KAPPAS:
-        grp[f"k{k}"] = g[k][RANK]
+    fu, fd = raw["up", "flow"], raw["down", "flow"]
+    # Current flow is symmetric under the swap: identical ranks, swapped role counts.
+    assert fu[RANK].equals(fd[RANK]), "current-flow ranks differ between the two orientations"
+    assert fu.rank_neighbour.equals(fd.rank_neighbour), "neighbour ranks differ between the two orientations"
+    assert (fu.sources.values == fd.targets.values).all() and (fu.targets.values == fd.sources.values).all()
 
-    pat = p["flow"][["case", "disorder", "status", "sample", "causal_in_network"]].copy()
-    pat["nb"], pat["flow"] = p["flow"].rank_neighbour, p["flow"][RANK]
-    pat["walk"], pat["k1"] = p["walk"][RANK], p["1"][RANK]
-    pat["success"] = p["walk"].walk_success_fraction
-    return grp, pat, int(grp.universe.iloc[0])
-
-
-def load_compare(base):
-    """Walk and flow ranks from runs under another orientation, or None."""
-    try:
-        g = {c: pd.read_csv(base / "bench_rw" / c / "group_results.tsv", sep="\t") for c in ("flow", "walk_full")}
-        p = {c: pd.read_csv(base / "bench_rw_p" / c / "patient_results.tsv", sep="\t") for c in ("flow", "walk_full")}
-    except FileNotFoundError:
-        return None
-    return {"orient": sources_are(base / "bench_rw" / "walk_full"), "g": g, "p": p}
+    grp = fd[["case", "disorder", "status", "causal_in_network", "universe"]].copy()
+    grp["up"], grp["down"] = fu.sources.values, fu.targets.values      # sources = up: increased are sources
+    grp["nb"] = fd.rank_neighbour.values
+    grp["flow"] = fd[RANK].values
+    for tag in RUNS:
+        grp[f"w_{tag}"] = raw[tag, "walk_full"][RANK].values
+        grp[f"s_{tag}"] = raw[tag, "walk_full"].walk_success_fraction.values
+        for k in KAPPAS:
+            grp[f"k{k}_{tag}"] = raw[tag, f"walk_k{k}"][RANK].values
+    return grp, int(grp.universe.iloc[0])
 
 
 def git_label():
@@ -135,7 +152,7 @@ def git_label():
         return ""
 
 
-# ---- charts ---------------------------------------------------------------------
+# ---- chart ----------------------------------------------------------------------
 def log_x(rank, x0, w, U):
     return x0 + math.log10(max(rank, 1.0)) / math.log10(U) * w
 
@@ -159,115 +176,66 @@ def x_ticks(x0, w, U, y0, y1, label_y):
     return "".join(out)
 
 
-def recall_chart(pat, U):
-    """Share of patients whose causal gene is within the top k, against k (log)."""
-    W, H, l, r, t, b = 900, 360, 60, 24, 14, 50
-    w, h = W - l - r, H - t - b
-    ks = np.arange(1, U + 1)
-    series = {}
-    for key in ("nb", "flow", "walk"):
-        ranks = np.sort(pat[key].values)
-        series[key] = np.searchsorted(ranks, ks, side="right") / len(ranks)
-    y = lambda s: t + (1 - s) * h
-    parts = []
-    for s in (0, .25, .5, .75, 1):
-        parts.append(f'<line class="grid" x1="{l}" x2="{l + w}" y1="{y(s):.1f}" y2="{y(s):.1f}"/>'
-                     f'<text class="tick" x="{l - 8}" y="{y(s) + 4:.1f}" text-anchor="end">{int(s * 100)}%</text>')
-    parts.append(x_ticks(l, w, U, t, t + h, t + h + 18))
-    for key, cls in (("nb", "ln-ref"), ("flow", "ln-flow"), ("walk", "ln-walk")):
-        v = series[key]
-        d = [f"M{log_x(1, l, w, U):.1f},{y(v[0]):.1f}"]
-        for i in range(1, U):
-            if v[i] != v[i - 1]:
-                d.append(f"H{log_x(ks[i], l, w, U):.1f}V{y(v[i]):.1f}")
-        d.append(f"H{l + w:.1f}")
-        parts.append(f'<path class="{cls}" d="{"".join(d)}"/>')
-    parts.append(f'<text class="axis-label" x="{l + w / 2}" y="{H - 6}" text-anchor="middle">'
-                 f'k: the causal gene is within the top k of {U:,} genes (log scale)</text>')
-    parts.append(f'<text class="axis-label" transform="translate(14 {t + h / 2}) rotate(-90)" text-anchor="middle">'
-                 f'Patients</text>')
-    parts.append(f'<line id="rc-x" class="crosshair" x1="0" x2="0" y1="{t}" y2="{t + h}" visibility="hidden"/>')
-    parts.append(f'<rect id="rc-hit" x="{l}" y="{t}" width="{w}" height="{h}" fill="transparent"/>')
-    data = {k: [round(float(x), 4) for x in v] for k, v in series.items()}
-    geom = {"l": l, "w": w, "U": U}
-    svg = (f'<svg id="recall" viewBox="0 0 {W} {H}" role="img" aria-label="Share of patients with the causal gene '
-           f'within the top k genes, for the absorbing walk, current flow and the neighbour baseline">{"".join(parts)}</svg>')
-    return svg, json.dumps({"series": data, "geom": geom})
+def marker(kind, x, y):
+    if kind == "flow":
+        return f'<circle class="m-flow" cx="{x:.1f}" cy="{y:.1f}" r="5.5"/>'
+    if kind == "up":
+        return f'<rect class="m-walk" x="{x - 5:.1f}" y="{y - 5:.1f}" width="10" height="10" rx="2"/>'
+    d = 6.5
+    return (f'<polygon class="m-down" points="{x:.1f},{y - d:.1f} {x + d:.1f},{y:.1f} '
+            f'{x:.1f},{y + d:.1f} {x - d:.1f},{y:.1f}"/>')
 
 
-def scatter_chart(pat, U):
-    """Per patient: current-flow rank (x) against walk rank (y), both log."""
-    S, l, b, t, r = 560, 62, 50, 14, 14
-    w = S - l - r
-    h = S - t - b
-    px = lambda v: log_x(v, l, w, U)
-    py = lambda v: t + h - (math.log10(max(v, 1.0)) / math.log10(U)) * h
-    parts = []
-    for v in (1, 10, 100, 1000, U):
-        parts.append(f'<line class="grid" x1="{px(v):.1f}" x2="{px(v):.1f}" y1="{t}" y2="{t + h}"/>'
-                     f'<line class="grid" x1="{l}" x2="{l + w}" y1="{py(v):.1f}" y2="{py(v):.1f}"/>'
-                     f'<text class="tick" x="{px(v):.1f}" y="{t + h + 18}" '
-                     f'text-anchor="{"end" if v == U else "middle"}">{v:,}</text>'
-                     f'<text class="tick" x="{l - 8}" y="{py(v) + 4:.1f}" text-anchor="end">{v:,}</text>')
-    parts.append(f'<line class="diag" x1="{px(1):.1f}" y1="{py(1):.1f}" x2="{px(U):.1f}" y2="{py(U):.1f}"/>')
-    parts.append(f'<text class="region" x="{l + w - 10}" y="{t + h - 12}" text-anchor="end">walk ranks it higher ↘</text>')
-    parts.append(f'<text class="region" x="{l + 10}" y="{t + 18}">↖ current flow ranks it higher</text>')
-    order = pat.assign(gain=np.sign(pat.flow - pat.walk)).sort_values("gain")
-    for _, row in order.iterrows():
-        cls = "pt-walk" if row.walk < row.flow else "pt-flow" if row.walk > row.flow else "pt-tie"
-        tip = (f"<b>{esc(row.disorder)}</b><br>patient {esc(row['sample'])}<br>current flow rank {fr(row.flow)}"
-               f"<br>walk rank {fr(row.walk)}")
-        parts.append(f'<circle class="{cls}" cx="{px(row.flow):.1f}" cy="{py(row.walk):.1f}" r="4.5" '
-                     f'data-tip="{esc(tip)}"/>')
-    parts.append(f'<text class="axis-label" x="{l + w / 2}" y="{S - 8}" text-anchor="middle">'
-                 f'Current flow: rank of the causal gene (log)</text>')
-    parts.append(f'<text class="axis-label" transform="translate(16 {t + h / 2}) rotate(-90)" text-anchor="middle">'
-                 f'Absorbing walk: rank of the causal gene (log)</text>')
-    return (f'<svg viewBox="0 0 {S} {S}" role="img" aria-label="Each primary patient: current-flow rank against '
-            f'walk rank of the causal gene">{"".join(parts)}</svg>')
-
-
-def dumbbell_chart(grp, U):
-    """Per disorder (group level): current-flow rank -> walk rank."""
-    rows = grp.assign(gain=np.log10(grp.flow / grp.walk)).sort_values("gain", ascending=False)
-    W, row_h, top, bottom = 900, 30, 8, 42
-    lab_w, x0, w = 300, 316, 470
-    H = top + row_h * len(rows) + bottom
-    parts = [x_ticks(x0, w, U, top, top + row_h * len(rows), top + row_h * len(rows) + 18)]
+def rank_chart(grp, U):
+    """Per disorder: current flow, walk (sources = up) and walk (sources = down) on one log axis."""
+    rows = grp.sort_values(["flow", "disorder"])
+    W, row_h, top, bottom = 900, 30, 26, 42
+    lab_w, x0, w = 280, 296, 440
+    vx = x0 + w + 16
+    n = len(rows)
+    H = top + row_h * n + bottom
+    parts = [x_ticks(x0, w, U, top, top + row_h * n, top + row_h * n + 18),
+             f'<text class="tick" x="{vx}" y="{top - 10}">flow / up / down</text>']
     for i, (_, r) in enumerate(rows.iterrows()):
         yc = top + row_h * i + row_h / 2
-        scored = not math.isnan(r.walk)                 # no walker reached a target: no walk rank
-        xf = log_x(r.flow, x0, w, U)
-        xw = log_x(r.walk, x0, w, U) if scored else xf
+        xs = {"flow": log_x(r.flow, x0, w, U)}
+        for tag in RUNS:
+            if not isnan(r[f"w_{tag}"]):
+                xs[tag] = log_x(r[f"w_{tag}"], x0, w, U)
         name = r.disorder if len(r.disorder) <= 40 else r.disorder[:38] + "…"
-        tip = (f"<b>{esc(r.disorder)}</b><br>causal: {esc(r.causal_in_network)}<br>current flow rank {fr(r.flow)}"
-               f"<br>walk rank {fr(r.walk) if scored else 'none (no walker reached a target)'}<br>neighbour baseline {fr(r.nb)}<br>"
-               f"{int(r.up)} increased, {int(r.down)} decreased; {pct(r.success, 1)} of walkers reach a target")
+        walk_tip = "".join(
+            f"<br>walk, {LABEL[tag]}: "
+            + ("not scorable (no walker reached a target)" if isnan(r[f"w_{tag}"]) else f"rank {fr(r[f'w_{tag}'])}")
+            + f", {share(r[f's_{tag}'])} of walkers reach a target" for tag in RUNS)
+        tip = (f"<b>{esc(r.disorder)}</b><br>causal: {esc(r.causal_in_network)}<br>"
+               f"{int(r.up)} increased, {int(r.down)} decreased<br>current flow: rank {fr(r.flow)}{walk_tip}"
+               f"<br>neighbour baseline: rank {fr(r.nb)}")
         parts.append(f'<g class="row" data-tip="{esc(tip)}">'
                      f'<rect class="row-bg" x="0" y="{yc - row_h / 2:.1f}" width="{W}" height="{row_h}"/>'
                      f'<text class="row-label" x="{lab_w}" y="{yc + 4:.1f}" text-anchor="end">{esc(name)}</text>'
-                     f'<line class="span" x1="{min(xf, xw):.1f}" x2="{max(xf, xw):.1f}" y1="{yc:.1f}" y2="{yc:.1f}"/>'
-                     f'<circle class="m-flow" cx="{xf:.1f}" cy="{yc:.1f}" r="5.5"/>'
-                     + (f'<circle class="m-walk" cx="{xw:.1f}" cy="{yc:.1f}" r="5.5"/>' if scored else "") +
-                     f'<text class="row-value" x="{x0 + w + 16}" y="{yc + 4:.1f}">{fr(r.flow)} → {fr(r.walk)}</text>'
-                     f'</g>')
+                     f'<line class="span" x1="{min(xs.values()):.1f}" x2="{max(xs.values()):.1f}" '
+                     f'y1="{yc:.1f}" y2="{yc:.1f}"/>'
+                     + "".join(marker(k, xs[k], yc) for k in ("flow", "up", "down") if k in xs) +
+                     f'<text class="row-value" x="{vx}" y="{yc + 4:.1f}">'
+                     f'{fr(r.flow)} / {fr(r.w_up)} / {fr(r.w_down)}</text></g>')
     parts.append(f'<text class="axis-label" x="{x0 + w / 2}" y="{H - 6}" text-anchor="middle">'
                  f'Rank of the causal gene among {U:,} genes (log scale; left is better)</text>')
-    return (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Rank of the causal gene per disorder, current flow '
-            f'and absorbing walk">{"".join(parts)}</svg>')
+    return (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Rank of the causal gene per disorder: current flow, '
+            f'absorbing walk with sources = up, and absorbing walk with sources = down">{"".join(parts)}</svg>')
 
 
 # ---- page -----------------------------------------------------------------------
 CSS = """
 :root{--page:#f3f5f7;--surface:#fbfcfd;--ink:#12161b;--ink-2:#4a5360;--muted:#6b7480;--rule:#dfe4ea;--axis:#c5ccd4;
---accent:#1f63b5;--note:#eef3fa;--note-ink:#1c3e66;--walk:#2a78d6;--flow:#eb6834;--ref:#7c8794;
+--accent:#1f63b5;--note:#eef3fa;--note-ink:#1c3e66;--walk:#2a78d6;--walk-down:#1baf7a;--flow:#eb6834;--ref:#7c8794;
 --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
 color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--page:#0f1216;--surface:#161a1f;
 --ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;--rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--note:#18222e;
---note-ink:#bcd4f2;--walk:#3987e5;--flow:#d95926;--ref:#8d96a1}}
+--note-ink:#bcd4f2;--walk:#3987e5;--walk-down:#199e70;--flow:#d95926;--ref:#8d96a1}}
 :root[data-theme="dark"]{color-scheme:dark;--page:#0f1216;--surface:#161a1f;--ink:#eef1f5;--ink-2:#b3bcc7;--muted:#8d96a1;
---rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--walk:#3987e5;--flow:#d95926;--ref:#8d96a1}
+--rule:#262c33;--axis:#38414b;--accent:#6ea6ec;--note:#18222e;--note-ink:#bcd4f2;--walk:#3987e5;--walk-down:#199e70;
+--flow:#d95926;--ref:#8d96a1}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:clamp(16px,4vw,40px);padding-block:40px 72px}
 main{max-width:980px;margin-inline:auto;display:grid;gap:44px}
@@ -295,18 +263,18 @@ main>*,section>*,figure>*{min-width:0}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
 th{font:500 11.5px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.dense table{font-size:13.5px}.dense th,.dense td{padding:8px 8px}.dense th{letter-spacing:.02em}.dense td:first-child{min-width:15ch}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr:last-child td{border-bottom:0}
 .up,.down,.same{font-size:12px;color:var(--ink-2)}
 figure{margin:0;display:grid;gap:12px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 16px 12px}
 figure svg{width:100%;height:auto;display:block}
-.square{max-width:560px}
 figcaption{font-size:13.5px;color:var(--ink-2)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13px;color:var(--ink-2)}
 .legend span{display:inline-flex;align-items:center;gap:7px}
 .sw{width:11px;height:11px;border-radius:50%;display:inline-block}
-.sw-walk{background:var(--walk)}.sw-flow{background:var(--flow)}
-.sw-line{width:20px;height:0;border-top:2px dashed var(--ref)}
+.sw-walk{background:var(--walk);border-radius:2px}.sw-flow{background:var(--flow)}
+.sw-down{background:var(--walk-down);border-radius:1px;width:9px;height:9px;transform:rotate(45deg);margin-inline:1px}
 svg text{font-family:var(--sans)}
 .grid{stroke:var(--rule);stroke-width:1}.grid.minor{opacity:.5}
 .tick{font:11px var(--mono);fill:var(--muted)}
@@ -316,19 +284,10 @@ svg text{font-family:var(--sans)}
 .row-bg{fill:transparent}.row:hover .row-bg{fill:var(--page)}
 .span{stroke:var(--axis);stroke-width:2}
 .m-walk{fill:var(--walk);stroke:var(--surface);stroke-width:2}
+.m-down{fill:var(--walk-down);stroke:var(--surface);stroke-width:2}
 .m-flow{fill:var(--flow);stroke:var(--surface);stroke-width:2}
-.ln-walk{fill:none;stroke:var(--walk);stroke-width:2}
-.ln-flow{fill:none;stroke:var(--flow);stroke-width:2}
-.ln-ref{fill:none;stroke:var(--ref);stroke-width:2;stroke-dasharray:5 4}
-.crosshair{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
-.diag{stroke:var(--axis);stroke-width:1.5;stroke-dasharray:5 4}
-.region{font-size:12px;fill:var(--muted)}
-.pt-walk{fill:var(--walk);stroke:var(--surface);stroke-width:1.5;opacity:.85}
-.pt-flow{fill:var(--flow);stroke:var(--surface);stroke-width:1.5;opacity:.85}
-.pt-tie{fill:var(--ref);stroke:var(--surface);stroke-width:1.5;opacity:.85}
-circle[data-tip]:hover{opacity:1;stroke:var(--ink)}
 .tip{position:fixed;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--axis);
-border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.12);max-width:300px;z-index:10}
+border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.12);max-width:320px;z-index:10}
 .tip[hidden]{display:none}
 .small{font-size:13.5px;color:var(--ink-2)}
 footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
@@ -345,118 +304,119 @@ document.querySelectorAll('[data-tip]').forEach(el=>{
   el.addEventListener('mousemove',e=>{ tip.innerHTML=el.dataset.tip; tip.hidden=false; place(e); });
   el.addEventListener('mouseleave',()=>{ tip.hidden=true; });
 });
-const RC = JSON.parse(document.getElementById('recall-data').textContent);
-const svg = document.getElementById('recall'), hit = document.getElementById('rc-hit'), cx = document.getElementById('rc-x');
-hit.addEventListener('mousemove', e=>{
-  const p = svg.createSVGPoint(); p.x=e.clientX; p.y=e.clientY;
-  const q = p.matrixTransform(svg.getScreenCTM().inverse());
-  const g = RC.geom, f = Math.min(Math.max((q.x-g.l)/g.w,0),1);
-  const k = Math.min(g.U, Math.max(1, Math.round(Math.pow(10, f*Math.log10(g.U)))));
-  const x = g.l + Math.log10(k)/Math.log10(g.U)*g.w;
-  cx.setAttribute('x1',x); cx.setAttribute('x2',x); cx.setAttribute('visibility','visible');
-  const s = RC.series, fmt=v=>(100*v).toFixed(1)+'%';
-  tip.innerHTML = `<b>Within the top ${k.toLocaleString()}</b><br>`+
-    `<span class="sw sw-walk"></span> Absorbing walk ${fmt(s.walk[k-1])}<br>`+
-    `<span class="sw sw-flow"></span> Current flow ${fmt(s.flow[k-1])}<br>`+
-    `<span class="sw-line" style="display:inline-block"></span> Neighbour baseline ${fmt(s.nb[k-1])}`;
-  tip.hidden=false; place(e);
-});
-hit.addEventListener('mouseleave', ()=>{ tip.hidden=true; cx.setAttribute('visibility','hidden'); });
 """
 
 
 def build(out):
-    grp_all, pat_all, U = load()
+    grp_all, U = load()
     grp = grp_all[grp_all.status == "primary"]
-    pat_p = pat_all[pat_all.status == "primary"]
-    pat = pat_p.dropna(subset=["flow", "walk"])
-    n_dropped = len(pat_p) - len(pat)
+    N = len(grp)
+    top = lambda s, k: int((s <= k).sum())          # a missing rank is never in the top k
 
-    gm_f, gm_w = grp.flow.median(), grp.walk.median()
-    pm_f, pm_w = pat.flow.median(), pat.walk.median()
-    top = lambda s, k: float((s <= k).mean())
-    better, worse = float((pat.walk < pat.flow).mean()), float((pat.walk > pat.flow).mean())
-    per = pat.assign(win=pat.walk < pat.flow).groupby(["case", "disorder"]).agg(
-        n=("sample", "size"), flow=("flow", "median"), walk=("walk", "median"), wins=("win", "mean")).reset_index()
-    dis_better = int((per.walk < per.flow).sum())
+    stats = {"flow": grp.flow}
+    stats.update({tag: grp[f"w_{tag}"] for tag in RUNS})
+    unscored = {tag: grp[grp[f"w_{tag}"].isna()] for tag in RUNS}
+    vs_flow = {}
+    for tag in RUNS:
+        w = grp[f"w_{tag}"]
+        vs_flow[tag] = {"better": grp[w < grp.flow], "worse": grp[w > grp.flow], "same": grp[w == grp.flow]}
+    up_higher = int(((grp.w_up < grp.w_down) | (grp.w_down.isna() & grp.w_up.notna())).sum())
+    down_higher = grp[(grp.w_down < grp.w_up) | (grp.w_up.isna() & grp.w_down.notna())]
+    succ_med = {tag: float(grp[f"s_{tag}"].median()) for tag in RUNS}
+    kappa_shift = {tag: max(abs(grp[f"k{k}_{tag}"].median() - grp[f"w_{tag}"].median()) for k in KAPPAS)
+                   for tag in RUNS}
 
-    tiles = [
-        ("Group median rank", f"{fr(gm_f)} <small>→</small> {fr(gm_w)}", f"{len(grp)} primary disorders"),
-        ("Patient median rank", f"{fr(pm_f)} <small>→</small> {fr(pm_w)}", f"{len(pat)} primary patients"),
-        ("Patients: causal gene in top 10", f"{pct(top(pat.flow, 10))} <small>→</small> {pct(top(pat.walk, 10))}",
-         f"top 100: {pct(top(pat.flow, 100))} → {pct(top(pat.walk, 100))}"),
-        ("Walk ranks it higher", pct(better), f"for patients; current flow higher for {pct(worse)}"),
-    ]
-    tiles_html = "".join(f'<div class="tile"><span class="k">{k}</span><span class="v">{v}</span>'
+    def median_note(tag):
+        n_ok = int(grp[f"w_{tag}"].notna().sum())
+        return "" if n_ok == N else f" over the {n_ok} it can score"
+
+    def unscored_note(tag):
+        u = unscored[tag]
+        return "" if not len(u) else f"; {esc(', '.join(u.disorder))} not scorable"
+
+    # summary --------------------------------------------------------------------
+    walk_bullets = "".join(
+        f"<li>Walk, {LABEL[tag]}: median {fr(stats[tag].median())}{median_note(tag)}{unscored_note(tag)}. "
+        f"Top 10 for {top(stats[tag], 10)} of {N}, top 100 for {top(stats[tag], 100)}. It ranks the causal gene above "
+        f"current flow in {len(vs_flow[tag]['better'])} of {N} disorders and below it in {len(vs_flow[tag]['worse'])}.</li>"
+        for tag in RUNS)
+
+    # tiles ----------------------------------------------------------------------
+    tiles = [("Current flow", fr(grp.flow.median()),
+              f"top 10: {top(grp.flow, 10)} of {N} · top 100: {top(grp.flow, 100)} · either orientation")]
+    for tag in RUNS:
+        s = stats[tag]
+        tiles.append((f"Walk, {LABEL[tag]}", fr(s.median()),
+                      f"top 10: {top(s, 10)} of {N} · top 100: {top(s, 100)}{median_note(tag).replace(' over', ' · median over')}"))
+    tiles_html = "".join(f'<div class="tile"><span class="k">{k}</span><span class="v">{v} <small>median</small></span>'
                          f'<span class="s">{s}</span></div>' for k, v, s in tiles)
 
-    gains = grp.assign(r=grp.flow / grp.walk).sort_values("r", ascending=False)
-    best = ", ".join(f"{esc(r.disorder)} {fr(r.flow)} → {fr(r.walk)}" for _, r in gains.head(4).iterrows())
-    losses = grp[grp.walk > grp.flow].assign(r=lambda d: d.walk / d.flow).sort_values("r", ascending=False)
-
-    recall_svg, recall_json = recall_chart(pat, U)
-    ks = [1, 10, 50, 100, 500]
-    recall_rows = [[f"top {k:,}", pct(top(pat.nb, k), 1), pct(top(pat.flow, k), 1), pct(top(pat.walk, k), 1),
-                    pct(top(pat.k1, k), 1) if pat.k1.notna().all() else "–"] for k in ks]
-
+    # per-disorder table -----------------------------------------------------------
     group_rows = []
-    for _, r in grp.sort_values("walk").iterrows():
-        group_rows.append([esc(r.disorder), f"<code>{esc(r.causal_in_network)}</code>", int(r.up), int(r.down),
-                           fr(r.nb), fr(r.flow), f"{fr(r.walk)} {change(r.flow, r.walk)}", pct(r.success, 1)])
-    per_rows = [[esc(r.disorder), r.n, fr(r.flow), f"{fr(r.walk)} {change(r.flow, r.walk)}", pct(r.wins)]
-                for _, r in per.sort_values("walk").iterrows()]
-
-    kappa_rows = [["full absorption (default)", fr(gm_w), int((grp.walk <= 100).sum()), int((grp.walk <= 10).sum()),
-                   fr(pm_w), pct(top(pat.walk, 10))]]
-    for k in KAPPAS:
-        col = grp[f"k{k}"]
-        prow = pat.k1 if k == "1" else None
-        kappa_rows.append([f"κ = {k}", fr(col.median()), int((col <= 100).sum()), int((col <= 10).sum()),
-                           fr(prow.median()) if prow is not None else "not run",
-                           pct(top(prow, 10)) if prow is not None else "–"])
-    kappa_rows.append(["<i>current flow, for reference</i>", fr(gm_f), int((grp.flow <= 100).sum()),
-                       int((grp.flow <= 10).sum()), fr(pm_f), pct(top(pat.flow, 10))])
-
-    loss_rows = [[esc(r.disorder), fr(r.flow), fr(r.walk), int(r.up), int(r.down), pct(r.success, 1)]
-                 for _, r in losses.iterrows()]
+    for _, r in grp.sort_values(["flow", "disorder"]).iterrows():
+        group_rows.append([esc(r.disorder), f"<code>{esc(r.causal_in_network).replace(';', ';<wbr>')}</code>", int(r.up), int(r.down),
+                           fr(r.nb), fr(r.flow),
+                           f"{fw(r.w_up)} {change(r.flow, r.w_up)}", f"{fw(r.w_down)} {change(r.flow, r.w_down)}",
+                           share(r.s_up), share(r.s_down)])
     sec = grp_all[grp_all.status == "secondary"]
-    sec_note = "; ".join(f"{esc(r.disorder)}: {fr(r.flow)} → {fr(r.walk)}" for _, r in sec.iterrows())
-    ok_g = grp.dropna(subset=["walk"])
-    corr = float(np.corrcoef(np.log10(ok_g.success.clip(lower=1e-4)), np.log10(ok_g.flow / ok_g.walk))[0, 1])
-    kappa_shift = fr(max(abs(grp[f"k{k}"].median() - gm_w) for k in KAPPAS))
-    unscored = grp[grp.walk.isna()]
-    one_sided = grp[(grp.up == 0) | (grp.down == 0)]
+    sec_note = "; ".join(f"{esc(r.disorder)}: current flow {fr(r.flow)}, walk {fw(r.w_up)} with sources = up, "
+                         f"{fw(r.w_down)} with sources = down" for _, r in sec.iterrows())
 
-    cmp = load_compare(COMPARE) if COMPARE.exists() else None
-    cmp_bullet, cmp_html = "", ""
-    if cmp and cmp["orient"] != ORIENT:
-        cg = cmp["g"]["walk_full"][cmp["g"]["walk_full"].status == "primary"][RANK]
-        cpat = cmp["p"]["walk_full"][cmp["p"]["walk_full"].status == "primary"][RANK].dropna()
-        other = cmp["orient"]
-        cmp_bullet = (f"<li>With the other orientation (sources = {other}, the protocol's §1.3) the same walk had a group median of "
-                      f"{fr(cg.median())} and put {pct(top(cpat, 10))} of patients' causal genes in the top 10 "
-                      f"(see <a href=\"#orientation\">orientation</a>).</li>")
-        cur_pat = pat_p.walk.dropna()
-        rows_o = [[f"walk, sources = {ORIENT} (this report)", fr(gm_w), int((grp.walk <= 10).sum()), int((grp.walk <= 100).sum()),
-                   fr(cur_pat.median()), pct(top(cur_pat, 10)), pct(top(cur_pat, 100))],
-                  [f"walk, sources = {other}", fr(cg.median()), int((cg <= 10).sum()), int((cg <= 100).sum()),
-                   fr(cpat.median()), pct(top(cpat, 10)), pct(top(cpat, 100))],
-                  ["<i>current flow (either orientation)</i>", fr(gm_f), int((grp.flow <= 10).sum()), int((grp.flow <= 100).sum()),
-                   fr(pm_f), pct(top(pat.flow, 10)), pct(top(pat.flow, 100))]]
-        by_dis = pd.DataFrame({"disorder": grp.disorder.values, "flow": grp.flow.values, "now": grp.walk.values,
-                               "other": cmp["g"]["walk_full"].set_index("case").loc[grp.case, RANK].values})
-        dis_rows = [[esc(r.disorder), fr(r.flow), fr(r.other), fr(r.now)] for r in by_dis.sort_values("now").itertuples()]
-        cmp_html = f"""
-<section id="orientation">
-  <h2>Orientation: which metabolites the walkers start from</h2>
-  <p class="prose">Current flow is symmetric: swapping sources and targets only reverses the current, so its ranks are identical
-  under both orientations (checked on every disorder and patient). The walk follows reaction directions, so the orientation
-  matters. Same network, data and settings; only the role of the significant metabolites differs.</p>
-  {table(["Method", "Group median", "Group top 10", "Group top 100", "Patient median", "Patients top 10", "Patients top 100"],
-         rows_o, num=(1, 2, 3, 4, 5, 6))}
-  {table(["Disorder", "Current flow", f"Walk, sources = {other}", f"Walk, sources = {ORIENT}"], dis_rows, num=(1, 2, 3))}
-  <p class="small">The comparison runs are in <code>{esc(COMPARE.relative_to(ROOT).as_posix())}/</code>.</p>
-</section>"""
+    # kappa table ------------------------------------------------------------------
+    def kappa_cells(col):
+        return [fr(col.median()), top(col, 10), top(col, 100)]
+    kappa_rows = [["full absorption<br>(default)"] + kappa_cells(grp.w_up) + kappa_cells(grp.w_down)]
+    for k in KAPPAS:
+        kappa_rows.append([f"κ = {k}"] + kappa_cells(grp[f"k{k}_up"]) + kappa_cells(grp[f"k{k}_down"]))
+    kappa_rows.append(["<i>current flow,<br>for reference</i>"] + kappa_cells(grp.flow) + kappa_cells(grp.flow))
+    k_unscored = {tag: " / ".join(str(int(grp[c].isna().sum())) for c in [f"w_{tag}"] + [f"k{k}_{tag}" for k in KAPPAS])
+                  for tag in RUNS}
+    plural_rank = lambda x: f"{fr(x)} rank{'' if x == 1 else 's'}"
+
+    # gains and losses -------------------------------------------------------------
+    def items(df, tag, key):
+        df = df.assign(r=df.flow / df[f"w_{tag}"]).sort_values("r", ascending=(key != "better"))
+        return ", ".join(f"{esc(r.disorder)} {fr(r.flow)} → {fr(r[f'w_{tag}'])}" for _, r in df.iterrows()) or "none"
+
+    gl_html = ""
+    for tag in RUNS:
+        v = vs_flow[tag]
+        same = (f"<li><b>Same rank ({len(v['same'])}):</b> {items(v['same'], tag, 'same')}.</li>" if len(v["same"]) else "")
+        uns = (f"<li><b>Not scorable ({len(unscored[tag])}):</b> no walker reaches a target in "
+               f"{esc(', '.join(f'{r.disorder} (current flow {fr(r.flow)})' for _, r in unscored[tag].iterrows()))}.</li>"
+               if len(unscored[tag]) else "")
+        gl_html += f"""
+  <h3>Walk, {LABEL[tag]}</h3>
+  <ul class="prose">
+    <li><b>Higher than current flow ({len(v['better'])}):</b> {items(v['better'], tag, 'better')}.</li>
+    <li><b>Lower than current flow ({len(v['worse'])}):</b> {items(v['worse'], tag, 'worse')}.</li>
+    {same}{uns}
+  </ul>"""
+    down_list = ", ".join(f"{esc(r.disorder)} ({fr(r.w_up)} → {fr(r.w_down)})"
+                          for _, r in down_higher.assign(q=down_higher.w_up / down_higher.w_down)
+                          .sort_values("q", ascending=False).iterrows()) or "none"
+    msud = grp_all[grp_all.case == "msud"]
+    msud_note = ""
+    if len(msud):
+        m = msud.iloc[0]
+        msud_note = (f" In {esc(m.disorder)}, for example, the causal gene is ranked {fw(m.w_up)} with sources = up and "
+                     f"{fw(m.w_down)} with sources = down; current flow ranks it {fr(m.flow)} either way.")
+    one_sided = grp[(grp.up == 0) | (grp.down == 0)]
+    only_up = one_sided[one_sided.down == 0]
+    only_down = one_sided[one_sided.up == 0]
+
+    def os_list(df):
+        return esc(", ".join(f"{r.disorder} (current flow {fr(r.flow)}, walk {fr(r.w_up)} up / {fr(r.w_down)} down)"
+                             for _, r in df.iterrows()))
+    os_text = ""
+    if len(only_up):
+        os_text += (f" {plural(len(only_up), 'disorder')} {'has' if len(only_up) == 1 else 'have'} significant increases "
+                    f"only: {os_list(only_up)}. With sources = up there are then only sources and the ground absorbs; "
+                    f"with sources = down there are only targets and the ground releases the walkers.")
+    if len(only_down):
+        os_text += (f" {plural(len(only_down), 'disorder')} {'has' if len(only_down) == 1 else 'have'} significant decreases "
+                    f"only: {os_list(only_down)}. With sources = up there are then only targets and the ground releases "
+                    f"the walkers; with sources = down there are only sources and the ground absorbs.")
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -469,22 +429,23 @@ def build(out):
   <div class="eyebrow">Metaboenrich · {esc(git_label())}</div>
   <h1>Absorbing random walk: benchmark</h1>
   <p class="lede">How well the experimental direction-respecting walk (<code>--mode walk</code>) finds the faulty enzyme in
-  inborn errors of metabolism, compared with the current-flow method it would replace.</p>
+  inborn errors of metabolism under each orientation, compared with the current-flow method. Group level only.</p>
 </header>
 
 <section class="summary">
   <ul>
-    <li>Sources are the significantly <b>{SRC}</b> metabolites and targets the significantly <b>{TGT}</b> ones (decision
-      D20). Current flow gives the same ranks either way; the walk does not.</li>
-    <li>Across {len(pat)} patients, the walk puts the causal gene in the top 10 for {pct(top(pat.walk, 10))} of them,
-      against {pct(top(pat.flow, 10))} for current flow. Median rank: {fr(pm_f)} for current flow, {fr(pm_w)} for the walk,
-      of {U:,} genes.</li>
-    <li>The walk ranks the causal gene higher than current flow for {pct(better)} of patients and, by each disorder's median patient rank, in {dis_better} of
-      {len(per)} disorders. Largest group-level gains: {best or "none"}.</li>
-    <li>Largest group-level losses: {', '.join(f'{esc(r.disorder)} ({fr(r.flow)} → {fr(r.walk)})' for _, r in losses.head(3).iterrows()) or "none"}
-      (see <a href="#losses">where the walk loses</a>).</li>
-    {cmp_bullet}
-    <li>Partial absorption (hook 2, κ) moves the group median by at most {kappa_shift} rank{'' if kappa_shift == '1' else 's'}. Full absorption stays the default.</li>
+    <li>The walk is run under two orientations. <b>Sources = up</b>: the significantly increased metabolites are the sources
+      and the decreased ones the targets. <b>Sources = down</b>: the significantly decreased metabolites are the sources and the increased
+      ones the targets (the package default since decision D20).</li>
+    <li>Current flow gives identical ranks under both orientations (checked for all {len(grp_all)} disorders). Median rank
+      {fr(grp.flow.median())} of {U:,} genes; top 10 for {top(grp.flow, 10)} of {N} primary disorders, top 100 for
+      {top(grp.flow, 100)}.</li>
+    {walk_bullets}
+    <li>Sources = up ranks the causal gene higher than sources = down in {up_higher} of {N} disorders. The median share of
+      walkers that reach a target is {share(succ_med['up'])} with sources = up and {share(succ_med['down'])} with sources = down.</li>
+    <li>Partial absorption (hook 2, κ) moves the group median by at most {plural_rank(kappa_shift['up'])} with sources = up and
+      {plural_rank(kappa_shift['down'])} with sources = down. Full absorption stays the default.</li>
+    <li>Group level only: each disorder's patients are pooled. Patient-level runs were dropped (decision D21).</li>
   </ul>
 </section>
 
@@ -494,109 +455,99 @@ def build(out):
   <h2>What was compared</h2>
   <div class="prose">
     <p><b>The test.</b> Untargeted plasma metabolomics from patients with a confirmed inborn error (Thistlethwaite et al.
-    2020, Miller et al. 2015). Each run goes from the patient's metabolite changes to a ranked gene list. The score is where the
-    known causal gene lands among the {U:,} genes on network reactions (1 = top). <b>Group level</b> pools each disorder's
-    patients (BH q &lt; 0.05 and |mean z| ≥ 1); <b>patient level</b> runs each patient alone (|z| ≥ 2).</p>
-    <p><b>Current flow</b> is the method used in the sealed blind predictions: Kirchhoff current between every significantly
-    {SRC} metabolite (source) and every significantly {TGT} one (target) on the undirected network, raw scoring; on an undirected
-    network the orientation doesn't change it. <b>Absorbing walk</b>: walkers start at the {SRC} metabolites in
-    proportion to |log2FC|, follow reaction directions, and stop at the {TGT} ones. Reversible reactions are split in two, a
-    walker can't undo its last step, dead ends leak, and only walks that reach a target are scored (decision D17).
-    <b>Neighbour baseline</b> ranks each enzyme by how many significant metabolites its own reactions touch.</p>
+    2020, Miller et al. 2015). Each disorder's patients are pooled (BH q &lt; 0.05 and |mean z| ≥ 1) and the run goes from
+    the pooled metabolite changes to a ranked gene list. The score is where the known causal gene lands among the {U:,} genes
+    on network reactions (1 = top). {N} primary disorders count; {plural(len(sec), 'secondary case')} {'is' if len(sec) == 1 else 'are'} shown apart.</p>
+    <p><b>Current flow</b> is the method used in the sealed blind predictions: Kirchhoff current between every source and
+    every target on the undirected network, raw scoring. Swapping sources and targets only reverses the current, so its ranks
+    are the same under both orientations.</p>
+    <p><b>Absorbing walk</b>: walkers start at the sources in proportion to |log2FC|, follow reaction directions, and stop at
+    the targets. Reversible reactions are split in two, a walker can't undo its last step, dead ends leak, and only walks that
+    reach a target are scored (decision D17). Because it follows directions, the orientation matters:</p>
+    <ul>
+      <li><b>Sources = up</b>: significantly increased metabolites are the sources, decreased are the targets
+        (<code>--sources increased</code>; protocol §1.3; the orientation used before D20). Runs in
+        <code>results/bench_rw_up/</code>.</li>
+      <li><b>Sources = down</b>: significantly decreased metabolites are the sources, increased are the targets
+        (<code>--sources decreased</code>; the package default since D20). Runs in <code>results/bench_rw/</code>.</li>
+    </ul>
+    <p><b>Neighbour baseline</b> ranks each enzyme by how many significant metabolites its own reactions touch.</p>
     <p class="small">Same network (3,958 metabolites, 6,377 reactions), same mapping and significance rules for every method;
-    only the scoring step differs. {n_dropped} patient{'' if n_dropped == 1 else 's'} with no reachable source–target pair in
-    the walk {'is' if n_dropped == 1 else 'are'} left out of the head-to-head patient numbers.</p>
+    only the scoring step and the orientation differ.</p>
   </div>
 </section>
 
 <section>
-  <h2>Patients: how often the causal gene is near the top</h2>
+  <h2>Disorders</h2>
   <figure>
-    <div class="legend"><span><i class="sw sw-walk"></i>Absorbing walk</span><span><i class="sw sw-flow"></i>Current flow</span>
-      <span><i class="sw-line"></i>Neighbour baseline</span></div>
-    {recall_svg}
-    <figcaption>Each line shows, for every cut-off k, the share of the {len(pat)} primary patients whose causal gene is within the top k.
-    Higher and further left is better. Within the top 10 the walk has {pct(top(pat.walk, 10), 1)} and current flow
-    {pct(top(pat.flow, 10), 1)}; within the top 100, {pct(top(pat.walk, 100), 1)} and {pct(top(pat.flow, 100), 1)}; within the
-    top 500, {pct(top(pat.walk, 500), 1)} and {pct(top(pat.flow, 500), 1)}. The baseline's late jump is a tie: genes touched by no
-    significant metabolite all share the average of the remaining ranks. Hover for exact values.</figcaption>
+    <div class="legend"><span><i class="sw sw-flow"></i>Current flow (either orientation)</span>
+      <span><i class="sw sw-walk"></i>Walk, sources = up</span><span><i class="sw sw-down"></i>Walk, sources = down</span></div>
+    {rank_chart(grp, U)}
+    <figcaption>One row per primary disorder, sorted by current-flow rank. The numbers on the right are the three ranks in
+    legend order; a dash and a missing marker mean the walk could not score that disorder (no walker reached a target).
+    Hover a row for the causal gene, the number of increased and decreased metabolites, and the share of walkers that reached
+    a target under each orientation.</figcaption>
   </figure>
-  {table(["Cut-off", "Neighbour baseline", "Current flow", "Absorbing walk", "Walk, κ = 1"], recall_rows, num=(1, 2, 3, 4))}
-</section>
-
-<section>
-  <h2>Patient by patient</h2>
-  <figure class="square">
-    {scatter_chart(pat, U)}
-    <figcaption>One dot per patient. Dots below the diagonal (blue) are patients where the walk ranks the causal gene higher;
-    above it (orange), current flow does. {int((pat.walk <= 1).sum())} patients have the causal gene ranked first by the walk,
-    against {int((pat.flow <= 1).sum())} for current flow.</figcaption>
-  </figure>
-  {table(["Disorder", "Patients", "Current flow, median", "Walk, median", "Walk higher for"], per_rows, num=(1, 2, 3, 4))}
-</section>
-
-<section>
-  <h2>Disorders (group level)</h2>
-  <figure>
-    <div class="legend"><span><i class="sw sw-flow"></i>Current flow</span><span><i class="sw sw-walk"></i>Absorbing walk</span></div>
-    {dumbbell_chart(grp, U)}
-    <figcaption>One row per disorder, sorted by how much the walk improves the rank. Hover a row for the causal gene, the number of
-    increased and decreased metabolites, and the share of walkers that reached a target.</figcaption>
-  </figure>
-  {table(["Disorder", "Causal gene(s)", "Up", "Down", "Neighbour", "Current flow", "Walk", "Walkers reaching a target"],
-         group_rows, num=(2, 3, 4, 5, 6, 7))}
-  <p class="small">Medians: neighbour baseline {fr(grp.nb.median())}, current flow {fr(gm_f)}, walk {fr(gm_w)}. Top 100:
-  {int((grp.nb <= 100).sum())}, {int((grp.flow <= 100).sum())} and {int((grp.walk <= 100).sum())} of {len(grp)}. Top 10:
-  {int((grp.nb <= 10).sum())}, {int((grp.flow <= 10).sum())} and {int((grp.walk <= 10).sum())}.
-  Secondary case, not in these counts: {sec_note}.</p>
+  {table(["Disorder", "Causal gene(s)", "Increased", "Decreased", "Neighbour", "Current<br>flow", "Walk,<br>sources = up",
+          "Walk,<br>sources = down", "Reaching a<br>target, up", "Reaching a<br>target, down"],
+         group_rows, num=(2, 3, 4, 5, 6, 7, 8, 9), cls="dense")}
+  <p class="small">Ranks of the causal gene among {U:,} genes; ▲ and ▼ mark a walk rank above or below current flow. The last
+  two columns give the share of released walkers that reach a target. Medians: neighbour baseline {fr(grp.nb.median())},
+  current flow {fr(grp.flow.median())}, walk with sources = up {fr(grp.w_up.median())}, walk with sources = down
+  {fr(grp.w_down.median())}{median_note('down')}. Top 100: {top(grp.nb, 100)}, {top(grp.flow, 100)}, {top(grp.w_up, 100)}
+  and {top(grp.w_down, 100)} of {N}. Top 10: {top(grp.nb, 10)}, {top(grp.flow, 10)}, {top(grp.w_up, 10)} and
+  {top(grp.w_down, 10)}. Secondary case, not in these counts: {sec_note}.</p>
 </section>
 
 <section>
   <h2>Partial absorption (hook 2)</h2>
-  <p class="prose">With κ set, a target ({TGT} metabolite) absorbs a walker with probability 1 − exp(−κ·|log2FC|) and lets the rest walk on
-  to targets further along. On this benchmark it barely moves anything, so the simpler full absorption stays the default.</p>
-  {table(["Setting", "Group median", "Group top 100", "Group top 10", "Patient median", "Patients in top 10"], kappa_rows,
-         num=(1, 2, 3, 4, 5))}
+  <p class="prose">With κ set, a target absorbs a walker with probability 1 − exp(−κ·|log2FC|) and lets the rest walk on to
+  targets further along. Under either orientation it barely moves anything, so the simpler full absorption stays the default.</p>
+  {table(["Setting", "Sources = up:<br>median", "Sources = up:<br>top 10", "Sources = up:<br>top 100",
+          "Sources = down:<br>median", "Sources = down:<br>top 10", "Sources = down:<br>top 100"], kappa_rows,
+         num=(1, 2, 3, 4, 5, 6), cls="dense")}
+  <p class="small">Counts are of {N} primary disorders; medians are over the disorders each setting can score.
+  Disorders the walk cannot score (full absorption / κ = {' / '.join(KAPPAS)}): {k_unscored['up']} with sources = up,
+  {k_unscored['down']} with sources = down.</p>
 </section>
 
-<section id="losses">
-  <h2>Where the walk loses</h2>
-  {table(["Disorder", "Current flow", "Walk", "Up", "Down", "Walkers reaching a target"], loss_rows, num=(1, 2, 3, 4, 5))}
+<section id="gains">
+  <h2>Where each orientation gains or loses against current flow</h2>
+  <p class="prose">Rank of the causal gene, current flow → walk, sorted from the largest change.</p>
+  {gl_html}
   <div class="prose">
-    <p><b>Direction against the block.</b> In an enzyme deficiency the substrate side usually rises and the product side falls.
-    With sources = {SRC} metabolites, walkers start on the {"product" if SRC == "decreased" else "substrate"} side and must follow
-    reaction directions to the {TGT} ones{", which lie upstream of the block, so the faulty enzyme is seldom on a successful route" if SRC == "decreased" else ", which takes them through the faulty enzyme"}.
-    Current flow ignores direction, which is why its ranks do not depend on the orientation.</p>
-    <p><b>One-sided disorders.</b> {len(one_sided)} disorders have significant changes in one direction only
-    ({esc(", ".join(f"{r.disorder} ({fr(r.flow)} → {fr(r.walk)})" for _, r in one_sided.iterrows())) or "none"}). There the measured,
-    unchanged metabolites stand in for the missing side.</p>
-    {f'<p><b>Not scored.</b> No walker reaches a target in {esc(", ".join(unscored.disorder))}, so the walk gives no ranking there.</p>' if len(unscored) else ""}
-    <p class="small">These are readings of the runs, not a general test. Across the {len(ok_g)} scored disorders, the share of walkers
-    that reach a target doesn't predict the gain or loss well (correlation of log shares {corr:+.2f}).</p>
+    <p><b>Where sources = down does better than sources = up:</b> {down_list} (walk rank up → down).</p>
+    <p><b>Substrate and product.</b> In an enzyme defect the substrate side usually rises and the product side falls. With
+    sources = up, walkers start at the accumulated substrates and the blocked enzyme lies on their way to the depleted products.
+    With sources = down they start on the product side and must follow reaction directions to the increased metabolites
+    upstream of the block, so the faulty enzyme is seldom on a successful route.{msud_note} Current flow ignores direction,
+    which is why its ranks do not depend on the orientation.</p>
+    {f'<p><b>One-sided disorders.</b>{os_text} The measured, unchanged metabolites stand in for the missing side.</p>' if os_text else ""}
+    <p class="small">These are readings of the runs, not a test.</p>
   </div>
 </section>
-
-{cmp_html}
 
 <section>
   <h2>Caveats</h2>
   <ul class="prose">
-    <li>One benchmark, {len(grp)} disorders, {len(pat)} patients, all plasma. The settings were not tuned on it, but the walk was
-      designed after seeing current flow's results on the same data, so treat any difference as provisional.</li>
+    <li>One benchmark, {N} disorders, all plasma. The settings were not tuned on it, but the walk was designed after seeing
+      current flow's results on the same data, and both orientations were compared on it, so treat any difference as provisional.</li>
+    <li>Patient-level runs were dropped (decision D21): one patient's z-scores against a reference population are not a
+      differential analysis.</li>
     <li>The walk depends on Human-GEM's reversibility labels (from flux bounds). Wrong labels block or open routes.</li>
-    <li>Leave-one-out scoring isn't defined for the walk; all comparisons here use raw scoring for both methods.</li>
-    <li>The sealed blind predictions were made with current flow. Whether the walk becomes the default should be decided before the
-      next blind round, not after looking at those answers.</li>
+    <li>Leave-one-out scoring isn't defined for the walk; all comparisons here use raw scoring for every method.</li>
+    <li>The sealed blind predictions were made with current flow. Whether the walk becomes the default, and under which
+      orientation, should be decided before the next blind round, not after looking at those answers.</li>
   </ul>
 </section>
 
 <footer>
-  <span>Built by <code>tools/report/build_rw_report.py</code> from <code>results/bench_rw/</code> and <code>results/bench_rw_p/</code>.
-  Method: <code>metaboenrich/walk.py</code>; decision log entries D17 and D20.</span>
+  <span>Built by <code>tools/report/build_rw_report.py</code> from <code>results/bench_rw/</code> (sources = down) and
+  <code>results/bench_rw_up/</code> (sources = up). Method: <code>metaboenrich/walk.py</code>; decision log entries D17, D20
+  and D21.</span>
 </footer>
 </main>
 <div class="tip" id="tip" hidden></div>
-<script type="application/json" id="recall-data">{recall_json}</script>
 <script>{JS}</script>
 </body></html>
 """
