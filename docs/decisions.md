@@ -181,6 +181,7 @@ metabolites as leaks (hook 4), the reverse "activation" orientation.
 Superseded by D20: all walk numbers above, the two loss cases and the 20%
 figure were made with sources = increased. The activation orientation has now
 been tried and is the default.
+Superseded by D21: the patient-level numbers above are no longer reported.
 
 ### D18. 3-rule pruning (2026-10-02 to 2026-10-06; DM with Claude Code and Claude Science)
 A carbon-based network with no hand-made currency lists, replacing the carbon
@@ -263,6 +264,39 @@ the diagnosed gene's rank; 55 of 66 top-15 gene lists are identical and the
 other 11 reorder only within exact ties.
 Open: test the walk on data where a flux increase is expected (an activated
 pathway); directed mode under the new orientation is untested.
+Superseded by D21: the patient-level numbers above are no longer reported.
+
+### D21. Group level only; walk reported under both orientations (2026-10-19, Reyna: no differential analysis from a single person)
+Patient-level results are removed from every current report and document:
+per-patient runs (one patient's z-scores against a reference population,
+significant if |z| ≥ 2), patient medians, shares of patients in the top k,
+counts of patients where one method beats another, and patient rows in
+tables. A single person gives no differential analysis. Cohort sizes stay
+(e.g. MSUD, 18 patients, pooled at group level). The benchmark's default is
+now `--levels group`; `--levels patient` still exists for reference only.
+Historical text (D17, D20, CHANGELOG entries before 2026-10-19) is kept.
+The walk is reported under both orientations, side by side:
+"sources = up" (significantly increased metabolites are the sources,
+decreased are the targets; `--sources increased`, protocol §1.3, the
+orientation before D20) and "sources = down" (decreased are the sources,
+increased are the targets; `--sources decreased`, the default since D20).
+Evidence (group level, 20 primary disorders, raw scoring, rank of the causal
+gene among 2,302 genes), median / top 10 / top 100: current flow (either
+orientation) 88.5 / 3 / 11; walk, sources = up 48 / 5 / 13; walk,
+sources = down 284 (over the 19 it can score; isovaleric aciduria unscorable)
+/ 0 / 6. Partial absorption, κ = 0.5 / 1 / 2: sources = up medians 45.5 / 47 /
+46.5, top 10 5, top 100 13; sources = down medians 284 / 284 / 285, top 10 0,
+top 100 6. Current flow gives identical ranks under both orientations for every
+disorder. The sources = up runs were rerun on current code on 2026-10-19
+(`results/bench_rw_up/`) and match the archived 2026-10-01 runs
+(`results/_increased_2026-10-01/`) exactly; sources = down runs are from
+2026-10-16 (`results/bench_rw/`). Example: MSUD, causal gene walk rank 1 with
+sources = up and 888 with sources = down; current flow 33 either way.
+A reading, not a test: in an enzyme defect the substrate side usually rises
+and the product side falls. With sources = up, walkers start at the
+accumulated substrates and the blocked enzyme lies on their way to the
+depleted products. With sources = down they start on the product side, so the
+faulty enzyme is seldom on a successful route.
 
 ## Open
 
@@ -270,10 +304,16 @@ pathway); directed mode under the new orientation is untested.
 - Fold-change magnitude does not enter L x = b (`--pair-weight fc` exists).
 - Directed current (protocol §2.3): no directed Laplacian; the absorbing walk
   (D17) is an experimental alternative. Whether to make it the default is open.
-- Orientation (D20): the walk is much worse with decreases as sources on the
-  inborn-error benchmark; test it on data where a flux increase is expected.
+- Orientation (D20, D21): on the inborn-error benchmark the walk does better
+  than current flow with sources = up and much worse with sources = down (the
+  default); test it on data where a flux increase is expected.
+- Single-person units in the blind predictions (D21): `predictions/published_v1`
+  includes units from one subject (e.g. the Alaimo 2020 patients, rule
+  "|z| >= 2 (one subject)"). The same objection applies. Not changed, as v1 is
+  sealed (D14).
 - Deoxynucleotides as cofactor families; RNA/DNA polymer nodes as carriers
   (likely source of HK1–3, PKM, RAD1/TREX1 recurring hits).
-- Organic acidurias (MMA, PA, GA) rank poorly with every method.
+- Organic acidurias (MMA, PA, GA) rank poorly with current flow. The walk
+  does better for MMA and PA under either orientation, not for GA (D21).
 - Candidate cofactors not yet handled: glutathione, THF, acetyl-CoA,
   glutamate/AKG, carnitine.

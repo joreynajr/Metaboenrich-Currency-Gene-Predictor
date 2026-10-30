@@ -28,7 +28,8 @@
 a directed absorbing random walk conditioned on absorption}
 \author{Metaboenrich methods note}
 \date{Code reference: \code{metaboenrich/walk.py}, commit \code{0f6c135} (branch \code{directed-rw});
-orientation option from commit \code{98874fc} (branch \code{flip-orientation}); option \code{--mode walk}}
+orientation option from commit \code{98874fc} (branch \code{flip-orientation}); option \code{--mode walk};\\
+benchmark section updated 2026-10-19 (D21: group level only, both orientations)}
 
 \begin{document}
 \maketitle
@@ -84,9 +85,12 @@ with ``walkers per source, absorbed by whichever target they reach first''.
   \item $\Sset\subset M$: sources (significant, $\log_2\mathrm{FC}<0$).
         $\Tset\subset M$: targets (significant, $\log_2\mathrm{FC}>0$).
         A $\log_2\mathrm{FC}$ of exactly 0 gets no role. This is the default,
-        \code{--sources decreased} (D20). Protocol \S1.3 uses the opposite
-        orientation (increases are the sources); \code{--sources increased}
-        restores it. The D17 results used that orientation.
+        \code{--sources decreased} (D20), reported as ``sources = down''
+        (significantly decreased metabolites are the sources, increased are the
+        targets). Protocol \S1.3 uses the opposite orientation;
+        \code{--sources increased} restores it, reported as ``sources = up''
+        (significantly increased metabolites are the sources, decreased are the
+        targets). The D17 results used sources = up.
   \item $\varphi_v = |\log_2\mathrm{FC}_v|$ for every source and target.
   \item $\kappa\ge 0$ (optional, \code{--walk-kappa}): partial-absorption strength.
 \end{itemize}
@@ -218,7 +222,7 @@ $h = a + Qh$, so
 \end{equation}
 For a source $s$, $h(s)$ is its \emph{reach probability}. Sources with $h(s)=0$ are
 excluded (``no directed path to a target''). In the example run every source reaches
-a target (with sources increased, one did not).
+a target (with sources = up, one did not).
 
 \paragraph{Expected visits.} The fundamental matrix $N=(I-Q)^{-1}$ has $N_{su}$ =
 expected number of visits to $u$ by a walk started at $s$. Its row for $s$ is
@@ -234,7 +238,7 @@ Both \eqref{eq:h} and \eqref{eq:visits} use the same LU factorisation of $I-Q$:
 %======================================================================
 
 Most released walkers never reach a target: in the example run only $26.5\%$ do
-($19.8\%$ with sources increased), the rest end in directed dead ends. Scoring all
+($19.8\%$ with sources = up), the rest end in directed dead ends. Scoring all
 walkers would reward reactions that lead into dead ends. The walk therefore scores
 only the walks that are absorbed.
 
@@ -321,7 +325,7 @@ share of successful walkers $\sum_s w_s p_s(t)$. A pair $(s,t)$ is ``reached'' i
 $p_s(t)>0$; others are excluded (``no walk reaches this target''). The run summary
 adds the success fraction $\sum_s\varphi_s h(s)/\sum_s\varphi_s$, the number of
 unreached sources, and the state, live-state and arc counts. In the example run all
-72 pairs are reached (with sources increased, 63 of 72).
+72 pairs are reached (with sources = up, 63 of 72).
 
 %======================================================================
 \section{One-sided data}
@@ -334,7 +338,7 @@ With the default, data with only significant increases have only targets, so the
 ground releases the walkers; data with only decreases have only sources, and the
 ground absorbs. The one-sided example (\code{results/onesided.csv}, only increases)
 now has 0 sources and 8 targets; the ground releases walkers and $4.7\%$ of them reach
-a target. With sources increased the ground absorbed, and $6.8\%$ reached a target.
+a target. With sources = up the ground absorbs, and $6.8\%$ reach a target.
 
 %======================================================================
 \section{From node scores to ranked genes and pathways}
@@ -380,8 +384,8 @@ That is $1+|\Sset|$ solves, against $|\Sset|+|\Tset|$ for current flow.
   \item \textbf{Sensitive to orientation.} In current flow, swapping sources and
         targets only negates the currents, and the scores do not change. The walk
         follows reaction directions, so the swap changes its result. On the benchmark
-        the default orientation (sources decreased) does much worse than the
-        protocol's (Section~\ref{sec:benchmark}).
+        the default orientation (sources = down) does much worse than the
+        protocol's (sources = up; Section~\ref{sec:benchmark}).
   \item \textbf{Only successful walks count.} When few walkers reach a target (low
         success fraction), scores rest on a small share of the released walkers.
 \end{itemize}
@@ -413,86 +417,109 @@ agrees with the exact solution (maximum difference $0.005$).
 \section{Benchmark}
 \label{sec:benchmark}
 %======================================================================
-Inborn errors of metabolism: rank of the causal gene among $2{,}302$ network genes,
-raw scoring, full absorption; lower is better. The walk was run in both orientations:
-sources decreased (the default, D20) and sources increased (protocol \S1.3, D17).
-Current flow gives the same ranks in both. Source: \code{docs/decisions.md}, D17 and
-D20; runs in \code{results/bench\_rw}, \code{results/bench\_rw\_p} and
-\code{results/\_increased\_2026-10-01/}.
+Inborn errors of metabolism, group level: each disorder's patients are pooled into one
+differential analysis (D21; single patients are not analysed). Rank of the causal gene
+among $2{,}302$ network genes, raw scoring, full absorption; lower is better. The walk
+was run in both orientations: sources = up (protocol \S1.3, D17; rerun on 2026-10-19
+with current code, identical to the archived 2026-10-01 runs) and sources = down (the
+default, D20; runs of 2026-10-16). Current flow gives the same ranks in both. Source:
+\code{docs/decisions.md}, D17, D20 and D21; runs in \code{results/bench\_rw\_up} and
+\code{results/bench\_rw}.
 
 \begin{center}
-\begin{tabular}{@{}llrrr@{}}
+\begin{tabular}{@{}lrrr@{}}
 \toprule
- & & & \multicolumn{2}{c}{Absorbing walk, sources}\\
-\cmidrule(l){4-5}
-Level & Measure & Current flow & decreased & increased\\
+ & & \multicolumn{2}{c}{Absorbing walk}\\
+\cmidrule(l){3-4}
+20 primary disorders & Current flow & sources = up & sources = down\\
 \midrule
-Group (20 primary disorders) & median rank & 88.5 & 284 & 48\\
- & in top 100 & 11 & 6 & 13\\
- & in top 10 & 3 & 0 & 5\\
-Patient (159 primary patients) & median rank & 145 & 459 & 67\\
- & in top 500 & 79\% & 52\% & 79\%\\
- & in top 100 & 47\% & 19\% & 55\%\\
- & in top 10 & 5\% & 6\% & 28\%\\
+median rank & 88.5 & 48 & 284\\
+in top 10 & 3 & 5 & 0\\
+in top 100 & 11 & 13 & 6\\
+median share of walkers reaching a target & -- & $6.6\%$ & $1.8\%$\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-With sources decreased the walk cannot score isovaleric aciduria, so its group median
-is over 19 disorders. Patient rows count the primary patients the walk can score.
-That is 159 in each orientation, but not the same 159: with sources decreased one
-isovaleric aciduria patient drops out, and with sources increased one OTC patient did.
-The current-flow median is $145$ over the first set, $134$ over the second and $140$ over all 160.
+With sources = down the walk cannot score isovaleric aciduria (no walker reaches a
+target), so its median is over 19 disorders. Per disorder:
 
-With sources decreased the walk falls well behind current flow. It ranks the causal
-gene better than current flow for $28\%$ of patients, and its median patient rank is
-better in 4 of 20 disorders (sources increased: $71\%$ and 14 of 20). At group level it
-is better in 7 of 20 disorders (sources increased: 13). It ranks the causal gene first
-for 4 patients (sources increased: 25; current flow: 0). The median share of released
-walkers that reach a target is $1.8\%$ per disorder and $2.1\%$ per patient (sources
-increased: $6.6\%$ and $3.8\%$). Isovaleric aciduria can no longer be scored: no walker
-reaches a target (sources increased: rank 64; current flow: 17).
+\begin{center}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & & \multicolumn{2}{c}{Absorbing walk}\\
+\cmidrule(l){3-4}
+Disorder & Current flow & sources = up & sources = down\\
+\midrule
+Thymidine phosphorylase deficiency & 1 & 1 & 212\\
+GAMT deficiency & 2 & 3 & 85\\
+TMLHE deficiency & 4 & 1 & 1{,}172\\
+Isovaleric aciduria & 17 & 64 & --\\
+3-Methylcrotonyl-CoA carboxylase deficiency & 23 & 25 & 1{,}649\\
+Argininosuccinic aciduria & 24 & 9 & 40\\
+Maple syrup urine disease & 33 & 1 & 888\\
+HMG-CoA lyase deficiency$^{*}$ & 55 & 18 & 1{,}001\\
+Citrullinaemia type I & 82 & 20 & 56\\
+AADC deficiency & 88 & 1{,}317 & 1{,}502\\
+Argininaemia & 89 & 32 & 2{,}013\\
+OTC deficiency & 168 & 72 & 60\\
+Homocystinuria & 181 & 765 & 604\\
+Phenylketonuria$^{*}$ & 186 & 16 & 1{,}134\\
+GABA-transaminase deficiency$^{*}$ & 282 & 237 & 18\\
+Adenylosuccinate lyase deficiency & 362 & 292 & 71\\
+Methylmalonic acidaemia & 439 & 99 & 106\\
+Holocarboxylase synthetase deficiency$^{*}$ & 717 & 320 & 284\\
+Glutaric aciduria type I & 930 & 1{,}054 & 1{,}581\\
+Propionic acidaemia & 1{,}187 & 176 & 170\\
+\midrule
+Cobalamin defects (secondary) & 61 & 70 & 662\\
+\bottomrule
+\end{tabular}
 
-Largest group-level losses against current flow: TMLHE deficiency $4\to1{,}172$,
+\smallskip
+$^{*}$ one-sided: only increases are significant.
+\end{center}
+
+With sources = up the walk beats current flow in 13 of 20 disorders. The largest gains
+are MSUD $33\to1$, PKU $186\to16$, propionic acidaemia $1{,}187\to176$ and
+citrullinaemia $82\to20$ (current flow $\to$ walk). With sources = down it beats
+current flow in 7 of 20. Its largest losses are TMLHE deficiency $4\to1{,}172$,
 thymidine phosphorylase deficiency $1\to212$, 3-methylcrotonyl-CoA carboxylase
 deficiency $23\to1{,}649$, argininaemia $89\to2{,}013$, HMG-CoA lyase deficiency
-$55\to1{,}001$, MSUD $33\to888$, PKU $186\to1{,}134$, GAMT deficiency $2\to85$.
-Largest gains: GABA-transaminase deficiency $282\to18$, propionic acidaemia
-$1{,}187\to170$, adenylosuccinate lyase deficiency $362\to71$, methylmalonic acidaemia
-$439\to106$. OTC deficiency ($168\to60$), citrullinaemia ($82\to56$) and holocarboxylase
-synthetase deficiency ($717\to284$) also improve. With sources increased the largest
-gains were MSUD $33\to1$, PKU $186\to16$, propionic acidaemia $1{,}187\to176$ and
-citrullinaemia $82\to20$.
+$55\to1{,}001$, MSUD $33\to888$, PKU $186\to1{,}134$ and GAMT deficiency $2\to85$. Its
+largest gains are GABA-transaminase deficiency $282\to18$, propionic acidaemia
+$1{,}187\to170$, adenylosuccinate lyase deficiency $362\to71$ and methylmalonic
+acidaemia $439\to106$.
 
-A reading of the losses, not a test: in an enzyme deficiency the substrate side usually
-rises and the product side falls. With decreased metabolites as sources, walkers start
-on the product side and must follow reaction directions to the increased metabolites.
-Those lie upstream of the block, so the faulty enzyme is seldom on a successful route.
-With sources increased, walkers went from the accumulated substrate through the blocked
-enzyme to the depleted product.
+A reading, not a test: in an enzyme deficiency the substrate side usually rises and the
+product side falls. With sources = up, walkers start at the accumulated substrates and
+the blocked enzyme lies on their way to the depleted products. With sources = down they
+start on the product side and must follow reaction directions to the increased
+metabolites, which lie upstream of the block, so the faulty enzyme is seldom on a
+successful route.
 
-The two D17 loss cases stay poor. In AADC deficiency (2 increased, 24 decreased)
-3-O-methyldopa is now a target. The walk ranks the causal gene $1{,}502$ (sources
-increased: $1{,}317$; current flow: 88), and $0.1\%$ of walkers reach a target. In
-homocystinuria (22 increased, 1 decreased) cortisol, the only significant decrease, is
-now the only source. The rank is 604 (sources increased: 765; current flow: 181), and
-$8.7\%$ of walkers reach a target. Four disorders are one-sided, with only increases,
-so they now have only targets and the ground releases the walkers: PKU
-($186\to1{,}134$), GABA-transaminase deficiency ($282\to18$), HMG-CoA lyase
-deficiency ($55\to1{,}001$) and holocarboxylase synthetase deficiency ($717\to284$)
-(current flow $\to$ walk).
+Two disorders are poor in both orientations. In AADC deficiency (2 increased, 24
+decreased), with sources = up the main source is 3-O-methyldopa, which COMT makes
+irreversibly from L-DOPA, the blocked substrate, so walkers cannot run back to the
+block; with sources = down it is a target, and $0.1\%$ of walkers reach a target. In
+homocystinuria (22 increased, 1 decreased), cortisol, the only significant decrease, is
+the only target with sources = up and the only source with sources = down ($1.0\%$ and
+$8.7\%$ of walkers reach a target). In the four one-sided disorders (only increases),
+sources = up has only sources and the ground absorbs; sources = down has only targets
+and the ground releases the walkers.
 
-Partial absorption barely matters in either orientation. With sources decreased the
-group medians are $284$, $284$ and $285$ for $\kappa=0.5,1,2$, against $284$ with full
-absorption; the patient median is $467$ at $\kappa=1$, against $459$. With sources
-increased the group medians were $45.5$--$47$, against $48$.
+Partial absorption barely matters in either orientation. For $\kappa=0.5,1,2$ the
+group medians are $45.5$, $47$ and $46.5$ with sources = up (against $48$ with full
+absorption) and $284$, $284$ and $285$ with sources = down (against $284$). Top 10 and
+top 100 counts do not change (5 and 13 up, 0 and 6 down).
 
 \paragraph{Status.} Not the default method. It changes protocol \S2.3, the evidence is
 one benchmark, and the blind predictions (D14) were made with current flow. To be
 decided before the next blind round. The reverse ``activation'' orientation, listed in
 D17 as not tried, is now the package default (D20). It leaves current flow unchanged
 and makes the walk much worse on this benchmark; the default was kept after this
-benchmark was seen. \code{--sources increased} gives the D17 orientation. Not yet
+benchmark was seen. \code{--sources increased} gives sources = up, the D17 orientation. Not yet
 tried: biased steps (hook 3), unchanged metabolites as leaks (hook 4), and the walk on
 data where a flux increase is expected (an activated pathway).
 
@@ -534,7 +561,7 @@ Code (\code{metaboenrich/walk.py}) & What it computes\\
         walks. \emph{Social Networks} 27, 39--54.
   \item Doyle, P.\,G.\ and Snell, J.\,L. (1984). \emph{Random Walks and Electric
         Networks}. Mathematical Association of America.
-  \item Metaboenrich \code{docs/decisions.md}, D17 and D20.
+  \item Metaboenrich \code{docs/decisions.md}, D17, D20 and D21.
 \end{itemize}
 
 \end{document}

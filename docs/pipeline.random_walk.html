@@ -159,9 +159,11 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
   <p><strong>In one paragraph.</strong> <code>--mode walk</code> keeps steps 1–4 of the main run and swaps step 5.
   Instead of solving Kirchhoff's equations on the undirected graph, it releases walkers at the decreased metabolites
   (sources), in proportion to |log2FC|, and lets them step only along reaction directions until an increased metabolite
-  (target) absorbs them. That is the default, <code>--sources decreased</code> (D20). It reverses protocol §1.3, which makes
-  the increased metabolites the sources; <code>--sources increased</code> restores the protocol's roles, which D17 used.
-  Unlike current flow, the walk gives different results under the two settings. Walkers that hit a dead end are lost, and only walks that reach a target are scored. The maths is one
+  (target) absorbs them. That is the default, <code>--sources decreased</code> (D20), reported as "sources = down"
+  (significantly decreased metabolites are the sources, increased are the targets). It reverses protocol §1.3, which makes
+  the increased metabolites the sources; <code>--sources increased</code> restores the protocol's roles, which D17 used, reported
+  as "sources = up" (significantly increased metabolites are the sources, decreased are the targets).
+  Unlike current flow, the walk gives different results under the two settings, so results are shown for both (D21). Walkers that hit a dead end are lost, and only walks that reach a target are scored. The maths is one
   sparse LU of (I − Q) on the walk's state space (<code>scipy.sparse.linalg.splu</code>, about 0.3 s on Human-GEM).
   That one factorisation gives every source's chance of reaching a target and its expected traffic over every arc. The walk
   returns the same <code>FlowResult</code> as current flow, so scoring and outputs are shared. The result tables gain one column,
@@ -637,15 +639,17 @@ python -m metaboenrich --daa my_daa.csv --out results/my_walk_k1 --mode walk --w
   <article class="card" id="oR">
     <div class="card-head"><span class="num">R</span><h3>Walk report</h3><span class="where">python tools/report/build_rw_report.py --out docs/rw_report.html</span></div>
     <p>Builds <a href="rw_report.html">rw_report.html</a>, the walk-vs-flow benchmark comparison, from benchmark result files
-    (<code>results/</code> is not committed). Run these first on branch <code>directed-rw</code>:</p>
-    <pre class="cmd">python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
-python -m metaboenrich.benchmark --levels group --method walk --out results/bench_rw/walk_full
-python -m metaboenrich.benchmark --levels group --method walk --walk-kappa K --out results/bench_rw/walk_kK   # K = 0.5, 1, 2
-python -m metaboenrich.benchmark --levels patient --out results/bench_rw_p/flow
-python -m metaboenrich.benchmark --levels patient --method walk --out results/bench_rw_p/walk_full
-python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 --out results/bench_rw_p/walk_k1</pre>
-    <p>These run under the default orientation. The report's <a href="rw_report.html#orientation">orientation section</a> compares them with the same runs under
-    <code>--sources increased</code>, kept in <code>results/_increased_2026-10-01/</code>, and skips it if that folder is absent.</p>
+    (<code>results/</code> is not committed). Group level only (D21). Run these first, once per orientation:</p>
+    <pre class="cmd"># sources = down (default)
+python -m metaboenrich.benchmark --out results/bench_rw/flow
+python -m metaboenrich.benchmark --method walk --out results/bench_rw/walk_full
+python -m metaboenrich.benchmark --method walk --walk-kappa K --out results/bench_rw/walk_kK   # K = 0.5, 1, 2
+# sources = up
+python -m metaboenrich.benchmark --sources increased --out results/bench_rw_up/flow
+python -m metaboenrich.benchmark --sources increased --method walk --out results/bench_rw_up/walk_full
+python -m metaboenrich.benchmark --sources increased --method walk --walk-kappa K --out results/bench_rw_up/walk_kK</pre>
+    <p><code>--levels group</code> is the default. The sources = up runs (2026-10-19, current code) match the archived runs of
+    2026-10-01 in <code>results/_increased_2026-10-01/</code> exactly.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>load()</code> · <code>build(out)</code><span>Reads the result TSVs and writes one self-contained page.</span></li>
@@ -660,10 +664,11 @@ python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 -
 
   <article class="card" id="oN">
     <div class="card-head"><span class="num">N</span><h3>Network Explorer</h3><span class="where">python tools/report/build_network_report.py --out docs/network_report.html</span></div>
-    <p>Builds <a href="network_report.html">network_report.html</a>: for every group-level benchmark disorder, it reruns both
-    methods exactly as the benchmark does (walk with full absorption) and draws the current-carrying subnetwork, each picked pathway,
-    and the causal gene's neighbourhood. Both methods share one layout per view. Needs <code>results/bench_rw/{flow,walk_full}</code>
-    to cross-check ranks. A full build takes about 8 minutes; <code>--cases pku msud</code> runs a quick subset.</p>
+    <p>Builds <a href="network_report.html">network_report.html</a>: for every group-level benchmark disorder, it reruns
+    current flow and the walk under both orientations (sources = up and sources = down) exactly as the benchmark does (walk with
+    full absorption) and draws the current-carrying subnetwork, each picked pathway,
+    and the causal gene's neighbourhood. All three share one layout per view. Needs the group benchmark runs above
+    (<code>flow</code> and <code>walk_full</code> in both <code>results/bench_rw</code> and <code>results/bench_rw_up</code>) to cross-check ranks. A full build takes about 8 minutes; <code>--cases pku msud</code> runs a quick subset.</p>
     <div class="cols">
       <div><div class="label">Functions</div><ul class="fn">
         <li><code>run_method(net, method, …)</code><span>Calls <code>current_flow</code> or <code>absorbing_walk</code>, then the scoring tables.</span></li>
@@ -682,53 +687,49 @@ python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 -
 
 <section id="results">
   <h2>Benchmark at a glance</h2>
-  <p class="small narrow">Rank of the causal gene among 2,302 network genes, raw scoring, full absorption (lower is better). The
-  sources = decreased column is the default since D20 (runs of 2026-10-16); the sources = increased column is the old orientation,
-  from <a href="decisions.md">decisions.md D17</a> (runs kept in <code>results/_increased_2026-10-01/</code>). Current flow is the same
-  under both. Full tables and charts in <a href="rw_report.html">rw_report.html</a>.</p>
+  <p class="small narrow">Rank of the causal gene among 2,302 network genes, group level, raw scoring, full absorption (lower is better).
+  Sources = up: significantly increased metabolites are the sources, decreased are the targets (<code>--sources increased</code>, the
+  orientation of <a href="decisions.md">decisions.md D17</a>; rerun 2026-10-19 on current code, identical to the archived 2026-10-01 runs).
+  Sources = down: decreased are the sources, increased are the targets (<code>--sources decreased</code>, the default since D20; runs of
+  2026-10-16). Current flow is the same under both. Full tables and charts in <a href="rw_report.html">rw_report.html</a>.</p>
   <div class="tbl">
   <table>
-    <thead><tr><th>Level</th><th>Measure</th><th class="num">Current flow</th><th class="num">Walk, sources = decreased</th><th class="num">Walk, sources = increased (D17)</th></tr></thead>
+    <thead><tr><th>Level</th><th>Measure</th><th class="num">Current flow</th><th class="num">Walk, sources = up</th><th class="num">Walk, sources = down</th></tr></thead>
     <tbody>
       <tr class="group"><th colspan="5">Group level · 20 primary disorders</th></tr>
-      <tr><th>Group</th><td>Median rank</td><td class="num">88.5</td><td class="num">284</td><td class="num">48</td></tr>
-      <tr><th>Group</th><td>Disorders in top 100</td><td class="num">11</td><td class="num">6</td><td class="num">13</td></tr>
-      <tr><th>Group</th><td>Disorders in top 10</td><td class="num">3</td><td class="num">0</td><td class="num">5</td></tr>
-      <tr class="group"><th colspan="5">Patient level · 160 primary patients</th></tr>
-      <tr><th>Patient</th><td>Median rank</td><td class="num">140</td><td class="num">459</td><td class="num">67</td></tr>
-      <tr><th>Patient</th><td>In top 500</td><td class="num">78.8%</td><td class="num">51.9%</td><td class="num">78.8%</td></tr>
-      <tr><th>Patient</th><td>In top 100</td><td class="num">46.9%</td><td class="num">18.8%</td><td class="num">55.0%</td></tr>
-      <tr><th>Patient</th><td>In top 10</td><td class="num">5.0%</td><td class="num">5.6%</td><td class="num">28.1%</td></tr>
+      <tr><th>Group</th><td>Median rank</td><td class="num">88.5</td><td class="num">48</td><td class="num">284</td></tr>
+      <tr><th>Group</th><td>Disorders in top 100</td><td class="num">11</td><td class="num">13</td><td class="num">6</td></tr>
+      <tr><th>Group</th><td>Disorders in top 10</td><td class="num">3</td><td class="num">5</td><td class="num">0</td></tr>
+      <tr><th>Group</th><td>Median share of walkers reaching a target</td><td class="num">n/a</td><td class="num">6.6%</td><td class="num">1.8%</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="small narrow">Patient percentages are over all 160 primary patients; the one patient the walk cannot score counts as a miss.
-  Walk medians are over the 159 patients with a walk rank. Over those 159, the current-flow median is 145 under the new orientation and 134
-  under the old one (D17), because a different patient lacks a walk rank in each.</p>
+  <p class="small narrow">The sources = down median is over the 19 disorders the walk can score; isovaleric aciduria has no walker
+  reaching a target.</p>
   <ul class="small narrow">
-    <li><strong>Sources = decreased (default):</strong> the walk is much worse than current flow. It ranks the causal gene above current
-    flow for 28% of patients (old orientation: 71%) and, by median patient rank, in 4 of 20 disorders (old: 14). At group level it does better in 7 of 20 (old: 13). It ranks the causal gene first for 4 patients (old: 25; current flow: 0).
-    The median share of released walkers that reach a target is 1.8% at group level (old 6.6%) and 2.1% at patient level (old 3.8%).</li>
-    <li><strong>Largest losses vs current flow (group, new orientation):</strong> TMLHE deficiency 4 → 1,172, 3-methylcrotonyl-CoA carboxylase
+    <li><strong>Sources = up:</strong> the walk beats current flow. Largest gains (group): MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176,
+    citrullinemia 82 → 20.</li>
+    <li><strong>Sources = down (default):</strong> the walk is much worse than current flow. At group level it does better in 7 of 20
+    disorders (sources = up: 13).</li>
+    <li><strong>Largest losses vs current flow (group, sources = down):</strong> TMLHE deficiency 4 → 1,172, 3-methylcrotonyl-CoA carboxylase
     deficiency 23 → 1,649, argininemia 89 → 2,013, HMG-CoA lyase deficiency 55 → 1,001, MSUD 33 → 888, PKU 186 → 1,134, thymidine phosphorylase
-    deficiency 1 → 212, GAMT 2 → 85. Isovaleric aciduria can no longer be scored: no walker reaches a target (old: rank 64; current flow: 17).</li>
-    <li><strong>Largest gains vs current flow (group, new orientation):</strong> GABA-transaminase deficiency 282 → 18, PA 1,187 → 170,
+    deficiency 1 → 212, GAMT 2 → 85. Isovaleric aciduria cannot be scored with sources = down: no walker reaches a target (sources = up: rank 64; current flow: 17).</li>
+    <li><strong>Largest gains vs current flow (group, sources = down):</strong> GABA-transaminase deficiency 282 → 18, PA 1,187 → 170,
     adenylosuccinate lyase deficiency 362 → 71, MMA 439 → 106. Also better: OTC 168 → 60, citrullinemia 82 → 56, holocarboxylase synthetase deficiency 717 → 284.</li>
     <li><strong>A reading, not a test:</strong> in an enzyme deficiency the substrate side usually rises and the product side falls. With decreased
-    metabolites as sources, walkers start on the product side and must follow reaction directions to the increased metabolites upstream of
-    the block, so the faulty enzyme is seldom on a successful route. Under the old orientation, walkers went from the accumulated substrate
+    metabolites as sources (sources = down), walkers start on the product side and must follow reaction directions to the increased metabolites upstream of
+    the block, so the faulty enzyme is seldom on a successful route. With sources = up, walkers go from the accumulated substrate
     through the blocked enzyme to the depleted product.</li>
-    <li><strong>Old orientation (D17), largest gains (group):</strong> MSUD 33 → 1, PKU 186 → 16, PA 1,187 → 176, citrullinemia 82 → 20.</li>
-    <li><strong>The two D17 losses, re-read:</strong> AADC deficiency (2 increased, 24 decreased): under D17, 3-O-methyldopa was the main source.
-    It is made irreversibly <em>from</em> the blocked substrate, so walkers could not run back to the block (88 → 1,317). Now 3-O-methyldopa is a
-    target, and the walk ranks the gene 1,502, with 0.1% of walkers reaching a target. Homocystinuria (22 increased, 1 decreased): under D17 the
-    only target was cortisol, which told the walk nothing (181 → 765). Now cortisol is the only source; the walk ranks the gene 604, and 8.7% of
-    walkers reach a target.</li>
-    <li><strong>κ:</strong> new orientation, group medians 284, 284 and 285 for K = 0.5, 1, 2 (top 10 = 0, top 100 = 6 for all) vs 284 with full
-    absorption; patient median 467 at K = 1. Old orientation: 45.5–47 vs 48. Full absorption stays the default.</li>
+    <li><strong>The two sources = up losses, re-read:</strong> AADC deficiency (2 increased, 24 decreased): with sources = up, 3-O-methyldopa is the main source.
+    It is made irreversibly <em>from</em> the blocked substrate, so walkers cannot run back to the block (88 → 1,317). With sources = down
+    3-O-methyldopa is a target, and the walk ranks the gene 1,502, with 0.1% of walkers reaching a target. Homocystinuria (22 increased, 1 decreased):
+    with sources = up the only target is cortisol, which tells the walk nothing (181 → 765). With sources = down cortisol is the only source; the
+    walk ranks the gene 604, and 8.7% of walkers reach a target.</li>
+    <li><strong>κ:</strong> group medians for K = 0.5, 1, 2: sources = up 45.5, 47, 46.5 vs 48 with full absorption (top 10 = 5, top 100 = 13
+    for all); sources = down 284, 284, 285 vs 284 (top 10 = 0, top 100 = 6 for all). Full absorption stays the default.</li>
     <li><strong>Status:</strong> not the default. It changes protocol §2.3, the evidence is one benchmark, and the blind predictions (D14)
     were made with current flow. To be decided before the next blind round. Under the default orientation (D20) the walk does worse than
-    current flow on this benchmark; <code>--sources increased</code> gives the D17 results.</li>
+    current flow on this benchmark; sources = up (<code>--sources increased</code>) gives the D17 results.</li>
   </ul>
 </section>
 
@@ -751,7 +752,8 @@ python -m metaboenrich.benchmark --levels patient --method walk --walk-kappa 1 -
 <footer>
   <span>Written by hand from the code at commit 0f6c135 (branch directed-rw, v0.2.0.dev0). Not regenerated by a build script; update it when <code>walk.py</code> changes.</span>
   <span>Updated 2026-10-16 for the source/target orientation (decision D20, <code>--sources</code>, commit 98874fc); benchmark numbers from the runs of that day.</span>
-  <span>Related: <a href="pipeline.html">pipeline.html</a> (current-flow pipeline) · <a href="rw_report.html">rw_report.html</a> · <a href="network_report.html">network_report.html</a> · <a href="decisions.md">decisions.md</a> (D17, D20)</span>
+  <span>Updated 2026-10-19 for decision D21: group level only, walk shown under both orientations (sources = up, sources = down).</span>
+  <span>Related: <a href="pipeline.html">pipeline.html</a> (current-flow pipeline) · <a href="rw_report.html">rw_report.html</a> · <a href="network_report.html">network_report.html</a> · <a href="decisions.md">decisions.md</a> (D17, D20, D21)</span>
 </footer>
 
 </main>

@@ -22,7 +22,8 @@
 \title{Metaboenrich step 5 (default):\\
 Ohm's-law current flow on the metabolite--reaction network}
 \author{Metaboenrich methods note}
-\date{Code reference: \code{metaboenrich/flow.py}, commit \code{0f6c135} (branch \code{directed-rw})}
+\date{Code reference: \code{metaboenrich/flow.py}, commit \code{0f6c135} (branch \code{directed-rw});\\
+benchmark section updated 2026-10-19 (D21: group level only, both orientations)}
 
 \begin{document}
 \maketitle
@@ -330,41 +331,41 @@ absorbing random walk changes exactly those three things.
 \section{Benchmark}\label{sec:benchmark}
 %======================================================================
 Inborn errors of metabolism (plasma $z$-scores from Thistlethwaite et al.\ 2020 and
-Miller et al.\ 2015): rank of the known causal gene among the $2{,}302$ network genes,
-raw scoring; lower is better. Source: \code{docs/decisions.md}, D17 (current flow;
-walk with sources increased) and D20 (walk with sources decreased, rerun 2026-10-16).
-Current flow gives every disorder and every patient the same raw rank under both
-orientations.
+Miller et al.\ 2015), group level: each disorder's patients are pooled into one
+differential analysis (D21; single patients are not analysed). Rank of the known
+causal gene among the $2{,}302$ network genes, raw scoring; lower is better. The walk
+is shown under both orientations: ``sources = up'' (significantly increased
+metabolites are the sources, decreased are the targets; \code{--sources increased},
+protocol \S1.3, D17) and ``sources = down'' (decreased are the sources, increased are
+the targets; \code{--sources decreased}, the default, D20). Current flow gives every
+disorder the same raw rank under both orientations. Source: \code{docs/decisions.md},
+D17, D20 and D21; runs in \code{results/bench\_rw\_up} (2026-10-19, identical to the
+archived 2026-10-01 runs) and \code{results/bench\_rw} (2026-10-16).
 
 \begin{center}
-\begin{tabular}{@{}llrrr@{}}
+\begin{tabular}{@{}lrrr@{}}
 \toprule
- & & & \multicolumn{2}{c@{}}{Absorbing walk, sources}\\
-\cmidrule(l){4-5}
-Level & Measure & Current flow & decreased & increased (old)\\
+ & & \multicolumn{2}{c@{}}{Absorbing walk}\\
+\cmidrule(l){3-4}
+20 primary disorders & Current flow & sources = up & sources = down\\
 \midrule
-Group (20 primary disorders) & median rank & 88.5 & 284 & 48\\
- & in top 100 & 11 & 6 & 13\\
- & in top 10 & 3 & 0 & 5\\
-Patient (159 primary patients) & median rank & 134 & 459 & 67\\
- & in top 100 & 47\% & 19\% & 55\%\\
- & in top 10 & 5\% & 6\% & 28\%\\
+median rank & 88.5 & 48 & 284\\
+in top 10 & 3 & 5 & 0\\
+in top 100 & 11 & 13 & 6\\
 \bottomrule
 \end{tabular}
 \end{center}
-The patient rows use the patients the walk can score: 159 under either
-orientation, but each orientation leaves out a different patient. Over the 159 of
-the new run, current flow has median rank 145 instead of 134; its top-100 and
-top-10 shares are the same at this precision.
+With sources = down the walk cannot score isovaleric aciduria (no walker reaches a
+target), so its median is over 19 disorders.
 
-With decreases as sources the walk falls well behind current flow. It ranks the
-causal gene above current flow for 28\% of patients (71\% under the old
-orientation), and for isovaleric aciduria no walker reaches a target. In an enzyme
-deficiency the substrate side usually rises and the product side falls, so walkers
-now start downstream of the block and seldom pass through the faulty enzyme. This is
-a reading of the results, not a test. Current flow remains the default: the blind
-predictions on published datasets (D14) were made with it, and its ranks do not
-depend on the orientation.
+With sources = up the walk does better than current flow; with sources = down it
+falls well behind. In an enzyme deficiency the substrate side usually rises and the
+product side falls. With sources = up walkers start at the accumulated substrates and
+pass through the blocked enzyme on their way to the depleted products; with
+sources = down they start downstream of the block and seldom pass through the faulty
+enzyme. This is a reading of the results, not a test. Current flow remains the
+default: the blind predictions on published datasets (D14) were made with it, and its
+ranks do not depend on the orientation.
 
 %======================================================================
 \section{Implementation map}

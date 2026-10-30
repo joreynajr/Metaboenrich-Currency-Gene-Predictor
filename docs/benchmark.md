@@ -1,12 +1,15 @@
 # Benchmark: finding the defective enzyme in inborn errors of metabolism
 
 Question: given untargeted plasma metabolomics from patients with a known
-single-enzyme defect, where does Metaboenrich rank the causal gene?
+single-enzyme defect, pooled by disorder, where does Metaboenrich rank the
+causal gene?
 
 Run: Metaboenrich 0.2.0.dev0, network v0.1.1 (3,958 metabolites, 6,377
 reactions, 16,356 edges), 2026-09-29. Reproduce with
 `python benchmarks/get_benchmark_data.py` then
-`python -m metaboenrich.benchmark --out results/benchmark_v02`.
+`python -m metaboenrich.benchmark --out results/benchmark_v02`. Since
+decision D21 (2026-10-19) results are reported at group level only, and the
+benchmark's default is `--levels group`.
 
 ## Data
 
@@ -42,7 +45,9 @@ MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
 - **Group level**: all patients with a disorder. Mean z per metabolite; z-test
   on the mean (values are already standardised), BH-adjusted; significant if
   q < 0.05 and |mean z| ≥ 1.
-- **Patient level**: each patient alone; significant if |z| ≥ 2.
+- **Group level only** (D21): a single patient's z-scores against a
+  reference population are not a differential analysis, so per-patient runs
+  are not reported. `--levels patient` still exists, for reference only.
 - **Ranking universe**: the 2,302 genes on network reactions; the causal gene's
   rank is its best rank among the listed causal genes. Random expectation:
   median ≈ 1,151.
@@ -58,12 +63,11 @@ MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
   Current flow is symmetric, so the ranks are the same under either
   orientation. Two later reruns, one per orientation (2026-10-01 with
   increases as sources, 2026-10-16 under D20), gave identical raw and
-  leave-one-out ranks for every disorder and identical raw ranks for every
-  patient. One patient's leave-one-out rank differs at the tail, a float tie
-  (HEP-GAMT-8: 1,887 under D20, 1,873 before, of 2,302). Source and target
-  counts swap. Both reruns differ from the tables below in a few ranks (for
-  example argininemia raw 89, not 88). The absorbing walk (`--mode walk`) is
-  not symmetric and does change; see `docs/rw_report.html`.
+  leave-one-out ranks for every disorder. Source and target counts swap.
+  Both reruns differ from the tables below in a few ranks (for example
+  argininemia raw 89, not 88). The absorbing walk (`--mode walk`) is not
+  symmetric and does change; see "Absorbing walk, both orientations" below
+  and `docs/rw_report.html`.
 
 ## Results
 
@@ -74,9 +78,6 @@ MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
 | Group (20) | **Metaboenrich, raw** | **88 (3.8%)** | 3 | 7 | **11** |
 | Group (20) | Metaboenrich, leave-one-out | 236.5 (10.3%) | 4 | 7 | 9 |
 | Group (20) | Neighbour baseline | 1,165 (50.6%) | 1 | 5 | 7 |
-| Patient (160) | **Metaboenrich, raw** | **139 (6.0%)** | 8 | 55 | 75 |
-| Patient (160) | Metaboenrich, leave-one-out | 224 (9.7%) | 12 | 43 | 58 |
-| Patient (160) | Neighbour baseline | 1,168 (50.7%) | 5 | 51 | 71 |
 
 ### Per disorder (group level)
 
@@ -106,6 +107,61 @@ MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
 
 \* one-sided run (only increases significant).
 
+### Absorbing walk, both orientations (group level)
+
+The experimental walk (`--mode walk`, decision D17) follows reaction
+directions, so it depends on which side starts. It is reported under both
+orientations:
+
+- **sources = up**: significantly increased metabolites are the sources,
+  decreased are the targets (`--sources increased`; protocol §1.3; the
+  orientation before D20).
+- **sources = down**: significantly decreased metabolites are the sources,
+  increased are the targets (`--sources decreased`; the default since D20).
+
+Runs: sources = down on 2026-10-16 (`results/bench_rw/`); sources = up on
+2026-10-19 with current code (`results/bench_rw_up/`), identical to the
+archived 2026-10-01 runs. Raw scoring, rank of the causal gene among 2,302
+genes, 20 primary disorders.
+
+| Method | Median | Top 10 | Top 50 | Top 100 |
+|---|---|---|---|---|
+| Current flow (either orientation) | 88.5 | 3 | 7 | 11 |
+| Walk, sources = up | **48** | **5** | **10** | **13** |
+| Walk, sources = down | 284 (19 scored) | 0 | 2 | 6 |
+| Walk κ = 0.5 / 1 / 2, sources = up | 45.5 / 47 / 46.5 | 5 | 10 | 13 |
+| Walk κ = 0.5 / 1 / 2, sources = down | 284 / 284 / 285 | 0 | 2 | 6 |
+
+κ: partial absorption (`--walk-kappa`). Isovaleric aciduria cannot be scored
+with sources = down: no walker reaches a target.
+
+| Disorder | Current flow | Walk, sources = up | Walk, sources = down | Reach a target, up | Reach a target, down |
+|---|---|---|---|---|---|
+| Thymidine phosphorylase deficiency | 1 | 1 | 212 | 1.7% | 2.3% |
+| GAMT deficiency | 2 | 3 | 85 | 5.5% | 1.3% |
+| TMLHE deficiency | 4 | 1 | 1,172 | 8.1% | 1.3% |
+| Isovaleric aciduria | 17 | 64 | not scored | 0.02% | 0% |
+| 3-MCC deficiency | 23 | 25 | 1,649 | 5.1% | 1.1% |
+| Argininosuccinic aciduria | 24 | 9 | 40 | 6.0% | 9.5% |
+| Maple syrup urine disease | 33 | 1 | 888 | 4.1% | 10.8% |
+| HMG-CoA lyase deficiency* | 55 | 18 | 1,001 | 43.2% | 1.1% |
+| Citrullinemia type I | 82 | 20 | 56 | 29.3% | 3.9% |
+| AADC deficiency | 88 | 1,317 | 1,502 | 3.6% | 0.1% |
+| Argininemia | 89 | 32 | 2,013 | 13.5% | 7.8% |
+| OTC deficiency | 168 | 72 | 60 | 7.2% | 1.1% |
+| Homocystinuria | 181 | 765 | 604 | 1.0% | 8.7% |
+| Phenylketonuria* | 186 | 16 | 1,134 | 30.8% | 4.7% |
+| GABA-transaminase deficiency* | 282 | 237 | 18 | 72.8% | 1.1% |
+| ADSL deficiency | 362 | 292 | 71 | 0.1% | 0.1% |
+| Methylmalonic aciduria | 439 | 99 | 106 | 20.7% | 17.2% |
+| Holocarboxylase synthetase deficiency* | 717 | 320 | 284 | 36.9% | 4.8% |
+| Glutaric aciduria type I | 930 | 1,054 | 1,581 | 0.2% | 0.3% |
+| Propionic aciduria | 1,187 | 176 | 170 | 20.3% | 11.0% |
+| *(secondary)* Cobalamin defects | 61 | 70 | 662 | 8.3% | 2.1% |
+
+"Reach a target": share of released walkers absorbed at a target (full
+absorption). \* one-sided run.
+
 ## Reading the results
 
 - Current flow ranks the causal gene far above chance and above the
@@ -117,9 +173,18 @@ MCEE, MMADHC; cobalamin: HCFC1, THAP11; homocystinuria: other causes).
   This is why raw scoring became the default (decision D9).
 - The baseline wins where the defect's signal sits directly on the enzyme
   (PKU, argininemia, citrullinemia).
-- Organic acidurias (MMA, PA, GA) rank poorly with every method; their main
-  markers (acylcarnitines, organic acids) may map poorly or sit behind CoA
-  handling. Open question.
+- The walk with sources = up beats current flow (median 48 against 88.5);
+  with sources = down it is much worse (284). A reading, not a test: in an
+  enzyme defect the substrate side usually rises and the product side falls.
+  With sources = up, walkers start at the accumulated substrates and the
+  blocked enzyme lies on their way to the depleted products. With sources =
+  down they start on the product side, so the faulty enzyme is seldom on a
+  successful route.
+- Organic acidurias (MMA, PA, GA) rank poorly with current flow and the
+  baseline. The walk does better for MMA and PA under either orientation
+  (99 and 176 with sources = up, 106 and 170 with sources = down) but not for
+  GA (1,054 and 1,581). Their main markers (acylcarnitines, organic acids)
+  may map poorly or sit behind CoA handling. Open question.
 
 ## Caveats
 

@@ -41,7 +41,7 @@ protocol leaves a choice open, the choice made here is listed under
 | [docs/decisions.md](docs/decisions.md) | Every methodological decision, with evidence and who decided |
 | [CHANGELOG.md](CHANGELOG.md) | Versions and what changed |
 | [predictions/published_v1/](predictions/published_v1/PREDICTIONS.md) | Sealed blind predictions on published datasets |
-| [predictions/published_v2/](predictions/published_v2/PREDICTIONS.md) | The same units rebuilt with sources = decreased (`python benchmarks/published_predictions.py --from-run predictions/published_v1 --out predictions/published_v2`) |
+| [predictions/published_v2/](predictions/published_v2/PREDICTIONS.md) | The same units rebuilt with sources = down, the default since D20 (`python benchmarks/published_predictions.py --from-run predictions/published_v1 --out predictions/published_v2`) |
 
 Rebuild the report with `python tools/report/build_report.py --public` and the
 atlas with `python tools/atlas/build_atlas.py` (see each script's header).
@@ -326,13 +326,17 @@ release URL and verified by hash.
    its walkers reach a target; for a target, the share of walkers it absorbs.
    Leave-one-out scoring isn't available. Directed cycles can circulate
    walkers, so throughput can exceed 1. See D17 in
-   [docs/decisions.md](docs/decisions.md) for the benchmark. D17 was run
-   with sources = increased. Under the default `--sources decreased` the walk
-   does much worse on the inborn-error benchmark: over the 20 primary
-   disorders the causal gene's median group rank is 284 of 2,302 (48 with
-   sources = increased, 88.5 for current flow). A likely reason, not tested:
-   walkers now start on the product side of the enzyme block. See
-   D20 and [docs/rw_report.html](docs/rw_report.html).
+   [docs/decisions.md](docs/decisions.md) for the benchmark. The walk is
+   reported under both orientations: "sources = up" (significantly increased
+   metabolites are the sources, decreased are the targets; `--sources
+   increased`, as in D17) and "sources = down" (decreased are the sources,
+   increased are the targets; `--sources decreased`, the default). On the
+   inborn-error benchmark, over the 20 primary disorders, the causal gene's
+   median group rank among 2,302 genes is 48 with sources = up and 284 with
+   sources = down (over the 19 it can score); current flow is 88.5 either
+   way. A likely reason, not tested: with sources = down, walkers start on
+   the product side of the enzyme block. See D20, D21 and
+   [docs/rw_report.html](docs/rw_report.html).
 
 ## Decisions still open
 

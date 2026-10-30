@@ -4,6 +4,30 @@ Network counts are for the analysis network (stage 5): metabolite nodes /
 reaction nodes / edges. The reasons behind each change are in
 [docs/decisions.md](docs/decisions.md).
 
+## flip-orientation branch (2026-10-19)
+
+Network unchanged (3,958 / 6,377 / 16,356; edge-list SHA-256 `942cd8ac…`).
+Results are reported at group level only, and the walk under both
+orientations (decision D21).
+
+- **`--levels` default** on `python -m metaboenrich.benchmark` is now
+  `group`. `--levels patient` still runs one analysis per patient on their
+  z-scores alone, for reference only: a single person is not a differential
+  analysis.
+- **Reports are group-only.** Patient medians, shares of patients in the
+  top k and patient rows are removed. Cohort sizes stay. Walk results are
+  shown side by side as "sources = up" (`--sources increased`) and
+  "sources = down" (`--sources decreased`, the default). Group level, 20
+  primary disorders, median rank of the causal gene among 2,302 genes: current
+  flow 88.5 (either orientation); walk 48 with sources = up, 284 with
+  sources = down (over the 19 it can score).
+- **Sources = up reruns** (`results/bench_rw_up/`, current code) match the
+  archived 2026-10-01 runs exactly.
+- **Docs updated**: README, `docs/benchmark.md`, `docs/decisions.md` (D21),
+  both pipeline maps, both methods notes (PDFs rebuilt), `docs/report.html`
+  (edited by hand) and `tools/report/build_report.py` (group-only),
+  `docs/index.html`.
+
 ## flip-orientation branch (2026-10-16)
 
 Network unchanged (3,958 / 6,377 / 16,356; edge-list SHA-256 `942cd8ac…`).

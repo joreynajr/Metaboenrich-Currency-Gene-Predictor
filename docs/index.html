@@ -53,7 +53,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
 <main>
 <header>
-  <div class="eyebrow">Metaboenrich · report library · 2026-10-16</div>
+  <div class="eyebrow">Metaboenrich · report library · 2026-10-19</div>
   <h1>Metaboenrich report library</h1>
   <p class="lede">Every HTML report for the Metaboenrich gene predictor in one place: what each one shows and what data it is
   built on. Repository reports open from this folder; the two analyses from the 2026-10-16 session open on claude.ai (they are
@@ -79,7 +79,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
   <article class="entry" id="pipeline">
     <div class="top"><h3><a href="pipeline.html">Pipeline Map</a></h3>
-      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">hand-written</span></span></div>
+      <span class="tags"><span class="tag ok">updated for D21</span><span class="tag neutral">hand-written</span></span></div>
     <dl>
       <dt>Synopsis</dt><dd>A step-by-step code map of the default run (<code>python -m metaboenrich</code>): load Human-GEM, decide
         currency metabolites, map the DAA table, build the metabolite–reaction graph, solve Kirchhoff current flow, score, write
@@ -88,22 +88,25 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
       <dt>Dataset</dt><dd>Human-GEM 2.0.1, pruned to the locked network of 3,958 metabolites, 6,377 reactions and 16,356 edges; any
         user DAA table. No data is embedded.</dd>
       <dt>Method</dt><dd class="meta">Current flow (grounded sparse LU per component), currency rules, scoring, pathway test.</dd>
-      <dt>Built</dt><dd class="meta">Written by hand from commit 48786d1; updated 2026-10-16 for the orientation change (D20).</dd>
+      <dt>Built</dt><dd class="meta">Written by hand from commit 48786d1; updated 2026-10-16 for the orientation change (D20) and 2026-10-19 for group-level-only reporting (D21).</dd>
     </dl>
   </article>
 
   <article class="entry" id="walk-pipeline">
     <div class="top"><h3><a href="pipeline.random_walk.html">Random Walk Pipeline</a></h3>
-      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">hand-written</span></span></div>
+      <span class="tags"><span class="tag ok">updated for D21</span><span class="tag neutral">hand-written</span></span></div>
     <dl>
       <dt>Synopsis</dt><dd>The same map for the experimental <code>--mode walk</code>, which replaces current flow with a directed,
         non-backtracking absorbing random walk: state space, absorption, reach probability, successful traffic and folding back
-        to scores, with a state-space diagram and a walk-versus-current-flow comparison. Its benchmark summary shows the walk
-        does better than current flow with increased sources and much worse with decreased sources, the default since D20.</dd>
-      <dt>Dataset</dt><dd>Locked Human-GEM network (21,787 walk states); inborn-error benchmark summary (20 disorders, 160
-        patients, rank among 2,302 genes) from runs on 2026-10-16 and 2026-10-01.</dd>
+        to scores, with a state-space diagram and a walk-versus-current-flow comparison. Its group-level benchmark summary shows
+        the walk under both orientations: with sources = up (increased metabolites are the sources) it does better than current
+        flow (median 48 against 88.5); with sources = down (decreased metabolites are the sources, the default since D20) it does
+        much worse (284).</dd>
+      <dt>Dataset</dt><dd>Locked Human-GEM network (21,787 walk states); inborn-error benchmark summary (20 primary disorders, each
+        run on its pooled patients, rank among 2,302 genes) from runs on 2026-10-16 (sources = down) and 2026-10-19 (sources = up).</dd>
       <dt>Method</dt><dd class="meta">Absorbing random walk conditioned on absorption (Doob h-transform), compared with current flow.</dd>
-      <dt>Built</dt><dd class="meta">Written by hand from commit 0f6c135; updated 2026-10-16 with that day's benchmark numbers.</dd>
+      <dt>Built</dt><dd class="meta">Written by hand from commit 0f6c135; updated 2026-10-16 (D20) and 2026-10-19 (D21: group level only,
+        both orientations).</dd>
     </dl>
   </article>
 </section>
@@ -121,54 +124,62 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
         benchmark (raw scoring, leave-one-out and a neighbour baseline, per-disorder ranks), what changed in version 0.2, the
         sealed blind predictions on the lab's 12 published datasets, and the open decisions.</dd>
       <dt>Dataset</dt><dd>Human-GEM network v0.1.1; benchmark plasma metabolomics from Miller et al. 2015 and Thistlethwaite et al.
-        2022 (20 disorders as groups, 160 patients, rank among 2,302 genes); blind units from <code>predictions/published_v1</code>.</dd>
+        2022 (20 disorders, each run on its pooled patients, rank among 2,302 genes); blind units from <code>predictions/published_v1</code>.</dd>
       <dt>Method</dt><dd class="meta">Current flow only, so its numbers hold under either orientation.</dd>
       <dt>Built</dt><dd class="meta">29 September 2026 by <code>tools/report/build_report.py</code>; one sentence edited on
-        2026-10-16 for D20 (it can't be rebuilt locally: lab inputs missing).</dd>
+        2026-10-16 for D20, and the patient rows removed by hand on 2026-10-19 for D21 (it can't be rebuilt locally: lab inputs
+        missing).</dd>
     </dl>
   </article>
 
   <article class="entry" id="rw">
     <div class="top"><h3><a href="rw_report.html">Absorbing Walk Report</a></h3>
-      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated</span></span></div>
+      <span class="tags"><span class="tag ok">updated for D21</span><span class="tag neutral">generated</span></span></div>
     <dl>
       <dt>Synopsis</dt><dd>Benchmarks the absorbing walk against current flow and a neighbour baseline: how high each ranks the known
-        causal gene, per disorder and per patient, with recall curves and a partial-absorption (κ) test. With decreased sources the
-        walk does worse than current flow overall (group median 284 against 88.5); its orientation section shows the walk with
-        increased sources at a median of 48.</dd>
+        causal gene per disorder, at group level, with a partial-absorption (κ) test. The walk is shown under both orientations, side
+        by side: with sources = up (increased metabolites are the sources) its median rank is 48, better than current flow's 88.5;
+        with sources = down (decreased metabolites are the sources, the default) it is 284.</dd>
       <dt>Dataset</dt><dd>Plasma metabolomics from patients with a confirmed inborn error (Thistlethwaite et al. 2020, Miller et al.
-        2015): 20 primary disorders, 159 patients, 1 secondary case; network of 3,958 metabolites and 2,302 genes.</dd>
-      <dt>Method</dt><dd class="meta">Absorbing walk (full and partial absorption) vs current flow vs neighbour baseline.</dd>
-      <dt>Built</dt><dd class="meta">2026-10-16, commit 7b4d0ce, by <code>tools/report/build_rw_report.py</code> from the benchmark runs of that day.</dd>
+        2015), pooled by disorder: 20 primary disorders and 1 secondary case; network of 3,958 metabolites and 2,302 genes.</dd>
+      <dt>Method</dt><dd class="meta">Absorbing walk (full and partial absorption, sources = up and sources = down) vs current flow vs
+        neighbour baseline.</dd>
+      <dt>Built</dt><dd class="meta">By <code>tools/report/build_rw_report.py</code>; rebuilt 2026-10-19 for D21 from the group-level
+        runs of 2026-10-16 (sources = down) and 2026-10-19 (sources = up).</dd>
     </dl>
   </article>
 
   <article class="entry" id="explorer">
     <div class="top"><h3><a href="network_report.html">Network Explorer</a></h3>
-      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated · 3.9 MB</span></span></div>
+      <span class="tags"><span class="tag ok">updated for D21</span><span class="tag neutral">generated</span></span></div>
     <dl>
-      <dt>Synopsis</dt><dd>An interactive Cytoscape viewer of where current flow and the absorbing walk send traffic through Human-GEM
-        for each of the 21 benchmark disorders. Switch between the current-carrying subnetwork, pathway views and the causal gene's
-        neighbourhood, compare the two methods side by side, and see the causal gene's rank under each.</dd>
+      <dt>Synopsis</dt><dd>An interactive Cytoscape viewer of where traffic runs through Human-GEM for each of the 21 benchmark
+        disorders, under three methods: current flow, the absorbing walk with sources = up (increased metabolites are the sources)
+        and the walk with sources = down (decreased metabolites are the sources). Switch between the current-carrying subnetwork,
+        pathway views and the causal gene's neighbourhood, compare the three methods side by side, and see the causal gene's rank
+        under each.</dd>
       <dt>Dataset</dt><dd>21 group-level inborn-error cases (14 from Thistlethwaite et al. 2020, 7 from Miller et al. 2015) on Human-GEM
         2.0.1; group mean z-scores only, no patient-level data.</dd>
-      <dt>Method</dt><dd class="meta">Current flow and absorbing walk, sources = decreased.</dd>
-      <dt>Built</dt><dd class="meta">2026-10-16 by <code>tools/report/build_network_report.py</code>; its ranks match the benchmark (42 of 42).</dd>
+      <dt>Method</dt><dd class="meta">Current flow (either orientation) and the absorbing walk under sources = up and sources = down.</dd>
+      <dt>Built</dt><dd class="meta">By <code>tools/report/build_network_report.py</code>; rebuilt 2026-10-19 for D21. Its ranks are
+        checked against the group benchmark runs.</dd>
     </dl>
   </article>
 
   <article class="entry" id="testing">
     <div class="top"><h3><a href="testing_data.html">Testing Data</a></h3>
-      <span class="tags"><span class="tag ok">updated for D20</span><span class="tag neutral">generated</span></span></div>
+      <span class="tags"><span class="tag ok">updated for D21</span><span class="tag neutral">generated</span></span></div>
     <dl>
       <dt>Synopsis</dt><dd>Describes the two data collections the method is tested on: the inborn-error benchmark (20 primary disorders,
-        1 secondary, 5 excluded, with source paper, cohort, plasma type, patient count and significant changes) and the blind set of
-        12 published papers split into analysis units. Includes a crosswalk of disorders in both and a note on possible patient
-        overlap. It shows no prediction results.</dd>
+        1 secondary, 5 excluded, with source paper, cohort, plasma type, cohort size and group-level significant changes) and the
+        blind set of 12 published papers split into analysis units. Each disorder is one analysis on its pooled patients; there are
+        no per-patient counts. Increased and decreased counts are the same under either orientation; the page says which side holds
+        the sources under sources = up and sources = down. Includes a crosswalk of disorders in both and a note on possible
+        overlap between the two cohorts. It shows no prediction results.</dd>
       <dt>Dataset</dt><dd>Thistlethwaite et al. 2022 (545 plasma samples, 1,364 metabolites) and Miller et al. 2015 (186 samples,
-        1,203 metabolites) via the CTD package; the blind units in <code>predictions/published_v2/units.tsv</code>.</dd>
-      <dt>Method</dt><dd class="meta">Data description; counts of increased and decreased metabolites per disorder.</dd>
-      <dt>Built</dt><dd class="meta">2026-10-16 by <code>tools/report/build_testing_data_report.py</code>.</dd>
+        1,203 metabolites) via the CTD package, pooled by disorder; the blind units in <code>predictions/published_v2/units.tsv</code>.</dd>
+      <dt>Method</dt><dd class="meta">Data description; group-level counts of increased and decreased metabolites per disorder.</dd>
+      <dt>Built</dt><dd class="meta">By <code>tools/report/build_testing_data_report.py</code>; rebuilt 2026-10-19 for D21.</dd>
     </dl>
   </article>
 </section>
@@ -237,7 +248,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
         subgraph focus and exclude, and several layouts.</dd>
       <dt>Dataset</dt><dd>Adam et al. 2013, FH knockout vs control mouse kidney (blind unit 001): 94 mapped metabolites; on the network, 39 decreased
         sources and 33 increased targets.</dd>
-      <dt>Method</dt><dd class="meta">Absorbing walk, sources = decreased; compared with the published current-flow genes.</dd>
+      <dt>Method</dt><dd class="meta">Absorbing walk, sources = down (decreased metabolites are the sources); compared with the published current-flow genes.</dd>
       <dt>Built</dt><dd class="meta">2026-10-16.</dd>
     </dl>
   </article>
@@ -248,7 +259,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
     <dl>
       <dt>Synopsis</dt><dd>One dataset run with <code>--sources decreased</code> and <code>--sources increased</code>, each with the walk
         and with current flow, drawn as two panels of the same graph and layout with each run's roles and traffic overlaid. The walk
-        ranks the causal gene 1 with increased sources and 888 with decreased sources; current flow ranks it 33 either way.</dd>
+        ranks the causal gene 1 with sources = up and 888 with sources = down; current flow ranks it 33 either way.</dd>
       <dt>Dataset</dt><dd>Maple syrup urine disease, 18 patients, group level (Thistlethwaite et al. 2020); causal enzyme BCKDH
         (BCKDHA, BCKDHB, DBT).</dd>
       <dt>Method</dt><dd class="meta">Absorbing walk and current flow under both orientations.</dd>
@@ -260,9 +271,9 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 <section class="group" aria-labelledby="g5">
   <h2 id="g5">Reference notes</h2>
   <div class="notes">
-    <p><a href="decisions.md">Decision log</a>: every methodological choice with its evidence, D1 to D20.</p>
+    <p><a href="decisions.md">Decision log</a>: every methodological choice with its evidence, D1 to D21.</p>
     <p><a href="benchmark.md">Benchmark notes</a>: the inborn-error benchmark's data, cases and method.</p>
-    <p><a href="../predictions/published_v2/PREDICTIONS.md">Blind predictions, v2</a>: the published-dataset units rebuilt under sources = decreased.</p>
+    <p><a href="../predictions/published_v2/PREDICTIONS.md">Blind predictions, v2</a>: the published-dataset units rebuilt under sources = down.</p>
   </div>
 </section>
 
