@@ -1,4 +1,5 @@
-"""Build the absorbing-walk benchmark report (one self-contained HTML page).
+"""Build the absorbing-walk report (one self-contained HTML page): the
+inborn-error benchmark and the lab's published datasets.
 
 Group level only (decision D21): each disorder's patients are pooled. The walk
 is reported under both orientations (D20):
@@ -23,6 +24,10 @@ place of results/bench_rw/, for example
     python -m metaboenrich.benchmark --levels group --sources increased --out results/bench_rw_up/flow
     python -m metaboenrich.benchmark --levels group --sources increased --method walk --out results/bench_rw_up/walk_full
 
+The published datasets: the analysis units in predictions/published_v2/units.tsv
+(read as on the testing-data page) and the causal gene's rank per unit and method in
+    results/published_eval/units.tsv     python benchmarks/published_eval.py --out results/published_eval
+
 Then:
     python tools/report/build_rw_report.py --out docs/rw_report.html
 """
@@ -30,11 +35,14 @@ import argparse
 import html
 import json
 import math
+import re
 import subprocess
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from build_testing_data_report import published_data     # the published units, causal genes completed by the answer key
 
 ROOT = Path(__file__).resolve().parents[2]
 # tag -> (folder, the orientation its runs must record)
@@ -44,6 +52,9 @@ KAPPAS = ["0.5", "1", "2"]
 CFGS = ["flow", "walk_full"] + [f"walk_k{k}" for k in KAPPAS]
 RANK = "rank_metaboenrich_raw"
 LABEL = {"up": "sources = up", "down": "sources = down"}
+EVAL = ROOT / "results" / "published_eval" / "units.tsv"
+EVAL_STATUS = {"ok": "evaluated", "skipped: fewer than 3 metabolites": "skipped: &lt; 3 metabolites",
+               "left out: single subject (D21)": "left out: one subject (D21)"}
 
 
 # ---- formatting -----------------------------------------------------------------
@@ -99,6 +110,14 @@ def plural(n, word, many=None):
     return f"{n} {word if n == 1 else (many or word + 's')}"
 
 
+def top(s, k):
+    return int((s <= k).sum())                  # a missing rank is never in the top k
+
+
+def genes_code(s):
+    return " ".join(f"<code>{esc(g)}</code>" for g in str(s).split(";") if g)
+
+
 # ---- data -----------------------------------------------------------------------
 def run_info(run_dir):
     return json.loads((Path(run_dir) / "run_info.json").read_text())
@@ -141,6 +160,23 @@ def load():
         for k in KAPPAS:
             grp[f"k{k}_{tag}"] = raw[tag, f"walk_k{k}"][RANK].values
     return grp, int(grp.universe.iloc[0])
+
+
+def load_published():
+    """Every published analysis unit with its ranks from benchmarks/published_eval.py. Up / down are the
+    significant metabolites on the network in the evaluation's own run (current flow, sources = down)."""
+    u = published_data().drop(columns=["one_sided"])
+    e = pd.read_csv(EVAL, sep="\t", dtype={"causal_in_network": str})
+    e = e.fillna({"causal_in_network": "", "kind": ""}).rename(columns={"status": "eval_status"})
+    cols = ["unit", "eval_status", "kind", "causal_in_network", "universe", "sources_down", "targets_up", "one_sided",
+            "rank_flow", "rank_walk_up", "rank_walk_down", "rank_neighbour", "walk_success_walk_up",
+            "walk_success_walk_down"]
+    p = u.merge(e[cols], on="unit", how="left", validate="1:1")
+    assert p.eval_status.notna().all(), f"units missing from {EVAL}: {', '.join(p.unit[p.eval_status.isna()])}"
+    p["short"] = p.paper.str.replace(r" et al\.? ", " ", regex=True)
+    p["label"] = p.short + " · " + p.Disease_Group.where(p.Disease_Group != "", p.Comparison)
+    p["ranked"] = p.eval_status.eq("ok") & p.causal_in_network.ne("") & p.rank_flow.notna()
+    return p.sort_values(["year", "paper", "unit"])
 
 
 def git_label():
@@ -186,8 +222,8 @@ def marker(kind, x, y):
             f'{x:.1f},{y + d:.1f} {x - d:.1f},{y:.1f}"/>')
 
 
-def rank_chart(grp, U):
-    """Per disorder: current flow, walk (sources = up) and walk (sources = down) on one log axis."""
+def rank_chart(grp, U, what="disorder"):
+    """Per disorder (or published unit): current flow, walk (sources = up) and walk (sources = down) on one log axis."""
     rows = grp.sort_values(["flow", "disorder"])
     W, row_h, top, bottom = 900, 30, 26, 42
     lab_w, x0, w = 280, 296, 440
@@ -220,7 +256,7 @@ def rank_chart(grp, U):
                      f'{fr(r.flow)} / {fr(r.w_up)} / {fr(r.w_down)}</text></g>')
     parts.append(f'<text class="axis-label" x="{x0 + w / 2}" y="{H - 6}" text-anchor="middle">'
                  f'Rank of the causal gene among {U:,} genes (log scale; left is better)</text>')
-    return (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Rank of the causal gene per disorder: current flow, '
+    return (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Rank of the causal gene per {what}: current flow, '
             f'absorbing walk with sources = up, and absorbing walk with sources = down">{"".join(parts)}</svg>')
 
 
@@ -290,6 +326,18 @@ svg text{font-family:var(--sans)}
 border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.12);max-width:320px;z-index:10}
 .tip[hidden]{display:none}
 .small{font-size:13.5px;color:var(--ink-2)}
+.added{font-size:12.5px;color:var(--muted)}
+.pill{font:500 11px/1.4 var(--mono);color:var(--ink-2);border:1px solid var(--axis);border-radius:10px;padding:1px 7px;white-space:nowrap}
+.papers{display:grid;gap:10px}
+details{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:12px 16px}
+summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";color:var(--muted);font-size:12px}
+details[open]>summary::before{content:"▾"}
+summary .meta{font-size:13px;color:var(--ink-2)}
+.det{display:grid;gap:12px;margin-top:12px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:0;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;min-width:0}
 footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:16px;display:grid;gap:6px}
 """
 
@@ -307,11 +355,159 @@ document.querySelectorAll('[data-tip]').forEach(el=>{
 """
 
 
+PUB_COLS = [("Neighbour", "rank_neighbour"), ("Current flow", "rank_flow"),
+            ("Walk, sources = up", "rank_walk_up"), ("Walk, sources = down", "rank_walk_down")]
+
+
+def unit_ranks(r):
+    """Neighbour, current flow, walk up, walk down for one published unit; '–' where there is no rank."""
+    if not r.ranked:
+        return ["–"] * 4
+    return [fr(r.rank_neighbour), fr(r.rank_flow), f"{fw(r.rank_walk_up)} {change(r.rank_flow, r.rank_walk_up)}",
+            f"{fw(r.rank_walk_down)} {change(r.rank_flow, r.rank_walk_down)}"]
+
+
+def unit_gene(r):
+    note = ""
+    if r.eval_status == "ok" and r.gene and not r.causal_in_network:
+        note = "not a network gene"
+    elif r.eval_status == "ok" and r.causal_in_network and not r.ranked:
+        note = "no significant metabolite on the network"
+    elif r.kind == "contrast":
+        note = "contrast: best rank over both disorders"
+    elif r.gene_added and r.gene:
+        note = "added from the disorder name"
+    return (genes_code(r.gene) or "–") + (f'<br><span class="added">{note}</span>' if note else "")
+
+
+def published_section(p, U):
+    """The published-datasets section and its line for the summary."""
+    assert p.universe.dropna().eq(U).all(), "the published evaluation ranks among a different gene universe"
+    rk = p[p.ranked]
+    dis, con = rk[rk.kind == "disorder"], rk[rk.kind == "contrast"]
+    papers = sorted(p.groupby("paper"), key=lambda x: (x[1].year.iloc[0], x[0]))
+
+    # summary table: one disorder vs controls, and two-disorder contrasts
+    def cells(df, col):
+        s = df[col].dropna()
+        return [fr(s.median()) if len(s) else "–", top(s, 10), top(s, 100)]
+    sum_rows = [[name] + cells(dis, col) + cells(con, col) for name, col in PUB_COLS]
+
+    # per paper
+    paper_rows, blocks = [], []
+    for paper, g in papers:
+        r_ok = g[g.ranked]
+        species = "; ".join(sorted({s for s in g.species if s}))
+        matrices = "; ".join(sorted({s for s in g.Matrix if s}))
+        paper_rows.append([esc(paper), esc(matrices), len(g), int(g.eval_status.eq("ok").sum()), len(r_ok)]
+                          + [fr(r_ok[col].median()) if len(r_ok) else "–" for _, col in PUB_COLS])
+        listed, single = g[g.Subject_ID == ""], g[g.Subject_ID != ""]
+        unit_html = ""
+        if len(listed):
+            rows = []
+            for _, r in listed.iterrows():
+                ud = (f"{fr(r.targets_up)} / {fr(r.sources_down)}" + (" ¹" if str(r.one_sided) == "True" else "")
+                      if r.eval_status == "ok" else "–")
+                comp = esc(r.Comparison) + (f'<br><span class="added">{esc(r.Disease_Group)}</span>' if r.Disease_Group else "")
+                if r.eval_status != "ok":
+                    comp += f'<br><span class="pill">{EVAL_STATUS.get(r.eval_status, esc(r.eval_status))}</span>'
+                rows.append([comp, esc(r.Matrix), unit_gene(r), fr(r.subjects), ud, *unit_ranks(r)])
+            unit_html = table(["Comparison", "Matrix", "Causal gene", "Subjects", "Up / down", "Neighbour", "Current<br>flow",
+                               "Walk,<br>sources = up", "Walk,<br>sources = down"], rows, num=(3, 4, 5, 6, 7, 8), cls="dense")
+        if len(single):
+            left = int(single.eval_status.str.startswith("left out").sum())
+            unit_html += (f'<p class="small">{plural(len(single), "single-patient unit")} not listed: {left} left out because '
+                          f'one person\'s z-scores are not a differential analysis (D21), {len(single) - left} skipped with '
+                          f'fewer than 3 usable metabolites.</p>')
+        genes = sorted({x for s in g.gene for x in str(s).split(";") if x})
+        gene_txt = ", ".join(genes[:14]) + (f" and {len(genes) - 14} more" if len(genes) > 14 else "")
+        rule_txt = "; ".join(sorted({re.sub(r"over \d+ subjects", "over N subjects", str(x)) for x in g.rule}))
+        blocks.append(f"""
+<details>
+  <summary><h3>{esc(paper)}</h3><span class="meta">{plural(len(g), 'unit')} · {int(g.eval_status.eq('ok').sum())} evaluated ·
+  {len(r_ok)} ranked · {esc(species)} · {esc(matrices)}</span></summary>
+  <div class="det">
+  <dl class="kv">
+    <dt>Comparisons</dt><dd>{esc('; '.join(sorted(set(g.Comparison))))}</dd>
+    <dt>Causal genes</dt><dd>{esc(gene_txt) or '–'}</dd>
+    <dt>Rule</dt><dd>{esc(rule_txt)}</dd>
+  </dl>
+  {unit_html}
+  </div>
+</details>""")
+
+    # chart of every ranked unit, in the benchmark chart's form
+    cd = pd.DataFrame({"disorder": rk.label, "causal_in_network": rk.causal_in_network, "up": rk.targets_up,
+                       "down": rk.sources_down, "nb": rk.rank_neighbour, "flow": rk.rank_flow, "w_up": rk.rank_walk_up,
+                       "w_down": rk.rank_walk_down, "s_up": rk.walk_success_walk_up, "s_down": rk.walk_success_walk_down})
+
+    # numbers for the prose
+    n_ev = int(p.eval_status.eq("ok").sum())
+    n_single = int(p.eval_status.str.startswith("left out").sum())
+    n_skip = int(p.eval_status.str.startswith("skipped").sum())
+    n_nonet = int((p.eval_status.eq("ok") & p.causal_in_network.eq("")).sum())
+    n_nosig = n_ev - n_nonet - len(rk)
+    up_better = {k: int((d.rank_walk_up < d.rank_flow).sum()) for k, d in (("dis", dis), ("all", rk))}
+    down_better = int((rk.rank_walk_down < rk.rank_flow).sum())
+    by_paper = rk.groupby("paper")[["rank_flow", "rank_walk_up", "rank_walk_down"]].median()
+    biggest = dis.paper.value_counts()
+    big_txt = (f"{biggest.iloc[0]} of the {len(dis)} come from {esc(biggest.index[0])}" if len(biggest) else "")
+
+    bullet = (f"<li>Published datasets: {len(dis)} one-disorder units from {dis.paper.nunique()} papers have a ranked causal "
+              f"gene. Median rank: current flow {fr(dis.rank_flow.median())}, walk with sources = up "
+              f"{fr(dis.rank_walk_up.median())}, walk with sources = down {fr(dis.rank_walk_down.median())}. Sources = up "
+              f"ranks the gene above current flow in {up_better['dis']} of {len(dis)}; {big_txt}.</li>")
+
+    html_ = f"""
+<section id="published">
+  <h2>Published datasets</h2>
+  <div class="prose">
+    <p>Metabolite tables the lab collected from {len(papers)} published papers, split into analysis units (one per paper,
+    comparison and sample type; by disease group for z-score data; by patient for Alaimo 2020). Each group-level unit is
+    rebuilt from its saved metabolite mapping and run with the current code under the same methods and orientations as the
+    benchmark. Score: the causal gene's rank among the {U:,} genes on network reactions, raw scoring.</p>
+    <p class="small">{len(p)} units: {n_ev} evaluated, {n_single} single-patient units left out (D21), {n_skip} skipped with
+    fewer than 3 usable metabolites. Of the evaluated units, {n_nonet} have a causal gene that is not a network gene (GLUT1, a
+    transporter; MELAS, a mitochondrial tRNA) and {n_nosig} have no significant metabolite on the network, so
+    {len(rk)} get a rank: {len(dis)} one disorder vs controls and {len(con)} two-disorder contrasts.</p>
+  </div>
+  {table(["Method", "One disorder:<br>median", "One disorder:<br>top 10", "One disorder:<br>top 100",
+          "Contrasts:<br>median", "Contrasts:<br>top 10", "Contrasts:<br>top 100"], sum_rows,
+         num=(1, 2, 3, 4, 5, 6), cls="dense")}
+  <p class="small">{len(dis)} one-disorder units, {len(con)} contrasts (Sidorina 2024: e.g. MMA vs CblC, where the best rank
+  over both disorders' genes counts). Sources = up ranks the causal gene above current flow in {up_better['all']} of
+  {len(rk)} ranked units; sources = down in {down_better}.</p>
+  <figure>
+    <div class="legend"><span><i class="sw sw-flow"></i>Current flow (either orientation)</span>
+      <span><i class="sw sw-walk"></i>Walk, sources = up</span><span><i class="sw sw-down"></i>Walk, sources = down</span></div>
+    {rank_chart(cd, U, what="published unit")}
+    <figcaption>One row per ranked unit (paper · disease group or comparison), sorted by current-flow rank. Hover a row for
+    the causal gene and the share of walkers that reach a target.</figcaption>
+  </figure>
+  <h3>By paper</h3>
+  <p class="small">Units from one paper share samples, lab and platform, so they are not independent ({esc(rk.paper.value_counts().index[0])}
+  alone gives {rk.paper.value_counts().iloc[0]} of the {len(rk)} ranked units). Medians per paper over its ranked units give
+  each study one vote: the walk with sources = up
+  has a lower median than current flow in {int((by_paper.rank_walk_up < by_paper.rank_flow).sum())} of {len(by_paper)}
+  papers, sources = down in {int((by_paper.rank_walk_down < by_paper.rank_flow).sum())}.</p>
+  {table(["Paper", "Sample type", "Units", "Evaluated", "Ranked", "Neighbour:<br>median", "Current flow:<br>median",
+          "Walk, up:<br>median", "Walk, down:<br>median"], paper_rows, num=(2, 3, 4, 5, 6, 7, 8), cls="dense")}
+  <h3>Units, paper by paper</h3>
+  <div class="papers">{''.join(blocks)}</div>
+  <p class="small">Units without ranks are marked under the comparison: skipped (fewer than 3 usable metabolites) or left
+  out. Up / down: significant metabolites on the network, increased and decreased. ¹ One-sided. ▲ and ▼ mark a
+  walk rank above or below current flow. Causal genes come from the master table's Gene column, completed by
+  <code>benchmarks/published_answer_key.tsv</code> where a unit names only the disorder. Rules were fixed before any result
+  was seen: log2FC data, p &lt; 0.05; several subjects with z-scores, BH q &lt; 0.05 and |mean z| ≥ 1.</p>
+</section>"""
+    return html_, bullet
+
+
 def build(out):
     grp_all, U = load()
     grp = grp_all[grp_all.status == "primary"]
     N = len(grp)
-    top = lambda s, k: int((s <= k).sum())          # a missing rank is never in the top k
+    pub_html, pub_bullet = published_section(load_published(), U)
 
     stats = {"flow": grp.flow}
     stats.update({tag: grp[f"w_{tag}"] for tag in RUNS})
@@ -427,9 +623,10 @@ def build(out):
 
 <header class="prose">
   <div class="eyebrow">Metaboenrich · {esc(git_label())}</div>
-  <h1>Absorbing random walk: benchmark</h1>
-  <p class="lede">How well the experimental direction-respecting walk (<code>--mode walk</code>) finds the faulty enzyme in
-  inborn errors of metabolism under each orientation, compared with the current-flow method. Group level only.</p>
+  <h1>Absorbing random walk: benchmark and published datasets</h1>
+  <p class="lede">How well the experimental direction-respecting walk (<code>--mode walk</code>) finds the faulty enzyme under
+  each orientation, compared with the current-flow method: first on the inborn-error benchmark, then on the lab's published
+  datasets. Group level only.</p>
 </header>
 
 <section class="summary">
@@ -445,6 +642,7 @@ def build(out):
       walkers that reach a target is {share(succ_med['up'])} with sources = up and {share(succ_med['down'])} with sources = down.</li>
     <li>Partial absorption (hook 2, κ) moves the group median by at most {plural_rank(kappa_shift['up'])} with sources = up and
       {plural_rank(kappa_shift['down'])} with sources = down. Full absorption stays the default.</li>
+    {pub_bullet}
     <li>Group level only: each disorder's patients are pooled. Patient-level runs were dropped (decision D21).</li>
   </ul>
 </section>
@@ -458,7 +656,7 @@ def build(out):
     2020, Miller et al. 2015). Each disorder's patients are pooled (BH q &lt; 0.05 and |mean z| ≥ 1) and the run goes from
     the pooled metabolite changes to a ranked gene list. The score is where the known causal gene lands among the {U:,} genes
     on network reactions (1 = top). {N} primary disorders count; {plural(len(sec), 'secondary case')} {'is' if len(sec) == 1 else 'are'} shown apart.</p>
-    <p><b>Current flow</b> is the method used in the sealed blind predictions: Kirchhoff current between every source and
+    <p><b>Current flow</b> is the package default: Kirchhoff current between every source and
     every target on the undirected network, raw scoring. Swapping sources and targets only reverses the current, so its ranks
     are the same under both orientations.</p>
     <p><b>Absorbing walk</b>: walkers start at the sources in proportion to |log2FC|, follow reaction directions, and stop at
@@ -478,7 +676,7 @@ def build(out):
 </section>
 
 <section>
-  <h2>Disorders</h2>
+  <h2>Benchmark: disorders</h2>
   <figure>
     <div class="legend"><span><i class="sw sw-flow"></i>Current flow (either orientation)</span>
       <span><i class="sw sw-walk"></i>Walk, sources = up</span><span><i class="sw sw-down"></i>Walk, sources = down</span></div>
@@ -526,25 +724,32 @@ def build(out):
     <p class="small">These are readings of the runs, not a test.</p>
   </div>
 </section>
+{pub_html}
 
 <section>
   <h2>Caveats</h2>
   <ul class="prose">
-    <li>One benchmark, {N} disorders, all plasma. The settings were not tuned on it, but the walk was designed after seeing
+    <li>The benchmark has {N} disorders, all plasma. The settings were not tuned on it, but the walk was designed after seeing
       current flow's results on the same data, and both orientations were compared on it, so treat any difference as provisional.</li>
+    <li>The published datasets are small and clustered: few ranked units, several from the same paper, mixed species and
+      sample types. Read the per-paper medians alongside the per-unit counts.</li>
+    <li>Both collections have now been seen. No held-out data remain, so a choice of default method or orientation made from
+      this page rests on data that also informed it.</li>
+    <li>Some patients may be in both collections (urea-cycle disorders in Burrage 2019, GABA-transaminase deficiency in
+      Kennedy 2019, the Alaimo samples); see <a href="testing_data.html#overlap">the testing-data page</a>. Until that is
+      checked, the two are not fully independent evidence.</li>
     <li>Patient-level runs were dropped (decision D21): one patient's z-scores against a reference population are not a
       differential analysis.</li>
     <li>The walk depends on Human-GEM's reversibility labels (from flux bounds). Wrong labels block or open routes.</li>
     <li>Leave-one-out scoring isn't defined for the walk; all comparisons here use raw scoring for every method.</li>
-    <li>The sealed blind predictions were made with current flow. Whether the walk becomes the default, and under which
-      orientation, should be decided before the next blind round, not after looking at those answers.</li>
   </ul>
 </section>
 
 <footer>
   <span>Built by <code>tools/report/build_rw_report.py</code> from <code>results/bench_rw/</code> (sources = down) and
-  <code>results/bench_rw_up/</code> (sources = up). Method: <code>metaboenrich/walk.py</code>; decision log entries D17, D20
-  and D21.</span>
+  <code>results/bench_rw_up/</code> (sources = up); published datasets from <code>predictions/published_v2/units.tsv</code>
+  and <code>results/published_eval/units.tsv</code>. Method: <code>metaboenrich/walk.py</code>; decision log entries D17,
+  D20 and D21.</span>
 </footer>
 </main>
 <div class="tip" id="tip" hidden></div>

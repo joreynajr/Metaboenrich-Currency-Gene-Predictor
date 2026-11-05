@@ -5,17 +5,19 @@ The benchmark is described at group level only (decision D21): one analysis per
 disorder, pooling its patients. Per-patient runs are not used.
 
 Two collections:
-  1. Inborn-error benchmark (answer key known): plasma z-scores from the CTD R
-     package (Thistlethwaite 2020 dataset, Miller 2015), cases in benchmarks/cases.tsv.
-  2. Blind published datasets (answer key withheld, decision D14): the analysis
-     units in predictions/published_v2/units.tsv. Only the data description is
-     used; prediction ranks are left out, and the answer key is never read.
+  1. Inborn-error benchmark: plasma z-scores from the CTD R package
+     (Thistlethwaite 2020 dataset, Miller 2015), cases in benchmarks/cases.tsv.
+  2. Published datasets: the analysis units in predictions/published_v2/units.tsv,
+     causal genes completed by benchmarks/published_answer_key.tsv, and the
+     causal gene's rank per unit and method from benchmarks/published_eval.py.
 
 Inputs (data/ and results/ are not committed):
     data/benchmark/{thistlethwaite2020.csv, miller2015.csv, cohorts_coded.tsv}   python benchmarks/get_benchmark_data.py
     benchmarks/cases.tsv
     results/bench_rw/flow/group_results.tsv        python -m metaboenrich.benchmark --levels group --out results/bench_rw/flow
     predictions/published_v2/units.tsv
+    benchmarks/published_answer_key.tsv
+    results/published_eval/units.tsv               python benchmarks/published_eval.py --out results/published_eval
 
     python tools/report/build_testing_data_report.py --out docs/testing_data.html
 """
@@ -32,11 +34,16 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "benchmarks"))
 
 from metaboenrich.benchmark import load_miller, load_t2020   # noqa: E402
+from published_eval import KEY, METHODS, causal_genes        # noqa: E402
 
 GROUP = ROOT / "results" / "bench_rw" / "flow" / "group_results.tsv"
 UNITS = ROOT / "predictions" / "published_v2" / "units.tsv"
+EVAL = ROOT / "results" / "published_eval" / "units.tsv"
+METHOD_LABELS = {"flow": "Current flow", "walk_up": "Walk, sources = up", "walk_down": "Walk, sources = down",
+                 "neighbour": "Neighbour baseline"}
 
 
 def sources_are(run_dir):
@@ -56,19 +63,12 @@ def up_down(df, orient):
 
 ORIENT = sources_are(GROUP.parent)
 CASES = ROOT / "benchmarks" / "cases.tsv"
+# The paper behind each benchmark dataset (as on the source-paper cards).
+PAPERS = {"t2020": "Thistlethwaite et al. 2022, Sci Rep", "miller": "Miller et al. 2015, J Inherit Metab Dis"}
 
 # Thistlethwaite 2020 cohorts that are not disorders.
 T2020_NON_DISEASE = {"edta_refs": "EDTA-plasma reference samples", "hep_refs": "Heparin-plasma reference samples",
                      "alaimo": "Alaimo et al. samples (not used by the benchmark)"}
-# Blind-set comparisons named only by disorder: the standard causal gene, added
-# here for the cross-reference (marked as added in the page). A comparison that
-# names two disorders (Sidorina 2024, e.g. "MMA vs CblC") gets both genes.
-BLIND_ALIASES = [
-    ("Arginase deficiency", "ARG1"), ("Argininosuccinate lyase deficiency", "ASL"),
-    ("Citrullinemia type 1", "ASS1"), ("Ornithine transcarbamylase deficiency", "OTC"),
-    ("MNGIE", "TYMP"), ("Lesch-Nyhan", "HPRT1"), ("VLCADD", "ACADVL"), ("Fumarase", "FH"),
-    ("MMA", "MMUT"), ("PA vs", "PCCA;PCCB"), ("CblC", "MMACHC"),
-]
 
 
 def esc(x):
@@ -79,6 +79,13 @@ def fint(x):
     if x is None or (isinstance(x, float) and np.isnan(x)):
         return "–"
     return f"{int(round(float(x))):,}"
+
+
+def frank(x):
+    """A rank; ties averaged by the tail rule can end in .5."""
+    if x is None or (isinstance(x, float) and np.isnan(x)):
+        return "–"
+    return f"{float(x):,.1f}" if float(x) % 1 else f"{int(x):,}"
 
 
 def git_label():
@@ -153,7 +160,7 @@ def benchmark_data():
     return bench, t_info, m_info
 
 
-# ---- blind set ----------------------------------------------------------------------
+# ---- published datasets -------------------------------------------------------------
 def subjects_in_rule(rule):
     m = re.search(r"over (\d+) subjects", str(rule))
     if m:
@@ -161,7 +168,7 @@ def subjects_in_rule(rule):
     return 1 if "one subject" in str(rule) else None
 
 
-def blind_data():
+def published_data():
     u = pd.read_csv(UNITS, sep="\t")
     u["subjects"] = u.rule.map(subjects_in_rule)
     u["ok"] = u.status.eq("ok")
@@ -170,17 +177,32 @@ def blind_data():
     u["Subject_ID"] = u.Subject_ID.str.replace(r"\.0$", "", regex=True)
     u["year"] = u.source.str.extract(r"(\d{4})").astype(int)
     u["paper"] = u.source.str.replace(r" et al ", " et al. ", regex=False)
-
-    def gene_for(r):
-        if r.diagnosed_gene_in_data:
-            return r.diagnosed_gene_in_data, False
-        text = f"{r.Comparison} {r.Disease_Group}"
-        found = [g for key, g in BLIND_ALIASES if key in text]
-        return ";".join(found), bool(found)
-    gg = u.apply(gene_for, axis=1)
-    u["gene"] = [g for g, _ in gg]
-    u["gene_added"] = [a for _, a in gg]
+    # causal genes as the evaluation uses them: the data's Gene column, completed by the answer key
+    key = pd.read_csv(KEY, sep="\t").fillna("")
+    genes = causal_genes(u, key)
+    u["gene"] = u.unit.map(lambda x: ";".join(genes[x][0]))
+    u["gene_added"] = u.unit.isin(set(key.unit))
     return u
+
+
+def eval_data(u):
+    """Per-unit ranks from benchmarks/published_eval.py, with the paper and comparison of each unit."""
+    e = pd.read_csv(EVAL, sep="\t", dtype={"causal_in_network": str}).fillna({"causal_in_network": "", "kind": ""})
+    e = e[e.status == "ok"].merge(u[["unit", "paper", "year", "Comparison", "Disease_Group", "Matrix"]], on="unit")
+    return e.sort_values(["year", "paper", "unit"])
+
+
+def eval_summary(e):
+    """Rows of median / top 10 / top 100 per method over the units with a scorable causal gene."""
+    rows = []
+    for name in [m[0] for m in METHODS] + ["neighbour"]:
+        r = e[f"rank_{name}"]
+        if name == "neighbour":
+            r = r[e.rank_flow.notna()]                 # the same units the methods score
+        s = r.dropna()
+        rows.append([METHOD_LABELS[name], len(s), frank(s.median()) if len(s) else "–", int((s <= 10).sum()),
+                     int((s <= 100).sum())])
+    return rows
 
 
 # ---- charts -------------------------------------------------------------------------
@@ -328,16 +350,18 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--rule);paddin
 
 def build(out):
     bench, t, m = benchmark_data()
-    u = blind_data()
+    u = published_data()
+    e = eval_data(u)
     used = bench[bench.status != "excluded"]
     prim = bench[bench.status == "primary"]
 
     # ---- headline tiles
+    scorable = e[e.causal_in_network != ""]
     tiles = [
         (f"{len(prim)}", "primary benchmark disorders"),
         (f"{int(prim.patients.sum())}", "primary benchmark patients"),
-        (f"{u.paper.nunique()}", "published papers in the blind set"),
-        (f"{len(u)} / {int(u.ok.sum())}", "blind analysis units / run"),
+        (f"{u.paper.nunique()}", "published papers"),
+        (f"{len(u)} / {len(e)}", "published analysis units / evaluated"),
     ]
     tiles_html = "".join(f'<div class="tile"><b>{a}</b><span>{esc(b)}</span></div>' for a, b in tiles)
 
@@ -380,23 +404,25 @@ def build(out):
         sub = bench[bench.status == status].sort_values(["category", "disorder"])
         if not len(sub):
             continue
-        rows.append([f'<tr class="group"><td colspan="9">{status} ({len(sub)})</td></tr>'])
+        rows.append([f'<tr class="group"><td colspan="10">{status} ({len(sub)})</td></tr>'])
         for _, r in sub.iterrows():
             rows.append([
                 f"<b>{esc(r.disorder)}</b>" + (f'<br><span class="added">{esc(r.note)}</span>' if r.note else ""),
                 esc(r.category), genes_html(r.genes),
-                f'<span class="pill {r.dataset}">{r.dataset}</span>', esc(r.plasma), fint(r.patients), fint(r.measured),
+                f'<span class="pill {r.dataset}">{r.dataset}</span>', esc(PAPERS[r.dataset]), esc(r.plasma),
+                fint(r.patients), fint(r.measured),
                 fint(r.get("sig")), f'{fint(r.get("up"))} / {fint(r.get("down"))}' + (" ¹" if r.get("one_sided") is True else "")])
-    head = ["Disorder", "Category", "Causal gene(s)", "Data", "Plasma", "Patients", "Metabolites tested",
+    head = ["Disorder", "Category", "Causal gene(s)", "Data", "Paper", "Plasma", "Patients", "Metabolites tested",
             "Significant (group)", "Up / down on network"]
+    num = (6, 7, 8, 9)
     body = []
     for r in rows:
         if len(r) == 1:
             body.append(r[0])
         else:
-            body.append("<tr>" + "".join(f'<td class="num">{c}</td>' if i in (5, 6, 7, 8) else f"<td>{c}</td>"
+            body.append("<tr>" + "".join(f'<td class="num">{c}</td>' if i in num else f"<td>{c}</td>"
                                          for i, c in enumerate(r)) + "</tr>")
-    hd = "".join(f'<th class="num">{h}</th>' if i in (5, 6, 7, 8) else f"<th>{h}</th>" for i, h in enumerate(head))
+    hd = "".join(f'<th class="num">{h}</th>' if i in num else f"<th>{h}</th>" for i, h in enumerate(head))
     disease_table = f'<div class="tbl"><table><thead><tr>{hd}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
 
     # ---- by category
@@ -425,7 +451,33 @@ def build(out):
             use = "taken from Thistlethwaite instead (same heparin cohort)"
         m_rows.append([esc(k), n, use])
 
-    # ---- blind set, per paper
+    # ---- published datasets: evaluation
+    sum_head = ["Method", "Units scored", "Median rank", "Top 10", "Top 100"]
+    disorder_table = table(sum_head, eval_summary(scorable[scorable.kind == "disorder"]), num=(1, 2, 3, 4))
+    contrast_table = table(sum_head, eval_summary(scorable[scorable.kind == "contrast"]), num=(1, 2, 3, 4))
+    names = [m[0] for m in METHODS]
+    eval_rows = []
+    for _, r in e.iterrows():
+        ranks = {n: r[f"rank_{n}"] for n in names + ["neighbour"]}
+        best = min((v for n, v in ranks.items() if n != "neighbour" and pd.notna(v)), default=None)
+        cells = [f"<b>{frank(v)}</b>" if best is not None and v == best else frank(v) for v in ranks.values()]
+        if not r.causal_in_network:
+            gene = genes_html(r.causal_genes) + ' <span class="added">(not a network gene)</span>'
+            cells = ["–"] * len(cells)
+        else:
+            gene = genes_html(r.causal_in_network) + (' <span class="added">(contrast)</span>' if r.kind == "contrast" else "")
+            if pd.isna(r.rank_flow):
+                cells[:-1] = ['<span class="added">no current</span>'] * (len(cells) - 1)
+        eval_rows.append([esc(r.paper), esc(r.Comparison) + (f"<br><span class=\"added\">{esc(r.Disease_Group)}</span>"
+                          if r.Disease_Group else ""), esc(r.Matrix), gene,
+                          f"{fint(r.sources_down)} / {fint(r.targets_up)}" + (" ¹" if str(r.one_sided) == "True" else ""), *cells])
+    eval_table = table(["Paper", "Comparison", "Matrix", "Causal gene", "Down / up", *[METHOD_LABELS[n] for n in names],
+                        "Neighbour"], eval_rows, num=(4, 5, 6, 7, 8))
+    n_noflow = int(((scorable.rank_flow.isna())).sum())
+    n_nonet = int((e.causal_in_network == "").sum())
+    n_single = int((u.ok & (u.Subject_ID != "")).sum())
+
+    # ---- published datasets, per paper
     paper_blocks = []
     for paper, g in sorted(u.groupby("paper"), key=lambda x: (x[1].year.iloc[0], x[0])):
         species = "; ".join(sorted({s for s in g.species if s}))
@@ -474,7 +526,7 @@ def build(out):
           len(g), int(g.ok.sum()), fint(g.metabolites.median())]
          for p, g in sorted(u.groupby("paper"), key=lambda x: (x[1].year.iloc[0], x[0]))], num=(3, 4, 5))
 
-    # ---- disease crosswalk: benchmark genes that also appear in the blind set
+    # ---- disease crosswalk: benchmark genes that also appear in the published datasets
     cross = []
     for _, r in bench.iterrows():
         gs = set(r.genes.split(";"))
@@ -483,7 +535,7 @@ def build(out):
             papers = "; ".join(f"{p} ({len(h)} unit{'s' if len(h) != 1 else ''})" for p, h in hit.groupby("paper"))
             cross.append([esc(r.disorder), genes_html(r.genes), f'<span class="pill {r.status}">{r.status}</span>',
                           fint(r.patients), esc(papers)])
-    cross_table = table(["Disorder", "Gene(s)", "Benchmark status", "Benchmark patients", "Also in the blind set"],
+    cross_table = table(["Disorder", "Gene(s)", "Benchmark status", "Benchmark patients", "Also in the published datasets"],
                         cross, num=(3,))
 
     # ---- overlaps
@@ -504,20 +556,21 @@ def build(out):
   patients each has, and how a metabolite counts as changed. Two collections, kept apart on purpose.</p>
   <nav class="toc"><a href="#overview">Overview</a><a href="#bench-papers">Benchmark: papers</a>
   <a href="#bench-diseases">Benchmark: diseases</a><a href="#bench-cohorts">Benchmark: cohorts</a>
-  <a href="#blind">Blind set: papers</a><a href="#crosswalk">Disease crosswalk</a><a href="#overlap">Overlaps</a></nav>
+  <a href="#published">Published: papers</a><a href="#published-eval">Published: evaluation</a>
+  <a href="#crosswalk">Disease crosswalk</a><a href="#overlap">Overlaps</a></nav>
 </header>
 
 <section id="overview">
   <div class="tiles">{tiles_html}</div>
   <div class="summary">
-    <p><strong>1. Inborn-error benchmark (answer known).</strong> Untargeted plasma metabolomics from patients with a
+    <p><strong>1. Inborn-error benchmark.</strong> Untargeted plasma metabolomics from patients with a
     confirmed single-enzyme defect, as per-sample z-scores against reference plasma. The question is where the method ranks
     the known causal gene among the 2,302 genes on the network. These data were used to choose settings (raw scoring,
     decision D9) and to compare methods (current flow vs the absorbing walk, D17).</p>
-    <p><strong>2. Blind published datasets (answer withheld).</strong> Metabolite tables the lab collected from published
-    papers, split into analysis units. Predictions were made and committed before anyone opened the answer key (each
-    paper's conclusions and the "Expected tool prediction" sheet; decision D14). This page uses only the data description
-    in <code>predictions/published_v2/units.tsv</code>. It shows no prediction results and reads no answer key.</p>
+    <p><strong>2. Published datasets.</strong> Metabolite tables the lab collected from published papers, split into
+    analysis units. Each group-level unit with a known causal gene is scored the same way as the benchmark: the causal
+    gene's rank among the 2,302 network genes, under current flow, the walk with either orientation and the neighbour
+    baseline. Single-patient units (Alaimo 2020) are described but not evaluated (D21).</p>
   </div>
 </section>
 
@@ -570,8 +623,8 @@ def build(out):
   {table(["Diagnosis", "Samples", "Use"], m_rows, num=(1,))}
 </section>
 
-<section id="blind">
-  <h2>2 · Blind set: papers</h2>
+<section id="published">
+  <h2>2 · Published datasets: papers</h2>
   <p class="small">Built by <code>benchmarks/published_predictions.py</code> from the lab's standardised master table.
   One unit per (paper, comparison, sample type), split further by disease group for z-score data and by patient for
   Alaimo 2020. Rules were fixed before any result was seen: log2FC data, p &lt; 0.05; several subjects with z-scores,
@@ -580,11 +633,32 @@ def build(out):
   {''.join(paper_blocks)}
 </section>
 
+<section id="published-eval">
+  <h2>2 · Published datasets: evaluation</h2>
+  <p class="small">Built by <code>benchmarks/published_eval.py</code>. Each run unit is rebuilt from its saved metabolite
+  mapping and run with the current code. Score: the causal gene's rank among the 2,302 genes on network reactions, raw
+  scoring; a gene a method does not score gets the mean of the remaining ranks (as in the benchmark). Current flow gives
+  the same ranks under either orientation (D21). {len(e)} group-level units evaluated; {n_single} single-patient units
+  left out (D21); {n_nonet} have a causal gene that is not a network gene (GLUT1, a transporter; MELAS, a mitochondrial
+  tRNA); {n_noflow} have no significant metabolites on the network, so no method yields a rank.</p>
+  <h3>One disorder vs controls</h3>
+  {disorder_table}
+  <h3>Two-disorder contrasts</h3>
+  <p class="small">Sidorina 2024 compares disorders with each other (e.g. MMA vs CblC); the best rank over both
+  disorders' genes counts.</p>
+  {contrast_table}
+  <p class="small">The neighbour row covers the units the methods score, so its median compares like with like.</p>
+  <h3>Per unit</h3>
+  {eval_table}
+  <p class="small">Bold: the best of the three methods for that unit. Down / up: significant metabolites on the network,
+  decreased and increased. ¹ One-sided.</p>
+</section>
+
 <section id="crosswalk">
   <h2>Disease crosswalk</h2>
-  <p class="small">Benchmark disorders whose causal gene also appears in the blind set. Where a blind unit names only the
-  disorder (Burrage 2019, Du 2023, Sidorina 2024, Reisz 2023, Sebaa 2023, Hou 2017), its standard gene was added here
-  for matching; those are marked "added" in the paper tables.</p>
+  <p class="small">Benchmark disorders whose causal gene also appears in the published datasets. Where a unit names only
+  the disorder (Burrage 2019, Du 2023, Sidorina 2024, Reisz 2023, Sebaa 2023, Hou 2017), its standard gene comes from
+  <code>benchmarks/published_answer_key.tsv</code>; those are marked "added" in the paper tables.</p>
   {cross_table}
 </section>
 
@@ -592,10 +666,11 @@ def build(out):
   <h2>Possible patient overlap</h2>
   <div class="warn">
     <p>Several papers in both collections come from the same clinical metabolomics programme, so some patients may appear
-    in both. Nothing here proves an overlap; it should be checked before blind results are scored.</p>
+    in both. Nothing here proves an overlap. Where patients are shared, a published result partly repeats the benchmark,
+    so the two collections should not be counted as independent evidence until this is checked.</p>
     <ul>
       <li>The Thistlethwaite data include an <code>alaimo</code> cohort of {t['cohorts'].get('alaimo', 0)} samples
-      (<code>ALAIMO-…</code>). The benchmark does not use it, but the blind set's Alaimo 2020 patients may be the same people.</li>
+      (<code>ALAIMO-…</code>). The benchmark does not use it, but the published Alaimo 2020 patients may be the same people.</li>
       <li>Urea-cycle disorders. Burrage 2019 groups (subjects): {burrage_txt}. Benchmark cohorts (patients): {bench_uc}.</li>
       <li>GABA-transaminase deficiency appears in the benchmark ({fint(bench.set_index('case').patients.get('abat'))} patients)
       and in Kennedy 2019.</li>
@@ -607,9 +682,10 @@ def build(out):
 
 <footer>
   <span>Built by <code>tools/report/build_testing_data_report.py</code> from the CTD data, <code>benchmarks/cases.tsv</code>,
-  the current-flow benchmark results and <code>predictions/published_v2/units.tsv</code> ({esc(git_label())}).</span>
+  the current-flow benchmark results, <code>predictions/published_v2/units.tsv</code>,
+  <code>benchmarks/published_answer_key.tsv</code> and <code>results/published_eval/units.tsv</code> ({esc(git_label())}).</span>
   <span>Related: <a href="benchmark.md">benchmark.md</a> · <a href="rw_report.html">rw_report.html</a> ·
-  <a href="decisions.md">decisions.md</a> (D9, D14, D17, D21) · <a href="../predictions/published_v2/PREDICTIONS.md">PREDICTIONS.md</a></span>
+  <a href="decisions.md">decisions.md</a> (D9, D17, D21) · <a href="../predictions/published_v2/PREDICTIONS.md">PREDICTIONS.md</a></span>
 </footer>
 </main>
 """
