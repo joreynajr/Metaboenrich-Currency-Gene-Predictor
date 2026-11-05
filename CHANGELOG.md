@@ -34,6 +34,20 @@ Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
   review (`handoff/rule4_reviewed.csv`) are all kept. Rules audit: Links tab
   gains 'carbon budget' and the Rule 4 fate. 3,808 metabolites / 6,066
   reaction nodes / 12,688 edges.
+- **Safeguard pick switch** (`rescue_pick` in `carbon_method_pairs` /
+  `carbon_method_rules`, `structure.RESCUE_PICK`; default "rarest", network
+  unchanged): "carbon" keeps the pair sharing the most carbons, "central" the
+  pair whose metabolites keep the most links. Group benchmark median 140.5
+  (rarest) / 134.0 (carbon) / 131.5 (central); central restores twice as many
+  hub couples (ATP/ADP, acetyl-CoA/CoA).
+- **Lipid merge experiment** (`fatty_acyl_coas`, `lipid_merge`, stage set
+  `lipid_merge`; the three_rule stages are not changed): the final network with
+  fatty acyl-CoAs (C13-C21 / C22+, or C12+), acyl-[ACP] and 1-acylglycerol-3P
+  C12+ merged. Non-fatty CoAs (bile acid, leukotriene, retinoyl) never merge;
+  acylcarnitines never merge. Close to neutral on the benchmark (median 136-137);
+  emptied reactions come back through NAD(P)/FAD couples. Report and the
+  gene-score bias it found (best-of-k scoring favours many-node genes) in
+  `handoff/report_lipid_lumping_test.md`.
 
 ## 3_rule_pruning branch (2026-10-06)
 

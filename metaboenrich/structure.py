@@ -45,6 +45,8 @@ def stages(model, stage_set="pruning", atom_dir="data", couple_min_reactions=Non
         return _carbon_stages(model, atom_dir, couple_min_reactions)
     if stage_set == "three_rule":
         return _three_rule_stages(model, atom_dir, couple_min_reactions)
+    if stage_set == "lipid_merge":
+        return _lipid_merge_stages(model, atom_dir, couple_min_reactions)
     return [s + ({},) for s in _pruning_stages(model)]
 
 
@@ -98,6 +100,7 @@ KEPT_RAREST_LOG = []
 KEPT_RAREST_LOG_RULES12 = []
 CARRIERS_FOUND = {}
 CARBON_BUDGET_LOG = []
+RESCUE_PICK = "rarest"   # the safeguard's choice in the final stage (atoms.RESCUE_PICKS)
 
 
 def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
@@ -129,13 +132,14 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
     c_pairs, _ = carbon_method_pairs(model, union, n_min, **cr)
     c_rules = carbon_method_rules(model, c_pairs, couples, pools, carriers=carriers)
     log = []
-    cl_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, log=log, **cr)
+    cl_pairs, _ = carbon_method_pairs(model, union, n_min, keep_rarest=True, no_rescue=shared, log=log,
+                                      rescue_pick=RESCUE_PICK, **cr)
     kegg = kegg_pairs_for_model(model, Path(atom_dir) / "Human-GEM.xml", Path(atom_dir) / "kegg_rclass_pairs.json")
     CARBON_BUDGET_LOG.clear()
     cl_pairs = carbon_budget_pairs(model, cl_pairs, {rid: {tuple(p) for p in ps} for rid, ps in kegg.items()},
                                    carbon_unbalanced(model), CARBON_BUDGET_LOG)
     cl_rules = carbon_method_rules(model, cl_pairs, couples, pools, keep_rarest=True, no_rescue=shared, log=log,
-                                   carriers=carriers)
+                                   carriers=carriers, rescue_pick=RESCUE_PICK)
     KEPT_RAREST_LOG[:] = log
 
     log0 = []
@@ -191,6 +195,69 @@ def _three_rule_stages(model, atom_dir, couple_min_reactions=None):
          ml_rules, 20, True, {"atom_pairs": ml_pairs, **drop, **mg}),
         first,
     ]
+
+
+LIPID_MERGE_LOG = {}   # stage key -> [{reaction, genes, kept_pair, kept_pair_count}] for reactions the merge empties
+LIPID_MERGE_MEMBERS = {}
+
+
+def _lipid_merge_stages(model, atom_dir, couple_min_reactions=None):
+    """The final 3-rule network with lipid chain-length ladders merged, one
+    change at a time (experiment; the three_rule stages are not changed).
+
+    The final network's pairs are renamed through the merge and pairs inside
+    one merged node dropped; nothing else is recomputed (couples, carriers and
+    Rule 4 stay as in the final network). A reaction the merge leaves with no
+    pair gets the safeguard: its rarest other carbon pair, never one Rule 4
+    removed, never in a membrane-crossing reaction; with none it drops out."""
+    from .atoms import (ACYL_COA_CLASSES, LIPID_MIN_CARBONS, carbon_rule1_pairs, lipid_merge, load_atom_pairs,
+                        transport_reactions)
+    base = {s[0]: s for s in _three_rule_stages(model, atom_dir, couple_min_reactions)}["three_rule"]
+    rules, extra = base[3], base[6]
+    final = extra["atom_pairs"]
+    rule4 = {(x["reaction"], tuple(x["pair"])) for x in CARBON_BUDGET_LOG}
+    rule1 = carbon_rule1_pairs(model, load_atom_pairs(Path(atom_dir) / "atom_pairs_union.json"))
+    freq = {}
+    for ps in rule1.values():
+        for p in {tuple(sorted(p)) for p in ps}:
+            freq[p] = freq.get(p, 0) + 1
+    shared = transport_reactions(model, carbon_cargo=False)
+    smiles = Path(atom_dir) / "Human-GEM_metabolites.tsv"
+    c12 = ((LIPID_MIN_CARBONS, 999, "ACYLCOA_LONG", f"long-chain acyl-CoA (C{LIPID_MIN_CARBONS}+)"),)
+    variants = (
+        ("lipid_coa_classes", "acyl-CoA C13-C21 and C22+ (fatty only)", {"coa_classes": ACYL_COA_CLASSES}),
+        ("lipid_coa12", "acyl-CoA C12+ (fatty only)", {"coa_classes": c12}),
+        ("lipid_coa12_acp", "acyl-CoA C12+ and acyl-[ACP] C12+", {"coa_classes": c12, "acp": True}),
+        ("lipid_coa12_acp_ag3p", "acyl-CoA, acyl-[ACP] and 1-acylglycerol-3P C12+",
+         {"coa_classes": c12, "acp": True, "acylglycerol3p": True}),
+    )
+    out = [base]
+    for key, title, opts in variants:
+        merge, names, members = lipid_merge(model, smiles, **opts)
+        LIPID_MERGE_MEMBERS[key] = members
+
+        def ren(p):
+            return merge.get(p[0], p[0]), merge.get(p[1], p[1])
+        pairs, log = {}, []
+        for rid, ps in final.items():
+            kept = list(dict.fromkeys(ren(p) for p in ps if ren(p)[0] != ren(p)[1]))
+            if ps and not kept:
+                cands = sorted({tuple(sorted(p)) for p in rule1.get(rid, []) if ren(p)[0] != ren(p)[1]
+                                and (rid, p) not in rule4} if rid not in shared else set())
+                best = min(cands, key=lambda p: (freq[p], p)) if cands else None
+                kept = [ren(p) for p in rule1[rid] if tuple(sorted(p)) == best][:1] if best else []
+                log.append({"reaction": rid, "genes": sorted(model.reactions[rid].genes), "kept_pair": best,
+                            "kept_pair_count": freq.get(best) if best else None, "lost_pairs": ps})
+            pairs[rid] = kept
+        LIPID_MERGE_LOG[key] = log
+        r = CurrencyRules(**{**rules.__dict__, "edits": {rid: {merge.get(m, m) for m in ms}
+                                                         for rid, ms in rules.edits.items()}})
+        desc = (f"The final network with {title} merged ({len(merge)} metabolites into {len(names)} node(s)); "
+                f"{len(log)} reactions lose every pair, "
+                f"{sum(x['kept_pair'] is None for x in log)} of them have no other pair and drop out.")
+        out.append((key, f"Lipid merge: {title}", desc, r, base[4], base[5],
+                    {**extra, "atom_pairs": pairs, "merge": merge, "merge_names": names}))
+    return out
 
 
 def _pruning_stages(model):
