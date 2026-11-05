@@ -65,7 +65,8 @@ def main():
         f.write("node_id\tname\ttype\thuman_gem_reaction\tgenes\n")
         for i, nid in enumerate(g.node_ids):
             if g.is_reaction[i]:
-                f.write(f"{nid.replace('R_', '')}\t{g.node_names[i]}\treaction\t{g.base_reaction[i].replace('R_', '')}\t"
+                f.write(f"{nid.replace('R_', '')}\t{g.node_names[i]}\treaction\t"
+                        f"{';'.join(r.replace('R_', '') for r in g.reactions_of(i))}\t"
                         f"{';'.join(sym.get(x, x) for x in g.reaction_genes[i])}\n")
             else:
                 f.write(f"{nid}\t{g.node_names[i]}\tmetabolite\t\t\n")
@@ -105,7 +106,8 @@ def main():
         "code_commit": commit,
         "date": date.today().isoformat(),
         "counts": {"metabolites": int(g.n - n_rxn), "reaction_nodes": n_rxn,
-                   "human_gem_reactions": len(set(g.base_reaction.values())), "edges": len(g.edges),
+                   "human_gem_reactions": len({r for i in range(g.n) if g.is_reaction[i] for r in g.reactions_of(i)}),
+                   "edges": len(g.edges),
                    "genes": len({x for v in g.reaction_genes.values() for x in v})},
         "carriers": sorted({g_name for g_name in (model.species[s].name for s in model.species
                                                    if model.species[s].met_id in structure.CARRIERS_FOUND)}),

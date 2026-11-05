@@ -1,0 +1,3809 @@
+node_id,label,degree,n_carbon
+MAM01450,cholesterol,144,27.0
+MAM01974,glutamate,122,5.0
+MAM01596,CO2,121,1.0
+MAM01597,CoA,121,21.0
+MAM01986,glycine,87,2.0
+MAM01365,arginine,83,6.0
+MAM01261,acetyl-CoA,74,23.0
+MAM02914,sn-glycerol-3-phosphate,71,3.0
+MAM02426,lysine,71,6.0
+MAM02348,L-carnitine,69,7.0
+MAM03089,tryptophan,68,11.0
+MAM01362,arachidonate,66,20.0
+MAM03101,tyrosine,61,9.0
+MAM02724,phenylalanine,60,9.0
+MAM01307,alanine,57,3.0
+MAM02819,pyruvate,55,3.0
+MAM02125,histidine,54,6.0
+MAM02527,N-acetylglucosamine,54,8.0
+MAM01628,cysteine,53,3.0
+MAM02770,proline,52,5.0
+MAM02360,leucine,49,6.0
+MAM01370,aspartate,49,4.0
+MAM01334,AMP,48,10.0
+MAM01965,glucose,46,6.0
+MAM02471,methionine,43,5.0
+MAM01910,galactose,42,6.0
+MAM02026,GSH,42,10.0
+MAM01975,glutamine,41,5.0
+MAM02993,threonine,39,4.0
+MAM01371,ATP,39,10.0
+MAM02896,serine,38,3.0
+MAM01252,acetate,38,2.0
+MAM01973,glucuronate,36,6.0
+MAM02678,palmitoyl-CoA,35,37.0
+MAM02453,mannose,34,6.0
+MAM02774,propanoyl-CoA,34,24.0
+MAM03135,valine,34,5.0
+MAM01369,asparagine,34,4.0
+MAM03106,UDP,34,9.0
+MAM02941,stearoyl-CoA,32,39.0
+MAM02543,N-acetylneuraminate,31,11.0
+MAM02525,N-acetylgalactosamine,29,8.0
+MAM01689,DHA,28,22.0
+MAM03114,UMP,28,9.0
+MAM01306,AKG,27,5.0
+MAM02184,isoleucine,27,6.0
+MAM02644,octanoyl-CoA,27,29.0
+MAM02495,myristoyl-CoA,26,35.0
+MAM01733,dolichyl-phosphate,26,100.0
+MAM01592,CMP-N-acetylneuraminate,26,20.0
+MAM02980,THF,25,19.0
+MAM02647,oleoyl-CoA,25,39.0
+MAM00184,[ACP],25,11.0
+MAM01833,formate,25,1.0
+MAM02552,NAD+,25,21.0
+MAM02442,malonyl-[ACP],24,14.0
+MAM02364,leukotriene B4,23,20.0
+MAM02677,palmitoleoyl-CoA,23,37.0
+MAM00119,"(7Z,10Z,13Z,16Z)-docosatetraenoyl-CoA",23,43.0
+MAM01590,CMP,22,9.0
+MAM02674,palmitate,22,16.0
+MAM01364,arachidonyl-CoA,22,41.0
+MAM00408,17alpha-hydroxypregnenolone,22,21.0
+MAM02633,OAA,22,4.0
+MAM01623,CTP,22,9.0
+MAM01643,dCDP,21,9.0
+MAM00108,"(6Z,9Z,12Z,15Z)-octadecatetraenoyl-CoA",21,39.0
+MAM02011,GM2,21,50.0
+MAM01773,eicosanoyl-CoA,21,41.0
+MAM02961,taurine,20,2.0
+MAM01424,CDP,20,9.0
+MAM02689,pentadecanoyl-CoA,20,36.0
+MAM01934,gamma-linolenoyl-CoA,20,39.0
+MAM02984,thiamin-PP,20,12.0
+MAM03108,UDP-glucose,20,15.0
+MAM01285,ADP,19,10.0
+MAM01831,formaldehyde,19,1.0
+MAM01644,dCMP,19,9.0
+MAM03130,UTP,19,9.0
+MAM01941,GD1a,19,66.0
+MAM02391,linoleoyl-CoA,19,39.0
+MAM02034,GTP,19,10.0
+MAM02923,spermidine,19,7.0
+MAM01725,docosanoyl-CoA,19,43.0
+MAM02345,lauroyl-CoA,19,33.0
+MAM00103,"(5Z,8Z,11Z,14Z,17Z)-eicosapentaenoyl-CoA",18,41.0
+MAM02016,GMP,18,10.0
+MAM00095,"(4Z,7Z,10Z,13Z,16Z,19Z)-docosahexaenoyl-CoA",18,43.0
+MAM01948,GDP,18,10.0
+MAM02833,retinoate,17,20.0
+MAM00409,17alpha-hydroxyprogesterone,17,21.0
+MAM01249,acetaldehyde,17,2.0
+MAM00125,"(8Z,11Z,14Z,17Z)-eicosatetraenoyl-CoA",17,41.0
+MAM00004,(10Z)-heptadecenoyl-CoA,17,38.0
+MAM00121,"(7Z,10Z,13Z,16Z,19Z)-docosapentaenoyl-CoA",17,43.0
+MAM02971,tetracosanoyl-CoA,17,45.0
+MAM01736,dopamine,17,8.0
+MAM01790,estrone,17,18.0
+MAM01784,EPA,17,20.0
+MAM02387,linoleate,17,18.0
+MAM01280,adenosine,17,10.0
+MAM01697,dihomo-gamma-linolenoyl-CoA,17,41.0
+MAM02832,retinal,16,20.0
+MAM00106,"(6Z,9Z)-octadecadienoyl-CoA",16,39.0
+MAM02736,"phosphatidylinositol-4,5-bisphosphate",16,11.0
+MAM01845,fructose-6-phosphate,16,6.0
+MAM01690,DHAP,16,3.0
+MAM00971,"4-androstene-3,17-dione",16,19.0
+MAM01734,dolichyl-phosphate-D-mannose,16,106.0
+MAM01806,farnesyl-PP,16,15.0
+MAM02554,NADP+,15,21.0
+MAM00745,"3alpha,12alpha-dihydroxy-5beta-cholanate",15,24.0
+MAM02594,nLc6Cer,15,58.0
+MAM01947,GD3,15,52.0
+MAM03120,urate,15,5.0
+MAM00266,10-formyl-THF,15,20.0
+MAM01191,7-hexadecenoyl-CoA,15,37.0
+MAM02101,heptadecanoyl-CoA,15,38.0
+MAM01840,fructose,15,6.0
+MAM02131,HMG-CoA,15,27.0
+MAM02096,hepoxilin A3,15,20.0
+MAM00016,(13Z)-docosenoyl-CoA,15,43.0
+MAM00025,(15Z)-tetracosenoyl-CoA,15,45.0
+MAM00326,12-keto-LTB4,15,20.0
+MAM01959,globoside,15,44.0
+MAM00554,1-phosphatidyl-1D-myo-inositol-5-phosphate,15,11.0
+MAM00007,(11Z)-eicosenoyl-CoA,15,41.0
+MAM00093,"(4Z,7Z,10Z,13Z,16Z)-docosapentaenoyl-CoA",15,43.0
+MAM01141,5-tetradecenoyl-CoA,15,35.0
+MAM01615,cortisol,14,21.0
+MAM01435,chenodiol,14,24.0
+MAM00585,20-COOH-LTB4,14,20.0
+MAM02929,sphingosine,14,18.0
+MAM01045,"5,10-methylene-THF",14,20.0
+MAM01058,"5,6-epoxytetraene",14,20.0
+MAM01650,decanoyl-CoA,14,31.0
+MAM01151,"6,7-dihydro-5-oxo-12-epi-LTB4",14,20.0
+MAM03109,UDP-glucuronate,14,15.0
+MAM00350,13-cis-retinoate,14,20.0
+MAM02763,pregnenolone,14,21.0
+MAM01755,dUMP,14,9.0
+MAM00380,15(S)-HPETE,14,20.0
+MAM01586,cis-vaccenoyl-CoA,14,39.0
+MAM00127,(9E)-octadecenoyl-CoA,14,39.0
+MAM02015,GM3,14,41.0
+MAM02008,GM1,14,56.0
+MAM01943,GD1b,14,66.0
+MAM01040,5(S)-HETE,14,20.0
+MAM01434,chenodeoxycholoyl-CoA,13,45.0
+MAM00042,(2E)-dodecenoyl-CoA,13,33.0
+MAM00057,(2E)-octadecenoyl-CoA,13,39.0
+MAM02439,malate,13,4.0
+MAM02402,lithocholate,13,24.0
+MAM02938,stearate,13,18.0
+MAM02187,isopentenyl-pPP,13,5.0
+MAM00118,(7Z)-tetradecenoyl-CoA,13,35.0
+MAM02030,GT1b,13,77.0
+MAM00131,"(9Z,12Z,15Z,18Z)-tetracosatetraenoyl-CoA",13,45.0
+MAM01747,dTDP,13,10.0
+MAM00551,"1-phosphatidyl-1D-myo-inositol-3,4-bisphosphate",13,11.0
+MAM02494,myristic acid,13,14.0
+MAM02344,lauric acid,13,12.0
+MAM02735,"phosphatidylinositol-3,5-bisphosphate",13,11.0
+MAM01968,glucose-6-phosphate,13,6.0
+MAM02794,prostaglandin H2,13,20.0
+MAM00309,12(S)-HPETE,13,20.0
+MAM03000,Tn-antigen,13,8.0
+MAM02734,"phosphatidylinositol-3,4,5-trisphosphate",13,11.0
+MAM02318,kinetensin,13,56.0
+MAM02390,linolenoyl-CoA,13,39.0
+MAM02847,RNA,12,15.0
+MAM03123,uridine,12,9.0
+MAM00767,3-decaprenyl-4-hydroxybenzoate,12,57.0
+MAM00267,10-formyl-THF-glu(5),12,40.0
+MAM00268,10-formyl-THF-glu(6),12,45.0
+MAM02969,testosterone,12,19.0
+MAM02806,PRPP,12,5.0
+MAM01182,7alpha-hydroxycholest-4-en-3-one,12,27.0
+MAM01983,glycerol,12,3.0
+MAM01680,dGDP,12,10.0
+MAM01967,glucose-1-phosphate,12,6.0
+MAM01939,D-glyceraldehyde 3-phosphate,12,3.0
+MAM02167,IMP,12,10.0
+MAM01752,dTMP,12,10.0
+MAM00262,"10,13,16,19-docosatetraenoyl-CoA",12,43.0
+MAM02154,hydroxypyruvate,12,3.0
+MAM02834,retinol,12,20.0
+MAM02741,phosphopantetheine,12,11.0
+MAM01255,acetoacetyl-CoA,12,25.0
+MAM00134,"(9Z,12Z,15Z,18Z,21Z)-tetracosapentaenoyl-CoA",12,45.0
+MAM00009,"(11Z,14Z)-eicosadienoyl-CoA",12,41.0
+MAM03050,tridecanoyl-CoA,12,34.0
+MAM00626,2-acetyl-1-alkyl-sn-glycero-3-phosphocholine,12,10.0
+MAM01645,dCTP,12,9.0
+MAM02692,pentaglutamyl-folate(THF),12,39.0
+MAM02119,hexaglutamyl-folate(THF),12,44.0
+MAM02691,pentaglutamyl-folate(DHF),12,39.0
+MAM01674,dephospho-CoA,12,21.0
+MAM02118,hexaglutamyl-folate(DHF),12,44.0
+MAM01152,"6,7-dihydro-5-oxo-LTB4",12,20.0
+MAM02696,PEP,12,3.0
+MAM01756,dUTP,12,9.0
+MAM03052,triiodothyronine,11,15.0
+MAM02444,malonyl-CoA,11,24.0
+MAM00661,2-methyl-3-oxopropanoate,11,4.0
+MAM02585,nicotinate ribonucleotide,11,11.0
+MAM02010,GM1b,11,55.0
+MAM02612,nonadecanoyl-CoA,11,40.0
+MAM00018,(13Z)-eicosenoyl-CoA,11,41.0
+MAM01904,GA1,11,44.0
+MAM00020,(13Z)-octadecenoyl-CoA,11,39.0
+MAM02978,tetrahydrobiopterin,11,9.0
+MAM02110,hexacosanoyl-CoA,11,47.0
+MAM01584,cis-gondoic acid,11,20.0
+MAM02007,glyoxalate,11,2.0
+MAM00333,12-oxo-c-LTB3,11,30.0
+MAM01802,FAD,11,27.0
+MAM01946,GD2,11,60.0
+MAM02052,heneicosanoyl-CoA,11,42.0
+MAM00110,"(6Z,9Z,12Z,15Z,18Z)-tetracosapentaenoyl-CoA",11,45.0
+MAM00012,"(11Z,14Z,17Z)-eicosatrienoyl-CoA",11,41.0
+MAM01660,dehydroepiandrosterone,11,19.0
+MAM02027,GSSG,11,20.0
+MAM01787,estradiol-17beta,11,18.0
+MAM01236,9-eicosenoyl-CoA,11,41.0
+MAM02927,sphinganine,11,18.0
+MAM01951,GDP-mannose,11,16.0
+MAM01288,ADP-ribose,11,15.0
+MAM01798,ethanolamine-phosphate,11,2.0
+MAM00051,(2E)-hexadecenoyl-CoA,11,37.0
+MAM00953,"4alpha-carboxy-4beta-methyl-5alpha-cholesta-8,24-dien-3beta-ol",11,29.0
+MAM02783,prostaglandin D2,11,20.0
+MAM02769,progesterone,11,21.0
+MAM03111,UDP-N-acetylglucosamine,11,17.0
+MAM01513,choline,11,5.0
+MAM00752,"3alpha,7alpha,12alpha-trihydroxy-5beta-cholestanate",11,27.0
+MAM02046,HCO3-,11,1.0
+MAM02583,nicotinamide,11,6.0
+MAM02944,succinyl-CoA,11,25.0
+MAM01069,5-alpha-dihydrotestosterone,11,19.0
+MAM01700,dihydrofolate,11,19.0
+MAM01368,ascorbate,11,6.0
+MAM00123,"(8Z,11Z)-eicosadienoyl-CoA",11,41.0
+MAM01646,deamido-NAD,11,21.0
+MAM00671,2-oxobutyrate,10,4.0
+MAM01123,5-oxo-12-HETE,10,20.0
+MAM02658,ornithine,10,5.0
+MAM02354,L-dopa,10,9.0
+MAM02480,methylmalonyl-CoA,10,25.0
+MAM00264,"10,13,16-docosatrienoyl-CoA",10,43.0
+MAM01688,dGTP,10,10.0
+MAM00023,"(13Z,16Z)-docosadienoyl-CoA",10,43.0
+MAM02475,methylglyoxal,10,3.0
+MAM00890,3-oxooctadecanoyl-CoA,10,39.0
+MAM01253,acetoacetate,10,4.0
+MAM03148,xanthine,10,5.0
+MAM01673,deoxyuridine,10,9.0
+MAM01044,"5,10-methenyl-THF",10,20.0
+MAM00098,"(5S,6S)-epoxy-(15R)-hydroxy-ETE",10,20.0
+MAM00101,"(5Z,8Z,11Z)-eicosatrienoyl-CoA",10,41.0
+MAM00006,(11Z)-docosenoyl-CoA,10,43.0
+MAM02646,oleate,10,18.0
+MAM00307,12(S)-HETE,10,20.0
+MAM02452,maltotriose,10,18.0
+MAM00163,(R)-4-phosphopantothenoyl-cysteine,10,12.0
+MAM01753,dTTP,10,10.0
+MAM00113,"(6Z,9Z,12Z,15Z,18Z,21Z)-tetracosahexaenoyl-CoA",10,45.0
+MAM00343,"13,16,19-docosatrienoyl-CoA",10,43.0
+MAM00552,1-phosphatidyl-1D-myo-inositol-3-phosphate,10,11.0
+MAM00521,"1D-myo-inositol-1,3,4,5,6-pentakisphosphate",10,6.0
+MAM01905,GA2,10,38.0
+MAM00257,"10,11-dihydro-LTB4",10,20.0
+MAM00623,26-hydroxycholesterol,10,27.0
+MAM02675,palmitolate,10,16.0
+MAM00736,"3,5-diiodo-L-thyronine",10,15.0
+MAM00720,"3,3-diiodo-L-thyronine",10,15.0
+MAM01038,"5(S),6(S)-epoxy-15(R)-HEPE",10,20.0
+MAM02489,monodehydroascorbate,10,6.0
+MAM01237,9-heptadecenoyl-CoA,10,38.0
+MAM00599,20-OH-LTB4,10,20.0
+MAM02122,hexanoyl-CoA,10,27.0
+MAM01797,ethanolamine,10,2.0
+MAM02183,isocitrate,10,6.0
+MAM00809,3-keto-4-methylzymosterol,10,28.0
+MAM01400,biocytin,10,16.0
+MAM02845,ribose-5-phosphate,10,5.0
+MAM01357,apoC-lys_btn,10,16.0
+MAM01089,"5beta-cholestane-3alpha,7alpha,12alpha,25-tetrol",9,27.0
+MAM00751,"3alpha,7alpha,12alpha-trihydroxy-5beta-cholestan-27-al",9,27.0
+MAM02350,L-cysteate,9,3.0
+MAM00918,3-sulfinoalanine,9,3.0
+MAM00252,"10,11-dihydro-12-epi-LTB4",9,20.0
+MAM02503,N1-acetylspermidine,9,9.0
+MAM03635,Ganglioside Gm1,9,55.0
+MAM00253,"10,11-dihydro-12-oxo-LTB4",9,20.0
+MAM01738,dopamine-O-quinone,9,8.0
+MAM02335,L-alanyl-tRNA(ala),9,3.0
+MAM02355,L-dopachrome,9,9.0
+MAM02581,nicotinamide D-ribonucleotide,9,11.0
+MAM00116,(7Z)-octadecenoyl-CoA,9,39.0
+MAM00129,(9E)-tetradecenoyl-CoA,9,35.0
+MAM02679,pantetheine,9,11.0
+MAM00756,"3alpha,7alpha-dihydroxy-5beta-cholestan-26-al",9,27.0
+MAM00553,1-phosphatidyl-1D-myo-inositol-4-phosphate,9,11.0
+MAM02419,L-threonyl-tRNA(thr),9,4.0
+MAM02555,NADPH,9,21.0
+MAM02796,prostaglandin J2,9,20.0
+MAM00258,"10,11-dihydro-LTB4-CoA",9,41.0
+MAM02786,prostaglandin E2,9,20.0
+MAM01721,DNA,9,10.0
+MAM01662,delta-12-prostaglandin J2,9,20.0
+MAM00349,13-cis-retinal,9,20.0
+MAM01120,"5-oxo-12(R)-hydroxy-eicosa-(8E,10E,14Z)-trienoyl-CoA",9,41.0
+MAM01630,cytidine,9,9.0
+MAM02812,putrescine,9,4.0
+MAM00853,"3-oxo-all-cis-6,9,12,15,18-tetracosapentaenoyl-CoA",9,45.0
+MAM00150,"(alpha-D-mannosyl)7-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine, isoform A (protein)",9,64.0
+MAM02415,L-prolyl-tRNA(pro),9,5.0
+MAM02930,sphingosine-1-phosphate,9,18.0
+MAM00375,15(R)-HpEPE,9,20.0
+MAM00317,"12,15,18,21-tetracosatetraenoyl-CoA",9,45.0
+MAM00573,"2,3-diketo-L-gulonate",9,6.0
+MAM02366,leukotriene C4,9,30.0
+MAM02336,lanosterol,9,30.0
+MAM00650,2-hydroxyestrone,9,18.0
+MAM02416,L-seryl-tRNA(ser),9,3.0
+MAM02450,maltose,9,12.0
+MAM02006,glycyl-tRNA(gly),9,2.0
+MAM01230,9-cis-retinal,9,20.0
+MAM02963,taurocholate,9,26.0
+MAM02112,hexacosenoyl-CoA,9,47.0
+MAM00410,"17beta-estradiol-2,3-quinone",9,18.0
+MAM01754,dUDP,9,9.0
+MAM02049,heme,9,34.0
+MAM01373,behenic acid,9,22.0
+MAM03047,tricosanoyl-CoA,9,44.0
+MAM02405,L-lysyl-tRNA(lys),9,6.0
+MAM01090,"5beta-cholestane-3alpha,7alpha,12alpha,26-tetrol",9,27.0
+MAM00559,1-pyrroline-5-carboxylate,9,5.0
+MAM01445,cholate,9,24.0
+MAM01988,glycocholate,9,26.0
+MAM00614,25(R)DHCA-CoA,9,48.0
+MAM02891,selenomethionine,9,5.0
+MAM01778,elaidate,9,18.0
+MAM01338,androsterone,9,19.0
+MAM01791,"estrone-2,3-quinone",9,18.0
+MAM02408,L-methionyl-tRNA(met),9,5.0
+MAM01402,biotinyl-5-AMP,8,20.0
+MAM02880,sarcosine,8,3.0
+MAM00269,10-formyl-THF-glu(7),8,50.0
+MAM02105,heptaglutamyl-folate(THF),8,49.0
+MAM02104,heptaglutamyl-folate(DHF),8,49.0
+MAM03102,ubiquinol,8,59.0
+MAM03103,ubiquinone,8,59.0
+MAM02460,melatonin,8,13.0
+MAM02928,sphinganine-1-phosphate,8,18.0
+MAM01321,alpha-CEHC-glucuronide,8,22.0
+MAM01118,5-oxo-(6E)-12-epi-LTB4,8,20.0
+MAM01924,gamma-CEHC-glucuronide,8,21.0
+MAM01963,glucosamine-6-phosphate,8,6.0
+MAM02504,N1-acetylspermine,8,12.0
+MAM02356,L-dopaquinone,8,9.0
+MAM02412,L-phenylalanyl-tRNA(phe),8,9.0
+MAM01155,"6-[(1S,2R)-1,2-dihydroxy-3-triphosphooxypropyl]-7,8-dihydropterin",8,9.0
+MAM00039,(2E)-decenoyl-CoA,8,31.0
+MAM01981,glyceraldehyde,8,3.0
+MAM00793,3-hydroxyoctadecanoyl-CoA,8,39.0
+MAM00913,3-phospho-D-glycerate,8,3.0
+MAM03012,"trans,cis-2,11-eicosadienoyl-CoA",8,41.0
+MAM00842,3-oxo-13cis-docosenoyl-CoA,8,43.0
+MAM03029,"trans-2-cis,cis,cis-8,11,14-eicosatetraenoyl-CoA",8,41.0
+MAM00701,3(S)-hydroxy-13-cis-docosenoyl-CoA,8,43.0
+MAM03013,"trans,cis-2,13-docosadienoyl-CoA",8,43.0
+MAM01668,deoxycytidine,8,9.0
+MAM00716,"3(S)-hydroxy-tetracosa-12,15,18,21-all-cis-tetraenoyl-CoA",8,45.0
+MAM00053,(2E)-hexenoyl-CoA,8,27.0
+MAM01637,dADP,8,10.0
+MAM03922,suberyl-CoA,8,29.0
+MAM00373,15(R)-HEPE,8,20.0
+MAM02332,lactose,8,12.0
+MAM00840,3-oxo-11-cis-eicosenoyl-CoA,8,41.0
+MAM00700,3(S)-hydroxy-11-cis-eicosenoyl-CoA,8,41.0
+MAM02341,L-asparaginyl-tRNA(asn),8,4.0
+MAM02340,L-arginyl-tRNA(arg),8,6.0
+MAM02376,L-glutaminyl-tRNA(gln),8,5.0
+MAM02342,L-aspartyl-tRNA(asp),8,4.0
+MAM02377,L-glutamyl-tRNA(glu),8,5.0
+MAM03579,fluvastatin,8,24.0
+MAM01739,dopaminochrome,8,8.0
+MAM01626,cys-gly,8,5.0
+MAM01231,9-cis-retinoate,8,20.0
+MAM01960,globotriaosylceramide,8,36.0
+MAM02844,ribose-1-phosphate,8,5.0
+MAM00969,4-aminobutanal,8,4.0
+MAM02926,spermine,8,10.0
+MAM00788,3-hydroxy-L-kynurenine,8,10.0
+MAM03137,VI2Fuc-nLc6,8,64.0
+MAM02617,noradrenaline,8,8.0
+MAM01064,"5alpha-androstane-3,17-dione",8,19.0
+MAM02904,sialyl-3-paragloboside,8,55.0
+MAM00987,4-hydroxy-17beta-estradiol-2-S-glutathione,8,28.0
+MAM01696,dihomo-gamma-linolenate,8,20.0
+MAM02033,GT3,8,63.0
+MAM01679,D-galactosyl-N-acylsphingosine,8,24.0
+MAM02404,L-leucyl-tRNA(leu),8,6.0
+MAM02347,lc4Cer,8,44.0
+MAM01415,calcidiol,8,27.0
+MAM02385,lignocerate,8,24.0
+MAM02464,mercaptopyruvate,8,3.0
+MAM02943,succinate,8,4.0
+MAM00965,4alpha-hydroxytetrahydrobiopterin,8,9.0
+MAM01127,5-oxoproline,8,5.0
+MAM02423,L-valyl-tRNA(val),8,5.0
+MAM01588,citrulline,8,6.0
+MAM01771,eicosanoate,8,20.0
+MAM02805,provitamin D3,8,27.0
+MAM00758,"3alpha,7alpha-dihydroxy-5beta-cholestanate",8,27.0
+MAM01383,beta-alanine,8,3.0
+MAM01420,carbamoyl-phosphate,8,1.0
+MAM02772,propanoate,8,3.0
+MAM02775,propinol adenylate,8,13.0
+MAM01124,5-oxo-6-trans-LTB4,8,20.0
+MAM02877,SAM,8,15.0
+MAM01514,choloyl-CoA,8,45.0
+MAM20066,menaquinol-4,8,31.0
+MAM01005,4-hydroxyphenylpyruvate,8,9.0
+MAM01412,butyryl-CoA,7,25.0
+MAM03791,11-octadecenoyl-CoA,7,39.0
+MAM02720,phenylacetate,7,8.0
+MAM01666,deoxyadenosine,7,10.0
+MAM01862,fumarate,7,4.0
+MAM01126,5-oxo-ETE,7,20.0
+MAM02362,leukotriene A4,7,20.0
+MAM02155,hyodeoxycholate,7,24.0
+MAM02964,taurodeoxycholate,7,26.0
+MAM01095,"5beta-cholestane-3alpha,7alpha-diol",7,27.0
+MAM03037,trans-4-hydroxy-L-proline,7,5.0
+MAM00750,"3alpha,7alpha,12alpha-trihydroxy-5beta-cholestan-26-al",7,27.0
+MAM01078,"5beta-cholestan-3alpha,7alpha,12alpha-triol",7,27.0
+MAM00592,20-hydroxycholesterol,7,27.0
+MAM01448,"cholest-5-ene-3beta,7alpha,27-triol",7,27.0
+MAM01675,desmosterol,7,27.0
+MAM00128,(9E)-tetradecenoic acid,7,14.0
+MAM01585,cis-vaccenic acid,7,18.0
+MAM00374,15(R)-HETE,7,20.0
+MAM01115,5-methyl-THF,7,20.0
+MAM01093,"5beta-cholestane-3alpha,7alpha,26-triol",7,27.0
+MAM02457,mead acid,7,20.0
+MAM01000,4-hydroxyestrone,7,18.0
+MAM02343,lathosterol,7,27.0
+MAM01715,D-lactaldehyde,7,3.0
+MAM01686,dGMP,7,10.0
+MAM00726,"3,4-dihydroxymandelaldehyde",7,8.0
+MAM01982,glycerate,7,3.0
+MAM00040,(2E)-docosenoyl-CoA,7,43.0
+MAM00866,3-oxodocosanoyl-CoA,7,43.0
+MAM02884,sedoheptulose-7-phosphate,7,7.0
+MAM03924,sebacoyl-CoA,7,31.0
+MAM00639,2-deoxy-D-ribose-1-phosphate,7,5.0
+MAM01169,6-phospho-D-gluconate,7,6.0
+MAM03150,xanthosine-5-phosphate,7,10.0
+MAM02369,leukotriene E4,7,23.0
+MAM02418,LTD4,7,25.0
+MAM01718,"D-myo-inositol-1,4,5-trisphosphate",7,6.0
+MAM01828,FMN,7,17.0
+MAM01701,dihydrolipoamide,7,8.0
+MAM02038,guanosine,7,10.0
+MAM02320,L-1-pyrroline-3-hydroxy-5-carboxylate,7,5.0
+MAM03916,pravastatin,7,23.0
+MAM03479,atorvastatin-lactone,7,33.0
+MAM03476,atorvastatin-acid,7,33.0
+MAM02159,hypoxanthine,7,5.0
+MAM02170,inosine,7,10.0
+MAM03634,Gliclazide,7,15.0
+MAM03110,UDP-N-acetyl-D-galactosamine,7,17.0
+MAM00635,2-arachidonoylglycerol,7,23.0
+MAM00682,"2-trans-cis,cis,cis,cis-4,8,11,14-eicosapentaenoyl-CoA",7,41.0
+MAM02922,spermidine monoaldehyde 2,7,7.0
+MAM00980,4-cis-decenoyl-CoA,7,31.0
+MAM02319,kynurenine,7,10.0
+MAM03118,uracil,7,4.0
+MAM02921,spermidine monoaldehyde 1,7,7.0
+MAM02925,spermine monoaldehyde,7,10.0
+MAM01316,all-trans-decaprenyl-diphosphate,7,50.0
+MAM02749,phytosphingosine,7,18.0
+MAM00670,2-oxoadipate,7,6.0
+MAM02421,L-tyrosyl-tRNA(tyr),7,9.0
+MAM00600,20-oxo-LTB4,7,20.0
+MAM03107,UDP-galactose,7,15.0
+MAM03121,urea,7,1.0
+MAM01912,galactosylgloboside,7,50.0
+MAM02996,thymidine,7,10.0
+MAM02766,(2S)-pristanic acid,7,19.0
+MAM03158,zymosterol,7,27.0
+MAM00141,(alpha-D-mannosyl)2-beta-D-mannosyl-N-acetylglucosamine,7,26.0
+MAM00995,4-hydroxybenzoate,7,7.0
+MAM01998,glycolate,7,2.0
+MAM01731,dolichyl-D-glucosyl-phosphate,7,106.0
+MAM01987,glycochenodeoxycholate,7,26.0
+MAM00970,4-aminobutyrate,7,4.0
+MAM00941,"4,4-dimethyl-5alpha-cholesta-8,14,24-trien-3beta-ol",6,29.0
+MAM20064,Fe(II)-heme o,6,49.0
+MAM01669,deoxyguanosine,6,10.0
+MAM00920,3-sulfopyruvate,6,3.0
+MAM01708,dimethylglycine,6,4.0
+MAM02322,L-2-aminoadipate,6,6.0
+MAM00755,"3alpha,7alpha-dihydroxy-5beta-cholest-24-enoyl-CoA",6,48.0
+MAM01758,D-xylose,6,5.0
+MAM02120,hexanoic acid,6,6.0
+MAM02139,"hyaluronan biosynthesis, precursor 1",6,14.0
+MAM02897,serotonin,6,10.0
+MAM03116,undecanoyl-CoA,6,32.0
+MAM03051,tridecylic acid,6,13.0
+MAM02725,phenylpyruvate,6,9.0
+MAM01279,adenine,6,5.0
+MAM00672,2-oxoglutaramate,6,5.0
+MAM00993,4-hydroxy-all-trans-retinoate,6,20.0
+MAM01290,adrenaline,6,9.0
+MAM02000,glycolithocholate,6,26.0
+MAM00919,3-sulfinylpyruvic acid,6,3.0
+MAM00294,11-deoxycorticosterone,6,21.0
+MAM01013,4-methyl-2-oxopentanoate,6,6.0
+MAM02396,lipoxin B4,6,20.0
+MAM00245,"1,2-dihydroxy-5-(methylthio)pent-1-en-3-one",6,6.0
+MAM00178,(S)-3-hydroxytetradecanoyl-CoA,6,35.0
+MAM00906,3-oxotetradecanoyl-CoA,6,35.0
+MAM00174,(S)-3-hydroxydodecanoyl-CoA,6,33.0
+MAM00868,3-oxododecanoyl-CoA,6,33.0
+MAM01425,CDP-choline,6,14.0
+MAM01260,acetylcholine,6,7.0
+MAM01422,carboxybiotin-carboxyl-carrier,6,17.0
+MAM00099,(5Z)-dodecenoyl-CoA,6,33.0
+MAM02683,paragloboside,6,45.0
+MAM01629,cystine,6,6.0
+MAM02803,protoporphyrin,6,34.0
+MAM02690,pentadecylic acid,6,15.0
+MAM01706,dimethylallyl-PP,6,5.0
+MAM01953,geranyl-PP,6,10.0
+MAM02446,maltoheptaose,6,42.0
+MAM02447,maltohexaose,6,36.0
+MAM02449,maltopentaose,6,30.0
+MAM00858,3-oxodecanoyl-CoA,6,31.0
+MAM03099,tyramine,6,8.0
+MAM00807,3-iodo-L-tyrosine,6,9.0
+MAM02839,reverse triiodthyronine,6,15.0
+MAM01923,gamma-carboxyethyl-hydroxychroman,6,15.0
+MAM00895,3-oxopalmitoyl-CoA,6,37.0
+MAM02451,maltotetraose,6,24.0
+MAM02456,margaric acid,6,17.0
+MAM00649,2-hydroxyestradiol-17beta,6,18.0
+MAM02448,maltononaose,6,54.0
+MAM01583,cis-erucic acid,6,22.0
+MAM00104,"(6Z,9Z)-octadecadienoic acid",6,18.0
+MAM01291,adrenic acid,6,22.0
+MAM01416,calcitetrol,6,27.0
+MAM01716,D-lactate,6,3.0
+MAM02970,tetracosanoylcarnitine,6,31.0
+MAM02912,sn-glycerol-3-PC,6,8.0
+MAM02738,phosphocholine,6,5.0
+MAM00597,"20-OH-10,11-dihydro-LTB4",6,20.0
+MAM00582,20-CoA-20-oxo-LTB4,6,41.0
+MAM01832,formamidopyrimidine nucleoside triphosphate,6,10.0
+MAM01698,dihydrobiopterin,6,9.0
+MAM02389,linolenate,6,18.0
+MAM02939,stearidonic acid,6,18.0
+MAM02721,phenylacetyl-CoA,6,29.0
+MAM00167,(R)-mevalonate,6,6.0
+MAM01611,core 6,6,16.0
+MAM00035,"(24R)-24,25-dihydroxycalciol",6,27.0
+MAM01932,gamma-linolenate,6,18.0
+MAM00164,(R)-5-diphosphomevalonate,6,6.0
+MAM01066,"5alpha-cholesta-7,24-dien-3beta-ol",6,27.0
+MAM02455,mannose-6-phosphate,6,6.0
+MAM01159,6-deoxy-L-galactose,6,6.0
+MAM01761,D-xylulose-5-phosphate,6,5.0
+MAM00766,3-carboxy-alpha-chromanol,6,16.0
+MAM02403,L-lactate,6,3.0
+MAM02868,saccharopine,6,11.0
+MAM03590,"2-Trans,6-Trans,10-Trans-Geranylgeranyl Diphosphate",6,20.0
+MAM00820,3-methoxy-4-hydroxyphenylglycolaldehyde,6,9.0
+MAM00872,3-oxoeicosanoyl-CoA,6,41.0
+MAM00777,3-hydroxyeicosanoyl-CoA,6,41.0
+MAM03014,"trans,cis-2,13-eicosadienoyl-CoA",6,41.0
+MAM00856,3-oxo-cis-15-tetracosaenoyl-CoA,6,45.0
+MAM00138,(alpha-D-Glucosyl)-(alpha-D-mannosyl)8-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),6,76.0
+MAM03729,Losartan,6,22.0
+MAM01933,gamma-linolenoylcarnitine,6,25.0
+MAM02777,prostaglandin A2,6,20.0
+MAM02789,prostaglandin F2alpha,6,20.0
+MAM02920,spermidine dialdehyde,6,7.0
+MAM02501,"N1,N12-diacetylspermine",6,14.0
+MAM01250,acetamidopropanal,6,5.0
+MAM02380,L-histidyl-tRNA(his),6,6.0
+MAM01122,"5-oxo-12(S)-hydroxy-eicosa-(8E,10E,14Z)-trienoyl-CoA",6,41.0
+MAM00678,2-trans-4-cis-decadienoyl-CoA,6,31.0
+MAM03491,dodecanedioyl-CoA,6,33.0
+MAM00709,3(S)-hydroxy-cis-15-tetracosaenoyl-CoA,6,45.0
+MAM03015,"trans,cis-2,15-tetracosadienoyl-CoA",6,45.0
+MAM00043,(2E)-eicosenoyl-CoA,6,41.0
+MAM00776,3-hydroxydocosanoyl-CoA,6,43.0
+MAM02358,L-erythro-4-hydroxyglutamate,6,5.0
+MAM02037,guanine,6,5.0
+MAM00522,"1D-myo-inositol-1,3,4,5-tetrakisphosphate",6,6.0
+MAM00329,12-oxo-20-carboxy-LTB4,6,20.0
+MAM02676,palmitoleoyl-carnitine,6,23.0
+MAM02640,octadecenoylcarnitine(7),6,25.0
+MAM00828,3-monoiodo-L-thyronine,6,15.0
+MAM03009,"trans,cis,cis-2,7,10-hexadecatrienoyl-CoA",6,37.0
+MAM03030,"trans-2-cis,cis-5,8-tetradecatrienoyl-CoA",6,35.0
+MAM00843,3-oxo-13-cis-eicosenoyl-CoA,6,41.0
+MAM00702,3(S)-hydroxy-13-cis-eicosenoyl-CoA,6,41.0
+MAM01220,"9,10-hydroxyoctadec-12(Z)-enoate",6,18.0
+MAM00710,3(S)-hydroxy-dihomo-gamma-linolenoyl-CoA,6,41.0
+MAM03586,Galactosyl Glucosyl Ceramide,6,30.0
+MAM01639,dAMP,6,10.0
+MAM03934,simvastatin lactone form,6,25.0
+MAM02846,ribulose-5-phosphate,6,5.0
+MAM00929,4-(methylnitrosamino)-1-(3-pyridyl)-1-butanol,6,10.0
+MAM00314,"12,13-hydroxyoctadec-9(z)-enoate",6,18.0
+MAM02401,L-isoleucyl-tRNA(ile),6,6.0
+MAM01655,dehydroascorbic acid,6,6.0
+MAM03021,"trans,cis-lauro-2,6-dienoyl-CoA",6,33.0
+MAM03035,trans-3-decenoyl-CoA,6,31.0
+MAM00525,"1D-myo-inositol-1,4,5,6-tetrakisphosphate",6,6.0
+MAM02962,taurochenodeoxycholate,6,26.0
+MAM01091,"5beta-cholestane-3alpha,7alpha,12alpha,27,27-pentaol",6,27.0
+MAM20077,2-O-acetyl-ADP-D-ribose,6,17.0
+MAM02393,lipoamide,6,8.0
+MAM03384,"Dibenzo[A,L]Pyrene-11,12-Diol",6,24.0
+MAM02642,octanoic acid,6,8.0
+MAM00631,2-aminoadipate 6-semialdehyde,6,6.0
+MAM02420,L-tryptophanyl-tRNA(trp),6,11.0
+MAM02133,homocysteine,6,4.0
+MAM01102,5-hydroxyindoleacetaldehyde,6,10.0
+MAM00761,"3beta,7alpha-dihydroxy-5-cholestenoate",6,27.0
+MAM01396,bilirubin,6,33.0
+MAM01401,biotin,6,10.0
+MAM00799,3-hydroxypropionyl-CoA,5,24.0
+MAM00900,3-oxopropanoate,5,3.0
+MAM00982,4-coumaroyl-CoA,5,30.0
+MAM01512,cholesterol-sulfate,5,27.0
+MAM03288,"5,8,11-tetradecatrienoyl-CoA",5,35.0
+MAM01654,dehydroalanine,5,3.0
+MAM00516,1-alkyl-2-lysoglycerol-3-phosphocholine,5,8.0
+MAM02374,L-glutamate 5-semialdehyde,5,5.0
+MAM00366,"14,15-EET",5,20.0
+MAM00279,"11,12-EET",5,20.0
+MAM01671,deoxyinosine,5,10.0
+MAM02719,phenylacetaldehyde,5,8.0
+MAM02425,L-xylulose,5,5.0
+MAM00981,4-coumarate,5,9.0
+MAM02616,nonanoyl-CoA,5,30.0
+MAM02813,pyridoxal,5,8.0
+MAM02814,pyridoxal-phosphate,5,8.0
+MAM01092,"5beta-cholestane-3alpha,7alpha,12alpha,27-tetraol",5,27.0
+MAM02754,PNP,5,6.0
+MAM03334,3(S)-3-hydroxydodecen-(5Z)-oyl-CoA,5,33.0
+MAM00524,"1D-myo-inositol-1,3,4-trisphosphate",5,6.0
+MAM00789,"3-hydroxy-N6,N6,N6-trimethyl-L-lysine",5,9.0
+MAM00884,3-oxolinoleoyl-CoA,5,39.0
+MAM00083,(3S)-3-hydroxylinoleoyl-CoA,5,39.0
+MAM02986,thiocyanate,5,1.0
+MAM03409,adipoyl-CoA,5,27.0
+MAM01423,carnosine,5,9.0
+MAM03515,cerivastatin-M1,5,24.0
+MAM03520,cyclosporine,5,62.0
+MAM00034,"(1S,2R)-naphthalene 1,2-oxide",5,10.0
+MAM00032,"(1R,2S)-naphthalene 1,2-oxide",5,10.0
+MAM00148,(alpha-D-mannosyl)6-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (B2),5,58.0
+MAM00149,(alpha-D-mannosyl)6-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (C),5,58.0
+MAM03687,ibuprofen-S,5,13.0
+MAM03517,cerivastatin-M23,5,25.0
+MAM01234,9-deoxy-delta12-PGD2,5,20.0
+MAM02004,glycoursodeoxycholate,5,26.0
+MAM02966,tauroursodeoxycholate,5,26.0
+MAM03129,ursodeoxycholate,5,24.0
+MAM00893,3-oxooleoyl-CoA,5,39.0
+MAM00859,3-oxo-dihomo-gamma-linolenoyl-CoA,5,41.0
+MAM00337,13(S)-HPODE,5,18.0
+MAM03007,"trans,cis,cis-2,11,14-eicosatrienoyl-CoA",5,41.0
+MAM00533,"1-hydroperoxy-8-carboxyoctyl-3,4-epoxynon-(2E)-enyl-ether",5,18.0
+MAM00311,"12,13-epoxy-9-alkoxy-(10E)-octadecenoate",5,18.0
+MAM01657,dehydrodolichol-diphosphate,5,100.0
+MAM03386,"7,12-Dimethylbenz[A]Anthracene-3,4-Oxide",5,20.0
+MAM01174,"7,12-dimethylbenz[a]anthracene",5,20.0
+MAM01379,"benzo[a]pyrene-9,10-oxide",5,20.0
+MAM01375,"benzo[a]pyrene-4,5-oxide",5,20.0
+MAM03091,type I B glycolipid,5,56.0
+MAM02023,GQ1b,5,88.0
+MAM01576,"cis,cis-myristo-5,8-dienoyl-CoA",5,35.0
+MAM00691,"3(S),5(S),12(R)-trihydroxy-eicosa-8-trans-6,14-cis-trienoyl-CoA",5,41.0
+MAM01927,gamma-glutamyl-cysteine,5,8.0
+MAM02454,mannose-1-phosphate,5,6.0
+MAM02173,inositol-1-phosphate,5,6.0
+MAM03383,"Dibenzo[A,L]Pyrene-11,12-Epoxide",5,24.0
+MAM02113,hexadecanal,5,16.0
+MAM03887,pristanoyl-CoA,5,40.0
+MAM03092,type I H glycolipid,5,50.0
+MAM00330,12-oxo-20-dihydroxy-LTB4,5,20.0
+MAM00555,"1-phosphatidyl-myo-inositol-3,5-bisphosphate",5,11.0
+MAM02171,inositol,5,6.0
+MAM00091,"(4Z,7Z,10Z)-hexadecatrienoyl-CoA",5,37.0
+MAM00989,4-hydroxy-2-oxoglutarate,5,5.0
+MAM00066,(2E)-tetradecenoyl-CoA,5,35.0
+MAM00904,3-oxotetracosanoyl-CoA,5,45.0
+MAM02283,"keratan sulfate II (core 2-linked), degradation product 5",5,50.0
+MAM02776,prostaglandin A1,5,20.0
+MAM00854,"3-oxo-cis,cis-5,8-tetradecadienoyl-CoA",5,35.0
+MAM00696,"3(S)-hydroxy-(5Z,8Z)-tetradecadienoyl-CoA",5,35.0
+MAM00855,"3-oxo-cis,cis-7,10-hexadecadienoyl-CoA",5,37.0
+MAM00081,"(3S)-3-hydroxy-cis,cis-palmito-7,10-dienoyl-CoA",5,37.0
+MAM00846,"3-oxo-5(S),12(R)-dihydroxy-eicosa-8-trans-6,14-cis-trienoyl-CoA",5,41.0
+MAM03387,"7,12-Dimethylbenz[A]Anthracene-3,4-Diol",5,20.0
+MAM00204,[protein]-L-lysine,5,7.0
+MAM03128,uroporphyrinogen III,5,40.0
+MAM03736,lovastatin lactone form,5,24.0
+MAM02507,n2m2masn,5,50.0
+MAM01997,glycolaldehyde,5,2.0
+MAM03127,uroporphyrinogen I,5,40.0
+MAM03136,vanillylmandelate,5,9.0
+MAM02137,homovanillate,5,9.0
+MAM00818,3-methoxy-4-hydroxyphenylacetaldehyde,5,9.0
+MAM00727,"3,4-dihydroxymandelate",5,8.0
+MAM03959,Tacrolimus,5,44.0
+MAM03685,hyocholic acid,5,24.0
+MAM02160,"2,3-Dihydro-1H-Indole-5,6-Dione",5,8.0
+MAM01961,"glucono-1,5-lactone-6-phosphate",5,6.0
+MAM00247,"1,3-bisphospho-D-glycerate",5,3.0
+MAM01785,erythrose-4-phosphate,5,4.0
+MAM01023,4-OH-9-cis-retinal,5,20.0
+MAM00883,3-oxolaur-6-cis-enoyl-CoA,5,33.0
+MAM00082,(3S)-3-hydroxydodec-cis-6-enoyl-CoA,5,33.0
+MAM00126,(9E)-octadecenoylcarnitine,5,25.0
+MAM00021,"(13Z,16Z)-docosadienoic acid",5,22.0
+MAM00008,"(11Z,14Z)-eicosadienoic acid",5,20.0
+MAM00094,"(4Z,7Z,10Z,13Z,16Z)-DPA",5,22.0
+MAM00111,"(6Z,9Z,12Z,15Z,18Z)-TPA",5,24.0
+MAM03045,tricosanoic acid,5,23.0
+MAM00341,"13,16,19-docosatrienoic acid",5,22.0
+MAM00010,"(11Z,14Z,17Z)-eicosatrienoic acid",5,20.0
+MAM00607,"23S,25,26-trihydroxyvitamin D3",5,27.0
+MAM01107,5-hydroxy-L-tryptophan,5,11.0
+MAM02643,octanoyl-[ACP],5,19.0
+MAM01258,acetyl-[ACP],5,13.0
+MAM00059,(2E)-octenoyl-CoA,5,29.0
+MAM02479,methylmalonate,5,4.0
+MAM02972,tetradecanoyl-[ACP],5,25.0
+MAM01728,dodecanoyl-[ACP],5,23.0
+MAM02648,omega-3-arachidonic acid,5,20.0
+MAM03153,ximenic acid,5,26.0
+MAM01432,cerotic acid,5,26.0
+MAM02564,nervonic acid,5,24.0
+MAM00412,"17beta-estradiol-3,4-quinone",5,18.0
+MAM01793,"estrone-3,4-quinone",5,18.0
+MAM00741,"3,5-dioxo-12(S)-hydroxy-eicosa-(8E,10E,14Z)-trienoyl-CoA",5,41.0
+MAM00690,"3(S),12(S)-dihydroxy-5-oxo-eicosa-(8E,10E,14Z)-trienoyl-CoA",5,41.0
+MAM00181,(S)-hydroxydecanoyl-CoA,5,31.0
+MAM01170,6-pyruvoyltetrahydropterin,5,9.0
+MAM01977,glutaryl-CoA,5,26.0
+MAM01841,"fructose-1,6-bisphosphate",5,6.0
+MAM00421,18-CoA-18-oxo-dinor-LTB4,5,39.0
+MAM00420,"18,20-dioxo-20-CoA-LTB4",5,41.0
+MAM00581,20-CoA-20-oxo-18r-hydroxy-LTB4,5,41.0
+MAM01134,5-S-cysteinyldopa,5,12.0
+MAM00143,(alpha-D-mannosyl)5-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (B1),5,52.0
+MAM02933,squalene,5,30.0
+MAM02466,mesaconyl-CoA,5,26.0
+MAM00132,"(9Z,12Z,15Z,18Z)-TTA",5,24.0
+MAM02613,nonadecylic acid,5,19.0
+MAM01582,cis-cetoleic acid,5,22.0
+MAM02053,heneicosanoic acid,5,21.0
+MAM01207,"8,11-eicosadienoic acid",5,20.0
+MAM01235,9-eicosenoic acid,5,20.0
+MAM00986,4-hydroxy-17beta-estradiol,5,18.0
+MAM01380,benzoate,5,7.0
+MAM03026,"trans,trans,cis-geranyl-geranyl-pp",5,20.0
+MAM00968,4alpha-methylzymosterol,5,28.0
+MAM00114,"(6Z,9Z,12Z,15Z,18Z,21Z)-THA",5,24.0
+MAM00135,"(9Z,12Z,15Z,18Z,21Z)-TPA",5,24.0
+MAM01741,DPA,5,22.0
+MAM02349,L-cystathionine,5,7.0
+MAM00019,(13Z)-octadecenoic acid,5,18.0
+MAM01016,4-methylthio-2-oxobutanoic acid,5,5.0
+MAM01238,9-heptadecylenic acid,5,17.0
+MAM00003,(10Z)-heptadecenoic acid,5,17.0
+MAM01197,7-palmitoleic acid,5,16.0
+MAM01189,7-dehydrodesmosterol,5,27.0
+MAM00787,3-hydroxykynurenine-O-beta-D-glucoside,5,16.0
+MAM03095,type II H glycolipid,5,50.0
+MAM00588,20-dihydroxy-LTB4,5,20.0
+MAM00836,"3-oxo-10(R)-hydroxy-octadeca-(6E,8E,12Z)-trienoyl-CoA",5,39.0
+MAM02618,noradrenochrome,5,8.0
+MAM01329,alpha-tocopheryl quinone,5,29.0
+MAM02998,thyroxine,5,15.0
+MAM00739,"3,5-diiodo-L-tyrosine",5,9.0
+MAM00728,"3,4-dihydroxyphenylacetaldehyde",5,8.0
+MAM00838,"3-oxo-10(S)-hydroxy-octadeca-(6E,8E,12Z)-trienoyl-CoA",5,39.0
+MAM01449,cholestenol,5,27.0
+MAM00017,(13Z)-eicosenoic acid,5,20.0
+MAM02745,physeteric acid,5,14.0
+MAM00117,(7Z)-tetradecenoic acid,5,14.0
+MAM03381,"Benzo[A]Pyrene-2,3-Oxide",5,20.0
+MAM01374,benzo[a]pyrene,5,20.0
+MAM02890,selenohomocysteine,5,4.0
+MAM01029,4-oxo-9-cis-retinoate,5,20.0
+MAM00886,3-oxomyrist-7-enoyl-CoA,5,35.0
+MAM01574,cis-(3S)-hydroxytetradec-7-enoyl-CoA,5,35.0
+MAM00894,3-oxopalmitoleoyl-CoA,5,37.0
+MAM00177,(S)-3-hydroxypalmitoleoyl-CoA,5,37.0
+MAM00088,(3Z)-dodecenoyl-CoA,5,33.0
+MAM02161,IDP,5,10.0
+MAM02193,ITP,5,10.0
+MAM02395,lipoxin A4,5,20.0
+MAM02866,S-[2-carboxy-1-(1H-imidazol-4-yl)ethyl]glutathione,5,16.0
+MAM03273,"4,7,10,13-hexadecatetraenoyl-CoA",5,37.0
+MAM02157,hypotaurine,5,2.0
+MAM01989,glycodeoxycholate,5,26.0
+MAM01667,deoxycholoyl-CoA,5,45.0
+MAM01398,bilirubin-monoglucuronoside,5,39.0
+MAM02747,(3R)-phytanoyl-CoA,5,41.0
+MAM02330,lactoneotetraosylceramide,5,44.0
+MAM00197,[protein]-L-arginine,5,7.0
+MAM00407,17alpha-hydroxypregnenolone sulfate,5,21.0
+MAM02762,pregnenolone sulfate,5,21.0
+MAM02771,"propane-1,2-diol",5,3.0
+MAM02329,lactaldehyde,5,3.0
+MAM01694,digalactosylceramide,5,30.0
+MAM02810,psychosine,5,24.0
+MAM02965,taurolithocholate,5,26.0
+MAM02876,salsolinol-1-carboxylate,5,11.0
+MAM00740,"3,5-dioxo-12(R)-hydroxy-eicosa-(8E,10E,14Z)-trienoyl-CoA",5,41.0
+MAM00689,"3(S),12(R)-dihydroxy-5-oxo-eicosa-(8E,10E,14Z)-trienoyl-CoA",5,41.0
+MAM02371,L-formylkynurenine,5,11.0
+MAM02470,methanol,5,1.0
+MAM02804,protoporphyrinogen IX,5,34.0
+MAM01648,decanoic acid,5,10.0
+MAM00616,25(R)THCA-CoA,5,48.0
+MAM02524,N-acetyl-D-mannosamine,5,8.0
+MAM02529,N-acetylglucosamine-6-phosphate,5,8.0
+MAM01394,betaine aldehyde,5,5.0
+MAM01880,G00077,5,66.0
+MAM03554,"4,8-dimethylnonanoyl-CoA",5,32.0
+MAM02639,octadecenoylcarnitine(5),5,25.0
+MAM02117,hexadecenoylcarnitine(9),5,23.0
+MAM00367,14-demethyllanosterol,5,29.0
+MAM02593,nLc5Cer,5,52.0
+MAM00760,3-amino-propanal,5,3.0
+MAM20073,N-(9Z-octadecenoyl)-sphing-4-enine,4,36.0
+MAM20068,N-(11Z-eicosenoyl)-sphing-4-enine,4,38.0
+MAM02694,pentanoyl-CoA,4,26.0
+MAM02107,heptanoyl-CoA,4,28.0
+MAM01074,5-aminolevulinate,4,5.0
+MAM03149,xanthosine,4,10.0
+MAM01100,5-formyl-THF,4,20.0
+MAM01627,cysteamine,4,2.0
+MAM01751,dTDP-glucose,4,16.0
+MAM01053,"5,6-dihydroxyindole-2-carboxylate",4,9.0
+MAM02661,oxalate,4,2.0
+MAM01714,dITP,4,10.0
+MAM02765,previtamin D3,4,27.0
+MAM01393,betaine,4,5.0
+MAM01593,CMP-neuNGc,4,20.0
+MAM02632,O2-4a-cyclic-tetrahydrobiopterin,4,9.0
+MAM02823,quinonoid dihydrobiopterin,4,9.0
+MAM02135,homogentisate,4,8.0
+MAM03911,pitavastatin,4,50.0
+MAM00572,"2,3-diketo-5-methylthiopentyl-1-phosphate",4,6.0
+MAM00115,(7Z)-octadecenoic acid,4,18.0
+MAM00260,"10,13,16,19-docosatetraenoic acid",4,22.0
+MAM00315,"12,15,18,21-tetracosatetraenoic acid",4,24.0
+MAM03918,rosuvastatin,4,44.0
+MAM00265,"10,13,16-docosatriynoic acid",4,22.0
+MAM01094,"5beta-cholestane-3alpha,7alpha,27-triol",4,27.0
+MAM01232,9-cis-retinol,4,20.0
+MAM00215,[protein]-omega-N-(ADP-D-ribosyl)-L-arginine,4,22.0
+MAM00579,"20alpha,22beta dihydroxycholesterol",4,27.0
+MAM02496,N(omega)-(ADP-D-ribosyl)-L-arginine,4,21.0
+MAM01133,5-pp-inspP5,4,6.0
+MAM02905,sialyl-galactosylgloboside,4,61.0
+MAM01653,"de-Fuc, GlcNAc removed PA6 (wo peptide linkage)",4,76.0
+MAM03737,lovastatin-hydroxyacid form,4,24.0
+MAM02623,N-pantothenoylcysteine,4,12.0
+MAM03999,thiomethyl-conjugate-acetaminophen,4,9.0
+MAM03591,"Glucose-1,3-Mannose Oligosaccharide",4,12.0
+MAM00139,(alpha-D-Glucosyl)2-(alpha-D-mannosyl)8-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),4,82.0
+MAM00140,(alpha-D-Glucosyl)3-(alpha-D-mannosyl)8-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),4,88.0
+MAM01636,D-4-phosphopantothenate,4,9.0
+MAM00748,"3alpha,7alpha,12alpha-trihydroxy-5beta-24-oxocholestanoyl-CoA",4,48.0
+MAM01614,corticosterone,4,21.0
+MAM00295,11-deoxycortisol,4,21.0
+MAM01075,"5-androstene-3,17-dione",4,19.0
+MAM02629,O-1-alk-1-enyl-2-acyl-sn-glycero-3-phosphoethanolamine,4,8.0
+MAM00223,1-(1-alkenyl)-sn-glycero-3-phosphoethanolamine,4,7.0
+MAM02746,(3R)-phytanic acid,4,20.0
+MAM01971,"glucosyl-(alpha-D-mannosyl)7-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine, isoform C (protein)",4,70.0
+MAM01970,"glucosyl-(alpha-D-mannosyl)7-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine, isoform B (protein)",4,70.0
+MAM01606,coproporphyrinogen III,4,36.0
+MAM03502,Suberyl Carnitine,4,15.0
+MAM01580,cis-aconitate,4,6.0
+MAM02997,thymine,4,5.0
+MAM01705,dihydrothymine,4,5.0
+MAM03402,acetaminophen/paracetamol,4,8.0
+MAM01183,7alpha-hydroxycholesterol,4,27.0
+MAM00284,"11beta-hydroxyandrost-4-ene-3,17-dione",4,19.0
+MAM01072,"5alpha-pregnane-3,20-dione",4,21.0
+MAM01314,allopregnanolone,4,21.0
+MAM02182,isocaproic-aldehyde,4,6.0
+MAM02680,pantothenate,4,9.0
+MAM03427,AM1c (cyclosporine),4,62.0
+MAM00497,1-acylglycerol-3P-palmn,4,19.0
+MAM02872,SAICAR,4,13.0
+MAM00574,"2,5-diamino-6-(5-triphosphoryl-3,4-trihydroxy-2-oxopentyl)-amino-4-oxopyrimidine",4,9.0
+MAM00575,"2,5-diaminopyrimidine nucleoside triphosphate",4,9.0
+MAM02124,histamine,4,5.0
+MAM00943,"4,4-dimethyl-5alpha-cholesta-8-en-3-beta-ol",4,29.0
+MAM01071,5alpha-dihydrotestosterone-sulfate,4,19.0
+MAM00610,24-hydroxycholesterol,4,27.0
+MAM03177,2-hydroxy-atorvastatin-acid / ortho-hydroxy-atorvastatin acid,4,33.0
+MAM03179,2-hydroxy-atorvastatin-lactone / ortho-hydroxy-atorvastatin lactone,4,33.0
+MAM02883,"sedoheptulose-1,7-bisphosphate",4,7.0
+MAM00640,2-deoxy-D-ribose-5-phosphate,4,5.0
+MAM01950,GDP-L-fucose,4,16.0
+MAM02582,nicotinamide ribonucleoside,4,11.0
+MAM02942,succinate semialdehyde,4,4.0
+MAM03956,Succinyl-Acetoacetate,4,8.0
+MAM03576,ethylmalonyl-CoA,4,26.0
+MAM01969,glucosyl-(alpha-D-mannosyl)6-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),4,64.0
+MAM03542,"4,7-decadienoyl-CoA",4,31.0
+MAM03545,"2,4,7-decatrienoyl-CoA",4,31.0
+MAM02830,"2,7-decadienoyl-CoA",4,31.0
+MAM03794,5-octenoyl-CoA,4,29.0
+MAM03205,"3,7-decadienoyl-CoA",4,31.0
+MAM03172,"2,6,9-dodecatrienoyl-CoA",4,33.0
+MAM03211,"3,6,9-dodecatrienoyl-CoA",4,33.0
+MAM03490,Dodecanedioyl Carnitine,4,19.0
+MAM01767,ecgonine-methyl ester,4,10.0
+MAM01792,"estrone-2,3-semiquinone",4,18.0
+MAM00651,2-hydroxyestrone-1-S-glutathione,4,28.0
+MAM00652,2-hydroxyestrone-4-S-glutathione,4,28.0
+MAM02148,hydroxyacetone,4,3.0
+MAM02445,maltodecaose,4,60.0
+MAM00629,2-amino-3-carboxymuconate semialdehyde,4,7.0
+MAM02584,nicotinate D-ribonucleoside,4,11.0
+MAM01428,CDP-ethanolamine,4,11.0
+MAM01116,5-methylthioadenosine,4,11.0
+MAM02681,PAP,4,10.0
+MAM01257,acetyl adenylate,4,12.0
+MAM03112,UDP-xylose,4,14.0
+MAM02116,hexadecenal,4,16.0
+MAM03727,Alpha-Linolenyl Carnitine,4,25.0
+MAM01001,4-hydroxyestrone-2-S-glutathione,4,28.0
+MAM00642,2-hydroxy-17beta-estradiol-4-S-glutathione,4,28.0
+MAM00641,2-hydroxy-17beta-estradiol-1-S-glutathione,4,28.0
+MAM03142,vitamin D3,4,27.0
+MAM01538,"chondroitin sulfate C (GalNAc6S-GlcA), degradation product 5",4,23.0
+MAM01601,cocaine,4,17.0
+MAM01587,citrate,4,6.0
+MAM02818,pyridoxine-phosphate,4,8.0
+MAM02351,L-cysteinyl-tRNA(cys),4,3.0
+MAM02029,GT1aalpha,4,77.0
+MAM02032,GT2,4,71.0
+MAM02031,GT1c,4,77.0
+MAM02025,GQ1c,4,88.0
+MAM02346,lc3Cer,4,38.0
+MAM02411,L-palmitoylcarnitine,4,23.0
+MAM02388,linoleic-carnitine,4,25.0
+MAM01363,arachidonyl-carnitine,4,27.0
+MAM00608,"23s,25-dihydroxyvitamin D3",4,27.0
+MAM00621,"25-hydroxyvitamin D3-26,23-lactol",4,27.0
+MAM00612,"24-oxo-1alpha,25-dihydroxyvitamin D3",4,27.0
+MAM01794,"estrone-3,4-semiquinone",4,18.0
+MAM00084,(3S)-citramalyl-CoA,4,26.0
+MAM01399,biliverdin,4,33.0
+MAM00037,"(24R,25R)3alpha,7alpha,24-trihydroxy-5beta-cholestanoyl-CoA",4,48.0
+MAM02764,presqualene-PP,4,30.0
+MAM02932,"squalene 2,3-oxide",4,30.0
+MAM02195,IV2Fuc-Lc4Cer,4,50.0
+MAM03090,type I A glycolipid,4,58.0
+MAM01433,cGMP,4,10.0
+MAM02660,orotidine-5-phosphate,4,10.0
+MAM01282,adenylosuccinate,4,14.0
+MAM01642,dATP,4,10.0
+MAM02196,IV2Fuc-nLc4Cer,4,51.0
+MAM01532,"chondroitin sulfate C (GalNAc6S-GlcA) and D (GlcNAc6S-GlcA2S), precursor 1",4,31.0
+MAM03097,type III H glycolipid,4,70.0
+MAM02595,nLc7Cer,4,66.0
+MAM02596,nLc8Cer,4,72.0
+MAM01936,gamma-tocopheroxyl-radical,4,28.0
+MAM02990,thioredoxin,4,525.0
+MAM01837,formylglutathione,4,11.0
+MAM03133,V3Fuc-nLc6Cer,4,64.0
+MAM00630,2-amino-3-oxoadipate,4,6.0
+MAM03982,"trans7,10-hexadecadienoyl-CoA",4,37.0
+MAM01796,ethanol,4,2.0
+MAM02321,L-2-amino-3-oxobutanoic acid,4,4.0
+MAM00097,(5-L-glutamyl)-L-amino acid,4,8.0
+MAM02723,phenylacetylglycine,4,10.0
+MAM00165,(R)-5-phosphomevalonate,4,6.0
+MAM02115,hexadecanoyl-[ACP],4,27.0
+MAM00270,10-HETE,4,20.0
+MAM01054,"5,6-EET",4,20.0
+MAM00168,(R)-S-lactoylglutathione,4,13.0
+MAM20081,2-(1-hydroxypropyl)thiamine diphosphate,4,15.0
+MAM01209,"8,9-EET",4,20.0
+MAM01042,5(S)-HPETE,4,20.0
+MAM01366,argininosuccinate,4,10.0
+MAM00826,3-methylcrotonyl-CoA,4,26.0
+MAM00827,3-methylglutaconyl-CoA,4,27.0
+MAM00365,"14,15-DiHETE",4,20.0
+MAM02999,tiglyl-CoA,4,26.0
+MAM01633,D-3-amino-isobutanoate,4,4.0
+MAM03181,"2,7,10,13-hexadecatetraenoyl-CoA",4,37.0
+MAM03656,"2,4,7,10,13-hexadecapentaenoyl-CoA",4,37.0
+MAM03220,"3,7,10,13-hexadecatetraenoyl-CoA",4,37.0
+MAM02867,S-[2-carboxy-1-(1H-imidazol-4-yl)ethyl]-L-cysteine,4,9.0
+MAM00773,"3-hydroxy-2,6-dimethyl-5-methylene-heptanoyl-CoA",4,31.0
+MAM03194,"2,6,9,12-octadecatetraenoyl-CoA",4,39.0
+MAM03254,"3,6,9,12-octadecatetraenoyl-CoA",4,39.0
+MAM00638,"2-carboxy-2,3-dihydro-5,6-dihydroxyindole",4,9.0
+MAM02138,hordenine,4,10.0
+MAM02499,"N,N-dimethyldopaminequinone",4,10.0
+MAM03364,3-oxo-cis-9-octadecenoyl-CoA,4,39.0
+MAM03365,3(S)-hydroxy-cis-9-octadecenoyl-CoA,4,39.0
+MAM03366,"trans,cis-2,9-octadecadienoyl-CoA",4,39.0
+MAM00824,3-methyl-2-oxobutyrate,4,5.0
+MAM03571,"5,8,11,14-eicosatetraenoyl-CoA",4,41.0
+MAM03171,"2,7,10,13,16-docosapentenoyl-CoA",4,43.0
+MAM03557,"2,4,7,10,13,16-docosahexenoyl-CoA",4,43.0
+MAM03210,"3,7,10,13,16-docosapentenoyl-CoA",4,43.0
+MAM00800,3-hydroxytetracosanoyl-CoA,4,45.0
+MAM00064,(2E)-tetracosenoyl-CoA,4,45.0
+MAM00878,3-oxohexacosanoyl-CoA,4,47.0
+MAM00783,3-hydroxyhexacosanoyl-CoA,4,47.0
+MAM00049,(2E)-hexacosenoyl-CoA,4,47.0
+MAM03084,tRNA-guanine,4,5.0
+MAM02911,sn-glycero-3-phospho-1-inositol,4,9.0
+MAM03560,docosanedioic acid,4,22.0
+MAM03659,3-hexenoyl-CoA,4,27.0
+MAM02097,hepoxilin A3-c,4,30.0
+MAM00357,13-hydroxy-alpha-tocotrienol,4,29.0
+MAM01935,gamma-tocopherol,4,28.0
+MAM00360,13-hydroxy-gamma-tocopherol,4,28.0
+MAM00778,3-hydroxyheneicosanoyl-CoA,4,42.0
+MAM00044,(2E)-heneicosenoyl-CoA,4,42.0
+MAM00356,13-hydroxy-alpha-tocopherol,4,29.0
+MAM00563,"2(S),6-dimethyl-heptanoyl-CoA",4,30.0
+MAM03034,"trans-3-cis-8,11,14-eicosatetraenoyl-CoA",4,41.0
+MAM00073,"(2E,6Z,9Z,12Z)-octadecatetraenoyl-CoA",4,39.0
+MAM00697,"3(S)-hydroxy-(6Z,9Z,12Z)-octadecatrienoyl-CoA",4,39.0
+MAM00834,"3-oxo-(6Z,9Z,12Z)-octadecatrienoyl-CoA",4,39.0
+MAM00072,"(2E,4Z,7Z,10Z)-hexadecatetraenoyl-CoA",4,37.0
+MAM00089,"(3Z,7Z,10Z)-hexadecatrienoyl-CoA",4,37.0
+MAM02378,L-gulonate,4,6.0
+MAM03362,3(S)-phytanoyl-CoA,4,41.0
+MAM01836,formyl-CoA,4,22.0
+MAM01575,"cis,cis-3,6-dodecadienoyl-CoA",4,33.0
+MAM03333,"trans,cis-dodeca-2,5-dienoyl-CoA",4,33.0
+MAM02492,myo-inositol-hexakisphosphate,4,6.0
+MAM03790,11-Octadecenoyl Carnitine,4,25.0
+MAM10038,hyocholoyl-CoA,4,45.0
+MAM10039,dehydrocholoyl-CoA,4,45.0
+MAM00887,3-oxononadecanoyl-CoA,4,40.0
+MAM00790,3-hydroxynonadecanoyl-CoA,4,40.0
+MAM00054,(2E)-nonadecenoyl-CoA,4,40.0
+MAM00873,3-oxoheneicosanoyl-CoA,4,42.0
+MAM00331,12-oxo-20-hydroxy-LTB4,4,20.0
+MAM00332,12-oxo-20-trihydroxy-LTB4,4,20.0
+MAM00328,"12-oxo-10,11-dihydro-20-COOH-LTB4",4,20.0
+MAM00291,11-cis-retinol,4,20.0
+MAM00885,3-oxomyrist-5-enoyl-CoA,4,35.0
+MAM03024,"trans,cis-octadeca-2,11-dienoyl-CoA",4,39.0
+MAM00170,(S)-3-hydroxy-11-cis-octadecenoyl-CoA,4,39.0
+MAM00841,3-oxo-11-cis-octadecenoyl-CoA,4,39.0
+MAM03020,"trans,cis-hexadeca-2,9-dienoyl-CoA",4,37.0
+MAM03016,"trans,cis-2,17-hexacosadienoyl-CoA",4,47.0
+MAM00142,(alpha-D-mannosyl)4-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),4,46.0
+MAM01505,cholesterol-ester-palmn,4,43.0
+MAM00879,3-oxo-hexacosenoyl-CoA,4,47.0
+MAM03276,4-Methyl-Thio-Oxo-Butyrate,4,5.0
+MAM02785,prostaglandin E1,4,20.0
+MAM03023,"trans,cis-myristo-2,7-dienoyl-CoA",4,35.0
+MAM00166,(R)-methylmalonyl-CoA,4,25.0
+MAM03025,"trans,cis-octadeca-2,9-dienoyl-CoA",4,39.0
+MAM00176,(S)-3-hydroxyoleyleoyl-CoA,4,39.0
+MAM03019,"trans,cis-hexadeca-2,7-dienoyl-CoA",4,37.0
+MAM00172,(S)-3-hydroxy-7-hexadecenoyl-CoA,4,37.0
+MAM00849,3-oxo-7-hexadecenoyl-CoA,4,37.0
+MAM03022,"trans,cis-myristo-2,5-dienoyl-CoA",4,35.0
+MAM01573,cis-(3S)-hydroxytetradec-5-enoyl-CoA,4,35.0
+MAM01153,"6,7-dihydro-LTB4",4,20.0
+MAM01119,"5-oxo-12(R)-hydroxy-eicosa-(2E,8E,10E,14Z)-tetraenoyl-CoA",4,41.0
+MAM01685,"D-glucurono-6,3-lactone",4,6.0
+MAM02860,"S-(9-deoxy-delta9,12-PGD2)-glutathione",4,30.0
+MAM02859,S-(9-deoxy-delta12-PGD2)-glutathione,4,30.0
+MAM02791,prostaglandin G1,4,20.0
+MAM02793,prostaglandin H1,4,20.0
+MAM02384,L-iduronic acid,4,6.0
+MAM00153,(alpha-D-mannosyl)8-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein),4,70.0
+MAM00715,3(S)-hydroxy-hexacosenoyl-CoA,4,47.0
+MAM01026,4-oxo-13-cis-retinoate,4,20.0
+MAM02624,N-retinylidene-N-retinylethanolamine,4,42.0
+MAM03088,tryptamine,4,10.0
+MAM02169,indoleacetate,4,10.0
+MAM02875,salsolinol,4,10.0
+MAM01292,adrenochrome,4,9.0
+MAM01135,5-S-glutathionyl-adrenochrome hydroquinone,4,19.0
+MAM01140,5-S-glutathionyl-noradrenochrome hydroquinone,4,18.0
+MAM01137,5-S-glutathionyl-dopachrome hydroquinone,4,19.0
+MAM01136,5-S-glutathionyl-aminochrome reduced,4,18.0
+MAM01622,crotonyl-CoA,4,25.0
+MAM03119,urate radical,4,5.0
+MAM02459,melatonin radical,4,13.0
+MAM01161,6-hydroxymelatonin,4,13.0
+MAM01839,formyl-N-acetyl-5-methoxykynurenamine,4,13.0
+MAM00835,"3-oxo-10(R)-hydroxy-octadeca-(6E,8E,12Z)-trienoate",4,18.0
+MAM00870,"3-oxoeicosa-cis,cis-11,14-dienoyl-CoA",4,41.0
+MAM00087,"(3S)-hydroxy-eicosa-cis,cis-11,14-dienoyl-CoA",4,41.0
+MAM00363,13-oxy-radical-octadecadienoate,4,18.0
+MAM02523,N-acetyl-D-glucosaminylphosphatidylinositol,4,19.0
+MAM00864,"3-oxo-docosa-7,10,13,16-all-cis-tetraenoyl-CoA",4,43.0
+MAM00714,"3(S)-hydroxy-docosa-7,10,13,16-all-cis-tetraenoyl-CoA",4,43.0
+MAM00681,"2-trans-9,12,15,18-all-cis-tetracosapentaenoyl-CoA",4,45.0
+MAM00865,"3-oxo-docosa-cis,cis,cis-10,13,16-trienoyl-CoA",4,43.0
+MAM10040,hyodeoxycholoyl-CoA,4,45.0
+MAM10042,ursodeoxycholoyl-CoA,4,45.0
+MAM01216,9(10)-EpOME,4,18.0
+MAM00305,12(13)-EpOME,4,18.0
+MAM02889,selenocysteine,4,3.0
+MAM02888,selenocystathionine,4,7.0
+MAM00200,[protein]-L-cysteine,4,4.0
+MAM02960,T-antigen,4,14.0
+MAM00698,"3(S)-hydroxy-10,13,16-all-cis-docosatrienoyl-CoA",4,43.0
+MAM03004,"trans,cis,cis,cis-2,10,13,16-docosatetraenoyl-CoA",4,43.0
+MAM01979,glutathionyl-3-hydroxykynurenine glucoside,4,26.0
+MAM02551,N-acetyl-seryl-aspartyl-lysyl-proline,4,20.0
+MAM03323,Diazepam,4,16.0
+MAM00175,(S)-3-hydroxyhexadecanoyl-CoA,4,37.0
+MAM01121,"5-oxo-12(S)-hydroxy-eicosa-(2E,8E,10E,14Z)-tetraenoyl-CoA",4,41.0
+MAM00837,"3-oxo-10(S)-hydroxy-octadeca-(6E,8E,12Z)-trienoate",4,18.0
+MAM00183,(S)-hydroxyoctanoyl-CoA,4,29.0
+MAM00892,3-oxooctanoyl-CoA,4,29.0
+MAM00182,(S)-hydroxyhexanoyl-CoA,4,27.0
+MAM00882,3-oxohexanoyl-CoA,4,27.0
+MAM01863,fumarylacetoacetate,4,8.0
+MAM02361,leukoaminochrome,4,8.0
+MAM02568,neuromedin B,4,52.0
+MAM02570,neuromedin N,4,32.0
+MAM01328,alpha-tocopheryl hydroquinone,4,29.0
+MAM03151,xanthurenate,4,10.0
+MAM00255,"10,11-dihydro-20-dihydroxy-LTB4",4,20.0
+MAM00583,"20-COOH-10,11-dihydro-LTB4",4,20.0
+MAM00026,(18E)-20-oxo-20-CoA-LTB4,4,41.0
+MAM01139,5-S-glutathionyl-L-dopa,4,19.0
+MAM00316,"12,15,18,21-tetracosatetraenoylcarnitine",4,31.0
+MAM02111,hexacosenoylcarnitine,4,33.0
+MAM00290,11-cis-retinal,4,20.0
+MAM00811,"3-keto-eicosa-8,11,14,17-all-cis-tetraenoyl-CoA",4,41.0
+MAM00708,"3(S)-hydroxy-all-cis-8,11,14,17-eicosatetraenoyl-CoA",4,41.0
+MAM01769,"eicosa-(2E,8Z,11Z,14Z,17Z)-pentaenoyl-CoA",4,41.0
+MAM00863,"3-oxo-docosa-7,10,13,16,19-all-cis-pentaenoyl-CoA",4,43.0
+MAM00713,"3(S)-hydroxy-docosa-7,10,13,16,19-all-cis-pentaenoyl-CoA",4,43.0
+MAM00679,"2-trans-7,10,13,16,19-all-cis-docosahexaenoyl-CoA",4,43.0
+MAM00718,"3(S)-hydroxy-tetracosa-9,12,15,18,21-all-cis-pentaenoyl-CoA",4,45.0
+MAM00680,"2-trans-9,12,15,18,21-all-cis-tetracosahexaenoyl-CoA",4,45.0
+MAM00546,"1-nitronaphthalene-5,6-oxide",4,10.0
+MAM02795,prostaglandin I2,4,20.0
+MAM01168,6-oxo-prostaglandin F1alpha,4,20.0
+MAM01037,"5(S),12(R)-dihydroxy-eicosa-2,8-trans-6,14-cis-tetraenoyl-CoA",4,41.0
+MAM01682,D-glucitol,4,6.0
+MAM03010,"trans,cis,cis-2,9,12-octadecatrienoyl-CoA",4,39.0
+MAM01577,"cis,cis-palmito-7,10-dienoyl-CoA",4,37.0
+MAM01407,"bromobenzene-3,4-oxide",4,6.0
+MAM01405,"bromobenzene-2,3-oxide",4,6.0
+MAM00861,"3-oxo-docosa-10,13,16,19-all-cis-tetraenoyl-CoA",4,43.0
+MAM00711,"3(S)-hydroxy-docosa-10,13,16,19-all-cis-tetraenoyl-CoA",4,43.0
+MAM03002,"trans,cis,cis,cis,cis-2,10,13,16,19-docosapentaenoyl-CoA",4,43.0
+MAM00901,"3-oxo-tetracosa-12,15,18,21-all-cis-tetraenoyl-CoA",4,45.0
+MAM03003,"trans,cis,cis,cis,cis-2,12,15,18,21-tetracosapentaenoyl-CoA",4,45.0
+MAM00721,"3,3-diiodo-L-thyronine-4-O-sulfate",4,15.0
+MAM00932,4-(n-nitrosomethylamino)-1-(3-pyridyl)-1-butanone,4,10.0
+MAM02573,neurotensin,4,78.0
+MAM00248,"1,3-diaminopropane",4,3.0
+MAM01387,beta-casomorphin,4,44.0
+MAM02563,neocasomorphin,4,35.0
+MAM01348,apelin-13,4,69.0
+MAM03330,cyanosulfurous acid anion,4,1.0
+MAM03525,Cyanate,4,1.0
+MAM02634,O-acetylcarnitine,4,9.0
+MAM00829,3-monoiodo-L-thyronine-4-O-sulfate,4,15.0
+MAM00737,"3,5-diiodo-L-thyronine-4-O-sulfate",4,15.0
+MAM01041,5(S)-HpEPE,4,20.0
+MAM02363,leukotriene A5,4,20.0
+MAM00212,"[protein]-N6,N6-dimethyl-L-lysine",4,9.0
+MAM00211,"[protein]-N6,N6,N6-trimethyl-L-lysine",4,10.0
+MAM02443,malonyl-carnitine,4,10.0
+MAM00243,"1,2-dihydronaphthalene-1,2-diol",4,10.0
+MAM02800,prostaglandin-PGE2-glyceryl ester,4,23.0
+MAM01296,aflatoxin B1,4,17.0
+MAM02716,PGH3,4,20.0
+MAM20070,"N-(5Z,8Z,11Z,14Z-eicosatetraenoyl)-(4R)-hydroxysphinganine",4,38.0
+MAM20074,N-(9Z-octadecenoyl)-sphinganine,4,36.0
+MAM20072,N-(9Z-octadecenoyl)-(4R)-hydroxysphinganine,4,36.0
+MAM20065,menadiol,4,11.0
+MAM03155,xylitol,4,5.0
+MAM02899,S-glutaryldihydrolipoamide,4,13.0
+MAM02132,homocarnosine,4,10.0
+MAM01356,apoC-lys,4,6.0
+MAM03935,simvastatin dihydroxy acid form,4,25.0
+MAM00763,3beta-hydroxy-5-cholestenal,4,27.0
+MAM00764,3beta-hydroxy-5-cholestene-27-oate,4,27.0
+MAM20069,N-(11Z-eicosenoyl)-sphinganine,4,38.0
+MAM01004,4-hydroxyphenyllactate,4,9.0
+MAM02142,hydracrylate,4,3.0
+MAM00996,4-hydroxybenzoyl-CoA,4,28.0
+MAM01103,5-hydroxyindoleacetate,4,10.0
+MAM01382,"beta-1,4-mannose-N-acetylglucosamine",4,14.0
+MAM20067,N-(11Z-eicosenoyl)-(4R)-hydroxysphinganine,4,38.0
+MAM00564,2(S)-pristanal,4,19.0
+MAM20061,epsilon-(gamma-L-Glutamyl)-L-lysine,4,11.0
+MAM20071,"N-(5Z,8Z,11Z,14Z-eicosatetraenoyl)-sphinganine",4,38.0
+MAM02635,O-butanoylcarnitine,3,11.0
+MAM01992,glycogenin G4G7,3,1845.0
+MAM00618,25(S)THCA-CoA,3,48.0
+MAM01984,glycerone,3,3.0
+MAM00725,"3,4-dihydroxy-5-all-trans-decaprenylbenzoate",3,57.0
+MAM01410,butyrate,3,4.0
+MAM03932,simvastatin-acyl-glucuronide,3,31.0
+MAM03919,rosuvastatin-glucuronide,3,56.0
+MAM00950,"4,8-dimethylnonanoylcarnitine",3,18.0
+MAM04082,Zymosterol Intermediate 2,3,27.0
+MAM03995,thiomethyl-sulphoxide-conjugate-acetaminophen,3,9.0
+MAM01759,D-xylulose,3,5.0
+MAM00387,15-epi-lipoxin A5,3,20.0
+MAM00620,25-hydroxyvitamin D2,3,28.0
+MAM00109,"(6Z,9Z,12Z,15Z,18Z)-tetracosapentaenoylcarnitine",3,31.0
+MAM00979,"4-cholesten-7alpha,27-diol-3-one",3,27.0
+MAM00130,"(9Z,12Z,15Z,18Z)-tetracosatetraenoylcarnitine",3,31.0
+MAM00619,25-hydroxycholesterol,3,27.0
+MAM02544,N-acetylneuraminate-9-phosphate,3,11.0
+MAM01952,gentisate aldehyde,3,7.0
+MAM04059,udp-ribose,3,14.0
+MAM01651,de-Fuc form of PA6 (wo peptide linkage),3,84.0
+MAM00754,"3alpha,7alpha-dihydroxy-24-oxo-5beta-cholestanoyl coa",3,48.0
+MAM02324,l2n2m2mn,3,54.0
+MAM01638,D-alanine,3,3.0
+MAM00531,1D-myo-inositol-bisdiphosphate-tetrakisphosphate,3,6.0
+MAM01019,4-nitrocatechol,3,6.0
+MAM02014,GM2alpha,3,49.0
+MAM02009,GM1alpha,3,55.0
+MAM02657,O-propanoylcarnitine,3,10.0
+MAM01298,"aflatoxin B1-exo-8,9-epoxide",3,17.0
+MAM01294,aflatoxin B1 dialdehyde,3,17.0
+MAM03044,trichloroethene,3,2.0
+MAM01440,chloral hydrate,3,2.0
+MAM03041,trichloroacetate,3,2.0
+MAM00712,"3(S)-hydroxy-docosa-13,16,19-all-cis-trienoyl-CoA",3,43.0
+MAM01039,5(S)-HEPE,3,20.0
+MAM02365,leukotriene B5,3,20.0
+MAM02517,"N6,N6,N6-trimethyl-L-lysine",3,9.0
+MAM02767,procollagen-5-hydroxy-L-lysine,3,7.0
+MAM01377,"benzo[a]pyrene-7,8-diol",3,20.0
+MAM01729,dodecanoylcarnitine,3,19.0
+MAM03049,tridecanoylcarnitine,3,20.0
+MAM02973,tetradecanoylcarnitine,3,21.0
+MAM02974,tetradecenoylcarnitine(5),3,21.0
+MAM01777,eicosenoylcarnitine(9),3,27.0
+MAM01775,eicosenoylcarnitine(11),3,27.0
+MAM00122,"(8Z,11Z)-eicosadienoylcarnitine",3,27.0
+MAM00100,"(5Z,8Z,11Z)-eicosatrienoylcarnitine",3,27.0
+MAM02051,heneicosanoylcarnitine,3,28.0
+MAM01724,docosanoylcarnitine,3,29.0
+MAM01727,docosenoylcarnitine,3,29.0
+MAM01661,dehydrospermidine,3,7.0
+MAM02531,N-acetyl-L-asparagine,3,6.0
+MAM00169,(S)-2-aminobutanoate,3,4.0
+MAM02100,heptadecanoylcarnitine,3,24.0
+MAM02102,heptadecenoylcarnitine(7),3,24.0
+MAM02103,heptadecenoylcarnitine(8),3,24.0
+MAM02940,stearoylcarnitine,3,25.0
+MAM00028,(18R)-HEPE,3,20.0
+MAM01056,"5,6-epoxy,(18R)-HEPE",3,20.0
+MAM02638,octadecenoylcarnitine(11),3,25.0
+MAM00105,"(6Z,9Z)-octadecadienoylcarnitine",3,25.0
+MAM02611,nonadecanoylcarnitine,3,26.0
+MAM01772,eicosanoylcarnitine,3,27.0
+MAM03455,Arginyl-Valyl-Tryptophan,3,22.0
+MAM03458,Asparaginyl-Methionyl-Proline,3,14.0
+MAM03459,Asparaginyl-Phenylalanyl-Aspartate,3,17.0
+MAM03460,Asparaginyl-Phenylalanyl-Cysteine,3,16.0
+MAM03461,Asparaginyl-Tyrosyl-Glycine,3,15.0
+MAM03462,Asparaginyl-Tyrosyl-Phenylalanine,3,22.0
+MAM03463,Asparaginyl-Tyrosyl-Threonine,3,17.0
+MAM03464,Asparaginyl-Alanyl-Arginine,3,13.0
+MAM03465,Aspartyl-Asparaginyl-Glutamate,3,13.0
+MAM03467,Aspartyl-Glutamyl-Proline,3,14.0
+MAM03468,Aspartyl-Glutamyl-Tryptophan,3,20.0
+MAM01776,eicosenoylcarnitine(7),3,27.0
+MAM00973,4-bromocatechol,3,6.0
+MAM00814,3-keto-THA-CoA,3,45.0
+MAM00557,1-pyrroline,3,4.0
+MAM02158,hypothiocyanite,3,1.0
+MAM00951,4-[(hydroxymethyl)nitrosoamino]-1-(3-pyridinyl)-1-butanone,3,10.0
+MAM00107,"(6Z,9Z,12Z,15Z)-octadecatetraenoylcarnitine",3,25.0
+MAM00124,"(8Z,11Z,14Z,17Z)-eicosatetraenoylcarnitine",3,27.0
+MAM00102,"(5Z,8Z,11Z,14Z,17Z)-eicosapentaenoylcarnitine",3,27.0
+MAM03345,Dynorphin B,3,74.0
+MAM00120,"(7Z,10Z,13Z,16Z,19Z)-docosapentaenoylcarnitine",3,29.0
+MAM01723,docosahexaenoylcarnitine,3,29.0
+MAM00011,"(11Z,14Z,17Z)-eicosatrienoylcarnitine",3,27.0
+MAM00342,"13,16,19-docosatrienoylcarnitine",3,29.0
+MAM00261,"10,13,16,19-docosatetraenoylcarnitine",3,29.0
+MAM01774,eicosatrienoylcarnitine,3,27.0
+MAM02410,L-oleoylcarnitine,3,25.0
+MAM00545,1-nitronaphthalene,3,10.0
+MAM03412,Alanyl-Arginyl-Glycine,3,11.0
+MAM03413,Alanyl-Asparaginyl-Leucine,3,13.0
+MAM03414,Alanyl-Glycyl-Lysine,3,11.0
+MAM00401,16e-18-oxo-18-CoA-dinor-LTE4,3,42.0
+MAM02652,omega-COOH-tetranor-LTE3-CoA,3,40.0
+MAM02994,thromboxane A2,3,20.0
+MAM02995,thromboxane B2,3,20.0
+MAM00092,"(4Z,7Z,10Z,13Z,16Z)-docosapentaenoylcarnitine",3,29.0
+MAM01770,eicosadienoylcarnitine,3,27.0
+MAM00022,"(13Z,16Z)-docosadienoylcarnitine",3,29.0
+MAM00263,"10,13,16-docosatrienoylcarnitine",3,29.0
+MAM01726,docosenoylcarnitine(11),3,29.0
+MAM02637,octadecatrienoylcarnitine,3,25.0
+MAM02367,leukotriene C5,3,30.0
+MAM03043,trichloroethanol,3,2.0
+MAM03533,Cystyl-Leucyl-Threonine,3,13.0
+MAM03534,Cystyl-Seryl-Methionine,3,11.0
+MAM03535,Cystyl-Tyrosyl-Asparagine,3,16.0
+MAM03598,Glutaminyl-Histidyl-Lysine,3,17.0
+MAM03600,Glutaminyl-Lysyl-Tryptophan,3,22.0
+MAM02924,spermine dialdehyde,3,10.0
+MAM01110,5-hydroxytryptophol,3,10.0
+MAM02636,ocosatetraenoylcarnitine,3,29.0
+MAM03469,Aspartyl-Histidyl-Cysteine,3,13.0
+MAM03470,Aspartyl-Histidyl-Proline,3,15.0
+MAM03471,Aspartyl-Lysyl-Glutamate,3,15.0
+MAM03472,Aspartyl-Lysyl-Histidine,3,16.0
+MAM03474,Aspartyl-Prolyl-Lysine,3,15.0
+MAM00992,4-hydroxy-4-(methylnitrosoamino)-1-(3-pyridinyl)-1-butanone,3,10.0
+MAM00226,"1-(methylnitrosoamino)-4-(3-pyridinyl)-1,4-butanediol",3,10.0
+MAM01320,alpha-[3-[(hydroxymethyl)nitrosoamino]propyl]-3-pyridinemethanol,3,10.0
+MAM01150,"6,7-dihydro-12-epi-LTB4",3,20.0
+MAM01043,5-(S-L-cysteinyl)-dopaquinone,3,12.0
+MAM00723,"3,4-dihydro-1,4-benzothiazine-3-carboxylate",3,12.0
+MAM00817,3-methoxy-4-hydroxy-5-all-trans-decaprenylbenzoate,3,58.0
+MAM01024,4-OH-retinal,3,20.0
+MAM03638,Gums,3,2760000.0
+MAM00667,2-methylglutaconyl-CoA,3,27.0
+MAM00688,"3(S),10(R)-OH-octadeca-6-trans-4,12-cis-trienoyl-CoA",3,39.0
+MAM00687,"3(S),10(R)-OH-octadeca-6-trans-4,12-cis-trienoate",3,18.0
+MAM02650,omega-COOH-dinor-LTE4-CoA,3,42.0
+MAM03475,Aspartyl-Valyl-Asparagine,3,13.0
+MAM03527,Cystyl-Asparaginyl-Methionine,3,12.0
+MAM03528,Cystyl-Aspartyl-Phenylalanine,3,16.0
+MAM03530,Cystyl-Glutaminyl-Methionine,3,13.0
+MAM03531,Cystyl-Glutamyl-Histidine,3,14.0
+MAM03532,Cystyl-Glutamyl-Tryptophan,3,19.0
+MAM03618,Glutamyl-Tryptophanyl-Alanine,3,19.0
+MAM03624,Glycyl-Histidyl-Asparagine,3,12.0
+MAM03625,Glycyl-Histidyl-Lysine,3,14.0
+MAM03627,Glycyl-Lysyl-Cysteine,3,11.0
+MAM00173,(S)-3-hydroxybutyryl-CoA,3,25.0
+MAM00729,"3,4-dihydroxyphenylacetate",3,8.0
+MAM00821,3-methoxytyramine,3,9.0
+MAM01010,4-maleylacetoacetate,3,8.0
+MAM01002,4-hydroxyphenylacetaldehyde,3,8.0
+MAM01003,4-hydroxyphenylacetate,3,8.0
+MAM00734,"3,5,3-triiodothyronine-4-sulfate",3,15.0
+MAM03164,D-alanyl-D-alanine,3,6.0
+MAM03483,Beta-Glucans,3,1200000.0
+MAM03601,Glutaminyl-Prolyl-Glutamate,3,15.0
+MAM00256,"10,11-dihydro-20-trihydroxy-LTB4",3,20.0
+MAM02649,omega-carboxy-trinor-LTB4,3,18.0
+MAM03437,Arginyl-Alanyl-Threonine,3,13.0
+MAM03441,Arginyl-Cystinyl-Glycine,3,11.0
+MAM03442,Arginyl-Cystinyl-Serine,3,12.0
+MAM01246,"9-peroxy-(5Z,7E,11Z,14Z)-eicosatetraenoate",3,20.0
+MAM00302,"11-peroxy-(5Z,8Z,12E,14Z)-eicosatetraenoate",3,20.0
+MAM00335,"12-peroxy-(5Z,8Z,10E,14Z)-eicosatetraenoate",3,20.0
+MAM02864,S-(PGJ2)-glutathione,3,30.0
+MAM02863,S-(PGA2)-glutathione,3,30.0
+MAM00547,"1-nitronaphthalene-7,8-oxide",3,10.0
+MAM00228,"1,1-dichloroethylene",3,2.0
+MAM00568,"2,2-dichloroacetaldehyde",3,2.0
+MAM00565,2-(S-glutathionyl)acetyl chloride,3,12.0
+MAM01444,chloroacetyl chloride,3,2.0
+MAM01218,"9,10-12,13-diepoxy-octadecanoate",3,18.0
+MAM03612,Glutamyl-Methioninyl-Histidine,3,16.0
+MAM03617,Glutamyl-Threonyl-Lysine,3,15.0
+MAM02898,S-farnesyl-protein,3,19.0
+MAM00677,"2-trans,6-trans-farnesal",3,15.0
+MAM02906,sialyl-T antigen,3,25.0
+MAM01608,core 3,3,16.0
+MAM01171,6-trans-12-epi-LTB4,3,20.0
+MAM00254,"10,11-dihydro-12R-hydroxy-LTC4",3,30.0
+MAM00602,20-trihydroxy-LTB4,3,20.0
+MAM01172,6-trans-LTB4,3,20.0
+MAM01599,cob(II)alamin,3,62.0
+MAM03602,Glutaminyl-Tryptophanyl-Glutamate,3,21.0
+MAM03603,Glutaminyl-Tyrosyl-Leucine,3,20.0
+MAM03606,Glutaminyl-Arginyl-Leucine,3,17.0
+MAM03607,Glutaminyl-Asparaginyl-Leucine,3,15.0
+MAM03609,Glutamyl-Isoleucyl-Lysine,3,17.0
+MAM03416,Alanyl-Lysine-Threonine,3,13.0
+MAM03436,Arginyl-Alanine-Phenylalanine,3,18.0
+MAM01106,5-hydroxykynurenine,3,10.0
+MAM00830,3-O-methyldopa,3,10.0
+MAM02603,N-methylsalsolinol,3,11.0
+MAM02473,methylamine,3,1.0
+MAM02407,L-metanephrine,3,10.0
+MAM03628,Glycyl-Lysyl-Phenylalanine,3,17.0
+MAM03896,L-Prolinylglycine,3,7.0
+MAM03907,Psyllium,3,9642006.0
+MAM00762,3-beta-D-glucuronosyl-3-beta-D-galactosyl-4-beta-D-galactosyl-O-beta-D-xylosylprotein,3,23.0
+MAM01568,chondroitin sulfate precursor (GalNAc-GlcA-(Gal)2-Xyl-L-Ser (protein)),3,31.0
+MAM00074,"(2E,7Z,10Z,13Z,16Z)-docosapentaenoyl-CoA",3,43.0
+MAM00903,"3-oxo-tetracosa-9,12,15,18-all-cis-tetraenoyl-CoA",3,45.0
+MAM02881,se-adenosyl-L-selenohomocysteine,3,14.0
+MAM02882,se-adenosylselenomethionine,3,15.0
+MAM02895,se-methyl-L-selenocysteine,3,4.0
+MAM03851,Pectin,3,2535.0
+MAM01991,glycogenin G4G4,3,1827.0
+MAM01993,glycogenin G7,3,1821.0
+MAM03411,Alanyl-Arginyl-Cysteine,3,12.0
+MAM01732,dolichyl-diphosphate,3,100.0
+MAM01730,dolichol,3,100.0
+MAM00151,"(alpha-D-mannosyl)7-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine, isoform B (protein)",3,64.0
+MAM03663,Histidyl-Arginyl-Serine,3,15.0
+MAM03666,Histidyl-Glutaminyl-Alanine,3,14.0
+MAM03668,Histidyl-Glutamyl-Glutamine,3,16.0
+MAM03669,Histidyl-Lysyl-Lysine,3,14.0
+MAM03671,Histidyl-Lysyl-Alanine,3,15.0
+MAM03672,Histidyl-Lysyl-Glutamate,3,17.0
+MAM03673,Histidyl-Lysyl-Isoleucine,3,18.0
+MAM03674,Histidyl-Lysyl-Threonine,3,16.0
+MAM02168,indole-3-acetaldehyde,3,10.0
+MAM01108,5-hydroxy-N-formylkynurenine,3,11.0
+MAM02323,l2fn2m2masn,3,68.0
+MAM02672,PA6,3,90.0
+MAM03390,3-Oxostearoyl-ACP,3,29.0
+MAM10035,alpha-muricholoyl-CoA,3,45.0
+MAM10036,beta-muricholoyl-CoA,3,45.0
+MAM02862,S-(PGA1)-glutathione,3,30.0
+MAM02020,gpi heparan sulfate,3,57.0
+MAM00275,10-peroxy-docosahexaenoate,3,22.0
+MAM00303,11-peroxy-docosahexaenoate,3,22.0
+MAM01315,alloxan,3,4.0
+MAM00662,2-methylacetoacetyl-CoA,3,26.0
+MAM03632,Glycyl-Tyrosyl-Lysine,3,17.0
+MAM03633,Glycyl-Valyl-Histidine,3,13.0
+MAM03662,Histidyl-Arginyl-Cysteine,3,15.0
+MAM04061,ursodeoxycholyl-CoA,3,45.0
+MAM01034,4-trimethylammoniobutanal,3,7.0
+MAM02278,keratan sulfate I,3,247.0
+MAM02237,"keratan sulfate I, degradation product 1",3,241.0
+MAM02274,"keratan sulfate I, degradation product 6",3,210.0
+MAM02276,"keratan sulfate I, degradation product 8",3,194.0
+MAM02277,"keratan sulfate I, degradation product 9",3,188.0
+MAM02239,"keratan sulfate I, degradation product 11",3,180.0
+MAM02240,"keratan sulfate I, degradation product 12",3,174.0
+MAM02687,pentadecanoyl-[ACP],3,26.0
+MAM03677,Histidyl-Methionyl-Glutamine,3,16.0
+MAM03678,Histidyl-Phenylalanyl-Arginine,3,21.0
+MAM03679,Histidyl-Prolyl-Lysine,3,17.0
+MAM03694,Isoleucyl-Asparaginyl-Histidine,3,16.0
+MAM03696,Isolecyl-Glutaminyl-Glutamate,3,16.0
+MAM03697,Isolecyl-Glycyl-Arginine,3,14.0
+MAM03698,Isolecyl-Prolyl-Lysine,3,17.0
+MAM00145,(alpha-D-mannosyl)5-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (C),3,52.0
+MAM00523,"1D-myo-inositol-1,3,4,6-tetrakisphosphate",3,6.0
+MAM03352,cis-6-dodecenoyl-CoA,3,33.0
+MAM03363,3(S)-2-hydroxyphytanoyl-CoA,3,41.0
+MAM00078,(2S)-pristanoyl-CoA,3,40.0
+MAM00077,(2R)-pristanic acid,3,19.0
+MAM00075,(2R)-pristanoyl-CoA,3,40.0
+MAM03331,"4,4-Dimethylcholesta-8(9),14-Dien-3Beta-Ol",3,29.0
+MAM03326,3-oxolaur-cis-5-enoyl-CoA,3,33.0
+MAM03320,1-Alkyl-Sn-Glycerol 3-Phosphate,3,3.0
+MAM00529,1D-myo-inositol-3-phosphate,3,6.0
+MAM01312,allantoate,3,4.0
+MAM01313,allantoin,3,4.0
+MAM01104,5-hydroxyisourate,3,5.0
+MAM03675,Histidyl-Lysyl-Valine,3,17.0
+MAM00372,14-peroxy-docosahexaenoate,3,22.0
+MAM10037,omega-muricholoyl-CoA,3,45.0
+MAM02842,riboflavin,3,17.0
+MAM01803,FADH2,3,27.0
+MAM03699,Isolecyl-Seryl-Arginine,3,15.0
+MAM03700,Isolecyl-Tryptophanyl-Tyrosine,3,26.0
+MAM03711,Leucyl-Alanyl-Arginine,3,15.0
+MAM03712,Leucyl-Asparaginyl-Aspartate,3,14.0
+MAM03713,Leucyl-Aspartyl-Lysine,3,16.0
+MAM03718,Leucyl-Prolyl-Arginine,3,17.0
+MAM03719,Leucyl-Seryl-Tryptophan,3,20.0
+MAM03721,Leucyl-Tryptophanyl-Arginine,3,23.0
+MAM03738,Lysyl-Arginyl-Leucine,3,18.0
+MAM03739,Lysyl-Cysteinyl-Histidine,3,15.0
+MAM03740,Lysyl-Glutaminyl-Phenylalanine,3,20.0
+MAM03743,Lysyl-Phenylalanyl-Isoleucine,3,21.0
+MAM03744,Lysyl-Tryptophanyl-Arginine,3,23.0
+MAM00526,"1D-myo-inositol-1,4-bisphosphate",3,6.0
+MAM02243,"keratan sulfate I, degradation product 15",3,160.0
+MAM02245,"keratan sulfate I, degradation product 17",3,152.0
+MAM02246,"keratan sulfate I, degradation product 18",3,146.0
+MAM02249,"keratan sulfate I, degradation product 20",3,138.0
+MAM02250,"keratan sulfate I, degradation product 21",3,132.0
+MAM02252,"keratan sulfate I, degradation product 23",3,124.0
+MAM02253,"keratan sulfate I, degradation product 24",3,118.0
+MAM02255,"keratan sulfate I, degradation product 26",3,110.0
+MAM02256,"keratan sulfate I, degradation product 27",3,104.0
+MAM03048,tridecanoyl-[ACP],3,24.0
+MAM02258,"keratan sulfate I, degradation product 29",3,96.0
+MAM02260,"keratan sulfate I, degradation product 30",3,90.0
+MAM02262,"keratan sulfate I, degradation product 32",3,82.0
+MAM00344,13-carboxy-alpha-tocopherol,3,29.0
+MAM00933,"4(R),8-dimethyl-nonanoyl-CoA",3,32.0
+MAM00948,"4,8,12-trimethyltridecanoyl-CoA",3,37.0
+MAM03923,sebacic acid,3,10.0
+MAM02394,lipoic acid,3,8.0
+MAM03745,Lysyl-Tyrosyl-Isoleucine,3,21.0
+MAM03960,D-Tagatose 1-Phosphate,3,6.0
+MAM03055,trioxilin A3,3,20.0
+MAM01047,"5,12,20-TriHETE",3,20.0
+MAM00377,15(S)-HETE,3,20.0
+MAM00209,[protein]-N6-(lipoyl)lysine,3,1375.0
+MAM20078,2-(2-methyl-1-hydroxypropyl)thiamine diphosphate,3,16.0
+MAM20080,2-(3-methyl-1-hydroxybutyl)thiamine diphosphate,3,17.0
+MAM01330,alpha-tocotrienol,3,29.0
+MAM00345,13-carboxy-alpha-tocotrienol,3,29.0
+MAM01096,5-carboxy-alpha-chromanol,3,19.0
+MAM01097,5-carboxy-gamma-chromanol,3,18.0
+MAM00346,13-carboxy-gamma-tocopherol,3,28.0
+MAM02242,"keratan sulfate I, degradation product 14",3,166.0
+MAM01607,core 2,3,22.0
+MAM02281,"keratan sulfate II (core 2-linked), degradation product 3",3,58.0
+MAM02284,"keratan sulfate II (core 2-linked), degradation product 6",3,44.0
+MAM01864,G(5)pppR-RNA,3,25.0
+MAM02664,oxidized dithiothreitol,3,4.0
+MAM02486,mitooxidized thioredoxin,3,819.0
+MAM02487,mitothioredoxin,3,819.0
+MAM02180,isobutyryl-CoA,3,25.0
+MAM01498,cholesterol-ester-laur,3,39.0
+MAM01510,cholesterol-ester-tridec,3,40.0
+MAM01501,cholesterol-ester-myrist,3,41.0
+MAM01487,cholesterol-ester-9-tetrade,3,41.0
+MAM01479,cholesterol-ester-7-tetrade,3,41.0
+MAM01470,cholesterol-ester-5-tetra,3,41.0
+MAM01504,cholesterol-ester-palm,3,43.0
+MAM01477,cholesterol-ester-7-hexa,3,43.0
+MAM01464,cholesterol-ester-13-octade,3,45.0
+MAM01489,cholesterol-ester-cis-vac,3,45.0
+MAM01486,cholesterol-ester-9-octa,3,45.0
+MAM01478,cholesterol-ester-7-octade,3,45.0
+MAM01474,"cholesterol-ester-6,9-octa",3,45.0
+MAM01502,cholesterol-ester-nanode,3,46.0
+MAM01492,cholesterol-ester-eico,3,47.0
+MAM01463,cholesterol-ester-13-eicose,3,47.0
+MAM01458,cholesterol-ester-11-eico,3,47.0
+MAM01484,cholesterol-ester-9-eicose,3,47.0
+MAM01481,"cholesterol-ester-8,11-eico",3,47.0
+MAM03284,"5,8,11,14,17-eicosapentenoyl-CoA",3,41.0
+MAM02263,"keratan sulfate I, degradation product 33",3,76.0
+MAM02265,"keratan sulfate I, degradation product 35",3,68.0
+MAM02266,"keratan sulfate I, degradation product 36",3,62.0
+MAM02268,"keratan sulfate I, degradation product 38",3,54.0
+MAM01457,cholesterol-ester-11-docose,3,49.0
+MAM01509,cholesterol-ester-trico,3,50.0
+MAM01508,cholesterol-ester-tetraco,3,51.0
+MAM01465,cholesterol-ester-15-tetra,3,51.0
+MAM01496,cholesterol-ester-hexacosa,3,53.0
+MAM01497,cholesterol-ester-hexecose,3,53.0
+MAM01500,cholesterol-ester-linolen,3,45.0
+MAM01473,"cholesterol-ester-6,9,12,15-octa",3,45.0
+MAM01480,"cholesterol-ester-8,11,14,17-eico",3,47.0
+MAM01468,"cholesterol-ester-5,8,11,14,17-eico",3,47.0
+MAM01475,"cholesterol-ester-7,10,13,16,19-docosa",3,49.0
+MAM01482,"cholesterol-ester-9,12,15,18,21-tetra",3,51.0
+MAM01495,cholesterol-ester-hepta,3,44.0
+MAM01485,cholesterol-ester-9-heptade,3,44.0
+MAM01507,cholesterol-ester-stea,3,45.0
+MAM01503,cholesterol-ester-ol,3,45.0
+MAM01452,"cholesterol-ester-10,13,16,19-docosa",3,49.0
+MAM01459,"cholesterol-ester-12,15,18,21-tetracosa",3,51.0
+MAM01499,cholesterol-ester-lin,3,45.0
+MAM01493,cholesterol-ester-gamma-lin,3,45.0
+MAM01490,cholesterol-ester-dihomo-gamma,3,47.0
+MAM01488,cholesterol-ester-arach,3,47.0
+MAM01476,"cholesterol-ester-7,10,13,16-docosa",3,49.0
+MAM01483,"cholesterol-ester-9,12,15,18-tetraco",3,51.0
+MAM01472,"cholesterol-ester-6,9,12,15,18-tetraco",3,51.0
+MAM01467,"cholesterol-ester-4,7,10,13,16-docosa",3,49.0
+MAM01456,"cholesterol-ester-11,14-eicosa",3,47.0
+MAM01461,"cholesterol-ester-13,16-docosa",3,49.0
+MAM01469,"cholesterol-ester-5,8,11-eico",3,47.0
+MAM01494,cholesterol-ester-heneico,3,48.0
+MAM01491,cholesterol-ester-docosa,3,49.0
+MAM01462,cholesterol-ester-13-docose,3,49.0
+MAM00355,13-hydroperoxy-H4-neuroprostane,3,22.0
+MAM00368,14-hydroperoxy-H4-neuroprostane,3,22.0
+MAM00415,17-hydroperoxy-H4-neuroprostane,3,22.0
+MAM00589,20-hydroperoxy-H4-neuroprostane,3,22.0
+MAM03401,Acetyl-L-Lysine,3,8.0
+MAM01605,coproporphyrinogen I,3,36.0
+MAM02286,"keratan sulfate II (core 2-linked), degradation product 8",3,36.0
+MAM01801,F1alpha,3,22.0
+MAM00561,2-(alpha-hydroxyethyl)thiamine-diphosphate,3,14.0
+MAM03792,octadecenoyl-CoA,3,39.0
+MAM01453,"cholesterol-ester-10,13,16-docosa",3,49.0
+MAM03367,"24(R),25(R)-varanoyl-CoA",3,48.0
+MAM01471,"cholesterol-ester-6,9,12,15,18,21-tetra",3,51.0
+MAM01466,"cholesterol-ester-4,7,10,13,16,19-doco",3,49.0
+MAM01455,"cholesterol-ester-11,14,17-eico",3,47.0
+MAM01460,"cholesterol-ester-13,16,19-doco",3,49.0
+MAM03762,Methionyl-Glutaminyl-Tyrosine,3,19.0
+MAM03763,Methionyl-Glycyl-Arginine,3,13.0
+MAM03764,Methionyl-Histidyl-Lysine,3,17.0
+MAM03768,Methionyl-Phenylalanyl-Arginine,3,20.0
+MAM03769,Methionyl-Tryptophanyl-Phenylalanine,3,25.0
+MAM03864,Phenylalanyl-Asparaginyl-Methionine,3,18.0
+MAM03868,Phenylalanyl-Leucyl-Aspartate,3,19.0
+MAM00171,(S)-3-hydroxy-2-methylbutyryl-CoA,3,26.0
+MAM02548,N-acetyl-S-[2-carboxy-1-(1H-imidazol-4-yl)ethyl]-L-cysteine,3,11.0
+MAM00403,16-hydroxyhexadecanoic acid,3,16.0
+MAM01713,dithiothreitol,3,4.0
+MAM02326,L-3-cyanoalanine,3,4.0
+MAM00984,4-hydroperoxy-H4-neuroprostane,3,22.0
+MAM01192,7-hydroperoxy-H4-neuroprostane,3,22.0
+MAM00271,10-hydroperoxy-H4-neuroprostane,3,22.0
+MAM00299,11-hydroperoxy-H4-neuroprostane,3,22.0
+MAM02530,N-acetyl-L-alanine,3,5.0
+MAM03869,Phenylalanyl-Leucyl-Histidine,3,21.0
+MAM03870,Phenylalanyl-Lysyl-Alanine,3,18.0
+MAM03871,Phenylalanyl-Lysyl-Proline,3,20.0
+MAM03875,Phenylalanyl-Prolyl-Arginine,3,20.0
+MAM03876,Phenylalanyl-Seryl-Tryptophan,3,23.0
+MAM03877,Phenylalanyl-Threonyl-Lysine,3,19.0
+MAM00914,3-phosphonooxypyruvate,3,3.0
+MAM00916,3-phosphoserine,3,3.0
+MAM00669,2-oxo-3-methylvalerate,3,6.0
+MAM00386,15-epi-lipoxin A4,3,20.0
+MAM00388,15-epi-lipoxin B4,3,20.0
+MAM03746,Lysyl-Valyl-Phenylalanine,3,20.0
+MAM03747,Lysyl-Valyl-Tryptophan,3,22.0
+MAM03760,Methionyl-Arginyl-Leucine,3,17.0
+MAM03761,Methionyl-Asparaginyl-Tyrosine,3,18.0
+MAM02165,imidazole-4-acetaldehyde,3,5.0
+MAM02123,hippurate,3,9.0
+MAM02916,somatostatin,3,77.0
+MAM02109,hexacosanoylcarnitine,3,33.0
+MAM00857,3-oxodecanoyl-[ACP],3,21.0
+MAM01649,decanoyl-[ACP],3,21.0
+MAM00867,3-oxododecanoyl-[ACP],3,23.0
+MAM00905,3-oxotetradecanoyl-[ACP],3,25.0
+MAM00880,3-oxohexadecanoyl-[ACP],3,27.0
+MAM02301,"keratan sulfate II (core 4-linked), degradation product 3",3,66.0
+MAM03895,Prolyl-Glutamatsyl-Lysine,3,16.0
+MAM03898,Prolyl-Histidyl-Tyrosine,3,20.0
+MAM03899,Prolyl-Leucyl-Arginine,3,17.0
+MAM03904,Prolyl-Tryptophanyl-Lysine,3,22.0
+MAM03905,Prolyl-Tryptophanyl-Threonine,3,20.0
+MAM03906,Prolyl-Valyl-Glutamine,3,15.0
+MAM02152,hydroxymethylglutathione,3,11.0
+MAM01438,chitin-component,3,8.0
+MAM01350,apoA1,3,1367.0
+MAM04041,"trans5,8tetradecadienoyl-CoA",3,35.0
+MAM03658,"7,10,13-hexadecatrienoyl-CoA",3,37.0
+MAM02871,SAH,3,14.0
+MAM00684,3-(methylthio)propionic acid,3,4.0
+MAM02540,N-acetylmethionine,3,7.0
+MAM03878,Phenylalanyl-Tryptophanyl-Leucine,3,26.0
+MAM03880,Phenylalanyl-Tyrosinyl-Glutamine,3,23.0
+MAM03881,Phenylalanyl-Tyrosinyl-Lysine,3,24.0
+MAM03888,Prolyl-Arginyl-Aspartate,3,15.0
+MAM03889,Prolyl-Arginyl-Cysteine,3,14.0
+MAM03890,Prolyl-Asparaginyl-Cysteine,3,12.0
+MAM01746,D-tagatose-6-phosphate,3,6.0
+MAM01760,D-xylulose-1-phosphate,3,5.0
+MAM03378,"Benzo[A]Pyrene-2,3-Diol",3,20.0
+MAM02666,oxidized thioredoxin,3,525.0
+MAM03925,Seryl-Arginyl-Alanine,3,12.0
+MAM03926,Seryl-Arginyl-Tryptophan,3,20.0
+MAM03927,Seryl-Cysteinyl-Arginine,3,12.0
+MAM03928,Seryl-Glycyl-Glutamate,3,10.0
+MAM02186,iso-nLc8Cer,3,73.0
+MAM03929,Seryl-Lysyl-Histidine,3,15.0
+MAM03930,Seryl-Phenylalanyl-Lysine,3,18.0
+MAM03931,Seryl-Tryptophanyl-Histidine,3,20.0
+MAM03983,Threonyl-Arginyl-Tyrosine,3,19.0
+MAM03984,Threonyl-Asparaginyl-Tyrosine,3,17.0
+MAM03986,Threonyl-Glutaminyl-Glutamate,3,14.0
+MAM03987,Threonyl-Glutaminyl-Tyrosine,3,18.0
+MAM03989,Threonyl-Isoleucyl-Arginine,3,16.0
+MAM03990,Threonyl-Methionyl-Arginine,3,15.0
+MAM01521,"chondroitin sulfate A (GalNAc4S-GlcA), degradation product 3",3,31.0
+MAM01529,"chondroitin sulfate B - dermatan sulfate (IdoA2S-GalNAc4S), free chain",3,45.0
+MAM01527,"chondroitin sulfate B - dermatan sulfate (IdoA2S-GalNAc4S), degradation product 2",3,37.0
+MAM01539,"chondroitin sulfate C (GalNAc6S-GlcA), free chain",3,45.0
+MAM01535,"chondroitin sulfate C (GalNAc6S-GlcA), degradation product 2",3,37.0
+MAM01536,"chondroitin sulfate C (GalNAc6S-GlcA), degradation product 3",3,31.0
+MAM01254,acetoacetyl-[ACP],3,15.0
+MAM01411,butyryl-[ACP],3,15.0
+MAM00881,3-oxohexanoyl-[ACP],3,17.0
+MAM04012,Tryptophanyl-Glutamyl-Glycine,3,18.0
+MAM04013,Tryptophanyl-Glutamyl-Leucine,3,22.0
+MAM04014,Tryptophanyl-Glutamyl-Proline,3,21.0
+MAM04015,Tryptophanyl-Glutamyl-Tyrosine,3,25.0
+MAM03626,Glycylleucine,3,8.0
+MAM01419,cAMP,3,10.0
+MAM01211,8alpha-hydroxy-gamma-tocopherone,3,28.0
+MAM01595,CO,3,1.0
+MAM00808,3-isoLM1,3,56.0
+MAM03379,"Benzo[A]Pyrene-4,5-Diol",3,20.0
+MAM03380,"Benzo[A]Pyrene-9,10-Diol",3,20.0
+MAM02559,N-carbamoyl-L-aspartate,3,5.0
+MAM03991,Threonyl-Phenylalanyl-Arginine,3,19.0
+MAM03992,Threonyl-Seryl-Arginine,3,13.0
+MAM03994,Threonyl-Tyrosyl-Methionine,3,18.0
+MAM04008,Tryptophanyl-Alanyl-Proline,3,19.0
+MAM04009,Tryptophanyl-Arginyl-Alanine,3,20.0
+MAM01563,"chondroitin sulfate E (GalNAc4,6diS-GlcA), precursor 2",3,31.0
+MAM01518,"chondroitin sulfate A (GalNAc4S-GlcA), B (IdoA2S-GalNAc4S), and E (GalNAc4,6diS-GlcA), precursor 1",3,31.0
+MAM01565,"chondroitin sulfate E (GalNAc4,6diS-GlcA), precursor 4",3,45.0
+MAM01516,"chondroitin sulfate A (GalNAc4S-GlcA) and B (IdoA2S-GalNAc4S), precursor 3",3,45.0
+MAM01524,"chondroitin sulfate A (GalNAc4S-GlcA), free chain",3,45.0
+MAM01520,"chondroitin sulfate A (GalNAc4S-GlcA), degradation product 2",3,37.0
+MAM02870,S-adenosylmethioninamine,3,14.0
+MAM02197,IV3GalNAca-Gb4Cer,3,53.0
+MAM02491,monosialylgalactosylgloboside,3,62.0
+MAM00769,3-dehydrosphinganine,3,18.0
+MAM01945,GD1c,3,66.0
+MAM02028,GT1a,3,77.0
+MAM01659,dehydroepiandrosterone sulfate,3,19.0
+MAM03629,Glycyl-Phenylalanine,3,11.0
+MAM04019,Tryptophanyl-Glycyl-Valine,3,18.0
+MAM04020,Tryptophanyl-Histidyl-Methionine,3,22.0
+MAM04021,Tryptophanyl-Isoleucyl-Lysine,3,23.0
+MAM04023,Tryptophanyl-Leucyl-Valine,3,22.0
+MAM02024,GQ1balpha,3,88.0
+MAM02121,hexanoyl-[ACP],3,17.0
+MAM00891,3-oxooctanoyl-[ACP],3,19.0
+MAM02192,itaconyl-CoA,3,26.0
+MAM02937,starch structure 2,3,18.0
+MAM00955,"4alpha-carboxy-5alpha-cholesta-8,24-dien-3beta-ol",3,28.0
+MAM02514,N4-acetylaminobutanal,3,6.0
+MAM00609,"24,25-dihydrolanosterol",3,30.0
+MAM02532,N-acetyl-L-aspartate,3,6.0
+MAM04031,Tryptophanyl-Seryl-Tyrosine,3,23.0
+MAM04032,Tryptophanyl-Threonyl-Glutamate,3,20.0
+MAM04033,Tryptophanyl-Threonyl-Isoleucine,3,21.0
+MAM04034,Tryptophanyl-Threonyl-Tyrosine,3,24.0
+MAM04035,Tryptophanyl-Tyrosyl-Glutamine,3,25.0
+MAM04037,Tryptophanyl-Valyl-Aspartate,3,20.0
+MAM01322,alpha-D-galactose-1-phosphate,3,6.0
+MAM02817,pyridoxine,3,8.0
+MAM02815,pyridoxamine,3,8.0
+MAM02816,pyridoxamine-phosphate,3,8.0
+MAM01722,DNA-5-methylcytosine,3,11.0
+MAM04049,Tyrosyl-Cysteinyl-Threonine,3,16.0
+MAM04051,Tyrosyl-Leucyl-Arginine,3,21.0
+MAM04054,Tyrosyl-Tryptophanyl-Phenylalanine,3,29.0
+MAM04056,Tyrosyl-Valyl-Methionine,3,19.0
+MAM02682,PAPS,3,10.0
+MAM01303,agmatine,3,5.0
+MAM02983,thiamin-P,3,12.0
+MAM00765,3-carboxy-1-hydroxypropyl-ThPP,3,16.0
+MAM04025,Tryptophanyl-Methionyl-Arginine,3,22.0
+MAM04026,Tryptophanyl-Methionyl-Valine,3,21.0
+MAM04029,Tryptophanyl-Prolyl-Leucine,3,22.0
+MAM04030,Tryptophanyl-Prolyl-Valine,3,21.0
+MAM00937,"4,4-dimethyl-14alpha-formyl-5alpha-cholesta-8,24-dien-3beta-ol",3,30.0
+MAM00413,"17beta-estradiol-3,4-semiquinone",3,18.0
+MAM00411,"17beta-estradiol-2,3-semiquinone",3,18.0
+MAM01417,calcitriol,3,27.0
+MAM00400,16alpha-hydroxyestrone,3,18.0
+MAM00772,3-deoxy-D-glycero-D-galacto-2-nonulosonic acid-9-phosphate,3,9.0
+MAM02370,leukotriene F4,3,28.0
+MAM00938,"4,4-dimethyl-14alpha-formyl-5alpha-cholesta-8-en-3beta-ol",3,30.0
+MAM01835,formylanthranilate,3,8.0
+MAM00775,3-hydroxyanthranilate,3,7.0
+MAM00633,2-aminomuconate semialdehyde,3,6.0
+MAM02129,histone-N6-methyl-L-lysine,3,8.0
+MAM02822,quinolinate,3,7.0
+MAM01283,adenylyl sulfate,3,10.0
+MAM04044,Tyrosyl-Alaninyl-Phenylalanine,3,21.0
+MAM04045,Tyrosyl-Arginyl-Glutamate,3,20.0
+MAM00550,1-palmitoyl-dihydroxyacetone-phosphate,3,19.0
+MAM04046,Tyrosyl-Arginyl-Serine,3,18.0
+MAM04047,Tyrosyl-Aspartyl-Arginine,3,19.0
+MAM04048,Tyrosyl-Cysteinyl-Glycine,3,14.0
+MAM03883,Phytosphingosine-1-Phosphate,3,18.0
+MAM01875,"13-O-desmethyl tacrolimus, 13-DMT or M-I",3,43.0
+MAM04062,Valyl-Arginyl-Glycine,3,13.0
+MAM04063,Valyl-Histidyl-Asparagine,3,15.0
+MAM04064,Valyl-Leucyl-Phenylalanine,3,20.0
+MAM04065,Valyl-Lysyl-Tyrosine,3,20.0
+MAM04066,Valyl-Phenylalanyl-Arginine,3,20.0
+MAM04067,Valyl-Prolyl-Tryptophan,3,21.0
+MAM04068,Valyl-Seryl-Arginine,3,14.0
+MAM03972,7-tetradecenoyl-CoA,3,35.0
+MAM02191,itaconate,3,5.0
+MAM01550,"chondroitin sulfate D (GlcNAc6S-GlcA2S), free chain",3,45.0
+MAM01545,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 2",3,37.0
+MAM01547,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 4",3,31.0
+MAM01549,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 6",3,23.0
+MAM01789,estrone 3-sulfate,3,18.0
+MAM03224,3-hydroxy S-ibuprofen,3,13.0
+MAM03236,3'-S-hydroxy-pravastatin-CoA,3,44.0
+MAM03238,3'-S-hydroxy-pravastatin-tetranor-CoA,3,40.0
+MAM03300,6'-beta-hydroxy simvastatin lactone,3,25.0
+MAM03241,3-alpha-iso-pravastatin,3,23.0
+MAM00674,2-phospho-D-glycerate,3,3.0
+MAM01949,GDP-4-dehydro-6-deoxy-D-mannose,3,16.0
+MAM01842,fructose-1-phosphate,3,6.0
+MAM01052,"5,6-Dihydrouracil",3,4.0
+MAM00923,3-ureidopropionate,3,4.0
+MAM04069,Valyl-Tryptophanyl-Phenylalanine,3,25.0
+MAM04016,Tryptophanyl-Glycyl-Aspartate,3,17.0
+MAM03213,3-hydroxy-adipoyl-CoA,3,27.0
+MAM03259,3-hydroxy-sebacoyl-CoA,3,31.0
+MAM03261,3-hydoxy-suberyl-CoA,3,29.0
+MAM03282,5-S-Cysteinylglycine Dopa,3,14.0
+MAM00956,4alpha-carboxy-5alpha-cholesta-8-en-3beta-ol,3,28.0
+MAM01337,androsterone sulfate,3,19.0
+MAM01336,androstenediol,3,19.0
+MAM00432,19-hydroxytestosterone,3,19.0
+MAM00434,19-oxo-testosterone,3,19.0
+MAM00433,19-oxoandrostenedione,3,19.0
+MAM01554,"chondroitin sulfate E (GalNAc4,6diS-GlcA) proteoglycan",3,45.0
+MAM01562,"chondroitin sulfate E (GalNAc4,6diS-GlcA), free chain",3,45.0
+MAM01557,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 3",3,37.0
+MAM01558,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 4",3,31.0
+MAM00024,(15Z)-tetracosenoylcarnitine,3,31.0
+MAM01446,"cholest-5-ene-3beta,7alpha,24(S)-triol",3,27.0
+MAM03278,4-OH-midazolam,3,18.0
+MAM01903,1'-OH-midazolam,3,18.0
+MAM01891,"15-DMT or M-III, 15-O-desmethyl tacrolimus",3,43.0
+MAM03756,Midazolam,3,18.0
+MAM01652,de-Fuc form of PA6,3,84.0
+MAM00514,1-alkyl-2-acylglycerol,3,4.0
+MAM00603,21-deoxycortisol,3,21.0
+MAM00285,11beta-hydroxyprogesterone,3,21.0
+MAM01616,cortisone,3,21.0
+MAM03801,oxypurinol,3,5.0
+MAM03429,AM1 (cyclosporine),3,62.0
+MAM03432,AM9 (cyclosporine),3,62.0
+MAM01130,5-phosphoribosyl-4-carboxy-5-aminoimidazole,3,9.0
+MAM03555,13-docosenoyl-CoA,3,43.0
+MAM00812,3-ketolactose,3,12.0
+MAM01131,5-phosphoribosylamine,3,5.0
+MAM02601,N-methylhistamine,3,6.0
+MAM03124,urocanate,3,6.0
+MAM03196,"31-DMT or M-II, 31-O-desmethyl tacrolimus",3,43.0
+MAM00954,4alpha-carboxy-4beta-methyl-5alpha-cholesta-8-en-3beta-ol,3,29.0
+MAM01391,beta-GalNAc-globoside,3,52.0
+MAM01265,acrylyl-CoA,3,24.0
+MAM01181,7alpha-hydroxy-5beta-cholestan-3-one,3,27.0
+MAM01397,bilirubin-bisglucuronoside,3,45.0
+MAM01940,GAR,3,7.0
+MAM03244,3-methoxy-acetaminophen,3,9.0
+MAM03271,4-hydroxy-atorvastatin-acid / para-hydroxy-atorvastatin acid,3,33.0
+MAM03272,4-hydroxy-atorvastatin-lactone / para-hydroxy-atorvastatin lactone,3,33.0
+MAM03285,5-hydroxy-fluvastatin,3,24.0
+MAM03304,6'-exomethylene-simvastatin-lactone form,3,25.0
+MAM03297,6'-beta-hydroxy-lovastatin-acid form,3,24.0
+MAM01178,"7alpha,12alpha-dihydroxycholest-4-en-3-one",3,27.0
+MAM01177,"7alpha,12alpha-dihydroxy-5beta-cholestan-3-one",3,27.0
+MAM00768,3-dehydro-L-gulonate,3,6.0
+MAM02526,N-acetylgalactosamine-1-phosphate,3,8.0
+MAM01561,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 7",3,23.0
+MAM00133,"(9Z,12Z,15Z,18Z,21Z)-tetracosapentaenoylcarnitine",3,31.0
+MAM00978,"4-cholesten-7alpha,24(S)-diol-3-one",3,27.0
+MAM02509,n2m2nm,3,58.0
+MAM02511,n2m2nmn,3,50.0
+MAM03689,ibuprofen-CoA-S form,3,34.0
+MAM00922,3-ureidoisobutyrate,3,5.0
+MAM02151,hydroxymethylbilane,3,40.0
+MAM01962,glucosamine,3,6.0
+MAM03523,cerivastatin-M1-glucuronide,3,30.0
+MAM03524,cerivastatin-M23-glucuronide,3,31.0
+MAM03686,ibuprofen-R,3,13.0
+MAM00749,"3alpha,7alpha,12alpha-trihydroxy-5beta-cholest-24-enoyl-CoA",3,48.0
+MAM00036,"(24R,25R)3alpha,7alpha,12alpha,24-tetrahydroxy-5beta-cholestanoyl-CoA",3,48.0
+MAM00405,"17alpha,20alpha-dihydroxycholesterol",3,27.0
+MAM00406,"17alpha,21-dihydroxypregnenolone",3,21.0
+MAM00549,1-organyl-2-lyso-sn-glycero-3-phosphocholine,3,8.0
+MAM00389,15-epi-lipoxin B5,3,20.0
+MAM02409,L-octanoylcarnitine,3,15.0
+MAM02108,heptylic acid,3,7.0
+MAM00657,2-methoxy-6-(all-trans-decaprenyl)phenol,3,57.0
+MAM03655,hexadecanedioyl-CoA,3,37.0
+MAM02036,guanidinoacetate,3,3.0
+MAM01619,creatine,3,4.0
+MAM01620,creatine-phosphate,3,4.0
+MAM01830,folate,3,19.0
+MAM02718,phenethylamine,3,8.0
+MAM00536,1-methylnicotinamide,3,7.0
+MAM01087,"5beta-cholestane-3alpha,7alpha,12alpha,24s,25-pentol",3,27.0
+MAM01388,beta-D-glucose,3,6.0
+MAM01693,dIDP,3,10.0
+MAM00399,16alpha-hydroxydehydroepiandrosterone,3,19.0
+MAM01788,estriol,3,18.0
+MAM02975,tetradecenoylcarnitine(7),3,21.0
+MAM02976,tetradecenoylcarnitine(9),3,21.0
+MAM02688,pentadecanoylcarnitine,3,22.0
+MAM02557,"naphthalene-1,2-diol",3,10.0
+MAM00534,1-lyso-2-arachidonoyl-phosphatidate,3,23.0
+MAM01214,"8-peroxy-(5Z,9E,11Z,14Z)-eicosatetraenoate",3,20.0
+MAM03444,Arginyl-Glutamyl-Proline,3,16.0
+MAM03446,Arginyl-Histidyl-Threonine,3,16.0
+MAM03447,Arginyl-Leucyl-Phenylalanine,3,21.0
+MAM03448,Arginyl-Lysyl-Aspartate,3,16.0
+MAM03450,Arginyl-Prolyl-Methionine,3,16.0
+MAM03451,Arginyl-Prolyl-Threonine,3,15.0
+MAM03453,Arginyl-Tyrosyl-Valine,3,20.0
+MAM03454,Arginyl-Valyl-Cysteine,3,14.0
+MAM00538,1-naphthol,3,10.0
+MAM00668,2-naphthol,3,10.0
+MAM03622,"Glycogen, Structure 4 (Glycogenin-1,6-{2[1,4-Glc], [1,4-Glc]})",2,1797.0
+MAM03548,chenodeoxyglycocholoyl-CoA,2,45.0
+MAM03652,"Hexadecenoyl Ethanolamide, C16:1-Ethanolamide (Delta 9)",2,18.0
+MAM20036,benzaldehyde,2,7.0
+MAM03263,3-hydroxy tetradecenoyl-7-CoA,2,35.0
+MAM03230,(S)-3-hydroxyoctadecanoyl-CoA,2,39.0
+MAM03249,3-hydroxyoctadecadienoyl-CoA,2,39.0
+MAM03252,3-hydroxyoctadecenoyl-CoA,2,39.0
+MAM03253,3-Hydroxy-Octadecenoyl Carnitine,2,25.0
+MAM03218,3-hydroxyhexadecanoyl-CoA,2,37.0
+MAM03219,3-Hydroxyhexadecanoylcarnitine,2,23.0
+MAM02600,N-methylethanolamine-phosphate,2,3.0
+MAM20013,octanal,2,8.0
+MAM20005,"20-oxo-(5Z,8Z,11Z,14Z)-eicosatetraenoate",2,20.0
+MAM20003,"20-oxo-(5Z,8Z,11Z,14Z)-eicosatetraenoate",2,20.0
+MAM20002,retinal,2,20.0
+MAM03779,NAPQI,2,8.0
+MAM04001,Torasemide-M1,2,16.0
+MAM04000,Torasemide,2,16.0
+MAM03920,rosuvastatin-5S-lactone,2,44.0
+MAM02604,N-methylserotonin,2,11.0
+MAM01160,"6-hydroxy-1,2,3,4-tetrahydro-beta-carboline",2,11.0
+MAM02549,N-acetyl-serotonin,2,12.0
+MAM02565,neungc,2,11.0
+MAM02539,N-acetylmannosamine-6-phosphate,2,8.0
+MAM00159,(R)-3-hydroxybutanoyl-CoA,2,25.0
+MAM01009,4-imidazolone-5-propanoate,2,6.0
+MAM02574,N-formimino-L-glutamate,2,6.0
+MAM03974,tetradecadienoyl-CoA,2,35.0
+MAM02659,orotate,2,5.0
+MAM00180,(S)-dihydroorotate,2,5.0
+MAM03174,"2-Decaprenyl-6-Methoxy-3-Methyl-1,4-Benzoquinone",2,58.0
+MAM02614,nonanoic acid,2,9.0
+MAM03117,undecylic acid,2,11.0
+MAM03913,pitavastatin-lactone,2,50.0
+MAM03912,pitavastatin-glucuronide,2,62.0
+MAM03893,des-isoproylpropionic-acid-fluvastatin-CoA,2,37.0
+MAM03580,fluvastatin-CoA form,2,45.0
+MAM03783,Nitropyridine metabolite of nifedipine,2,17.0
+MAM03784,hydroxy metabolite of nifedipine,2,16.0
+MAM02050,hemoglobin,2,91.0
+MAM01631,cytochrome-C,2,1612.0
+MAM03562,dodecanedioic acid,2,12.0
+MAM03541,Dodecenoyl Carnitine,2,19.0
+MAM03204,3-Hydroxydecanoylcarnitine,2,17.0
+MAM02484,mitoACP,2,11.0
+MAM03489,Sebacoyl Carnitine,2,17.0
+MAM03501,Octenoyl Carnitine,2,15.0
+MAM02756,porphobilinogen,2,10.0
+MAM00556,1-piperideine-6-carboxylate,2,6.0
+MAM03498,Hexanoyl Carnitine,2,13.0
+MAM00576,"2,5-dihydroxybenzoate",2,7.0
+MAM01305,AIR,2,8.0
+MAM01132,5-phosphoribosylformylglycinamidine,2,8.0
+MAM03544,Decadienoyl Carnitine,2,17.0
+MAM01256,acetone,2,3.0
+MAM01957,globin,2,57.0
+MAM03781,acid metabolite of nifedipine,2,16.0
+MAM00558,1-pyrroline-2-carboxylate,2,5.0
+MAM01742,D-proline,2,5.0
+MAM03728,Losartan-E3174/ losartan-M6,2,22.0
+MAM03223,3-hydroxy R-ibuprofen,2,13.0
+MAM03849,Pseudoecgonine,2,9.0
+MAM01766,ecgonine,2,9.0
+MAM00471,1-acylglycerol-3P-9-tetrade,2,17.0
+MAM00493,1-acylglycerol-3P-myrist,2,17.0
+MAM00502,1-acylglycerol-3P-tridec,2,16.0
+MAM00484,1-acylglycerol-3P-laur,2,15.0
+MAM01429,CDP-glycerol,2,12.0
+MAM03688,ibuprofen-CoA-R form,2,34.0
+MAM03998,trans-lactone-fluvastatin,2,24.0
+MAM02372,L-fucose-1-phosphate,2,6.0
+MAM00569,"2,3-bisphospho-D-glycerate",2,3.0
+MAM03499,Adipoyl Carnitine,2,13.0
+MAM03408,adipic acid,2,6.0
+MAM02476,methylimidazole-acetaldehyde,2,6.0
+MAM01913,galactosylglycerol,2,9.0
+MAM01930,gamma-L-glutamyl-L-alanine,2,8.0
+MAM02739,phosphodimethylethanolamine,2,4.0
+MAM01304,AICAR,2,9.0
+MAM02575,N-formyl-GAR,2,8.0
+MAM03581,fluvstatin-glucuronide,2,30.0
+MAM03526,cysteine-conjugate-acetaminophen,2,11.0
+MAM03519,cerivastatin-M31,2,26.0
+MAM03514,cerivastatin,2,25.0
+MAM03516,cerivastatin-M22,2,25.0
+MAM03518,cerivastatin-M24,2,24.0
+MAM03770,Methyl-hydroxy-gliclazide,2,15.0
+MAM02127,histone-L-lysine,2,7.0
+MAM00634,2-aminomuconate,2,6.0
+MAM01342,anthranilate,2,7.0
+MAM02698,"2,6-dodecadienoyl-CoA",2,33.0
+MAM03203,"3,6-dodecadienoyl-CoA",2,33.0
+MAM03539,5-dodecenoyl-CoA,2,33.0
+MAM04004,"2,6,10-trimethyl undecanoyl-CoA",2,35.0
+MAM02945,sucrose,2,12.0
+MAM01843,"fructose-2,6-bisphosphate",2,6.0
+MAM02586,nicotinate,2,6.0
+MAM02843,ribose,2,5.0
+MAM03506,S-carboxy ibuprofen,2,13.0
+MAM00494,1-acylglycerol-3P-nanode,2,22.0
+MAM00458,"1-acylglycerol-3P-6,9-octa",2,21.0
+MAM00462,1-acylglycerol-3P-7-octade,2,21.0
+MAM00470,1-acylglycerol-3P-9-octade,2,21.0
+MAM00495,1-acylglycerol-3P-ol,2,21.0
+MAM00474,1-acylglycerol-3P-cis-vac,2,21.0
+MAM00448,1-acylglycerol-3P-13-octade,2,21.0
+MAM00499,1-acylglycerol-3P-stea,2,21.0
+MAM00469,1-acylglycerol-3P-9-heptade,2,20.0
+MAM00438,1-acylglycerol-3P-10-heptade,2,20.0
+MAM00481,1-acylglycerol-3P-heptade,2,20.0
+MAM00461,1-acylglycerol-3P-7-hexade,2,19.0
+MAM00496,1-acylglycerol-3P-palm,2,19.0
+MAM00498,1-acylglycerol-3P-pentade,2,18.0
+MAM02497,N-(omega)-hydroxyarginine,2,6.0
+MAM02553,NADH,2,21.0
+MAM03388,"7,12-Dimethylbenz[A]Anthracene-3,4-Diol-1,2-Epoxide",2,20.0
+MAM01804,FAICAR,2,10.0
+MAM03382,"Dibenzo[A,L]Pyrene",2,24.0
+MAM02528,N-acetylglucosamine-1-phosphate,2,8.0
+MAM01911,galactose-1-phosphate,2,6.0
+MAM03385,"Dibenzo[A,L]Pyrene-11,12-Diol-13,14-Epoxide",2,24.0
+MAM02985,thiamin-PPP,2,12.0
+MAM02982,thiamin,2,12.0
+MAM01826,ferrocytochrome C,2,42.0
+MAM01824,ferricytochrome C,2,42.0
+MAM01164,"6-lactoyl-5,6,7,8-tetrahydropterin",2,9.0
+MAM00924,"4-(2-amino-3-hydroxyphenyl)-2,4-dioxobutanoate",2,10.0
+MAM01976,glutamyl-5-phosphate,2,5.0
+MAM03653,"2,4,7,10-hexadecatetraenoyl-CoA",2,37.0
+MAM03274,"4,7,10-hexadecatrienoyl-CoA",2,37.0
+MAM03182,"2,7,10-hexadecatrienoyl-CoA",2,37.0
+MAM03492,tetradecanedioyl-CoA,2,35.0
+MAM03978,"5,8-tetradecadienoyl-CoA",2,35.0
+MAM01355,apoC3,2,484.0
+MAM01354,apoC2,2,509.0
+MAM01353,apoC1,2,421.0
+MAM01439,chitobiose,2,16.0
+MAM01099,5-formiminotetrahydrofolate,2,20.0
+MAM02892,selenomethionine-se-oxide,2,5.0
+MAM00785,3-hydroxyisobutyryl-CoA,2,25.0
+MAM02468,methacrylyl-CoA,2,25.0
+MAM02181,isobutyrylglycine,2,6.0
+MAM02558,N-arachidonoylglycine,2,22.0
+MAM03789,9-octadecenoyl-CoA,2,39.0
+MAM03654,Hexadecanediocacid,2,16.0
+MAM03221,"3,7,10-hexadecatrienoyl-CoA",2,37.0
+MAM00664,2-methylbutyrylglycine,2,7.0
+MAM00663,2-methylbutyryl-CoA,2,26.0
+MAM00825,3-methylcrotonoylglycine,2,7.0
+MAM02190,isovalerylglycine,2,7.0
+MAM02189,isovaleryl-CoA,2,26.0
+MAM01332,aminoacetone,2,3.0
+MAM03559,"3,7,10,13,16,19-docosahexenoyl-CoA",2,43.0
+MAM03556,"2,4,7,10,13,16,19-docosaheptenoyl-CoA",2,43.0
+MAM02831,"2,7,10,13,16,19-docosahexenoyl-CoA",2,43.0
+MAM01994,glycogenin G7G1,2,1827.0
+MAM01990,glycogenin G11,2,1845.0
+MAM01995,glycogenin G8,2,1827.0
+MAM02910,S-methyl-5-thio-D-ribulose-1-phosphate,2,6.0
+MAM02481,methylthioribose-1p,2,6.0
+MAM03570,"2,5,8,11,14-eicosapentaenoyl-CoA",2,41.0
+MAM03567,11-eicosenoyl-CoA,2,41.0
+MAM03255,"3,6,9,12,15-octadecapentenoyl-CoA",2,39.0
+MAM03195,"2,6,9,12,15-octadecapentenoyl-CoA",2,39.0
+MAM01454,cholesterol-ester-10-hepta,2,44.0
+MAM00784,3-hydroxyisobutyrate,2,4.0
+MAM03969,trans4decenoyl-CoA,2,31.0
+MAM01506,cholesterol-ester-penta,2,42.0
+MAM03357,One Carbon Unit,2,1.0
+MAM00845,3-oxo-4-methyl-pentanoyl-CoA,2,27.0
+MAM00706,3(S)-hydroxy-4-methyl-pentanoyl-CoA,2,27.0
+MAM01017,4-methyl-trans-2-pentenoyl-CoA,2,27.0
+MAM00831,3-oxo-(2S)-methylisocapryloyl-CoA,2,30.0
+MAM03797,10-hydroxydecanoic acid,2,10.0
+MAM03242,3-hydroxyisovaleryl-CoA,2,26.0
+MAM03495,Succinyl Carnitine,2,11.0
+MAM03798,22-hydroxydocosanoic acid,2,22.0
+MAM00454,1-acylglycerol-3P-5-tetrade,2,17.0
+MAM03480,atorvastatin-lactone-ether-glucuronide / G3,2,39.0
+MAM03477,atorvastatin-acyl-glucuronide / G2,2,39.0
+MAM03478,atorvastatin-ether-glucuronide -G1,2,45.0
+MAM03431,AM4N (cyclosporine),2,61.0
+MAM03430,AM4N9 (cyclosporine),2,61.0
+MAM03426,AM1c9 (cyclosporine),2,62.0
+MAM03424,AM1AL (cyclosporine),2,62.0
+MAM03423,AM1A (cyclosporine),2,62.0
+MAM03420,AM19 (cyclosporine),2,62.0
+MAM01226,9-carboxy-alpha-tocotrienol,2,24.0
+MAM00287,11-carboxy-alpha-tocotrienol,2,26.0
+MAM02856,S-(2-methylbutanoyl)-dihydrolipoamide,2,13.0
+MAM20079,2-(2-methyl-1-hydroxybutyl)thiamine diphosphate,2,17.0
+MAM03967,"trans3,6dodecadienoyl-CoA",2,33.0
+MAM02934,S-succinyldihydrolipoamide,2,12.0
+MAM02869,S-acetyldihydrolipoamide,2,10.0
+MAM03966,"trans2,6dodecadienoyl-CoA",2,33.0
+MAM02399,lipoyllysine,2,14.0
+MAM00208m,[protein]-N6-(dihydrolipoyl)lysine,2,
+MAM01702,dihydrolipoate,2,8.0
+MAM03522,cis2trans4decadienoyl-CoA,2,31.0
+MAM00090,"(4R,8R,12R)-trimethyl-(2E)-tridecenoyl-CoA",2,37.0
+MAM01185,7-carboxy-alpha-chromanol,2,21.0
+MAM01225,9-carboxy-alpha-chromanol,2,24.0
+MAM00286,11-carboxy-alpha-chromanol,2,26.0
+MAM01327,alpha-tocopherol,2,29.0
+MAM01187,7-carboxy-gamma-chromanol,2,20.0
+MAM01227,9-carboxy-gamma-chromanol,2,23.0
+MAM00288,11-carboxy-gamma-chromanol,2,25.0
+MAM01117,5-nitro-gamma-tocopherol,2,28.0
+MAM01188,7-carboxy-gamma-tocotrienol,2,20.0
+MAM01228,9-carboxy-gamma-tocotrienol,2,23.0
+MAM00289,11-carboxy-gamma-tocotrienol,2,25.0
+MAM01186,7-carboxy-alpha-tocotrienol,2,21.0
+MAM03033,"trans-3-cis-5,8,11,14-eicosapentaenoyl-CoA",2,41.0
+MAM01418,calcitroic acid,2,23.0
+MAM03377,"24,25,26,27-Tetranor-23-Oxo-Hydroxyvitamin D3",2,23.0
+MAM00703,"3(S)-hydroxy-2(S),6-dimethyl-heptanoyl-CoA",2,30.0
+MAM00578,"2,6-dimethyl-trans-2-heptenoyl-CoA",2,30.0
+MAM00562,"2(R),6-dimethyl-heptanoyl-CoA",2,30.0
+MAM00844,"3-oxo-4(R),8-dimethyl-nonanoyl-CoA",2,32.0
+MAM00705,"3(S)-hydroxy-4(R),8-dimethyl-nonanoyl-CoA",2,32.0
+MAM00934,"4(R),8-dimethyl-trans-2-nonenoyl-CoA",2,32.0
+MAM00832,"3-oxo-(2S,6R,10R)-trimethyl-hendecanoyl-CoA",2,35.0
+MAM00685,"3(R)-hydroxy-(2S,6R,10)-trimethyl-hendecanoyl-CoA",2,35.0
+MAM00079,"(2S,6R,10R)-trimethyl-(2E)-hendecenoyl-CoA",2,35.0
+MAM00080,"(2S,6R,10R)-trimethyl-hendecanoyl-CoA",2,35.0
+MAM00076,"(2R,6R,10R)-trimethyl-hendecanoyl-CoA",2,35.0
+MAM00833,"3-oxo-(4R,8R,12R)-trimethyl-tridecanoyl-CoA",2,37.0
+MAM00686,"3(R)-hydroxy-(4R,8R,12R)-trimethyl-tridecanoyl-CoA",2,37.0
+MAM03884,(3S)-phytanic acid,2,20.0
+MAM00513,1-alkyl-2-acetyl-sn-glycerol,2,5.0
+MAM03317,1-Alkyl-2-Acetyl-Sn-Glycerol 3-Phosphate,2,5.0
+MAM03351,3-oxo-cis-8-tetradecenoyl-CoA,2,35.0
+MAM03350,(3S)-3-hydroxy-cis-8-tetradecenoyl-CoA,2,35.0
+MAM03361,trans-2-cis-8-tetradecadienoyl-CoA,2,35.0
+MAM00530,1D-myo-inositol-4-phosphate,2,6.0
+MAM00815,3-mercaptolactate,2,3.0
+MAM02145,hydrogen-cyanide,2,1.0
+MAM00813,3-ketopristanoyl-CoA,2,40.0
+MAM00798,3-hydroxypristanoyl-CoA,2,40.0
+MAM03027,"trans-2,3-dehydropristanoyl-CoA",2,40.0
+MAM20083,(2R)-pristanal,2,19.0
+MAM00655,(3R)-2-hydroxyphytanoyl-CoA,2,41.0
+MAM03308,7-beta-OH-gliclazide,2,15.0
+MAM03302,6'-exomethylene-lovastatin-acid form,2,24.0
+MAM03303,6'-exomethylene-lovastatin lactone form,2,24.0
+MAM03298,6'-beta-hydroxy-methyl-simvastatin-lactone form,2,25.0
+MAM03296,6'-beta-hydroxy-lovastatin lactone form,2,24.0
+MAM03292,6'-beta-carboxy-simvastatin-lactone form,2,25.0
+MAM01028,4-oxo-9-cis-retinal,2,20.0
+MAM00351,13-cis-retinol,2,20.0
+MAM01008,4-hydroxyvitamin A1,2,20.0
+MAM01625,cyclic-3-hydroxymelatonin,2,13.0
+MAM01032,4-oxoretinol,2,20.0
+MAM00528,"1D-myo-inositol-3,4-bisphosphate",2,6.0
+MAM03360,trans-3-cis-8-tetradecadienoyl-CoA,2,35.0
+MAM03359,"trans-2-cis,cis-4,8-tetradecatrienoyl-CoA",2,35.0
+MAM03358,"(3E,5Z,8Z)-tetradecatrienoyl-CoA",2,35.0
+MAM03419,lysophosphatidic acid,2,3.0
+MAM03290,6-beta-OH-gliclazide,2,15.0
+MAM04007,triol metabolite of pravastatin,2,23.0
+MAM03256,3-hydroxy-acetaminophen,2,8.0
+MAM03239,3'-hydroxy-simvastatin-lactone form,2,25.0
+MAM03235,3'-S-hydroxy-pravastatin,2,23.0
+MAM03228,3''-hydroxy-lovastatin lactone form,2,24.0
+MAM00492,1-acylglycerol-3P-linolen,2,21.0
+MAM01057,"5,6-epoxy-13-cis-retinoate",2,20.0
+MAM00899,3-oxopentanoyl-CoA,2,26.0
+MAM00797,3-hydroxypentanoyl-CoA,2,26.0
+MAM00063,(2E)-pentenoyl-CoA,2,26.0
+MAM00877,3-oxoheptanoyl-CoA,2,28.0
+MAM00782,3-hydroxyheptanoyl-CoA,2,28.0
+MAM00353,13-cis-retinoyl-glucuronide,2,26.0
+MAM01022,4-OH-13-cis-retinal,2,20.0
+MAM01030,4-oxo-9-cis-retinoyl-beta-glucuronide,2,26.0
+MAM01233,9-cis-retinoyl-beta-D-glucuronide,2,26.0
+MAM00427,18-hydroxy-all-trans-retinoate,2,20.0
+MAM01105,5-hydroxykynurenamine,2,9.0
+MAM00230,"1,2,3,4-tetrahydro-beta-carboline",2,11.0
+MAM00221,"1-(1,2,3,4,5-pentahydroxypent-1-yl)-1,2,3,4-tetrahydro-beta-carboline-3-carboxylate",2,17.0
+MAM02824,rac-4-hydroxy-4-O-(beta-D-glucuronide)-all-trans-retinoate,2,26.0
+MAM01031,4-oxo-all-trans-retinoate,2,20.0
+MAM03793,"Octadecenoyl Carnitine (Hypothetical, Position Of Double Bond Unknown)",2,25.0
+MAM01248,A2PE-H2,2,47.0
+MAM00482,1-acylglycerol-3P-hexacosa,2,29.0
+MAM00449,1-acylglycerol-3P-15-tetra,2,27.0
+MAM00500,1-acylglycerol-3P-tetraco,2,27.0
+MAM00501,1-acylglycerol-3P-trico,2,26.0
+MAM00441,1-acylglycerol-3P-11-docose,2,25.0
+MAM00446,1-acylglycerol-3P-13-docose,2,25.0
+MAM00477,1-acylglycerol-3P-docosa,2,25.0
+MAM00480,1-acylglycerol-3P-heneico,2,24.0
+MAM00453,"1-acylglycerol-3P-5,8,11-eico",2,23.0
+MAM00468,1-acylglycerol-3P-9-eicose,2,23.0
+MAM00442,1-acylglycerol-3P-11-eico,2,23.0
+MAM00447,1-acylglycerol-3P-13-eicose,2,23.0
+MAM00478,1-acylglycerol-3P-eico,2,23.0
+MAM00875,3-oxoheptadecanoyl-CoA,2,38.0
+MAM00780,3-hydroxyheptadecanoyl-CoA,2,38.0
+MAM00046,(2E)-heptadecenoyl-CoA,2,38.0
+MAM00730,"3,4-dihydroxyphenylethyleneglycol",2,8.0
+MAM02622,normetanephrine,2,9.0
+MAM02599,"N-methyl-4,6,7-trihydroxy-1,2,3,4-tetrahydroisoquinoline",2,10.0
+MAM00945,"4,6,7-trihydroxy-1,2,3,4-tetrahydroisoquinoline",2,9.0
+MAM03184,2-hydroxy-S-ibuprofen,2,13.0
+MAM01894,1-hydroxy S-ibuprofen,2,13.0
+MAM01890,"15,31-O-Didesmethyl-tacrolimus",2,42.0
+MAM01889,"13,15-O-didesmethyl tacrolimus",2,42.0
+MAM01888,"1,4-Dihydroxy-midazolam",2,18.0
+MAM01818,"13,31-O-Didesmethyl-tacrolimus",2,42.0
+MAM03336,"2-Hydroxyamino-Meiqx-N2-(Beta-1-Glucosiduronyl)-2-Hydroxyamino-3,8-Dimethylimidazo[4,5-F]Quinoxaline",2,17.0
+MAM03335,"2-Hydroxyamino-3,8-Dimethylimidazo[4,5-F]Quinoxaline",2,11.0
+MAM00048,(2E)-heptenoyl-CoA,2,28.0
+MAM00889,3-oxononanoyl-CoA,2,30.0
+MAM00792,3-hydroxynonanoyl-CoA,2,30.0
+MAM00056,(2E)-nonenoyl-CoA,2,30.0
+MAM00911,3-oxoundecanoyl-CoA,2,32.0
+MAM00806,3-hydroxyundecanoyl-CoA,2,32.0
+MAM00071,(2E)-undecenoyl-CoA,2,32.0
+MAM00909,3-oxotridecanoyl-CoA,2,34.0
+MAM00804,3-hydroxytridecanoyl-CoA,2,34.0
+MAM00069,(2E)-tridecenoyl-CoA,2,34.0
+MAM00897,3-oxopentadecanoyl-CoA,2,36.0
+MAM00795,3-hydroxypentadecanoyl-CoA,2,36.0
+MAM00061,(2E)-pentadecenoyl-CoA,2,36.0
+MAM01154,"6,7-dihydroxy-1,2,3,4-tetrahydroisoquinoline",2,9.0
+MAM00732,"3,5,3,5-tetraiodo-L-thyronine-beta-D-glucuronoside",2,21.0
+MAM00733,"3,5,3-triiodo-L-thyronine-beta-D-glucuronoside",2,21.0
+MAM02606,N-methyltyramine,2,9.0
+MAM03954,suberic acid,2,8.0
+MAM02621,norlaudanosoline,2,16.0
+MAM03324,Nordazepam,2,15.0
+MAM02550,N-acetyl-seryl-aspartate,2,9.0
+MAM02429,lysyl-proline,2,11.0
+MAM03369,5-Ht-Moduline,2,18.0
+MAM00460,"1-acylglycerol-3P-7,10,13,16-docosa",2,25.0
+MAM00472,1-acylglycerol-3P-arach,2,23.0
+MAM00476,1-acylglycerol-3P-dihomo-gamma,2,23.0
+MAM00479,1-acylglycerol-3P-gamma-lin,2,21.0
+MAM00491,1-acylglycerol-3P-lin,2,21.0
+MAM00443,"1-acylglycerol-3P-12,15,18,21-tetra",2,27.0
+MAM00436,"1-acylglycerol-3P-10,13,16,19-doco",2,25.0
+MAM00444,"1-acylglycerol-3P-13,16,19-doco",2,25.0
+MAM00439,"1-acylglycerol-3P-11,14,17-eico",2,23.0
+MAM00450,"1-acylglycerol-3P-4,7,10,13,16,19-doco",2,25.0
+MAM00455,"1-acylglycerol-3P-6,9,12,15,18,21-tetra",2,27.0
+MAM00459,"1-acylglycerol-3P-7,10,13,16,19-docosa",2,25.0
+MAM00452,"1-acylglycerol-3P-5,8,11,14,17-eico",2,23.0
+MAM01138,5-S-glutathionyl-dopamine,2,18.0
+MAM02569,neuromedin N(1-4),2,26.0
+MAM02567,neuromedin B(4-10),2,40.0
+MAM02566,neuromedin B(1-3),2,12.0
+MAM00738,"3,5-diiodo-L-thyronine-beta-D-glucuronoside",2,21.0
+MAM00719,"3,3,5-triiodo-L-thyronine-beta-D-glucuronoside",2,21.0
+MAM00722,"3,3-diiodo-L-thyronine-beta-D-glucuronoside",2,21.0
+MAM00457,"1-acylglycerol-3P-6,9,12,15-octa",2,21.0
+MAM03708,"Lithocholic acid-3glucuronide, CDCA-3G",2,30.0
+MAM03707,"Lithocholic acid-24glucuronide, CDCA-24G",2,30.0
+MAM03645,"Hyodeoxycholic acid-6glucuronide, HDCA-6G",2,30.0
+MAM03644,"Hyodeoxycholic acid-24glucuronide, HDCA-24G",2,30.0
+MAM03643,"Hyocholic acid-6glucuronide, HCA-6G",2,30.0
+MAM03642,"Hyocholic acid-24glucuronide, HCA-24G",2,30.0
+MAM02315,kinetensin 1-7,2,41.0
+MAM03376,"13,14-Epoxy-Retinol",2,20.0
+MAM03328,27Alpha-Hydroxy-8-Dehydrocholesterol,2,27.0
+MAM03329,8-Dehydrocholesterol,2,27.0
+MAM01165,"6-methoxy-3-methyl-2-all-trans-decaprenyl-1,4-benzoquinol",2,58.0
+MAM00658,"2-methoxy-6-all trans-decaprenyl-2-methoxy-1,4-benzoquinol",2,57.0
+MAM03621,Glycyl-Glycine,2,4.0
+MAM01381,benzothiazine,2,11.0
+MAM00249,"1,4-benzothiazine-O-quinonimine",2,12.0
+MAM03537,"Deoxycholic acid-3glucuronide, CDA-3G",2,30.0
+MAM03536,"Deoxycholic acid-24glucuronide, CDA-24G",2,30.0
+MAM03509,"Chenodeoxycholic acid-3glucuronide, CDCA-3G",2,30.0
+MAM03508,"Chenodeoxycholic acid-24glucuronide, CDCA-24G",2,30.0
+MAM03503,"Cholic acid-24glucuronide, CA-24G",2,30.0
+MAM03281,5-S-Cysteinyldopamine,2,11.0
+MAM01762,dynorphin A-(1-5),2,28.0
+MAM00990,4-hydroxy-2-quinolinecarboxylic acid,2,10.0
+MAM00921,3-UMP,2,9.0
+MAM00570,"2,3-cyclic-UMP",2,9.0
+MAM00112,"(6Z,9Z,12Z,15Z,18Z,21Z)-tetracosahexaenoylcarnitine",2,31.0
+MAM03046,tricosanoylcarnitine,2,30.0
+MAM03631,Glycylsarcosine,2,5.0
+MAM00770,3-demethylubiquinol-10,2,58.0
+MAM02316,kinetensin 1-8,2,50.0
+MAM03683,trans-delta-2-heptadecanoyl-CoA,2,38.0
+MAM03955,Suberyl-Glycine,2,10.0
+MAM03766,methyl-succinyl-CoA,2,26.0
+MAM03660,Hexanoyl-Glycine,2,8.0
+MAM00213,[protein]-N6-methyl-L-lysine,2,8.0
+MAM01347,apelin-(1-12),2,60.0
+MAM02562,neocasomorphin (1-5),2,29.0
+MAM01386,beta-casomorphin (1-6),2,38.0
+MAM03344,"3,5-Diiodothyroacetate-Beta-D-Glucuronoside",2,20.0
+MAM01928,gamma-glutamylglutathione,2,15.0
+MAM01931,gamma-L-glutamyl-L-alpha-aminobutyrate,2,9.0
+MAM01670,deoxyhypusine,2,10.0
+MAM02572,neurotensin 11-13,2,21.0
+MAM02571,neurotensin 1-10,2,57.0
+MAM03613,glutaconyl-CoA,2,26.0
+MAM03222,3-hydroxy-glutaryl-CoA,2,26.0
+MAM03964,trans-delta-2-glutaryl-CoA,2,26.0
+MAM03997,Tiglyl Glycine,2,7.0
+MAM03886,Propionyl-Glycine,2,5.0
+MAM03245,3-Methyl-Glutaconate,2,6.0
+MAM03343,"3,5,3-Triiodothyroacetate-Beta-D-Glucuronoside",2,20.0
+MAM03339,"3,5,3-Triiodothyroacetate",2,14.0
+MAM03342,"3,3,5-Triiodothyroacetate-Beta-D-Glucuronoside",2,20.0
+MAM03338,"3,3,5-Triiodothyroacetate",2,14.0
+MAM03341,"3,5,3,5-Tetraiodothyroacetate-Beta-D-Glucuronoside",2,20.0
+MAM03337,"3,5,3,5-Tetraiodothyroacetate",2,14.0
+MAM02556,naphthalene,2,10.0
+MAM01241,9-hydroxybenzo[a]pyrene,2,20.0
+MAM01378,"benzo[a]pyrene-7,8-oxide",2,20.0
+MAM01036,5-(D-galactosyloxy)-L-lysine-procollagen,2,13.0
+MAM01922,gamma-butyrobetaine,2,7.0
+MAM03191,2-Methyl-3-Oxo-Valerate,2,6.0
+MAM03192,2-methyl-3-oxo-valeryl-CoA,2,27.0
+MAM04073,vanilpyruvic acid,2,10.0
+MAM03630,Glycylproline,2,7.0
+MAM03394,L-Homocystine,2,8.0
+MAM02787,prostaglandin E3,2,20.0
+MAM00376,15(S)-HEPE,2,20.0
+MAM00379,15(S)-HpEPE,2,20.0
+MAM01300,aflatoxin M1,2,17.0
+MAM00250,"1,4-dihydroxynaphthalene",2,10.0
+MAM03340,"3,5-Diiodothyroacetate",2,14.0
+MAM04070,Valyl-Tryptophanyl-Valine,2,21.0
+MAM02913,sn-glycerol-3-PE,2,5.0
+MAM00437,"1-acylglycerol-3P-10,13,16-docosa",2,25.0
+MAM00445,"1-acylglycerol-3P-13,16-docosa",2,25.0
+MAM00440,"1-acylglycerol-3P-11,14-eicosa",2,23.0
+MAM00451,"1-acylglycerol-3P-4,7,10,13,16-docosa",2,25.0
+MAM00456,"1-acylglycerol-3P-6,9,12,15,18-tetraco",2,27.0
+MAM04053,Tyrosyl-Threonine,2,13.0
+MAM04052,Tyrosyl-Phenylalanyl-Tyrosine,2,27.0
+MAM04050,Tyrosyl-Glutamate,2,14.0
+MAM03042,trichloroethanol glucuronide,2,8.0
+MAM00595,20-hydroxy-LTB5,2,20.0
+MAM01125,5-oxo-EPE,2,20.0
+MAM03006,"trans,cis,cis,cis-2,13,16,19-docosatetraenoyl-CoA",2,43.0
+MAM00862,"3-oxo-docosa-13,16,19-all-cis-trienoyl-CoA",2,43.0
+MAM01441,chloral,2,2.0
+MAM01691,dichloroacetate,2,2.0
+MAM01692,dichloroacetyl chloride,2,2.0
+MAM02954,TAG epoxide,2,2.0
+MAM01318,"alpha-(1,2-dihydroxyethyl)-1,2,3,4-tetrahydro-7-hydroxy-9-methoxy-3,4-dioxocyclopenta[c][1]benzopyran-6-acetaldehyde",2,17.0
+MAM01156,"6-[2,3-dihydroxy-1-(hydroxymethyl)propyl]-1,2-dihydro-7-hydroxy-9-methoxy-cyclopenta[c][1]benzopyran-3,4-dione",2,17.0
+MAM00229,"1,2,3,4-tetrahydro-alpha,7-dihydroxy-beta-(hydroxymethyl)-9-methoxy-3,4-dioxocyclopenta[c][1]benzopyran-6-propanal",2,17.0
+MAM01295,aflatoxin B1 diol,2,17.0
+MAM00653,2-hydroxyglutarate,2,5.0
+MAM02017,GO3P,2,19.0
+MAM02114,hexadecanol,2,16.0
+MAM04043,Tyrosyl-Alanine,2,12.0
+MAM04036,Tryptophanyl-Tyrosyl-Tyrosine,2,29.0
+MAM04028,Tryptophanyl-Prolyl-Glycine,2,18.0
+MAM04027,Tryptophanyl-Phenylalanine,2,20.0
+MAM02948,sulfatide,2,25.0
+MAM03005,"trans,cis,cis,cis-2,11,14,17-eicosatetraenoyl-CoA",2,41.0
+MAM00086,"(3S)-hydroxy-eicosa-cis,cis,cis-11,14,17-trienoyl-CoA",2,41.0
+MAM00869,"3-oxoeicosa-cis,cis,cis-11,14,17-trienoyl-CoA",2,41.0
+MAM00801,3-hydroxy-THA-CoA,2,45.0
+MAM01664,delta2-THA-CoA,2,45.0
+MAM01196,7-hydroxymethyl-12-methylbenz[a]anthracene,2,20.0
+MAM00435,"1a,11b-dihydro-4,9-dimethylbenz[a]anthra[3,4-b]oxirene",2,20.0
+MAM00975,"4-bromophenol-2,3-epoxide",2,6.0
+MAM00974,4-bromophenol,2,6.0
+MAM01406,"bromobenzene-3,4-dihydrodiol",2,6.0
+MAM01403,bromobenzene,2,6.0
+MAM00985,4-hydroxy-1-(3-pyridinyl)-1-butanone,2,9.0
+MAM03321,Phosphatidyl-N-Dimethylethanolamine,2,9.0
+MAM03316,Phosphatidyl-N-Methylethanolamine,2,8.0
+MAM00327,12-O-D-glucuronoside-13-hydroxyoctadec-(9Z)-enoate,2,24.0
+MAM00323,12-hydroxy-13-O-D-glucuronoside-octadec-(9Z)-enoate,2,24.0
+MAM00274,10-hydroxy-octadec-(12Z)-enoate-9-beta-D-glucuronide,2,24.0
+MAM00931,4-(nitrosoamino)-1-(3-pyridinyl)-1-butanone,2,9.0
+MAM03032,"trans-3,4-dihydro-3,4-dihydroxy-7,12-dimethylbenz[a]anthracene",2,20.0
+MAM01173,"7,12-dimethylbenz[a]anthracene 5,6-oxide",2,20.0
+MAM02013,GM2A-GM2,2,990.0
+MAM02012,GM2A,2,940.0
+MAM03160,GM4,2,36.0
+MAM01850,fucacgalfucgalacglcgalgluside heparan sulfate,2,64.0
+MAM01873,G00038,2,51.0
+MAM04024,Tryptophanyl-Lysine,2,17.0
+MAM04022,Tryptophanyl-Isoleucyl-Tryptophan,2,28.0
+MAM04018,Tryptophanyl-Glycyl-Phenylalanine,2,22.0
+MAM04017,Tryptophanyl-Glycyl-Leucine,2,19.0
+MAM04011,Tryptophanyl-Glutaminyl-Glutamine,2,21.0
+MAM04010,Tryptophanyl-Aspartyl-Aspartate,2,19.0
+MAM03096,type III A glycolipid,2,78.0
+MAM02580,N-hydroxy-1-aminonaphthalene,2,10.0
+MAM00548,1-nitrosonaphthalene,2,10.0
+MAM00225,"1-(3-pyridinyl)-1,4-butanediol",2,9.0
+MAM01319,alpha-[3-(nitrosoamino)propyl]-3-pyridinemethanol,2,9.0
+MAM01929,gamma-hydroxy-3-pyridinebutanoate,2,9.0
+MAM01035,5-(3-pyridyl)-2-hydroxytetrahydrofuran,2,9.0
+MAM02608,N-nitrosomethanamine,2,1.0
+MAM01025,4-oxo-1-(3-pyridyl)-1-butanone,2,9.0
+MAM00917,3-succinoylpyridine,2,9.0
+MAM00731,"3,4-epoxynonanal",2,9.0
+MAM01372,azelaic acid,2,9.0
+MAM01027,4-oxo-2-nonenal,2,9.0
+MAM00312,"12,13-epoxy-9-hydroperoxy-(10E)-octadecenoate",2,18.0
+MAM00313,"12,13-epoxylinoleic acid-radical",2,18.0
+MAM00636,2-bromoacetaldehyde,2,2.0
+MAM00242,"1,2-dibromoethane",2,2.0
+MAM00676,2-S-glutathionyl acetate,2,12.0
+MAM00566,2-(S-glutathionyl)acetyl glutathione,2,22.0
+MAM00227,"1,1-dichloroethylene epoxide",2,2.0
+MAM01876,G00057,2,64.0
+MAM03093,type II A antigen,2,59.0
+MAM03094,type II B antigen,2,57.0
+MAM02592,nLc5Cer(G00051),2,51.0
+MAM02199,"IV3NeuAc,III3Fuc-nLc4Cer",2,61.0
+MAM00744,"3,8-LD1",2,66.0
+MAM03993,Threonyl-Threonyl-Arginine,2,14.0
+MAM03988,Threonyl-Histidinyl-Histidine,2,16.0
+MAM02490,monofucosyllactoisooctaosylceramide,2,79.0
+MAM03098,type IIIAb,2,92.0
+MAM01879,G00074,2,84.0
+MAM01878,G00073,2,78.0
+MAM01877,G00072,2,72.0
+MAM00195,[protein C terminal]-S-farnesyl-L-cysteine-methyl ester,2,20.0
+MAM00194,[protein C terminal]-S-farnesyl-L-cysteine,2,19.0
+MAM01281,adenylated molybdopterin,2,20.0
+MAM02488,molybdopterin,2,10.0
+MAM01618,cPMP,2,10.0
+MAM02469,methaneselenol,2,1.0
+MAM00912,3-phosphoadenylylselenate,2,10.0
+MAM01284,adenylylselenate,2,10.0
+MAM02855,S-(2-hydroxyethyl)glutathione,2,12.0
+MAM01978,glutathione episulfonium ion,2,12.0
+MAM02861,S-(formylmethyl)glutathione,2,12.0
+MAM01240,9-hydroxy-10-O-D-glucuronoside-(12Z)-octadecenoate,2,24.0
+MAM00988,4-hydroxy-2-nonenal,2,9.0
+MAM01871,G00031,2,16.0
+MAM00983,4-hydroperoxy-2-nonenal,2,9.0
+MAM01217,9(S)-HPODE,2,18.0
+MAM03008,"trans,cis,cis-2,13,16-docasatrienoyl-CoA",2,43.0
+MAM00085,"(3S)-hydroxy-docasa-cis,cis-13,16-dienoyl-CoA",2,43.0
+MAM00860,"3-oxodocasa-cis,cis-13,16-dienoyl-CoA",2,43.0
+MAM01609,core 4,2,24.0
+MAM01805,farnesylcysteine,2,18.0
+MAM01884,G00083,2,70.0
+MAM01882,G00081,2,70.0
+MAM01886,G00085,2,84.0
+MAM01885,G00084,2,78.0
+MAM03902,Prolyl-Prolyl-Arginine,2,16.0
+MAM03901,Prolyl-Phenylalanine,2,14.0
+MAM03900,Prolyl-Lysyl-Proline,2,16.0
+MAM03897,Prolyl-Histidine,2,11.0
+MAM03894,Prolyl-Glutaminyl-Proline,2,15.0
+MAM02095,"heparan sulfate, precursor 9",2,87.0
+MAM02094,"heparan sulfate, precursor 8",2,79.0
+MAM02093,"heparan sulfate, precursor 7",2,73.0
+MAM02092,"heparan sulfate, precursor 6",2,65.0
+MAM02091,"heparan sulfate, precursor 5",2,59.0
+MAM02090,"heparan sulfate, precursor 4",2,51.0
+MAM02089,"heparan sulfate, precursor 3",2,45.0
+MAM02088,"heparan sulfate, precursor 2",2,37.0
+MAM02081,"heparan sulfate, precursor 1",2,31.0
+MAM01906,Gal2-Xyl-L-Ser-[protein],2,17.0
+MAM01921,Gal-Xyl-L-Ser-[protein],2,11.0
+MAM03156,Xyl-L-Ser-[protein],2,5.0
+MAM01143,6-(alpha-D-glucosaminyl)-1-phosphatidyl-1D-myo-inositol,2,17.0
+MAM02907,sialyl-Tn antigen,2,19.0
+MAM02074,"heparan sulfate, degradation product 4",2,73.0
+MAM02073,"heparan sulfate, degradation product 3",2,81.0
+MAM02066,"heparan sulfate, degradation product 2",2,79.0
+MAM00717,"3(S)-hydroxy-tetracosa-6,9,12,15,18-all-cis-pentaenoyl-CoA",2,45.0
+MAM03028,"trans-2-all-cis-6,9,12,15,18-tetracosahexaenoyl-CoA",2,45.0
+MAM03017,"trans,cis-2,8,11-eicosatrienoyl-CoA",2,41.0
+MAM00704,3(S)-hydroxy-3-oxo-eicosadienoyl-CoA,2,41.0
+MAM02055,"heparan sulfate, degradation product 1",2,79.0
+MAM02080,"heparan sulfate, free chain",2,79.0
+MAM02054,heparan sulfate proteoglycan,2,79.0
+MAM02087,"heparan sulfate, precursor 15",2,79.0
+MAM02086,"heparan sulfate, precursor 14",2,79.0
+MAM02085,"heparan sulfate, precursor 13",2,79.0
+MAM02084,"heparan sulfate, precursor 12",2,79.0
+MAM02083,"heparan sulfate, precursor 11",2,79.0
+MAM02082,"heparan sulfate, precursor 10",2,79.0
+MAM02067,"heparan sulfate, degradation product 20",2,45.0
+MAM02065,"heparan sulfate, degradation product 19",2,43.0
+MAM02064,"heparan sulfate, degradation product 18",2,43.0
+MAM02063,"heparan sulfate, degradation product 17",2,43.0
+MAM02062,"heparan sulfate, degradation product 16",2,49.0
+MAM02061,"heparan sulfate, degradation product 15",2,49.0
+MAM02060,"heparan sulfate, degradation product 14",2,57.0
+MAM02059,"heparan sulfate, degradation product 13",2,55.0
+MAM02058,"heparan sulfate, degradation product 12",2,55.0
+MAM02057,"heparan sulfate, degradation product 11",2,55.0
+MAM02056,"heparan sulfate, degradation product 10",2,55.0
+MAM02079,"heparan sulfate, degradation product 9",2,61.0
+MAM02078,"heparan sulfate, degradation product 8",2,69.0
+MAM02077,"heparan sulfate, degradation product 7",2,67.0
+MAM02076,"heparan sulfate, degradation product 6",2,67.0
+MAM02075,"heparan sulfate, degradation product 5",2,67.0
+MAM01896,G10595,2,152.0
+MAM01866,G00006,2,146.0
+MAM01895,G10526,2,140.0
+MAM01865,G00005,2,134.0
+MAM01323,alpha-D-mannosyl-beta-D-mannosyl-diacetylchitobiosyldiphosphodolichol,2,128.0
+MAM01390,beta-D-mannosyldiacetylchitobiosyldiphosphodolichol,2,122.0
+MAM02498,"N,N-chitobiosyldiphosphodolichol",2,116.0
+MAM02522,N-acetyl-D-glucosaminyldiphosphodolichol,2,108.0
+MAM01656,dehydrodolichol,2,100.0
+MAM01658,dehydrodolichol-phosphate,2,100.0
+MAM02072,"heparan sulfate, degradation product 25",2,23.0
+MAM02071,"heparan sulfate, degradation product 24",2,31.0
+MAM02070,"heparan sulfate, degradation product 23",2,31.0
+MAM02069,"heparan sulfate, degradation product 22",2,37.0
+MAM02068,"heparan sulfate, degradation product 21",2,37.0
+MAM00147,(alpha-D-mannosyl)6-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (B1),2,58.0
+MAM00146,(alpha-D-mannosyl)6-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (A),2,58.0
+MAM00871,3-oxo-eicosadienoyl-CoA,2,41.0
+MAM03011,"trans,cis-2,11-docosadienoyl-CoA",2,43.0
+MAM00699,3(S)-hydroxy-11-cis-docosenoyl-CoA,2,43.0
+MAM00839,3-oxo-11cis-docosenoyl-CoA,2,43.0
+MAM03018,"trans,cis-2,9-eicosadienoyl-CoA",2,41.0
+MAM00707,3(S)-hydroxy-9-cis-eicosenoyl-CoA,2,41.0
+MAM00852,3-oxo-9-cis-eicosenoyl-CoA,2,41.0
+MAM00152,"(alpha-D-mannosyl)7-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine, isoform C (protein)",2,64.0
+MAM00154,(Glc)3 (GlcNAc)2 (Man)9 (PP-Dol)1,2,188.0
+MAM01900,G10599,2,182.0
+MAM01899,G10598,2,176.0
+MAM01867,G00007,2,170.0
+MAM01898,G10597,2,164.0
+MAM01897,G10596,2,158.0
+MAM02235,"keratan sulfate I biosynthesis, precursor 8",2,115.0
+MAM02234,"keratan sulfate I biosynthesis, precursor 7",2,115.0
+MAM02233,"keratan sulfate I biosynthesis, precursor 6",2,107.0
+MAM02232,"keratan sulfate I biosynthesis, precursor 5",2,101.0
+MAM02231,"keratan sulfate I biosynthesis, precursor 4",2,101.0
+MAM02223,"keratan sulfate I biosynthesis, precursor 3",2,93.0
+MAM02212,"keratan sulfate I biosynthesis, precursor 2",2,87.0
+MAM02201,"keratan sulfate I biosynthesis, precursor 1",2,79.0
+MAM01829,fn2m2masn,2,56.0
+MAM01869,G00021,2,66.0
+MAM01868,G00020,2,58.0
+MAM02510,n2m2nmasn,2,58.0
+MAM02597,nm2masn,2,42.0
+MAM02598,nm4masn,2,54.0
+MAM00144,(alpha-D-mannosyl)5-beta-D-mannosyl-diacetylchitobiosyl-L-asparagine (protein) (B2),2,52.0
+MAM02217,"keratan sulfate I biosynthesis, precursor 24",2,191.0
+MAM02216,"keratan sulfate I biosynthesis, precursor 23",2,185.0
+MAM02215,"keratan sulfate I biosynthesis, precursor 22",2,185.0
+MAM02214,"keratan sulfate I biosynthesis, precursor 21",2,177.0
+MAM02213,"keratan sulfate I biosynthesis, precursor 20",2,171.0
+MAM02211,"keratan sulfate I biosynthesis, precursor 19",2,171.0
+MAM02210,"keratan sulfate I biosynthesis, precursor 18",2,163.0
+MAM02209,"keratan sulfate I biosynthesis, precursor 17",2,157.0
+MAM02208,"keratan sulfate I biosynthesis, precursor 16",2,157.0
+MAM02207,"keratan sulfate I biosynthesis, precursor 15",2,149.0
+MAM02206,"keratan sulfate I biosynthesis, precursor 14",2,143.0
+MAM02205,"keratan sulfate I biosynthesis, precursor 13",2,143.0
+MAM02204,"keratan sulfate I biosynthesis, precursor 12",2,135.0
+MAM02203,"keratan sulfate I biosynthesis, precursor 11",2,129.0
+MAM02202,"keratan sulfate I biosynthesis, precursor 10",2,129.0
+MAM02236,"keratan sulfate I biosynthesis, precursor 9",2,121.0
+MAM02230,"keratan sulfate I biosynthesis, precursor 36",2,247.0
+MAM02229,"keratan sulfate I biosynthesis, precursor 35",2,241.0
+MAM02228,"keratan sulfate I biosynthesis, precursor 34",2,241.0
+MAM03389,Stearoyl-ACP,2,29.0
+MAM03392,(2E)-Octadecenoyl-ACP,2,29.0
+MAM03391,3-Hydroxystearoyl-ACP,2,29.0
+MAM00067,(2E)-tricosenoyl-CoA,2,44.0
+MAM02227,"keratan sulfate I biosynthesis, precursor 33",2,233.0
+MAM02226,"keratan sulfate I biosynthesis, precursor 32",2,227.0
+MAM02225,"keratan sulfate I biosynthesis, precursor 31",2,227.0
+MAM02224,"keratan sulfate I biosynthesis, precursor 30",2,219.0
+MAM02222,"keratan sulfate I biosynthesis, precursor 29",2,213.0
+MAM02221,"keratan sulfate I biosynthesis, precursor 28",2,213.0
+MAM02220,"keratan sulfate I biosynthesis, precursor 27",2,205.0
+MAM02219,"keratan sulfate I biosynthesis, precursor 26",2,199.0
+MAM02218,"keratan sulfate I biosynthesis, precursor 25",2,199.0
+MAM02241,"keratan sulfate I, degradation product 13",2,174.0
+MAM00802,3-hydroxytricosanoyl-CoA,2,44.0
+MAM00907,3-oxotricosanoyl-CoA,2,44.0
+MAM02099,heptadecanoyl-[ACP],2,28.0
+MAM00045,(2E)-heptadecenoyl-[ACP],2,28.0
+MAM00779,3-hydroxyheptadecanoyl-[ACP],2,28.0
+MAM00874,3-oxoheptadecanoyl-[ACP],2,28.0
+MAM00060,(2E)-pentadecenoyl-[ACP],2,26.0
+MAM00794,3-hydroxypentadecanoyl-[ACP],2,26.0
+MAM00896,3-oxopentadecanoyl-[ACP],2,26.0
+MAM02238,"keratan sulfate I, degradation product 10",2,188.0
+MAM02275,"keratan sulfate I, degradation product 7",2,210.0
+MAM02273,"keratan sulfate I, degradation product 5",2,222.0
+MAM02270,"keratan sulfate I, degradation product 4",2,222.0
+MAM02259,"keratan sulfate I, degradation product 3",2,233.0
+MAM02248,"keratan sulfate I, degradation product 2",2,241.0
+MAM00070,(2E)-undecenoyl-[ACP],2,22.0
+MAM00805,3-hydroxyundecanoyl-[ACP],2,22.0
+MAM00910,3-oxoundecanoyl-[ACP],2,22.0
+MAM02615,nonanoyl-[ACP],2,20.0
+MAM00055,(2E)-nonenoyl-[ACP],2,20.0
+MAM00791,3-hydroxynonanoyl-[ACP],2,20.0
+MAM00888,3-oxononanoyl-[ACP],2,20.0
+MAM02106,heptanoyl-[ACP],2,18.0
+MAM00047,(2E)-heptenoyl-[ACP],2,18.0
+MAM00781,3-hydroxyheptanoyl-[ACP],2,18.0
+MAM00876,3-oxoheptanoyl-[ACP],2,18.0
+MAM02257,"keratan sulfate I, degradation product 28",2,104.0
+MAM02254,"keratan sulfate I, degradation product 25",2,118.0
+MAM02251,"keratan sulfate I, degradation product 22",2,132.0
+MAM02247,"keratan sulfate I, degradation product 19",2,146.0
+MAM02244,"keratan sulfate I, degradation product 16",2,160.0
+MAM02309,"keratan sulfate II biosynthesis, precursor 5",2,61.0
+MAM02308,"keratan sulfate II biosynthesis, precursor 4",2,53.0
+MAM02307,"keratan sulfate II biosynthesis, precursor 3",2,47.0
+MAM02306,"keratan sulfate II biosynthesis, precursor 2",2,39.0
+MAM02304,"keratan sulfate II biosynthesis, precursor 1",2,33.0
+MAM02272,"keratan sulfate I, degradation product 41",2,34.0
+MAM02271,"keratan sulfate I, degradation product 40",2,40.0
+MAM02269,"keratan sulfate I, degradation product 39",2,48.0
+MAM02267,"keratan sulfate I, degradation product 37",2,62.0
+MAM02264,"keratan sulfate I, degradation product 34",2,76.0
+MAM02261,"keratan sulfate I, degradation product 31",2,90.0
+MAM00068,(2E)-tridecenoyl-[ACP],2,24.0
+MAM00803,3-hydroxytridecanoyl-[ACP],2,24.0
+MAM00908,3-oxotridecanoyl-[ACP],2,24.0
+MAM03115,undecanoyl-[ACP],2,22.0
+MAM02285,"keratan sulfate II (core 2-linked), degradation product 7",2,44.0
+MAM01704,dihydroneopterin,2,9.0
+MAM02693,pentanoyl-[ACP],2,16.0
+MAM00062,(2E)-pentenoyl-[ACP],2,16.0
+MAM00796,3-hydroxypentanoyl-[ACP],2,16.0
+MAM00898,3-oxopentanoyl-[ACP],2,16.0
+MAM02773,propanoyl-[ACP],2,14.0
+MAM02282,"keratan sulfate II (core 2-linked), degradation product 4",2,58.0
+MAM02280,"keratan sulfate II (core 2-linked), degradation product 2",2,70.0
+MAM02279,"keratan sulfate II (core 2-linked), degradation product 1",2,70.0
+MAM02288,keratan sulfate II (core 2-linked),2,81.0
+MAM02305,"keratan sulfate II biosynthesis, precursor 10",2,81.0
+MAM02313,"keratan sulfate II biosynthesis, precursor 9",2,75.0
+MAM02312,"keratan sulfate II biosynthesis, precursor 8",2,75.0
+MAM02311,"keratan sulfate II biosynthesis, precursor 7",2,67.0
+MAM02310,"keratan sulfate II biosynthesis, precursor 6",2,61.0
+MAM00041,(2E)-dodecenoyl-[ACP],2,23.0
+MAM01634,D-3-hydroxydodecanoyl-[ACP],2,23.0
+MAM00038,(2E)-decenoyl-[ACP],2,21.0
+MAM00160,(R)-3-hydroxydecanoyl-[ACP],2,21.0
+MAM02303,keratan sulfate II (core 4-linked),2,89.0
+MAM02290,"keratan sulfate II (core 4-linked), biosynthesis, precursor 10",2,89.0
+MAM02298,"keratan sulfate II (core 4-linked), biosynthesis, precursor 9",2,83.0
+MAM02297,"keratan sulfate II (core 4-linked), biosynthesis, precursor 8",2,83.0
+MAM02296,"keratan sulfate II (core 4-linked), biosynthesis, precursor 7",2,75.0
+MAM02295,"keratan sulfate II (core 4-linked), biosynthesis, precursor 6",2,69.0
+MAM02294,"keratan sulfate II (core 4-linked), biosynthesis, precursor 5",2,69.0
+MAM02293,"keratan sulfate II (core 4-linked), biosynthesis, precursor 4",2,61.0
+MAM02292,"keratan sulfate II (core 4-linked), biosynthesis, precursor 3",2,55.0
+MAM02291,"keratan sulfate II (core 4-linked), biosynthesis, precursor 2",2,47.0
+MAM02289,"keratan sulfate II (core 4-linked), biosynthesis, precursor 1",2,36.0
+MAM02287,"keratan sulfate II (core 2-linked), degradation product 9",2,30.0
+MAM01525,chondroitin sulfate B - dermatan sulfate (IdoA2S-GalNAc4S) proteoglycan,2,45.0
+MAM01531,"chondroitin sulfate B (IdoA2S-GalNAc4s), precursor 5",2,45.0
+MAM01523,"chondroitin sulfate A (GalNAc4S-GlcA), degradation product 5",2,23.0
+MAM01522,"chondroitin sulfate A (GalNAc4S-GlcA), degradation product 4",2,31.0
+MAM01519,"chondroitin sulfate A (GalNAc4S-GlcA), degradation product 1",2,45.0
+MAM01517,chondroitin sulfate A (GalNAc4S-GlcA) proteoglycan,2,45.0
+MAM01530,"chondroitin sulfate B (IdoA2S-GalNAc4S), precursor 4",2,45.0
+MAM01515,"chondroitin sulfate A (GalNAc4S-GlcA) and B (IdoA2S-GalNAc4S), precursor 2",2,37.0
+MAM01564,"chondroitin sulfate E (GalNAc4,6diS-GlcA), precursor 3",2,37.0
+MAM02302,"keratan sulfate II (core 4-linked), degradation product 4",2,66.0
+MAM02300,"keratan sulfate II (core 4-linked), degradation product 2",2,78.0
+MAM02299,"keratan sulfate II (core 4-linked), degradation product 1",2,78.0
+MAM00050,(2E)-hexadecenoyl-[ACP],2,27.0
+MAM00162,(R)-3-hydroxypalmitoyl-[ACP],2,27.0
+MAM00065,(2E)-tetradecenoyl-[ACP],2,25.0
+MAM02130,HMA,2,25.0
+MAM01542,chondroitin sulfate D (GlcNAc6S-GlcA2S) precursor 2,2,31.0
+MAM01537,"chondroitin sulfate C (GalNAc6S-GlcA), degradation product 4",2,31.0
+MAM00622,"25-hydroxyvitamin D3-26,23-lactone",2,27.0
+MAM00058,(2E)-octenoyl-[ACP],2,19.0
+MAM00161,(R)-3-hydroxyoctanoyl-[ACP],2,19.0
+MAM00052,(2E)-hexenoyl-[ACP],2,17.0
+MAM01635,D-3-hydroxyhexanoyl-[ACP],2,17.0
+MAM01409,but-2-enoyl-[ACP],2,15.0
+MAM00158,(R)-3-hydroxybutanoyl-[ACP],2,15.0
+MAM00611,"24-oxo-1alpha,23,25-trihydroxyvitamin D3",2,27.0
+MAM01534,"chondroitin sulfate C (GalNAc6S-GlcA), degradation product 1",2,45.0
+MAM01533,chondroitin sulfate C (GalNAc6S-GlcA) proteoglycan,2,45.0
+MAM01541,"chondroitin sulfate C (GalNAc6S-GlcA), precursor 3",2,45.0
+MAM01540,"chondroitin sulfate C (GalNAc6S-GlcA), precursor 2",2,37.0
+MAM01528,"chondroitin sulfate B - dermatan sulfate (IdoA2S-GalNAc4S), degradation product 3",2,37.0
+MAM01526,"chondroitin sulfate B - dermatan sulfate (IdoA2S-GalNAc4S), degradation product 1",2,45.0
+MAM01309,aldosterone,2,21.0
+MAM00660,2-methoxyestrone,2,19.0
+MAM01567,"chondroitin sulfate E (GalNAc4,6diS-GlcA), precursor 5b",2,45.0
+MAM01566,"chondroitin sulfate E (GalNAc4,6diS-GlcA), precursor 5a",2,45.0
+MAM01548,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 5",2,31.0
+MAM01546,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 3",2,37.0
+MAM01544,"chondroitin sulfate D (GlcNAc6S-GlcA2S), degradation product 1",2,45.0
+MAM01543,chondroitin sulfate D (GlcNAc6S-GlcA2S) proteoglycan,2,45.0
+MAM01553,"chondroitin sulfate D (GlcNAc6S-GlcA2S), precursor 5",2,45.0
+MAM01552,"chondroitin sulfate D (GlcNAc6S-GlcA2S), precursor 4",2,45.0
+MAM01551,"chondroitin sulfate D (GlcNAc6S-GlcA2S), precursor 3",2,37.0
+MAM02809,psychosine sulfate,2,24.0
+MAM02164,III3Fuc-nLc6Cer,2,64.0
+MAM03138,VI3NeuAc-nLc6Cer,2,69.0
+MAM03891,Prolyl-Cysteine,2,8.0
+MAM03879,Phenylalanyl-Tyrosine,2,18.0
+MAM03874,Phenylalanyl-Phenylalaninyl-Threonine,2,22.0
+MAM03873,Phenylalanyl-Phenylalaninyl-Asparagine,2,22.0
+MAM01050,"5,15-DiHETE",2,20.0
+MAM00590,20-hydroxy-5S-HETE,2,20.0
+MAM00605,21-hydroxypregnenolone,2,21.0
+MAM00429,18-hydroxycorticosterone,2,21.0
+MAM00604,21-hydroxyallopregnanolone,2,21.0
+MAM02761,"pregn-5-ene-3,20-dione-17-ol",2,21.0
+MAM02760,"pregn-5-ene-3,20-dione",2,21.0
+MAM02508,n2m2mn,2,42.0
+MAM02140,hyaluronan degradation product 1,2,22.0
+MAM02141,hyaluronate,2,28.0
+MAM01560,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 6",2,31.0
+MAM01559,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 5",2,31.0
+MAM01556,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 2",2,45.0
+MAM01555,"chondroitin sulfate E (GalNAc4,6diS-GlcA), degradation product 1",2,45.0
+MAM00431,19-hydroxyandrostenedione,2,19.0
+MAM01511,cholesterol-STAR,2,1420.0
+MAM02935,STAR,2,1393.0
+MAM02951,sulfoglycolithocholate,2,26.0
+MAM00199,[protein]-L-citrulline,2,7.0
+MAM00206,[protein]-L-tyrosine,2,10.0
+MAM00560,1-radyl-2-acyl-sn-glycero-3-phosphocholine,2,9.0
+MAM00515,1-alkyl-2-acylglycerophosphoethanolamine,2,6.0
+MAM00283,"11beta,17alpha,21-trihydroxypregnenolone",2,21.0
+MAM03867,Phenylalanyl-Leucine,2,15.0
+MAM03866,Phenylalanyl-Glutaminyl-Phenylalanine,2,23.0
+MAM03865,Phenylalanyl-Aspartate,2,13.0
+MAM03767,Methionyl-Methionyl-Isoleucine,2,16.0
+MAM00296,"11h-14,15-EETA",2,20.0
+MAM00390,"15H-11,12-EETA",2,20.0
+MAM00393,15-oxoETE,2,20.0
+MAM01048,"5,12-DiHETE",2,20.0
+MAM01203,8(S)-HPETE,2,20.0
+MAM01088,"5beta-cholestane-3alpha,7alpha,12alpha,25,27-pentol",2,27.0
+MAM01086,"5beta-cholestane-3alpha,7alpha,12alpha,24r,25-pentol",2,27.0
+MAM01085,"5beta-cholestane-3alpha,7alpha,12alpha,23,25-pentol",2,27.0
+MAM00747,"3alpha,7alpha,12alpha,25-tetrahydroxy-5beta-cholestane-24-one",2,27.0
+MAM03039,trehalose,2,12.0
+MAM00946,"4,6-dideoxy-4-oxo-dTDP-D-glucose",2,16.0
+MAM00673,2-phenylacetamide,2,8.0
+MAM01289,ADP-ribose-2-phosphate,2,15.0
+MAM00606,22beta-hydroxycholesterol,2,27.0
+MAM00598,20-OH-hepoxilin A3,2,20.0
+MAM02098,hepoxilin B3,2,20.0
+MAM03741,Lysyl-Glutamyl-Glutamate,2,16.0
+MAM03723,Leucyl-Valine,2,11.0
+MAM03722,Leucyl-Tyrosyl-Tyrosine,2,24.0
+MAM03720,Leucyl-Tryptophan,2,17.0
+MAM03717,Leucyl-Proline,2,11.0
+MAM03716,Leucyl-Leucyl-Tryptophan,2,23.0
+MAM01856,fucfucgalacglcgalacglcgal14acglcgalgluside heparan sulfate,2,84.0
+MAM02610,noladin-ether,2,23.0
+MAM00518,"1-alpha,24R,25-trihydroxyvitamin D2",2,28.0
+MAM00613,"24R,25-dihyoxyvitamin D2",2,28.0
+MAM00580,20alpha-hydroxy-4-pregnen-3-one,2,21.0
+MAM01709,dIMP,2,10.0
+MAM02807,pseudouridine-5-phosphate,2,9.0
+MAM00318,"12,20-diHETE",2,20.0
+MAM00259,"10,11-epoxy-(4Z,7Z)-hexadecadienoic acid",2,16.0
+MAM00310,"12,13-epoxy-(6Z,9Z)-octadecadienoic acid",2,18.0
+MAM01176,"7,8-epoxy-(4Z,10Z)-hexadecadienoic acid",2,16.0
+MAM01219,"9,10-epoxy-(6Z,12Z)-octadecadienoic acid",2,18.0
+MAM03695,Isolecyl-Aspartate,2,10.0
+MAM03693,Isoleucyl-Arginyl-Isoleucine,2,18.0
+MAM03680,Histidyl-Tryptophanyl-Histidine,2,23.0
+MAM03676,Histidyl-Methionine,2,11.0
+MAM00339,"13,14-dihydro-15-oxo-lipoxin A4",2,20.0
+MAM02413,L-pipecolate,2,6.0
+MAM01663,delta1-piperideine-2-carboxylate,2,6.0
+MAM01180,7alpha-hydroxy-3-oxo-4-cholestenoic acid,2,27.0
+MAM01447,"cholest-5-ene-3beta,7alpha,25-triol",2,27.0
+MAM01084,"5beta-cholestan-7alpha,27-diol-3-one",2,27.0
+MAM01082,"5beta-cholestan-7alpha,12alpha,27-triol-3-one",2,27.0
+MAM00977,"4-cholesten-7alpha,12alpha,27-triol-3-one",2,27.0
+MAM00625,27-hydroxycholesterol,2,27.0
+MAM00743,"3,7,24THCA-CoA",2,48.0
+MAM00615,25(R)TetraHCA-CoA,2,48.0
+MAM01157,6-amino-2-oxohexanoate,2,6.0
+MAM00519,"1-alpha,25-dihydroxyvitamin D2",2,28.0
+MAM02587,nifedipine,2,17.0
+MAM01344,antipyrine,2,11.0
+MAM00394,15-oxo-lipoxin A4,2,20.0
+MAM02538,N-acetyl-LTE4,2,25.0
+MAM03670,Histidyl-Histidyl-Lysine,2,18.0
+MAM03667,Histidyl-Glutamate,2,11.0
+MAM03665,Histidyl-Cystyl-Cysteine,2,12.0
+MAM03664,Histidyl-Aspartate,2,10.0
+MAM00935,4(R)-hydroxy-dodec-(6Z)-enoate,2,12.0
+MAM00847,3-oxo-6(R)-hydroxy-tetradec-8-cis-enoate,2,14.0
+MAM00692,"3(S),6(R)-dihydroxy-tetradec-(8Z)-enoate",2,14.0
+MAM01145,"6(R)-hydroxy-tetradeca-(2E,8Z)-dienoate",2,14.0
+MAM01144,"6(R)-hydroxy-tetradeca-(2E,4E,8Z)-trienoate",2,14.0
+MAM01146,"6(R)-hydroxy-tetradeca-(4E,8Z)-dienoate",2,14.0
+MAM00850,"3-oxo-8(R)-hydroxy-hexadeca-(6E,10Z)-dienoate",2,16.0
+MAM00694,"3(S),8(R)-dihydroxy-(6E,10Z)-hexadecadienoate",2,16.0
+MAM01200,"8(R)-hydroxy-hexadeca-(2E,6E,10Z)-trienoate",2,16.0
+MAM01199,"8(R)-hydroxy-hexadeca-(2E,4E,6E,10Z)-tetraenoate",2,16.0
+MAM01201,"8(R)-hydroxy-hexadeca-(4E,6E,10Z)-trienoate",2,16.0
+MAM03616,Glutamyl-Threonine,2,9.0
+MAM03611,Glutamyl-Methionine,2,10.0
+MAM03610,Glutamyl-Leucine,2,11.0
+MAM01148,"6(S)-hydroxy-tetradeca-(2E,8Z)-dienoate",2,14.0
+MAM01147,"6(S)-hydroxy-tetradeca-(2E,4E,8Z)-trienoate",2,14.0
+MAM01149,"6(S)-hydroxy-tetradeca-(4E,8Z)-dienoate",2,14.0
+MAM00851,"3-oxo-8(S)-hydroxy-hexadeca-(6E,10Z)-dienoate",2,16.0
+MAM00695,"3(S),8(S)-dihydroxy-(6E,10Z)-hexadecadienoate",2,16.0
+MAM01205,"8(S)-hydroxy-hexadeca-(2E,6E,10Z)-trienoate",2,16.0
+MAM01204,"8(S)-hydroxy-hexadeca-(2E,4E,6E,10Z)-tetraenoate",2,16.0
+MAM01206,"8(S)-hydroxy-hexadeca-(4E,6E,10Z)-trienoate",2,16.0
+MAM01942,GD1alpha,2,66.0
+MAM01956,glcnac-gal-globoside,2,58.0
+MAM02327,L-4-hydroxyglutamate semialdehyde,2,5.0
+MAM00786,3-hydroxykynurenamine,2,9.0
+MAM00665,2-methylcitrate,2,7.0
+MAM01672,deoxyribose,2,5.0
+MAM00179,(S)-3-sulfolactate,2,3.0
+MAM01324,alpha-GalNAc-globoside,2,52.0
+MAM00742,"3,7,24THCA",2,27.0
+MAM02977,tetraHCA,2,27.0
+MAM00753,"3alpha,7alpha,24(S)-trihydroxy-5beta-cholestan-27-al",2,27.0
+MAM00746,"3alpha,7alpha,12alpha,24(S)-tetrahydroxy-5beta-cholestan-27-al",2,27.0
+MAM01079,"5beta-cholestan-3alpha,7alpha,24(S),27-tetrol",2,27.0
+MAM01076,"5beta-cholestan-3alpha,7alpha,12alpha,24(S),27-pentol",2,27.0
+MAM01080,"5beta-cholestan-3alpha,7alpha,24(S)-triol",2,27.0
+MAM01077,"5beta-cholestan-3alpha,7alpha,12alpha,24(S)-tetrol",2,27.0
+MAM01083,"5beta-cholestan-7alpha,24(S)-diol-3-one",2,27.0
+MAM01081,"5beta-cholestan-7alpha,12alpha,24(S)-triol-3-one",2,27.0
+MAM00976,"4-cholesten-7alpha,12alpha,24(S)-triol-3-one",2,27.0
+MAM02950,sulfochenodeoxycholate,2,24.0
+MAM01999,glycolipid,2,56.0
+MAM01918,galgalthcrm heparan sulfate,2,48.0
+MAM01920,galthcrm heparan sulfate,2,42.0
+MAM02931,sphingosylphosphorylcholine,2,23.0
+MAM01245,9-O-acetylated-GT3,2,65.0
+MAM01244,9-O-acetylated-GD3,2,54.0
+MAM02947,sulfatide galactocerebroside,2,24.0
+MAM00936,4(S)-hydroxy-dodec-(6Z)-enoate,2,12.0
+MAM00848,3-oxo-6(S)-hydroxy-tetradec-(8Z)-enoate,2,14.0
+MAM00693,"3(S),6(S)-dihydroxy-tetradec-(8Z)-enoate",2,14.0
+MAM03599,Glutaminyl-Lysyl-Lysine,2,17.0
+MAM03597,Glutaminyl-Histidyl-Histidine,2,17.0
+MAM03596,Glutaminyl-Asparaginyl-Glutamine,2,14.0
+MAM00584,20-COOH-18-oxo-LTE4-CoA,2,44.0
+MAM00419,18(R)-hydroxy-20-oxo-20-CoA-LTE4,2,44.0
+MAM00027,(18E)-20-oxo-20-CoA-LTE4,2,44.0
+MAM00587,20-COOH-LTE4-CoA,2,44.0
+MAM00586,20-COOH-LTE4,2,23.0
+MAM00601,20-oxo-LTE4,2,23.0
+MAM00596,20-hydroxy-LTE4,2,23.0
+MAM00617,25(S)DHCA-CoA,2,48.0
+MAM00757,"3alpha,7alpha-dihydroxy-5beta-cholestan-27-al",2,27.0
+MAM01264,acngalacglcgalgluside heparan sulfate,2,56.0
+MAM01854,fucfucgalacglc13galacglcgal14acglcgalgluside heparan sulfate,2,84.0
+MAM01858,fucgalacglc13galacglcgal14acglcgalgluside heparan sulfate,2,78.0
+MAM01857,fucgalacgalfucgalacglcgal14acglcgalgluside heparan sulfate,2,84.0
+MAM01908,galacgalfucgalacglcgal14acglcgalgluside heparan sulfate,2,78.0
+MAM01263,acgalfucgalacglcgal14acglcgalgluside heparan sulfate,2,72.0
+MAM01907,galacgalfuc12gal14acglcgalgluside heparan sulfate,2,64.0
+MAM01262,acgalfuc12gal14acglcgalgluside heparan sulfate,2,58.0
+MAM02430,m2emgacpail heparan sulfate,2,53.0
+MAM02463,memgacpail heparan sulfate,2,47.0
+MAM02433,m3gacpail heparan sulfate,2,51.0
+MAM02431,m2gacpail heparan sulfate,2,45.0
+MAM02483,mgacpail heparan sulfate,2,39.0
+MAM02379,"L-gulono-1,4-lactone",2,6.0
+MAM02338,L-arabitol,2,5.0
+MAM01855,fucfucgalacglcgal14acglcgalgluside heparan sulfate,2,70.0
+MAM02792,prostaglandin G2,2,20.0
+MAM00015,(13E)-tetranor-16-oxo-16-CoA-LTE4,2,40.0
+MAM00397,16(S)-hydroxy-18-oxo-18-CoA-LTE4,2,42.0
+MAM00422,18-COOH-(15E)-dinor-LTE4-CoA,2,42.0
+MAM00423,18-COOH-(16E)-dinor-LTE5-CoA,2,42.0
+MAM03473,Aspartyl-Methionyl-Aspartate,2,13.0
+MAM03466,Aspartyl-Glutamate,2,9.0
+MAM00381,15-dehydro-prostaglandin D2,2,20.0
+MAM01287,ADP-mannose,2,16.0
+MAM01286,ADP-glucose,2,16.0
+MAM02878,S-aminomethyldihydrolipoamide,2,9.0
+MAM02546,N-acetylornithine,2,7.0
+MAM00577,"2,6-dimethylheptanoyl-carnitine",2,16.0
+MAM02021,gpi_prot heparan sulfate,2,57.0
+MAM01780,em2emgacpail_prot heparan sulfate,2,55.0
+MAM02461,mem2emgacpail heparan sulfate,2,61.0
+MAM01779,em2emgacpail heparan sulfate,2,55.0
+MAM02779,prostaglandin B2,2,20.0
+MAM02781,prostaglandin C2,2,20.0
+MAM03457,Asparaginyl-Cysteinyl-Cysteine,2,10.0
+MAM03456,Asparaginyl-Asparaginyl-Arginine,2,14.0
+MAM03452,Arginyl-Seryl-Serine,2,12.0
+MAM03449,Arginyl-Phenylalanine-Arginine,2,21.0
+MAM03445,Arginyl-Glycyl-Glycine,2,10.0
+MAM03443,Arginyl-Glutamyl-Glutamate,2,16.0
+MAM00322,12-hydroperoxyeicosatetraenoate-glyceryl-ester,2,23.0
+MAM01335,anandamide,2,22.0
+MAM02799,prostaglandin-PGE2-3-glyceryl ester,2,23.0
+MAM00960,4alpha-formyl-5alpha-cholesta-8-en-3beta-ol,2,28.0
+MAM00964,4alpha-hydroxymethyl-5alpha-cholesta-8-en-3beta-ol,2,28.0
+MAM00967,4alpha-methyl-cholesta-8-enol,2,28.0
+MAM00966,4alpha-methyl-5alpha-cholesta-8-en-3-one,2,28.0
+MAM00958,4alpha-formyl-4beta-methyl-5alpha-cholesta-8-en-3beta-ol,2,29.0
+MAM00962,4alpha-hydroxymethyl-4beta-methyl-5alpha-cholesta-8-en-3beta-ol,2,29.0
+MAM00942,"4,4-dimethyl-5alpha-cholesta-8,14-dien-3-beta-ol",2,29.0
+MAM00940,"4,4-dimethyl-14alpha-hydroxymethyl-5alpha-cholesta-8-en-3beta-ol",2,30.0
+MAM03163,"indole-5,6-quinone",2,8.0
+MAM02798,prostaglandin-PGE2-1-glyceryl ester,2,23.0
+MAM01915,galfucgalacglcgal14acglcgalgluside heparan sulfate,2,70.0
+MAM00281,"11,15-cyclo-12,14-cycloperoxy-8-hydroperoxy-(5Z,9E)-eicosadienoate",2,20.0
+MAM01222,"9,11-cycloperoxy-15-hydroperoxy-(5Z,13E)-eicosadienoate",2,20.0
+MAM01223,"9,11-cycloperoxy-5-hydroperoxy-(6E,14Z)-eicosadienoate",2,20.0
+MAM01063,"5,9-cyclo-6,8-cycloperoxy-12-hydroperoxy-(10E,14Z)-eicosadienoate",2,20.0
+MAM03440,Arginyl-Arginyl-Metheonine,2,17.0
+MAM03439,Arginyl-Arginyl-Lysine,2,18.0
+MAM03435,Arginyl-Alanyl-Alanine,2,12.0
+MAM03415,Alanyl-Histidyl-Alanine,2,12.0
+MAM01067,"5alpha-cholesta-8,24-dien-3-one",2,27.0
+MAM00959,"4alpha-formyl-5alpha-cholesta-8,24-dien-3beta-ol",2,28.0
+MAM00963,"4alpha-hydroxymethyl-5alpha-cholesta-8,24-dien-3beta-ol",2,28.0
+MAM00957,"4alpha-formyl-4beta-methyl-5alpha-cholesta-8,24-dien-3beta-ol",2,29.0
+MAM00961,"4alpha-hydroxymethyl-4beta-methyl-5alpha-cholesta-8,24-dien-3beta-ol",2,29.0
+MAM01598,cob(I)alamin,2,62.0
+MAM02547,N-acetylputrescine,2,6.0
+MAM02386,limonene,2,10.0
+MAM02936,starch structure 1,2,66.0
+MAM01068,5alpha-cholesta-8-en-3-one,2,27.0
+MAM00816,3-mercaptolactate-cysteine-disulfide,2,6.0
+MAM01748,dTDP-4-dehydro-6-deoxy-L-mannose,2,16.0
+MAM02465,mesaconate,2,5.0
+MAM01600,cobamide-coenzyme,2,72.0
+MAM00952,4-acetamidobutanoate,2,6.0
+MAM00391,15-HpETrE,2,20.0
+MAM00385,15-deoxy-prostaglandin J2,2,20.0
+MAM01681,D-glucarate,2,6.0
+MAM03702,Indoxyl,2,8.0
+MAM03485,benzoyl-CoA,2,28.0
+MAM03313,7-Ketolithocholate,2,24.0
+MAM03397,Acetyl-Glycine,2,4.0
+MAM10018,"5-Hydroxy-2-oxo-4-ureido-2,5-dihydro-1H-imidazole-5-carboxylate",2,5.0
+MAM10023,dehydrocholic acid,2,24.0
+MAM10030,hyocholic acid,2,24.0
+MAM10025,omega-muricholic acid,2,24.0
+MAM01684,D-glucuronate 1-phosphate,2,6.0
+MAM00939,"4,4-dimethyl-14alpha-hydroxymethyl-5alpha-cholesta-8,24-dien-3beta-ol",2,30.0
+MAM01745,D-tagatose,2,6.0
+MAM00348,13-cis-oxo-retinoate,2,20.0
+MAM02515,n4m2masn,2,66.0
+MAM02512,n3m2masn,2,58.0
+MAM01198,7-peroxy-docosahexaenoate,2,22.0
+MAM02780,prostaglandin C1,2,20.0
+MAM03749,Mannosyl-3-(Phosphoethanolaminyl-Mannosyl)-Glucosaminyl-Acylphosphatidylinositol (M4A)),2,63.0
+MAM10032,tauro-beta-muricholic acid,2,26.0
+MAM10022,beta-muricholic acid,2,24.0
+MAM10024,tauro-alpha-muricholic acid,2,26.0
+MAM10021,alpha-muricholic acid,2,24.0
+MAM03233,3-(3-Hydroxy-Phenyl)Propionate Hydroxy Derivative,2,9.0
+MAM03232,3-(3-Hydroxy-Phenyl)Propionate,2,9.0
+MAM00418,17-peroxy-docosahexaenoate,2,22.0
+MAM00404,16-peroxy-docosahexaenoate,2,22.0
+MAM03619,Glycerol 2-Phosphate,2,3.0
+MAM01763,dynorphin A-(1-8),2,46.0
+MAM03714,Leucyl-Glycine,2,8.0
+MAM02172,"inositol-1,3-bisphosphate",2,6.0
+MAM02722,phenylacetylglutamine,2,13.0
+MAM02166,imidazole-4-acetate,2,5.0
+MAM03862,phenylacetylglycine,2,10.0
+MAM03681,Homocitrulline,2,7.0
+MAM04040,tetradecenoyl-CoA (N-C14:1),2,35.0
+MAM01892,15-Keto-Prostaglandin F2A,2,20.0
+MAM03168,3-oxopropionyl-CoA,2,24.0
+MAM03167,5-Phosphonooxy-L-lysine,2,6.0
+MAM03165,sedoheptulose,2,7.0
+MAM02136,homoserine,2,4.0
+MAM02825,rac-4-hydroxy-4-O-(beta-D-glucuronide)-all-trans-retinyl-acetate,2,28.0
+MAM00994,4-hydroxy-all-trans-retinyl-acetate,2,22.0
+MAM01925,gamma-glutamyl-3-aminopropiononitrile,2,8.0
+MAM01926,gamma-glutamyl-beta-cyanoalanine,2,9.0
+MAM02670,"P1,P4-bis(5-adenosyl)-tetraphosphate",2,20.0
+MAM01579,"cis-2-methyl-5-isopropylhexa-2,5-dienoyl-CoA",2,31.0
+MAM03031,"trans-2-methyl-5-isopropylhexa-2,5-dienoyl-CoA",2,31.0
+MAM03105,ubiquitin,2,0.0
+MAM02655,O-phospho-L-homoserine,2,4.0
+MAM01437,chitin,2,24.0
+MAM02671,"P1,P4-bis(5-guanosyl)-tetraphosphate",2,20.0
+MAM03040,TRH,2,16.0
+MAM02711,perillic acid,2,10.0
+MAM02713,perillyl aldehyde,2,10.0
+MAM02837,retinyl palmitate,2,36.0
+MAM01591,CMP-2-aminoethylphosphonate,2,11.0
+MAM01594,CMP-N-trimethyl-2-aminoethylphosphonate,2,14.0
+MAM01581,cis-beta-D-glucosyl-2-hydroxycinnamate,2,15.0
+MAM02669,oxytocin,2,43.0
+MAM02918,S-palmitoylprotein,2,20.0
+MAM01360,apppA,2,20.0
+MAM00191,[myosin light chain]-phosphate,2,4.0
+MAM00190,[myosin light chain],2,4.0
+MAM01838,formyl-L-methionyl-peptide,2,12.0
+MAM02002,glycoprotein-N-acetyl-D-glucosaminyl-phospho-D-mannose,2,14.0
+MAM02428,lysosomal-enzyme-N-acetyl-D-glucosaminyl-phospho-D-mannose,2,14.0
+MAM03145,vitamin K,2,11.0
+MAM02702,peptide-L-aspartate,2,5.0
+MAM01018,4-N-(n-acetyl-D-glucosaminyl)-protein,2,13.0
+MAM02521,N-acetyl-beta-D-glucosaminylamine,2,8.0
+MAM02513,N4-(acetyl-beta-D-glucosaminyl)asparagine,2,12.0
+MAM02542,N-acetylmuramoyl-ala,2,14.0
+MAM02755,polynucleotide,2,15.0
+MAM01317,alpha tubulin,2,13.0
+MAM03086,tRNA-queuine,2,12.0
+MAM02820,queuine,2,12.0
+MAM00219,[pyruvate dehydrogenase (acetyl transferring)],2,4.0
+MAM00220,[pyruvate dehydrogenase (acetyl transferring)]-phosphate,2,4.0
+MAM02545,N-acetyl-O-acetylneuraminate,2,13.0
+MAM02577,"NG,NG-dimethyl-L-arginine",2,8.0
+MAM02627,N-tetradecanoylglycylpeptide,2,18.0
+MAM02438,m7G(5')pppR-RNA,2,26.0
+MAM03550,"C12:0-Ethanolamide, Didecanoyl Ethanolamide",2,14.0
+MAM03584,I-Antigen,2,72.0
+MAM03173,"2-Decaprenyl-6-Methoxy-1,4-Benzoquinone",2,57.0
+MAM03175,"2-Decaprenyl-5-Hydroxy-6-Methoxy-3-Methyl-1,4-Benzoquinone",2,58.0
+MAM20039,(2E)-octenoate,2,8.0
+MAM20040,(2E)-octenal,2,8.0
+MAM03265,"3-hydroxy trans7,10-hexadecadienoyl-CoA",2,37.0
+MAM03216,3-hydroxyhexadecenoyl-CoA,2,37.0
+MAM03267,"3-hydroxy trans5,8tetradecadienoyl-CoA",2,35.0
+MAM20086,GSSH,2,10.0
+MAM20082,S-propanoyldihydrolipoamide,2,11.0
+MAM20062,3-O-acetyl-ADP-D-ribose,2,17.0
+MAM20063,alpha-NAD(+),2,21.0
+MAM20075,N-dodecanoylsphing-4-enine,2,30.0
+MAM03977,"C14:0-Ethanolamide, Tetradecanoyl Ethanolamide",2,16.0
+MAM20060,all-trans-4-oxoretinal,1,20.0
+MAM20076n,N-hexadecanoylsphing-4-enine,1,
+MAM20032,beta-D-galactose,1,6.0
+MAM20031,13-hydroxytetradecanoate,1,14.0
+MAM20030,13-hydroxytetradecanoate,1,14.0
+MAM20029,11-hydroxydodecanoate,1,12.0
+MAM20028,11-hydroxydodecanoate,1,12.0
+MAM20027,"21-hydroxy-(4Z,7Z,10Z,13Z,16Z,19Z)-docosahexaenoate",1,22.0
+MAM20026,"21-hydroxy-(4Z,7Z,10Z,13Z,16Z,19Z)-docosahexaenoate",1,22.0
+MAM20025,"19-hydroxy-(5Z,8Z,11Z,14Z,17Z)-eicosapentaenoate",1,20.0
+MAM20024,"19-hydroxy-(5Z,8Z,11Z,14Z,17Z)-eicosapentaenoate",1,20.0
+MAM20021,"19-hydroxy-(5Z,8Z,11Z)-eicosatrienoate",1,20.0
+MAM20018,"19-hydroxy-(5Z,8Z,11Z)-eicosatrienoate",1,20.0
+MAM03980,Tetradecenoyl Carnitine,1,21.0
+MAM03979,tetradecenoyl-CoA,1,35.0
+MAM01112,5-methoxyindoleacetate,1,11.0
+MAM01113,5-methoxytryptophol,1,11.0
+MAM01834,formyl-5-hydroxykynurenamine,1,10.0
+MAM00417,17-hydroxy-E4-neuroprostane,1,22.0
+MAM00369,14-hydroxy-D4-neuroprostane,1,22.0
+MAM00370,14-hydroxy-E4-neuroprostane,1,22.0
+MAM00358,13-hydroxy-D4-neuroprostane,1,22.0
+MAM00359,13-hydroxy-E4-neuroprostane,1,22.0
+MAM00300,11-hydroxy-D4-neuroprostane,1,22.0
+MAM00301,11-hydroxy-E4-neuroprostane,1,22.0
+MAM01676,detyrosinated alpha-tubulin,1,4.0
+MAM02989,thiopurine,1,5.0
+MAM03054,trimethylamine-N-oxide,1,3.0
+MAM03053,trimethylamine,1,3.0
+MAM01707,dimethylamine,1,2.0
+MAM02005,glycylpeptide,1,4.0
+MAM02435,m7G(5')pppAm,1,32.0
+MAM02436,"m7G(5')pppm6Am (mRNA containing an N6,2'-O-dimethyladenosine cap)",1,33.0
+MAM02437,m7G(5')pppRm-RNA (mRNA containing a 2'-O-methylpurine cap),1,27.0
+MAM01251,acetanilide,1,8.0
+MAM02474,methylarsonate,1,1.0
+MAM03087,tRNA-uridine,1,9.0
+MAM03085,tRNA-pseudouridine,1,9.0
+MAM03060,tRNA containing 6-isopentenyladenosine,1,5.0
+MAM02625,N-substituted amino acid,1,3.0
+MAM02626,N-substituted aminoacyl tRNA,1,3.0
+MAM03058,tRNA containing 5-aminomethyl-2-thiouridine,1,5.0
+MAM03059,tRNA containing 5-methylaminomethyl-2-thiouridylate,1,6.0
+MAM03062,tRNA containing N7-methylguanine,1,6.0
+MAM03061,tRNA containing N2-methylguanine,1,6.0
+MAM01129,5-phosphopolynucleotide,1,15.0
+MAM00915,3-phosphopolynucleotide,1,15.0
+MAM00594,20-hydroxy-E4-neuroprostane,1,22.0
+MAM00593,20-hydroxy-D4-neuroprostane,1,22.0
+MAM00416,17-hydroxy-D4-neuroprostane,1,22.0
+MAM02704,peptide-L-methionine,1,6.0
+MAM01128,5-oxoprolyl-peptide,1,9.0
+MAM02375,L-glutaminyl-peptide,1,9.0
+MAM02707,peptidylglycine,1,6.0
+MAM02706,peptidylamidoglycolate,1,6.0
+MAM02339,L-arginyl-protein,1,6.0
+MAM03144,vitamin K epoxide,1,11.0
+MAM02829,reduced vitamin K,1,11.0
+MAM00822,3-methyl-2-oxobutanoate-dehydrogenase,1,4.0
+MAM00823,3-methyl-2-oxobutanoate-dehydrogenase-phosphate,1,4.0
+MAM00155,(indol-3-yl)acetamide,1,10.0
+MAM02701,peptide-3-hydroxy-L-aspartate,1,5.0
+MAM02541,N-acetylmuramate,1,11.0
+MAM02737,phospho-[beta adrenergic receptor],1,4.0
+MAM00187,[beta-adrenergic-receptor],1,4.0
+MAM01341,aniline,1,6.0
+MAM00216,[protein]-S-methyl-L-cysteine,1,5.0
+MAM00207,[protein]-N5-alkylglutamine,1,6.0
+MAM00201,[protein]-L-glutamine,1,6.0
+MAM02128,histone-N6-acetyl-L-lysine,1,9.0
+MAM02472,methionyl-peptide,1,11.0
+MAM00189,[methionine synthase]-methylcob(I)alamin,1,70.0
+MAM00188,[methionine synthase]-cob(II)alamin,1,69.0
+MAM02699,peptide-2-(3-carboxy-3-aminopropyl)-L-histidine,1,11.0
+MAM02700,peptide-2-[3-carboxy-3-(methylammonio)propyl]-L-histidine,1,12.0
+MAM02003,glycoprotein-phospho-D-mannose,1,6.0
+MAM02427,lysosomal-enzyme-D-mannose,1,6.0
+MAM02849,"RNA-terminal-2,3-cyclic-phosphate",1,15.0
+MAM02848,RNA-3-terminal-phosphate,1,15.0
+MAM02705,peptidyl-allysyl-peptide,1,7.0
+MAM02708,peptidyl-L-lysyl-peptide,1,7.0
+MAM02703,peptide-L-methionine-(S)-S-oxide,1,6.0
+MAM02602,N-methylputrescine,1,5.0
+MAM00632,2-aminoethylphosphonate,1,2.0
+MAM02628,N-trimethyl-2-aminoethylphosphonate,1,5.0
+MAM00675,2-phosphoglycolate,1,2.0
+MAM02535,N-acetyl-L-glutamate 5-semialdehyde,1,7.0
+MAM02537,N-acetyl-L-glutamate-5-phosphate,1,7.0
+MAM02333,lactose-6-phosphate,1,12.0
+MAM01578,cis-2-hydroxycinnamate,1,9.0
+MAM02768,procollagen-L-lysine,1,7.0
+MAM01166,6-methylmercaptopurine,1,6.0
+MAM02668,oxytocin 1-8,1,41.0
+MAM01985,glycinamide,1,2.0
+MAM00202,[protein]-L-isoaspartate,1,5.0
+MAM00203,[protein]-L-isoaspartate-methyl ester,1,6.0
+MAM01720,DNA containing guanine,1,20.0
+MAM01719,DNA containing 6-O-methylguanine,1,21.0
+MAM02744,phylloquinone,1,31.0
+MAM02979,tetrahydropteroyltri-L-glutamate,1,29.0
+MAM01114,5-methyltetrahydropteroyltri-L-glutamate,1,30.0
+MAM01020,4-nitrophenyl-phosphate,1,6.0
+MAM02710,peptidylproline-(omega=180),1,6.0
+MAM02709,peptidylproline-(omega=0),1,6.0
+MAM00214,[protein]-N-ubiquityllysine,1,8.0
+MAM03104,ubiquitin C terminal thiolester,1,0.0
+MAM01436,chitin(n-1),1,16.0
+MAM02317,kinetensin 4-8,1,35.0
+MAM02314,kinetensin 1-3,1,15.0
+MAM02126,histidyl-prolinamide,1,11.0
+MAM02915,somatostatin fragment 3-14,1,72.0
+MAM02654,O-methylhippurate,1,10.0
+MAM02383,L-iditol,1,6.0
+MAM00537,1-methylpyrrolinium,1,5.0
+MAM01678,dextrin,1,18.0
+MAM03933,S-Sulfo-L-Cysteine,1,3.0
+MAM01909,galactitol,1,6.0
+MAM04075,"1-Vaccenoyl-Cholesterol, Cholesterol-Ester (18:1, Delta 11)",1,45.0
+MAM04076,"1-Linoleoyl-Cholesterol, Cholesterol-Ester (18:2, Delta 9, 12)",1,45.0
+MAM04077,"1-Gamma-Linolenoyl-Cholesterol, Cholesterol-Ester (18:3, Delta 6, 9, 12)",1,45.0
+MAM03247,3-Methylhistidine,1,7.0
+MAM03433,"19-Hydroxyandrost-4-Ene-3,17-Dione",1,19.0
+MAM03882,Phenyllactate,1,9.0
+MAM03410,2-hydroxyadipic acid,1,6.0
+MAM01278,acylglycerone-phosphate,1,3.0
+MAM02381,L-hydroxylysine,1,6.0
+MAM03166,sedoheptulose-1-phosphate,1,7.0
+MAM03161,glycogen,1,6.0
+MAM10011,N-formyl-L-glutamate,1,6.0
+MAM03159,phylloquinol,1,31.0
+MAM01194,7-hydroxy-E4-neuroprostane,1,22.0
+MAM00999,4-hydroxy-E4-neuroprostane,1,22.0
+MAM00997,4-hydroxy-D4-neuroprostane,1,22.0
+MAM03976,"cia-5,8, tetradecadienoic acid",1,14.0
+MAM03569,"cis,cis-11,14-eicosadienoic acid",1,20.0
+MAM04080,"Cholesteryl Docosahexanoate, Cholesterol-Ester (22:6, Delta 4,7,10,13,16,19)",1,49.0
+MAM04078,"Cholesteryl Arachidonate, Cholesterol-Ester (20:4, Delta 5,8,11,14)",1,47.0
+MAM04079,"1-Timnodnoyl-Cholesterol, Cholesterol-Ester (20:5, Delta 5,8,11,14,17)",1,47.0
+MAM02417,L-sorbose,1,6.0
+MAM01764,dynorphin A-(6-8),1,18.0
+MAM01846,fructoseglycine,1,8.0
+MAM01847,fructoseglycine-ketone-3-phosphate,1,8.0
+MAM01848,fructoselysine-3-phosphate,1,12.0
+MAM00520,1-deoxy-1-(N6-lysino)-D-fructose,1,12.0
+MAM02185,isomaltose,1,12.0
+MAM01677,dextrin(n-1),1,12.0
+MAM02516,n5m2masn,1,74.0
+MAM01073,5-amino-2-oxopentanoic acid,1,5.0
+MAM01740,D-ornithine,1,5.0
+MAM01101,5-guanidino-2-oxopentanoate,1,6.0
+MAM01215,8-peroxy-docosahexaenoate,1,22.0
+MAM02778,prostaglandin B1,1,20.0
+MAM03748,Mannosyl-3-(Phosphoethanolaminyl-Mannosyl)-Glucosaminyl-Acylphosphatidylinositol (M4A),1,63.0
+MAM10020,"17alpha,20alpha-Dihydroxypregn-4-en-3-one",1,21.0
+MAM10019,5alpha-Pregnan-20alpha-ol-3-one,1,21.0
+MAM10016,"2,3-epoxy-2,3-dihydro-2-methyl-3-phytyl-1,4-naphthoquinone",1,31.0
+MAM10017,"3-hydroxy-2-methyl-3-phytyl-2,3-dihydronaphthoquinone",1,31.0
+MAM03396,D-Arabitol,1,5.0
+MAM03248,3-Methyl-Thio-Propionate,1,4.0
+MAM00272,10-hydroxy-D4-neuroprostane,1,22.0
+MAM00273,10-hydroxy-E4-neuroprostane,1,22.0
+MAM01193,7-hydroxy-D4-neuroprostane,1,22.0
+MAM03400,N-Acetylleucine,1,8.0
+MAM03399,Acetyl Isoleucine (Chemspider Id: 9964364),1,8.0
+MAM03406,Acetyl-Threonine,1,6.0
+MAM10028,glycohyodeoxycholic acid,1,26.0
+MAM10041,tauro-hyodeoxycholic acid,1,26.0
+MAM10029,glycodehydrocholic acid,1,26.0
+MAM10034,taurodehydrocholic acid,1,26.0
+MAM10027,glycohyocholic acid,1,26.0
+MAM10026,taurohyocholic acid,1,26.0
+MAM10031,tauro-omega-muricholic acid,1,26.0
+MAM01743,D-ribulose,1,5.0
+MAM02836,retinoyl-glucuronide,1,26.0
+MAM03620,(S)-Glycerate,1,3.0
+MAM02835,retinoyl-CoA,1,41.0
+MAM01006,4-hydroxyretinoic acid,1,20.0
+MAM01385,beta-carotene,1,40.0
+MAM02992,threonate,1,4.0
+MAM02424,L-xylonate,1,5.0
+MAM02406,L-lyxonate,1,5.0
+MAM00624,27alpha-hydroxy-7-dehydrocholesterol,1,27.0
+MAM03750,Mannosyl-3-(Phosphoethanolaminyl-Mannosyl)-Glucosaminyl-Acylphosphatidylinositol-Protein (M4A),1,63.0
+MAM03231,3-hydroxyphenylpropionic acid (3-hppa),1,9.0
+MAM03703,Indoxyl Sulfate,1,8.0
+MAM00378,15(S)-HETrE,1,20.0
+MAM02851,S-(11-hydroxy-9-deoxy-delta12-PGD2)-glutathione,1,30.0
+MAM02852,"S-(11-OH-9-deoxy-delta9,12-PGD2)-glutathione",1,30.0
+MAM00383,"15-deoxy-delta-12,14-PGJ2",1,20.0
+MAM03701,Indole,1,8.0
+MAM03837,P-Cresol Sulfate,1,7.0
+MAM03836,P-Cresol,1,7.0
+MAM03398,Acetylhomoserine,1,6.0
+MAM03234,3-(3-Hydroxy-Phenyl)Propionate Hydroxy Derivative Glucuronide,1,15.0
+MAM01221,"9,11,15-trihydroxyprosta-(5Z,13E)-dien-1-oate",1,20.0
+MAM01061,"5,9,11-trihydroxyprosta-(6E,14Z)-dien-1-oate",1,20.0
+MAM01062,"5,9-cyclo-6,8,12-trihydroxy-(10E,14Z)-eicosadienoic acid",1,20.0
+MAM03438,Arginyl-Arginine,1,12.0
+MAM01361,aquacob(III)alamin,1,62.0
+MAM01326,alpha-pinene-oxide,1,10.0
+MAM00002,(+)-alpha-pinene,1,10.0
+MAM02712,perillyl alcohol,1,10.0
+MAM00001,(-)-trans-carveol,1,10.0
+MAM01966,"glucose-1,6-bisphosphate",1,6.0
+MAM01640,D-arginine,1,6.0
+MAM02987,thiocysteine,1,3.0
+MAM01749,dTDP-6-deoxy-L-mannose,1,16.0
+MAM01632,cytosine,1,4.0
+MAM01414,caffeate,1,9.0
+MAM02359,L-erythrulose,1,4.0
+MAM01665,dem2emgacpail_prot heparan sulfate,1,39.0
+MAM02432,m3emgacpail heparan sulfate,1,59.0
+MAM02788,prostaglandin F1alpha,1,20.0
+MAM01167,6-oxo-prostaglandin E1,1,20.0
+MAM00293,11-dehydro-thromboxane B2,1,20.0
+MAM02797,prostaglandin-PGB2-glyceryl ester,1,23.0
+MAM00395,15-oxo-prostaglandin E2-glyceryl ester,1,23.0
+MAM00428,18-hydroxy-arachidonate,1,20.0
+MAM00324,12-hydroxy-arachidonate,1,20.0
+MAM00013,"(13E)-11alpha-hydroxy-9,15-dioxoprost-13-enoate",1,20.0
+MAM00306,12(R)-HPETE,1,20.0
+MAM02458,eumelanin,1,17.0
+MAM03100,tyramine-O-sulfate,1,8.0
+MAM03154,XTP,1,10.0
+MAM02441,malonic-dialdehyde,1,3.0
+MAM00282,"11,15-cyclo-8,12,14-trihydroxy-(5Z,9E)-eicosadienoic acid",1,20.0
+MAM01851,fucfuc132galacglcgal14acglcgalgluside heparan sulfate,1,70.0
+MAM01853,fucfucfucgalacglcgal14acglcgalgluside heparan sulfate,1,76.0
+MAM02331,lacto-N-fucopentaosyl-III-ceramide,1,50.0
+MAM00014,(13E)-tetranor-16-carboxy-LTE4,1,19.0
+MAM02651,omega-COOH-tetranor-LTE3,1,19.0
+MAM00398,"16,18-oxo-18-CoA-dinor-LTE4",1,42.0
+MAM00308,12(S)-HHT,1,17.0
+MAM00382,"15-deoxy-delta-12,14-PGD2",1,20.0
+MAM00338,"13,14-dihydro-15-keto-PGD2",1,20.0
+MAM00384,15-deoxy-PGD2,1,20.0
+MAM00392,15-keto-prostaglandin F2alpha,1,20.0
+MAM01621,creatinine,1,4.0
+MAM02536,N-acetyl-L-glutamate,1,7.0
+MAM02462,mem2emgacpail_prot heparan sulfate,1,61.0
+MAM02434,m3gacpail_prot heparan sulfate,1,51.0
+MAM01687,dgpi_prot heparan sulfate,1,41.0
+MAM01861,fucosyl-galactosylgloboside,1,56.0
+MAM01695,digalactosylceramidesulfate,1,30.0
+MAM00424,18-COOH-LTB4,1,18.0
+MAM03529,Cystyl-Cysteine,1,6.0
+MAM00425,18-COOH-LTE4,1,21.0
+MAM02198,"IV3Neu5Ac,III4Fuc-Lc4Cer",1,61.0
+MAM03850,pseudoecgonyl-CoA,1,30.0
+MAM03623,"Glycogen, Structure 5 (Glycogenin-2[1,4-Glc])",1,1791.0
+MAM01852,fucfucfucgalacglc13galacglcgal14acglcgalgluside heparan sulfate,1,90.0
+MAM01916,galgalfucfucgalacglcgalacglcgal14acglcgalgluside heparan sulfate,1,96.0
+MAM01914,galfuc12gal14acglcgalgluside heparan sulfate,1,56.0
+MAM01783,emgacpail heparan sulfate,1,41.0
+MAM01964,glucosaminyl-acylphosphatidylinositol,1,33.0
+MAM02645,O-D-mannosylprotein,1,6.0
+MAM00771,3-deoxy-D-glycero-D-galacto-2-nonulosonic acid,1,9.0
+MAM02337,L-arabinose,1,5.0
+MAM01919,gal-glcnac-gal-globoside,1,64.0
+MAM01033,4-pyridoxate,1,8.0
+MAM02620,norepinephrine sulfate,1,8.0
+MAM00949,"4,8-dihydroxyquinoline",1,9.0
+MAM02325,L-3-amino-isobutanoate,1,4.0
+MAM02150,hydroxylated-ebastine,1,32.0
+MAM02019,GP1calpha,1,99.0
+MAM02018,GP1c,1,99.0
+MAM01944,GD1beta,1,66.0
+MAM01859,fucgalfucgalacglcgalgluside heparan sulfate,1,62.0
+MAM01613,core 8,1,14.0
+MAM01612,core 7,1,16.0
+MAM01610,core 5,1,16.0
+MAM01955,"glcnac-alpha-1,4-core 2",1,30.0
+MAM01954,"glcnac-alpha-1,4-core 1",1,22.0
+MAM01917,galgalgalthcrm heparan sulfate,1,54.0
+MAM02673,paclitaxel,1,47.0
+MAM01109,5-hydroxy-omeprazole,1,17.0
+MAM02653,omeprazole,1,17.0
+MAM01768,edaravone,1,10.0
+MAM03113,umbelliferone,1,9.0
+MAM01617,coumarin,1,9.0
+MAM00371,14-hydroxytetradecanoic acid,1,14.0
+MAM00325,12-hydroxydodecanoic acid,1,12.0
+MAM00998,4-hydroxy-debrisoquine,1,10.0
+MAM00320,12-epi-LTB4,1,20.0
+MAM00304,11-trans-LTE4,1,23.0
+MAM03577,Ley Glycolipid,1,56.0
+MAM03608,Glutamyl-Glutamate,1,10.0
+MAM01711,disialylgalactosylgloboside,1,72.0
+MAM02903,"sialyl(2,3)-sialyl(2,6)-galactosylgloboside",1,72.0
+MAM02902,"sialyl(1,3)-sialyl(2,6)-galactosylgloboside",1,72.0
+MAM01750,dTDP-galactose,1,16.0
+MAM01210,"8,9-epoxy-(5Z)-tetradecenoic acid",1,14.0
+MAM01055,"5,6-epoxy-(8Z)-tetradecenoic acid",1,14.0
+MAM00005,(11R)-HPETE,1,20.0
+MAM03578,Leb Glycolipid,1,56.0
+MAM00319,"12,20-dioxo-LTB4",1,20.0
+MAM00340,"13,14-dihydro-lipoxin A4",1,20.0
+MAM01647,debrisoquin,1,10.0
+MAM01179,"7alpha,25-dihydroxy-4-cholesten-3-one",1,27.0
+MAM02953,tachysterol 3,1,27.0
+MAM02422,lumisterol 3,1,27.0
+MAM01765,ebastine,1,32.0
+MAM02153,hydroxy-nifedipine,1,17.0
+MAM01007,4-hydroxy-tolbutamide,1,12.0
+MAM03001,tolbutamide,1,12.0
+MAM01163,6-hydroxypaclitaxel,1,47.0
+MAM03056,trioxilin B3,1,20.0
+MAM00334,12-oxoETE,1,20.0
+MAM03742,Lysyl-Lysyl-Lysine,1,18.0
+MAM01111,5-L-gamma-glutamyl,1,5.0
+MAM00321,12-hetre,1,20.0
+MAM00278,"11,12-dihydroxy-(5E,7E,9E,14Z)-eicosatetraenoate",1,20.0
+MAM03141,vitamin D2,1,28.0
+MAM01070,5alpha-dihydrotestosterone-glucuronide,1,25.0
+MAM00402,16-glucuronide-estriol,1,24.0
+MAM01799,etiocholan-3alpha-ol-17-one 3-glucuronide,1,25.0
+MAM01800,etiocholanolone,1,19.0
+MAM02968,testosterone sulfate,1,19.0
+MAM01339,androsterone-glucuronide,1,25.0
+MAM01795,estrone-glucuronide,1,24.0
+MAM02967,testosterone glucuronide,1,25.0
+MAM01158,6beta-hydroxytestosterone,1,19.0
+MAM00512,1-alkenyl-2-acylglycerol,1,6.0
+MAM01184,7alpha-hydroxypregnenolone,1,21.0
+MAM00364,"14,15-DHET",1,20.0
+MAM00277,"11,12-DHET",1,20.0
+MAM01208,"8,9-DHET",1,20.0
+MAM01051,"5,6-DHET",1,20.0
+MAM00280,"11,14,15-THETA",1,20.0
+MAM00276,"11,12,15-THETA",1,20.0
+MAM01202,8(S)-HETE,1,20.0
+MAM03758,Melanin,1,9.0
+MAM01737,dopamine-3-O-sulfate,1,8.0
+MAM01021,4-nitrophenyl-sulfate,1,6.0
+MAM02505,N1-methyl-2-pyridone-5-carboxamide,1,7.0
+MAM02506,N1-methyl-4-pyridone-5-carboxamide,1,7.0
+MAM01786,estradiol-17beta 3-glucuronide,1,24.0
+MAM01641,D-aspartate,1,4.0
+MAM00396,16(R)-HETE,1,20.0
+MAM00354,13-HETE,1,20.0
+MAM00297,11-HETE,1,20.0
+MAM01239,9-HETE,1,20.0
+MAM01213,8-HETE,1,20.0
+MAM01190,7-HETE,1,20.0
+MAM03872,Phenylalanyl-Phenylalanine,1,18.0
+MAM01014,4-methylpentan-1-ol,1,6.0
+MAM01065,"5alpha-androstane-3alpha,17beta-diol",1,19.0
+MAM00628,2-acyl-1-alkyl-sn-glycero-3-phosphate,1,4.0
+MAM02952,sulfotaurolithocholate,1,26.0
+MAM02893,selenomethionyl-tRNA(met),1,5.0
+MAM00217,[protein]-tyrosine-O-sulfate,1,10.0
+MAM00222,1-(1-alkenyl)-sn-glycero-3-phosphate,1,5.0
+MAM00224,1-(1-alkenyl)-sn-glycerol,1,5.0
+MAM00627,2-acyl-1-(1-alkenyl)-sn-glycero-3-phosphate,1,6.0
+MAM03132,"V3Fuc,III3Fuc-nLc6Cer",1,71.0
+MAM01887,G00086,1,90.0
+MAM03903,Prolyl-Prolyl-Proline,1,15.0
+MAM00430,19(S)-HETE,1,20.0
+MAM00426,18-HETE,1,20.0
+MAM00414,17-HETE,1,20.0
+MAM03908,psillium-glycocholic acid complex,1,9642032.0
+MAM01872,G00032,1,22.0
+MAM03909,psyllium-taurocholic acid complex,1,9642032.0
+MAM01870,G00022,1,74.0
+MAM03910,psyllium-taurodeoxycholic acid complex,1,9642032.0
+MAM00645,2-hydroxy-3-methoxyestrone,1,19.0
+MAM01012,4-methoxyestrone,1,19.0
+MAM01011,4-methoxy-17beta-estradiol,1,19.0
+MAM00659,2-methoxyestradiol-17beta,1,19.0
+MAM00644,2-hydroxy-3-methoxy-17beta-estradiol,1,19.0
+MAM00567,"2,2-dichloro-1,1-ethanediol",1,2.0
+MAM02162,"III3,IV2Fuc-nLc4Cer",1,57.0
+MAM01874,G00040,1,62.0
+MAM01881,G00079,1,85.0
+MAM10008,protein C terminal,1,1.0
+MAM03852,pectin-deoxycholic acid complex,1,2559.0
+MAM03715,Leucylleucine,1,12.0
+MAM03854,pectin-taurocholic acid complex,1,2561.0
+MAM00362,"13-oxo-(9Z,11E)-tridecadienoate",1,13.0
+MAM00336,13(S)-HODE,1,18.0
+MAM00298,11-HpODE,1,18.0
+MAM01243,9-hydroxyoctadecadienoate,1,18.0
+MAM03853,Pectin-Glycocholate Complex,1,2561.0
+MAM01712,disialyl-T antigen,1,36.0
+MAM10010,"S-[(2E,6E)-farnesyl]-L-cysteine methyl ester",1,19.0
+MAM01883,G00082,1,76.0
+MAM02194,"IV2Fuc,III4Fuc-Lc4Cer",1,57.0
+MAM01860,fuc-Lc4Cer,1,50.0
+MAM01849,fuc-3-isoLM1,1,62.0
+MAM02163,III3Fuc-nLc4Cer,1,51.0
+MAM02853,"S-(2,2-dichloro-1-hydroxy)ethyl glutathione",1,12.0
+MAM00539,1-naphthylamine,1,10.0
+MAM00543,"1-nitro-7-glutathionyl-8-hydroxy-7,8-dihydronaphthalene",1,20.0
+MAM00544,"1-nitro-7-hydroxy-8-glutathionyl-7,8-dihydronaphthalene",1,20.0
+MAM00540,"1-nitro-5,6-dihydroxy-dihydronaphthalene",1,10.0
+MAM00541,"1-nitro-5-glutathionyl-6-hydroxy-5,6-dihydronaphthalene",1,20.0
+MAM00542,"1-nitro-5-hydroxy-6-glutathionyl-5,6-dihydronaphthalene",1,20.0
+MAM03036,"trans-4,5-epoxy-(2E)-decenal",1,10.0
+MAM02641,octanoate radical,1,8.0
+MAM02695,pentyl radical,1,5.0
+MAM01443,chloroacetic acid,1,2.0
+MAM02854,S-(2-chloroacetyl)glutathione,1,12.0
+MAM03788,Octadecynoyl-ACP (N-C18:2ACP),1,29.0
+MAM03725,linoelaidic acid ACP (all trans),1,29.0
+MAM03131,V3(NeuAc)2-Gb5Cer,1,70.0
+MAM01958,globo-H,1,57.0
+MAM01404,"bromobenzene-2,3-dihydrodiol",1,6.0
+MAM00571,"2,3-dihydro-2-S-glutathionyl-3-hydroxy bromobenzene",1,16.0
+MAM00637,2-bromophenol,1,6.0
+MAM00972,"4-bromo-3,5-cyclohexadiene-1,2-dione",1,6.0
+MAM00724,"3,4-dihydro-3-hydroxy-4-S-glutathionyl bromobenzene",1,16.0
+MAM00930,4-(methylnitrosamino)-1-(3-pyridyl-N-oxide)-1-butanol,1,10.0
+MAM02607,NNAL-N-glucuronide,1,16.0
+MAM00928,4-(methylnitrosamino)-1-(3-pyridyl)-1-butanol glucuronide,1,16.0
+MAM00927,4-(methylnitrosamino)-1-(1-oxido-3-pyridinyl)-1-butanone,1,10.0
+MAM03038,"trans-5,6-dihydro-5,6-dihydroxy-7,12-dimethylbenz[a]anthracene",1,20.0
+MAM01195,7-hydroxymethyl-12-methylbenz[a]anthracene sulfate,1,20.0
+MAM00030,"(1aalpha,2beta,3alpha,11calpha)-1a,2,3,11c-tetrahydro-6,11-dimethylbenzo[6,7]phenanthro[3,4-b]oxirene-2,3-diol",1,20.0
+MAM00244,"1,2-dihydroxy-3,4-epoxy-1,2,3,4-tetrahydronaphthalene",1,10.0
+MAM00246,"1,2-naphthoquinone",1,10.0
+MAM00031,"(1R)-hydroxy-(2R)-glutathionyl-1,2-dihydronaphthalene",1,20.0
+MAM00467,"1-acylglycerol-3P-9,12,15,18-tetraco",1,27.0
+MAM04055,Tyrosyl-Tyrosine,1,18.0
+MAM03726,linoleic acid ACP (all cis),1,29.0
+MAM03795,cis-octadec-11-enoyl-[ACP] (N-C18:1),1,29.0
+MAM03786,Octadecanoyl-ACP (N-C18:0ACP),1,29.0
+MAM03646,cis-hexadec-9-enoyl-[ACP] (N-C16:1),1,27.0
+MAM01049,"5,12-dihydroxy-(6E)-LTB5",1,20.0
+MAM02850,"S-(1,2-dichlorovinyl)glutathione",1,12.0
+MAM01299,"aflatoxin B1-exo-8,9-epoxide-GSH",1,27.0
+MAM03968,cis-tetradec-7-enoyl-[ACP] (N-C14:1),1,25.0
+MAM00532,1-hexadecylglycerol-3-phosphate,1,19.0
+MAM03553,"2,6-dimethylheptanoyl-CoA",1,30.0
+MAM03787,Octadecadienoate (N-C18:2),1,18.0
+MAM03176,2-Hydroxy-3-Methyl-Valerate,1,6.0
+MAM03778,N-Acetylvanilalanine,1,12.0
+MAM04072,Vanil-Lactate,1,10.0
+MAM03957,Succinylacetone,1,7.0
+MAM03407,N-Acetyl-Tyrosine,1,11.0
+MAM03771,"(2S,3R)-3-Hydroxybutane-1,2,3-Tricarboxylate",1,7.0
+MAM03193,"(Z)-But-2-Ene-1,2,3-Tricarboxylate",1,7.0
+MAM03482,"Band Membrane Protein (Methylated, Universal, Erythrocyte -> 2.1,3,4.1)",1,0.0
+MAM04071,Valyl-Valine,1,10.0
+MAM01297,"aflatoxin B1-endo-8,9-epoxide",1,17.0
+MAM01046,"5,12,18R-TriHEPE",1,20.0
+MAM02368,leukotriene D5,1,25.0
+MAM01301,"aflatoxin M1-8,9-epoxide",1,17.0
+MAM01302,aflatoxin Q1,1,17.0
+MAM00033,"(1S)-hydroxy-(2S)-glutathionyl-1,2-dihydronaphthalene",1,20.0
+MAM00251,"1,4-naphthoquinone",1,10.0
+MAM03258,3-hydroxy-sebacic acid,1,10.0
+MAM03214,3-Hydroxy-Adipate,1,6.0
+MAM03227,3-hydroxyisovaleric acid,1,5.0
+MAM03615,Glutaconate,1,5.0
+MAM03257,3-Hydroxy-Glutarate,1,5.0
+MAM03777,Mevalonate-Lactone,1,6.0
+MAM03246,3-Methyl-Glutarate,1,6.0
+MAM03212,3-Hydroxy-3-Methyl-Glutarate,1,6.0
+MAM03190,2-Methyl-3-Hydroxy-Valerate,1,6.0
+MAM01242,"9-hydroxybenzo[a]pyrene-4,5-oxide",1,20.0
+MAM01376,"benzo[a]pyrene-7,8-dihydrodiol-9,10-oxide",1,20.0
+MAM01175,"7,8-dihydro-7-hydroxy-8-S-glutathionyl-benzo[a]pyrene",1,30.0
+MAM00944,"4,5-dihydro-4-hydroxy-5-S-glutathionyl-benzo[a]pyrene",1,30.0
+MAM00232,"1,2-D-glucosyl-5-D-(galactosyloxy)-L-lysine-procollagen",1,19.0
+MAM03189,2-Methyl-3-Hydroxy-Butyrate,1,5.0
+MAM03186,2-Hydroxy-Isovalerate,1,5.0
+MAM03568,"trans,cis,cis-2,11,14-eicosatrienoic acid",1,20.0
+MAM03682,trans-delta-2-heptadecanoic acid,1,17.0
+MAM03657,"(Z,Z,Z)-7,10,13-hexadecatrienoic acid",1,16.0
+MAM03981,"7Z,10Z-hexadecadienoic acid",1,16.0
+MAM03277,4-Hydroxy-Butyrate,1,4.0
+MAM03765,Methyl-Succinate,1,5.0
+MAM03575,ethylmalonic acid,1,5.0
+MAM03314,7-Hydroxy-Octanoate,1,8.0
+MAM03287,5-hydroxyhexanoic acid,1,6.0
+MAM02919,spermic acid 1,1,10.0
+MAM02502,"N1,N8-diacetylspermidine",1,11.0
+MAM02188,isoputreanine,1,7.0
+MAM02811,putreanine,1,7.0
+MAM03349,Dynorphin B (6-9),1,26.0
+MAM03348,Dynorphin B (10-13),1,20.0
+MAM03260,3-hydoxy-suberic acid,1,8.0
+MAM03207,3-dehydrocholic acid,1,24.0
+MAM03661,2-Hydroxyhexadecanal,1,16.0
+MAM03270,"4-S-Glutathionyl-5,6-Dihydroxyindoline",1,18.0
+MAM03295,6-Hydroxydopamine-Quinone,1,8.0
+MAM03197,"3,4-Dihydroxyphenylethanol",1,8.0
+MAM03563,Dopamine-3-O-Glucuronide,1,14.0
+MAM02518,N8-acetylspermidine,1,9.0
+MAM00666,2-methylglutaconic acid,1,6.0
+MAM01325,alpha-hydroxyisocaproic acid,1,6.0
+MAM01392,beta-hydroxy-beta-methylbutyrate,1,5.0
+MAM03641,guar gum-taurocholic acid complex,1,2760026.0
+MAM03640,Guar Gum-Glycocholate Complex,1,2760026.0
+MAM03639,guar gum-deoxyxholic acid complex,1,2760024.0
+MAM03564,Dopamine-4-O-Glucuronide,1,14.0
+MAM03565,Dopamine 4-O-Sulphate,1,8.0
+MAM03283,"5,8,11,14,17-eicosapentenoic acid",1,20.0
+MAM03637,Glycoursodeoxycholic acid 3-sulfate,1,26.0
+MAM03589,Glycodeoxycholic acid 3-sulfate,1,26.0
+MAM03588,Glycochenodeoxycholic acid 3-sulfate,1,26.0
+MAM03587,Glycocholic acid 3-sulfate,1,26.0
+MAM03538,Deoxycholic acid 3-sulfate,1,24.0
+MAM03355,"14-Hydroxy-4,14-Retro-Retinol",1,20.0
+MAM03347,"All-Trans-3,4-Didehydroretinoate",1,20.0
+MAM03327,Vitamin A2,1,20.0
+MAM01059,"5,6-indolequinone-2-carboxylate",1,9.0
+MAM01735,dopachrome-O-semiquinone,1,9.0
+MAM00735,"3,5-dihydroxy-3,4-dihydro-1,4-benzothiazine",1,11.0
+MAM03605,beta glucan-taurodeoxycholic acid complex,1,1200026.0
+MAM03504,Cholic acid 3-sulfate,1,24.0
+MAM03209,3-dehydro-Lithocholate,1,24.0
+MAM03208,3-dehydro-Deoxycholate,1,24.0
+MAM03206,3-dehydrochenodeoxycholic acid,1,24.0
+MAM03965,Taurodeoxycholic acid 3-sulfate,1,26.0
+MAM00466,"1-acylglycerol-3P-9,12,15,18,21-tetra",1,27.0
+MAM00464,"1-acylglycerol-3P-8,11,14,17-eico",1,23.0
+MAM03604,beta glucan-taurocholic acid complex,1,1200026.0
+MAM03595,Beta Glucan-Glycocholate Complex,1,1200026.0
+MAM03373,"2,3-Epoxy-Alpha-Tocopheryl Quinone",1,29.0
+MAM03372,"4Alpha,5-Epoxy-8Alpha-Hydroperoxytocopherone",1,29.0
+MAM03371,"5,6-Epoxy-Alpha-Tocopheryl Quinone",1,29.0
+MAM03370,"7,8-Epoxy-8Alpha-Hydroperoxytocopherone",1,29.0
+MAM02619,noradrenochrome-O-semiquinone,1,8.0
+MAM01293,adrenochrome-O-semiquinone,1,9.0
+MAM01333,aminochrome-O-semiquinone,1,8.0
+MAM03963,Taurochenodeoxycholic acid 3-sulfate,1,26.0
+MAM03996,taurohyocholic acid,1,26.0
+MAM03962,Taurocholic acid 3-sulfate,1,26.0
+MAM03709,Lithocholic acid 3-sulfate,1,24.0
+MAM03198,"3'-alpha,5'beta-dihydroxy-pravastatin / 3'-alpha5'beta6'beta-trihydroxy pravastatin",1,23.0
+MAM03185,2-hydroxy S-ibuprofen-glucuronide,1,19.0
+MAM03180,2-hydroxy-atorvastatin-lactone-glucuronide,1,39.0
+MAM03178,2-hydroxy-atorvastatin-acyl-glucuronide,1,39.0
+MAM01902,1'-OH-midazolam-glucuronide,1,24.0
+MAM01901,1-hydroxy S-ibuprofen-glucuronide,1,19.0
+MAM01817,"12-HT or M-VI, 12-hydroxy tacrolimus",1,44.0
+MAM04058,Ursodeoxycholic acid 3-sulfate,1,24.0
+MAM04042,Tauroursodeoxycholic acid 3-sulfate,1,26.0
+MAM03322,Methylcobalamin,1,63.0
+MAM02500,"N,N-dimethylindoliumolate",1,10.0
+MAM00991,4-hydroxy-3-nitrophenylacetate,1,8.0
+MAM00643,2-hydroxy-3-(4-hydroxyphenyl)propenoate,1,9.0
+MAM03356,"13,14-Dihydroxy-Retinol",1,20.0
+MAM03375,L-Alanyl-L-Leucine,1,9.0
+MAM03374,L-Leucyl-L-Serine,1,9.0
+MAM02177,iso-A2E(13-cis),1,42.0
+MAM01247,A2PE,1,47.0
+MAM01346,APE,1,27.0
+MAM00483,1-acylglycerol-3P-hexecose,1,29.0
+MAM00465,"1-acylglycerol-3P-8,11-eico",1,23.0
+MAM03225,3-hydroxy S-ibuprofen-glucuronide,1,19.0
+MAM00819,3-methoxy-4-hydroxyphenylethyleneglycol,1,9.0
+MAM00231,"1,2-dehydrosalsolinol",1,10.0
+MAM02874,salsoline-1-carboxylate,1,12.0
+MAM02873,salsoline,1,11.0
+MAM00647,2-hydroxy-3-phenylpropenoate,1,9.0
+MAM00654,2-hydroxyphenylacetate,1,8.0
+MAM03152,xanthurenate-8-O-beta-D-glucoside,1,16.0
+MAM00925,4-(2-amino-3-hydroxyphenyl)-4-oxobutanoic acid-O-glucoside,1,16.0
+MAM00947,"4,6-dihydroxyquinoline",1,9.0
+MAM03199,"3',5'-dihydrodiol-simvastatin-lactone form",1,25.0
+MAM03279,"3-keto-5,6,-dihydroxy-pravastatin",1,23.0
+MAM03275,4-OH-midazolam-glucuronide,1,24.0
+MAM03269,4-beta-OH-gliclazide,1,15.0
+MAM03240,3'-hydroxy-simvastatin-acid form,1,25.0
+MAM03229,3''-hydroxy-lovastatin acid form,1,24.0
+MAM01060,"5,8-epoxy-13-cis-retinoate",1,20.0
+MAM00352,13-cis-retinoyl-beta-D-glucuronide,1,26.0
+MAM00292,11-cis-retinyl-palmitate,1,36.0
+MAM01229,"9-cis-4-oxo-13,14-dihydro-retinoate",1,20.0
+MAM01224,"9,13-cis-retinoate",1,20.0
+MAM02478,methyl-indole-3-acetate,1,11.0
+MAM02605,N-methyltryptamine,1,11.0
+MAM01384,beta-carboline,1,11.0
+MAM02178,"iso-A2E(9,13-di-cis)",1,42.0
+MAM02179,iso-A2E(9-cis),1,42.0
+MAM02176,iso-A2E(11-cis),1,42.0
+MAM03305,6-hydroxy-fluvastatin,1,24.0
+MAM03306,6-hydroxy-fluvastatin-glucuronide,1,30.0
+MAM03301,6'-beta-hydroxy simvastatin acid,1,25.0
+MAM03299,6'-beta-hydroxy-methyl-simvastatin-acid form,1,25.0
+MAM03294,6-epipravastatin,1,23.0
+MAM03293,6'-beta-carboxy-simvastatin-acid form,1,25.0
+MAM02334,lactosylceramide sulfate,1,31.0
+MAM01340,anhydroretinol,1,20.0
+MAM03122,ureidoglycolate,1,3.0
+MAM00527,"1D-myo-inositol-3,4,5,6-tetrakisphosphate",1,6.0
+MAM01311,alkyl-glycerone-3-phosphate,1,3.0
+MAM03319,1-Acylglycerone 3-Phosphate,1,4.0
+MAM03291,6-beta-OH-gliclazide-glucuronide,1,21.0
+MAM03289,6-alpha-OH-gliclazide,1,15.0
+MAM03286,5-hydroxy-fluvastatin-glucuronide,1,30.0
+MAM03280,"5,6-epoxy-3-alpha-iso-pravastatin",1,23.0
+MAM03421,AM1A4N (cyclosporine),1,61.0
+MAM03418,allopurinol,1,5.0
+MAM03958,sulphate-conjugate-acetaminophen,1,8.0
+MAM01331,alpha-tocotrienoxyl radical,1,29.0
+MAM02858,S-(3-methylbutanoyl)-dihydrolipoamide,1,13.0
+MAM02857,S-(2-methylpropanoyl)-dihydrolipoamide,1,12.0
+MAM00210,[protein]-N6-(octanoyl)lysine,1,1375.0
+MAM02590,nitrosoperoxycarbonate,1,1.0
+MAM01937,gamma-tocopheryl-quinone,1,28.0
+MAM00347,13-carboxy-gamma-tocotrienol,1,28.0
+MAM03353,"tetracosa-9,12,15,18,21-all-cis-pentaenoyl-CoA",1,45.0
+MAM01212,8alpha-hydroxytocopherone,1,29.0
+MAM03403,Acetaminophen glucuronide,1,14.0
+MAM03312,7-hydroxy-3-alpha-iso-pravastatin,1,23.0
+MAM03309,7-beta-OH-gliclazide-glucuronide,1,21.0
+MAM03307,7-alpha-OH-gliclazide,1,15.0
+MAM03510,Methanethiol,1,1.0
+MAM03405,Acrylate,1,3.0
+MAM02533,N-acetyl-L-cystathionine,1,9.0
+MAM00648,2-hydroxybutyrate,1,4.0
+MAM02865,S-[2-carboxy-1-(1H-imidazol-4-yl)ethyl]-3-thiolactate,1,9.0
+MAM03368,24-oxo-25(R)-trihydroxycoprostanoyl-CoA,1,48.0
+MAM01996,glycogenin,1,1779.0
+MAM02981,THF-hexaglutamate,1,49.0
+MAM01015,4-methyl-pentanoyl-CoA,1,27.0
+MAM03552,"2,6-dimethyl heptanoyl-CoA",1,30.0
+MAM03243,3-Hydroxy-Isovaleryl Carnitine,1,12.0
+MAM03497,Glutaryl Carnitine,1,12.0
+MAM02534,N-acetyl-L-cysteine,1,5.0
+MAM03428,AM1c-glucuronide (cyclosporine),1,68.0
+MAM03425,AM1c4N9 (cyclosporine),1,61.0
+MAM03422,AM1Ac (cyclosporine),1,62.0
+MAM03566,desacyl dehydro-pravastatin,1,18.0
+MAM03549,dehydro-gliclazide,1,15.0
+MAM03547,N-desisopropyl-fluvastatin,1,21.0
+MAM03546,deoxy-fluvastatin-dinor,1,22.0
+MAM03759,acetaminophen-mercapturate-conjugate/N-acetyl-cysteine-acetaminophen,1,13.0
+MAM03521,cyclosporine-sulphate,1,62.0
+MAM03513,carboxy-gliclazide,1,15.0
+MAM02752,picolinic acid,1,6.0
+MAM01572,cinnavalininate,1,14.0
+MAM01717,"D-mannose-1,6-bisphosphate",1,6.0
+MAM01844,fructose-3-phosphate,1,6.0
+MAM02917,sorbitol-3-phosphate,1,6.0
+MAM03507,S-carboxy ibuprofen glucuronide,1,19.0
+MAM02576,N-formylmethionyl-tRNA,1,6.0
+MAM02667,oxo-xanthurenate,1,10.0
+MAM02134,homocysteine-thiolactone,1,4.0
+MAM00463,1-acylglycerol-3P-7-tetrade,1,17.0
+MAM03593,"Glucose-1,2-(2)[Glucose-1,3]-Mannose Oligosaccharide",1,24.0
+MAM03592,"(2)[Glucose-1,3]-Mannose Oligosaccharide",1,18.0
+MAM03183,2-hydroxy-R-ibuprofen,1,13.0
+MAM03690,ibuprofen acyl glucuronide,1,19.0
+MAM03636,glucuronide-thiomethyl-acetaminophen conjugate,1,15.0
+MAM03594,glucuronide-conjugate of 3-methoxy-acetaminophen,1,14.0
+MAM03583,des-isopropyl-dihydro-fluvastatin-tetranor-glucuronide,1,23.0
+MAM02373,L-fuculose,1,6.0
+MAM02477,methylimidazoleacetic acid,1,6.0
+MAM01259,acetylcarnosine,1,11.0
+MAM01266,activated methyl group,1,1.0
+MAM02841,ribitol,1,5.0
+MAM00810,3-keto-beta-D-galactose,1,6.0
+MAM03582,des-isopropyl-dihydro-fluvastatin-tetranor,1,17.0
+MAM03572,"31-O-Desmethyl,19-Hydroxy,37, 39-Epoxy-tacrolimus",1,41.0
+MAM00157,(R)-3-hydroxybutanoate,1,4.0
+MAM03488,Decanoyl Carnitine,1,17.0
+MAM01603,coproporphyrin I,1,36.0
+MAM01604,coproporphyrin III,1,36.0
+MAM03125,uroporphyrin I,1,40.0
+MAM03126,uroporphyrin III,1,40.0
+MAM03780,N-desmethyl-rosuvastatin,1,42.0
+MAM03735,Losartan-N2-glucuronide / Losartan-M7,1,28.0
+MAM03734,Losartan-M5,1,22.0
+MAM03733,Losartan-M4 (glucuronide derivative),1,28.0
+MAM03732,Losartan-M2,1,22.0
+MAM03731,Losartan-M1,1,22.0
+MAM03730,Losartan-N1-glucuronide,1,28.0
+MAM03705,"3'-hydroxy-iso-delta-4',5'-hydroxy acid form of lovastatin",1,24.0
+MAM03961,taurine conjugate of S-ibuprofen,1,15.0
+MAM03505,R-carboxy ibuprofen,1,13.0
+MAM03134,valeric acid,1,5.0
+MAM03915,pitavastatin-M3,1,50.0
+MAM03914,pitavastatin-M13,1,50.0
+MAM03892,des-isoproylpropionic-acid-fluvastatin,1,18.0
+MAM03800,oxypurinol-7-riboside,1,10.0
+MAM03799,oxypurinol-1-riboside,1,10.0
+MAM03782,lactone form of nifedipine,1,16.0
+MAM01358,apocytochrome-C,1,1578.0
+MAM03500,octenoyl-CoA,1,29.0
+MAM03496,Tiglyl Carnitine,1,12.0
+MAM03706,Isovaleryl Carnitine,1,12.0
+MAM01683,D-gluconic acid,1,6.0
+MAM03543,decadienoyl-CoA,1,31.0
+MAM00646,2-hydroxy-3-oxopropanoate,1,3.0
+MAM03487,Decenoyl Carnitine,1,17.0
+MAM03486,decenoyl-CoA,1,31.0
+MAM03757,Midazolam-glucuronide,1,24.0
+MAM03404,acetaminophen-glutathione-conjugate,1,18.0
+MAM03237,3'-S-hydroxy-pravastatin-tetranor,1,19.0
+MAM04039,thiomethyl-sulphoxide-acetaminophen-sulphate,1,9.0
+MAM04038,thiomethyl-sulphoxide-acetaminophen-glucuronide,1,15.0
+MAM04003,Torasemide-M5,1,16.0
+MAM04002,Torasemide-M3,1,16.0
+MAM03985,threo-isomer of fluvastain,1,24.0
+MAM03952,sulphate-conjugate of thiomethyl-acetaminophen,1,9.0
+MAM03921,sulphate-conjugate-3-methoxy-acetaminophen,1,8.0
+MAM03917,pravastatin glucuronide,1,29.0
+MAM02520,N-acetyl-5-methoxykynuramine,1,12.0
+MAM01162,6-hydroxymelatonin-sulfate,1,13.0
+MAM03202,3-Hydroxydodecanoylcarnitine,1,19.0
+MAM03975,Tetradecadienoyl Carnitine,1,21.0
+MAM03264,3-Hydroxy Tetradecenoyl-7-Carnitine,1,21.0
+MAM01408,bufotenine,1,12.0
+MAM03251,3-Hydroxyoctadecanoyl Carnitine,1,25.0
+MAM03250,3-Hydroxyoctadecadienoylcarnitine,1,25.0
+MAM20016,15-oxoprostaglandin E2,1,20.0
+MAM20017,"13,14-dihydro-15-oxo-prostaglandin E2",1,20.0
+MAM20014,15-oxoprostaglandin E2,1,20.0
+MAM20015,"13,14-dihydro-15-oxo-prostaglandin E2",1,20.0
+MAM20011,(S)-3-hydroxybutanoate,1,4.0
+MAM20012,(R)-2-hydroxyglutarate,1,5.0
+MAM20010,hydroquinone,1,6.0
+MAM20009,"1,4-benzoquinone",1,6.0
+MAM20008,hydroquinone,1,6.0
+MAM20007,"1,4-benzoquinone",1,6.0
+MAM20006,"(5Z,8Z,11Z,14Z)-eicosatetraenedioate",1,20.0
+MAM20004,"(5Z,8Z,11Z,14Z)-eicosatetraenedioate",1,20.0
+MAM20001,retinol,1,20.0
+MAM01757,D-xylonolactone,1,5.0
+MAM20059,all-trans-4-hydroxyretinal,1,20.0
+MAM20058,all-trans-4-hydroxyretinol,1,20.0
+MAM20057,"(2E,6E)-farnesoate",1,15.0
+MAM20056,"(2E,6E)-farnesoate",1,15.0
+MAM20055,heptanal,1,7.0
+MAM20054,heptanal,1,7.0
+MAM20053,octanal,1,8.0
+MAM20052,tetradecanal,1,14.0
+MAM20051,tetradecanal,1,14.0
+MAM20050,decanal,1,10.0
+MAM03200,3-Adenosine Monophosphate,1,10.0
+MAM20037,hexanal,1,6.0
+MAM20035,alpha-D-glucose,1,6.0
+MAM20034,alpha-D-glucose,1,6.0
+MAM20033,beta-D-galactose,1,6.0
+MAM00096,(5)ppPur-mRNA,1,15.0
+MAM20049,decanal,1,10.0
+MAM20048,dodecanal,1,12.0
+MAM20047,dodecanal,1,12.0
+MAM20046,octadecanal,1,18.0
+MAM20045,octadecanal,1,18.0
+MAM20044,22-oxodocosanoate,1,22.0
+MAM20043,22-oxodocosanoate,1,22.0
+MAM20042,(E)-hexadec-2-enoate,1,16.0
+MAM20041,(E)-hexadec-2-enoate,1,16.0
+MAM20038,(E)-4-hydroxynon-2-enoate,1,9.0
+MAM03493,hexadecanedioic acid mono-L-carnitine ester,1,23.0
+MAM03266,"3-Hydroxy Trans7,10-Hexadecadienoyl Carnitine",1,23.0
+MAM03217,3-Hydroxyhexadecenoylcarnitine,1,23.0
+MAM03262,3-Hydroxy-Tetradecanoyl Carnitine,1,21.0
+MAM03268,"3-Hydroxy Trans5,8Tetradecadienoyl Carnitine",1,21.0

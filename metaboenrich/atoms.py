@@ -306,8 +306,24 @@ def combine_pairs(raw_mapped, kegg, mode="kegg-first"):
 COUPLE_MIN_REACTIONS = 10
 
 
+RESCUE_PICKS = ("rarest", "carbon", "central")
+
+
+def _rescue_key(pick, freq, carbons, degree):
+    """Sort key for the safeguard's choice among a reaction's removed pairs
+    (smallest first). rarest: fewest reactions. carbon: most carbons the two
+    molecules can share (the smaller carbon count). central: most links the
+    two molecules keep elsewhere in the pruned network. Ties fall back to
+    rarest, then metabolite ids."""
+    if pick == "carbon":
+        return lambda p: (-min(carbons.get(p[0], 0), carbons.get(p[1], 0)), freq[p], p)
+    if pick == "central":
+        return lambda p: (-(degree.get(p[0], 0) + degree.get(p[1], 0)), freq[p], p)
+    return lambda p: (freq[p], p)
+
+
 def carbon_method_pairs(model, pairs, couple_min_reactions=COUPLE_MIN_REACTIONS, keep_rarest=False,
-                        no_rescue=frozenset(), log=None, merge=None, carriers=None):
+                        no_rescue=frozenset(), log=None, merge=None, carriers=None, rescue_pick="rarest"):
     """The standalone carbon method, with no hand-made currency lists.
 
     Rule 1: keep a substrate-product pair only if both molecules contain
@@ -329,6 +345,9 @@ def carbon_method_pairs(model, pairs, couple_min_reactions=COUPLE_MIN_REACTIONS,
     carriers: {(met, met) sorted: carrier} from find_carriers (Rule 3); these
     carrier / loaded-form pairs are removed everywhere, like couples.
 
+    rescue_pick: how the safeguard chooses among the removed pairs
+    ("rarest", "carbon" or "central"; see _rescue_key).
+
     merge: {met_id: merged id} (acyl_coa_merge). Pairs are renamed first and
     pairs within one merged node dropped, so couples are counted on the
     merged network (CoA / long-chain acyl-CoA becomes one pair).
@@ -336,9 +355,10 @@ def carbon_method_pairs(model, pairs, couple_min_reactions=COUPLE_MIN_REACTIONS,
     Returns ({reaction id: [(sub, prod), ...]}, {(met, met): n_reactions} of
     the couples removed)."""
     from .network import parse_formula
-    carbon = {}
+    carbon, carbons = {}, {}
     for s in model.species.values():
-        carbon.setdefault(s.met_id, parse_formula(s.formula)["C"] > 0)
+        carbons.setdefault(s.met_id, parse_formula(s.formula)["C"])
+        carbon.setdefault(s.met_id, carbons[s.met_id] > 0)
     if merge:
         carbon.update({v: True for v in merge.values()})
         pairs = {rid: list(dict.fromkeys((merge.get(a, a), merge.get(b, b)) for a, b, *_ in ps
@@ -353,11 +373,16 @@ def carbon_method_pairs(model, pairs, couple_min_reactions=COUPLE_MIN_REACTIONS,
     drop = set(couples) | set(carriers or ())
     out = {rid: [(a, b) for a, b in ps if tuple(sorted((a, b))) not in drop] for rid, ps in rule1.items()}
     if keep_rarest:
+        degree = {}
+        for ps in out.values():
+            for m in {x for p in ps for x in p}:
+                degree[m] = degree.get(m, 0) + 1
+        key = _rescue_key(rescue_pick, freq, carbons, degree)
         for rid, ps in rule1.items():
             if out[rid] or not ps or rid in no_rescue:
                 continue
             candidates = sorted({tuple(sorted(p)) for p in ps})
-            best = min(candidates, key=lambda p: (freq[p], p))
+            best = min(candidates, key=key)
             out[rid] = [(a, b) for a, b in ps if tuple(sorted((a, b))) == best][:1]
             if log is not None:
                 log.append({"reaction": rid, "kept_pair": best, "kept_pair_count": freq[best],
@@ -372,7 +397,7 @@ def carbon_rule1_pairs(model, pairs):
 
 
 def carbon_method_rules(model, pairs, couples, pools=frozenset(), keep_rarest=False, no_rescue=frozenset(),
-                        log=None, merge=None, carriers=None):
+                        log=None, merge=None, carriers=None, rescue_pick="rarest"):
     """CurrencyRules applying the two rules to reactions with no atom map,
     from formulas alone: metabolites without carbon are removed everywhere
     (Rule 1), and in an unmapped reaction a detected couple is removed when
@@ -383,17 +408,23 @@ def carbon_method_rules(model, pairs, couples, pools=frozenset(), keep_rarest=Fa
     keep_rarest, no_rescue, log: the keep-rarest safeguard of
     carbon_method_pairs, for unmapped reactions. Where removing couples would
     leave fewer than two metabolites (so the reaction drops out), the rarest
-    couple present across the two sides is kept. Couple counts are the
+    couple present across the two sides is kept (or the one rescue_pick
+    prefers; degrees from the mapped reactions' `pairs`). Couple counts are the
     network-wide counts from the mapped reactions (`couples`), not recomputed.
 
     carriers: {carrier: {loaded forms}} from find_carriers (Rule 3). In an
     unmapped reaction the carrier itself is removed when a loaded form of it
     is on the other side; the loaded form keeps its links."""
     from .network import CurrencyRules, parse_formula
-    removed = {}
+    removed, carbons, degree = {}, {}, {}
     for s in model.species.values():
+        carbons.setdefault(s.met_id, parse_formula(s.formula)["C"])
         if parse_formula(s.formula)["C"] == 0:
             removed[s.met_id] = "no carbon"
+    for ps in pairs.values():
+        for m in {x for p in ps for x in p}:
+            degree[m] = degree.get(m, 0) + 1
+    key = _rescue_key(rescue_pick, couples, carbons, degree)
     partner = {}
     for a, b in couples:
         partner.setdefault(a, set()).add(b)
@@ -418,7 +449,7 @@ def carbon_method_rules(model, pairs, couples, pools=frozenset(), keep_rarest=Fa
                 present = sorted({tuple(sorted((a, b))) for a in subs - both for b in prods - both
                                   if tuple(sorted((a, b))) in couples})
                 if present:
-                    best = min(present, key=lambda p: (couples[p], p))
+                    best = min(present, key=key)
                     hit -= set(best)
                     if log is not None:
                         log.append({"reaction": rid, "kept_pair": best, "kept_pair_count": couples[best],
@@ -442,6 +473,138 @@ def transport_reactions(model, carbon_cargo=True):
         if shared and (not carbon_cargo or any(carbon[m] for m in shared)):
             out.add(rid)
     return out
+
+
+def carbon_balance(model):
+    """{reaction id: (carbon in, carbon out)} from formulas and stoichiometry.
+
+    Every C in a formula counts, including the one in an acyl 'RCO'; the
+    unspecified R is not carbon, so a reaction moving an R group can look
+    balanced or not depending on how Human-GEM wrote it."""
+    from .network import parse_formula
+    carbons = {sid: parse_formula(s.formula)["C"] for sid, s in model.species.items()}
+    return {rid: (sum(n * carbons[s] for s, n in rxn.substrates.items()),
+                  sum(n * carbons[s] for s, n in rxn.products.items()))
+            for rid, rxn in model.reactions.items()}
+
+
+def carbon_unbalanced(model):
+    """Reactions whose carbon in and out differ (carbon_balance). In these,
+    "did carbon pass from A to B" has no well-defined answer, so a rule that
+    reasons from carbon counts must leave them out; the rules audit flags them."""
+    return {rid for rid, (c_in, c_out) in carbon_balance(model).items() if abs(c_in - c_out) > 1e-6}
+
+
+CARBON_BUDGET_MAX_MOLECULES = 16
+
+
+def carbon_budget(model, rid, links, unbalanced=frozenset(), max_molecules=CARBON_BUDGET_MAX_MOLECULES):
+    """Rule 4 (candidate): can carbon pass from substrate s to product p, by carbon counts alone?
+
+    Counting alone never rules a link out (carbon could always be split in
+    proportion), so the test assumes each substrate molecule's carbon goes
+    whole into one product molecule. It looks for complete assignments of
+    every substrate molecule (stoichiometry counted, compartments merged) to
+    product molecules whose carbon sums match exactly. A link no such
+    assignment uses is 'impossible'; one some assignment uses is 'possible'.
+    'inconclusive' when no assignment exists (some substrate must split, as
+    in ornithine transcarbamylase written in reverse), stoichiometry is not
+    whole, a partner has no carbon, or the reaction has more than
+    `max_molecules` carbon molecules; 'unbalanced' for reactions in
+    `unbalanced` (carbon_unbalanced). It proves impossibility only under
+    that assumption and never certifies a link.
+
+    links: [(s, p)] met_ids, s on the substrate side as written.
+    Returns {(s, p): verdict}."""
+    from .network import parse_formula
+    if rid in unbalanced:
+        return {lk: "unbalanced" for lk in links}
+    rxn = model.reactions[rid]
+    carbons, side = {}, {}
+    for sign, refs in ((-1, rxn.substrates), (1, rxn.products)):
+        for s, n in refs.items():
+            m = model.species[s].met_id
+            carbons[m] = parse_formula(model.species[s].formula)["C"]
+            side[m] = side.get(m, 0) + sign * n
+    subs = {m: -n for m, n in side.items() if n < 0 and carbons[m] > 0}
+    prods = {m: n for m, n in side.items() if n > 0 and carbons[m] > 0}
+    counts = list(subs.values()) + list(prods.values())
+    if (any(abs(n - round(n)) > 1e-6 for n in counts) or sum(round(n) for n in counts) > max_molecules
+            or not subs or not prods):
+        return {lk: "inconclusive" for lk in links}
+    pieces = sorted((carbons[m] for m, n in subs.items() for _ in range(round(n))), reverse=True)
+
+    def caps_of(extra=None):
+        caps = [carbons[m] for m, n in prods.items() for _ in range(round(n))]
+        if extra:
+            s, p = extra
+            k = caps.index(carbons[p])
+            if caps[k] < carbons[s]:
+                return None
+            caps[k] -= carbons[s]
+        return tuple(sorted(caps))
+
+    if not _fits_pieces(pieces, caps_of()):
+        return {lk: "inconclusive" for lk in links}
+    out = {}
+    for s, p in links:
+        if s not in subs or p not in prods:
+            out[(s, p)] = "inconclusive"
+            continue
+        caps = caps_of((s, p))
+        if caps is None:
+            out[(s, p)] = "impossible"
+            continue
+        i = pieces.index(carbons[s])
+        rest = pieces[:i] + pieces[i + 1:]
+        out[(s, p)] = "possible" if _fits_pieces(rest, caps) else "impossible"
+    return out
+
+
+def carbon_budget_pairs(model, pairs, protected=None, unbalanced=frozenset(), log=None):
+    """Rule 4: remove carbon pairs their reaction's carbon counts rule out (carbon_budget).
+
+    Catches the atom mapper's false links: transaminase cross-pairs, ATP to
+    the aminoacyl-tRNA, glutamine's amide nitrogen counted as carbon, hydride
+    donors. protected: {reaction id: {(s, p)}} never removed, the KEGG RCLASS
+    pairs (kegg_pairs_for_model). carbon_budget assumes molecules go whole,
+    so in a group transfer whose swapped molecules happen to match in carbon
+    (SCOT moving CoA, GALT moving UMP, BHMT moving a methyl) it rules out
+    exactly the real links; KEGG lists those. A reaction is never left with
+    no pair. Each removal is appended to `log` when one is given.
+
+    pairs: {reaction id: [(s, p), ...]}. Returns the pairs with Rule 4 applied."""
+    protected = protected or {}
+    out = {}
+    for rid, ps in pairs.items():
+        if not ps or rid not in model.reactions:
+            out[rid] = ps
+            continue
+        v = carbon_budget(model, rid, list(dict.fromkeys(ps)), unbalanced)
+        keep = [p for p in ps if v[p] != "impossible" or p in protected.get(rid, ())]
+        if not keep:
+            keep = ps
+        elif log is not None:
+            log += [{"reaction": rid, "pair": p} for p in dict.fromkeys(ps) if p not in keep]
+        out[rid] = keep
+    return out
+
+
+def _fits_pieces(pieces, caps):
+    """Whether substrate molecules of `pieces` carbons (largest first) can each go whole
+    into a product molecule so that every product's remaining carbon `caps` is filled exactly."""
+    from functools import lru_cache
+
+    @lru_cache(maxsize=None)
+    def fits(i, caps):
+        if i == len(pieces):
+            return not any(caps)
+        for k, c in enumerate(caps):
+            if c >= pieces[i] and (k == 0 or caps[k - 1] != c):     # equal capacities are interchangeable
+                if fits(i + 1, tuple(sorted(caps[:k] + (c - pieces[i],) + caps[k + 1:]))):
+                    return True
+        return False
+    return fits(0, caps)
 
 
 ACYL_COA_CLASSES = (  # (min acyl carbons, max, merged id, name); chain-length classes of fatty-acid biochemistry
@@ -480,6 +643,82 @@ def acyl_coa_merge(model, smiles_path="data/Human-GEM_metabolites.tsv", classes=
     return merge, {new: name for _, _, new, name in classes}, lengths
 
 
+ACP_CARBONS = 11          # 4'-phosphopantetheine arm of [ACP] as Human-GEM writes it (C11H21N2O7PRS)
+ACYLGLYCEROL3P_CARBONS = 3
+LIPID_MIN_CARBONS = 12
+
+
+def fatty_acyl_coas(model, smiles_path="data/Human-GEM_metabolites.tsv"):
+    """{met_id: (acyl carbons, fatty)} for every acyl-CoA found from structure
+    (as in acyl_coa_merge). fatty: the acyl part adds no ring and no N, P or
+    S to CoA, so bile-acid CoAs (choloyl-CoA, DHCA-CoA), aromatic CoAs and
+    dephospho/ADP-modified forms are not fatty; hydroxy, oxo and enoyl
+    beta-oxidation intermediates are."""
+    from rdkit import Chem, RDLogger
+    RDLogger.DisableLog("rdApp.*")
+    coa = Chem.MolFromSmarts("SCCNC(=O)CCNC(=O)C(O)C(C)(C)COP(=O)(O)OP(=O)(O)OC")
+    thio = Chem.MolFromSmarts("[CX3](=O)S")
+    names = {s.met_id: s.name for s in model.species.values()}
+
+    def count(mol, el):
+        return sum(a.GetSymbol() == el for a in mol.GetAtoms())
+    out = {}
+    for mid, smi in load_smiles(smiles_path).items():
+        if mid not in names or "pool" in names[mid].lower():
+            continue
+        mol = Chem.MolFromSmiles(smi)
+        if mol is None or not (mol.HasSubstructMatch(coa) and mol.HasSubstructMatch(thio)):
+            continue
+        fatty = (mol.GetRingInfo().NumRings() == 3 and count(mol, "N") == 7 and count(mol, "P") == 3
+                 and count(mol, "S") == 1)
+        out[mid] = (count(mol, "C") - COA_CARBONS, fatty)
+    return out
+
+
+def lipid_merge(model, smiles_path="data/Human-GEM_metabolites.tsv", coa_classes=None, acp=False,
+                acylglycerol3p=False, min_carbons=LIPID_MIN_CARBONS):
+    """Merge chain-length ladders of lipid intermediates into one node per class.
+
+    coa_classes: ((min acyl carbons, max, merged id, name), ...) for fatty
+    acyl-CoAs (fatty_acyl_coas; non-fatty CoAs never merge). acp: acyl-[ACP]
+    intermediates (named [ACP] or ACP, formula with the N2 P S arm; acyl
+    carbons = C - 11). acylglycerol3p: the 1-acylglycerol-3P species (acyl
+    carbons = C - 3). ACP and 1-acylglycerol-3P merge from `min_carbons` up.
+    Acylcarnitines are never merged. Returns ({met_id: merged id},
+    {merged id: name}, [(met_id, class, acyl carbons, merged id or reason)])."""
+    from .network import parse_formula
+    merge, names, members = {}, {}, []
+    sp = {}
+    for s in model.species.values():
+        sp.setdefault(s.met_id, s)
+    if coa_classes:
+        for mid, (n, fatty) in sorted(fatty_acyl_coas(model, smiles_path).items()):
+            cls = next((c for c in coa_classes if c[0] <= n <= c[1]), None)
+            if cls and fatty:
+                merge[mid] = cls[2]
+                names[cls[2]] = cls[3]
+            members.append((mid, "acyl-CoA", n, cls[2] if cls and fatty else
+                            ("not fatty" if cls else "below boundary")))
+    for flag, cls, test, offset, new, label in (
+            (acp, "acyl-ACP", lambda s, f: ("[ACP]" in s.name or "ACP" in s.name) and f["N"] == 2 and f["P"] == 1
+             and f["S"] == 1, ACP_CARBONS, "ACYLACP_LONG", f"long-chain acyl-[ACP] (C{min_carbons}+)"),
+            (acylglycerol3p, "1-acylglycerol-3P", lambda s, f: s.name.startswith("1-acylglycerol-3P-")
+             and "pool" not in s.name, ACYLGLYCEROL3P_CARBONS, "ACYLG3P_LONG",
+             f"long-chain 1-acylglycerol-3P (C{min_carbons}+)")):
+        if not flag:
+            continue
+        for mid, s in sorted(sp.items()):
+            f = parse_formula(s.formula)
+            if not test(s, f):
+                continue
+            n = f["C"] - offset
+            if n >= min_carbons:
+                merge[mid] = new
+                names[new] = label
+            members.append((mid, cls, n, new if n >= min_carbons else "below boundary"))
+    return merge, names, members
+
+
 CARRIER_MIN_LOADED = 10
 
 
@@ -508,6 +747,56 @@ def _carrier_site(small, large):
         if ok and sites:
             return frozenset(sites)
     return None
+
+
+def formula_loaded_forms(model, carriers, smiles):
+    """Loaded forms Human-GEM gives no structure, found from formula and name.
+
+    find_carriers is a substructure search, so a loaded form with no SMILES is
+    invisible to it and keeps its link to the carrier (51% of cholesterol's
+    esters). A partner qualifies here only if it has no structure, its formula
+    contains the carrier's with the difference plus water matching some
+    metabolite in the model, and it is named after the carrier (CHANGELOG 0.1.1).
+    Carrier discovery is unchanged; this only extends membership. Formulas are
+    heavy-atom only (parse_formula), so protonation never gets in the way.
+
+    Returns {carrier: {extra loaded forms}}."""
+    from collections import Counter
+    from .network import parse_formula
+
+    form = {s.met_id: s.formula for s in model.species.values()}
+    name = {s.met_id: s.name for s in model.species.values()}
+    heavy = {tuple(sorted(parse_formula(f).items())) for f in form.values() if f}
+
+    add = {}
+    for c, known in carriers.items():
+        cf, cn = parse_formula(form.get(c, "")), str(name.get(c, "")).lower()
+        if not cf or not cn:
+            continue
+        for rxn in model.reactions.values():
+            subs = {model.species[s].met_id for s in rxn.substrates}
+            prods = {model.species[s].met_id for s in rxn.products}
+            if c in subs:
+                others = prods
+            elif c in prods:
+                others = subs
+            else:
+                continue
+            for x in others:
+                if x == c or x in smiles or x in known:
+                    continue
+                xf = parse_formula(form.get(x, ""))
+                # containment must be tested explicitly: Counter subtraction
+                # drops negative counts, so xf - cf alone would accept a
+                # partner smaller than the carrier
+                if not xf or any(xf[el] < n for el, n in cf.items()):
+                    continue
+                acyl = xf - cf
+                if not acyl or tuple(sorted((acyl + Counter({"O": 1})).items())) not in heavy:
+                    continue
+                if cn in str(name.get(x, "")).lower():
+                    add.setdefault(c, set()).add(x)
+    return add
 
 
 def find_carriers(model, pairs, smiles_path="data/Human-GEM_metabolites.tsv", min_loaded=CARRIER_MIN_LOADED):
@@ -549,6 +838,8 @@ def find_carriers(model, pairs, smiles_path="data/Human-GEM_metabolites.tsv", mi
                 loaded.setdefault(small, {})[large] = site
     carriers = {c: set(d) for c, d in loaded.items()
                 if len(d) >= min_loaded and len(Counter(d.values())) == 1}
+    for c, extra in formula_loaded_forms(model, carriers, smiles).items():
+        carriers[c] |= extra
     remove = {tuple(sorted((c, x))): c for c, xs in carriers.items() for x in xs}
     return carriers, remove
 

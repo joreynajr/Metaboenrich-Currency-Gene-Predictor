@@ -1,0 +1,49 @@
+carrier,carrier_name,loaded_form,loaded_name,loaded_formula,acyl_heavy_formula,example_match
+MAM01597,CoA,MAM01269,acyl-CoA-bile-PC pool,C22H31N7O17P3SR,C1O2R1,fatty acid-chylomicron pool
+MAM01597,CoA,MAM02652,omega-COOH-tetranor-LTE3-CoA,C40H55N8O22P3S2,C19N1O7S1,(13E)-tetranor-16-carboxy-LTE4
+MAM01597,CoA,MAM03216,3-hydroxyhexadecenoyl-CoA,C37H60N7O18P3S,C16O3,"10,11-epoxy-(4Z,7Z)-hexadecadienoic acid"
+MAM01597,CoA,MAM03236,3'-S-hydroxy-pravastatin-CoA,C44H66N7NaO23P3S,C23Na1O8,3'-S-hydroxy-pravastatin
+MAM01597,CoA,MAM03238,3'-S-hydroxy-pravastatin-tetranor-CoA,C40H58N7NaO21P3S,C19Na1O6,3'-S-hydroxy-pravastatin-tetranor
+MAM01597,CoA,MAM03249,3-hydroxyoctadecadienoyl-CoA,C39H62N7O18P3S,C18O3,12(13)-EpOME
+MAM01597,CoA,MAM03486,decenoyl-CoA,C31H48N7O17P3S,C10O2,"1,2-dihydronaphthalene-1,2-diol"
+MAM01597,CoA,MAM03580,fluvastatin-CoA form,C45H56FN8NaO19P3S,C24F1N1Na1O4,fluvastatin
+MAM01597,CoA,MAM03688,ibuprofen-CoA-R form,C34H48N7O17P3S,C13O2,tridecylic acid
+MAM01597,CoA,MAM03689,ibuprofen-CoA-S form,C34H48N7O17P3S,C13O2,tridecylic acid
+MAM01597,CoA,MAM03974,tetradecadienoyl-CoA,C35H54N7O17P3S,C14O2,(7Z)-tetradecenoic acid
+MAM01597,CoA,MAM04040,tetradecenoyl-CoA (N-C14:1),C35H56N7O17P3S,C14O2,(7Z)-tetradecenoic acid
+MAM01597,CoA,MAM10038,hyocholoyl-CoA,C45H70N7O20P3S,C24O5,12-dehydrocholic acid
+MAM01597,CoA,MAM10039,dehydrocholoyl-CoA,C45H64N7O20P3S,C24O5,12-dehydrocholic acid
+MAM01597,CoA,MAM10040,hyodeoxycholoyl-CoA,C45H70N7O19P3S,C24O4,"3alpha,12alpha-dihydroxy-5beta-cholanate"
+MAM01450,cholesterol,MAM01452,"cholesterol-ester-10,13,16,19-docosa",C49H80O2,C22O2,"(13Z,16Z)-docosadienoic acid"
+MAM01450,cholesterol,MAM01453,"cholesterol-ester-10,13,16-docosa",C49H82O2,C22O2,"(13Z,16Z)-docosadienoic acid"
+MAM01450,cholesterol,MAM01455,"cholesterol-ester-11,14,17-eico",C47H78O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01457,cholesterol-ester-11-docose,C49H86O2,C22O2,"(13Z,16Z)-docosadienoic acid"
+MAM01450,cholesterol,MAM01459,"cholesterol-ester-12,15,18,21-tetracosa",C51H84O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01460,"cholesterol-ester-13,16,19-doco",C49H82O2,C22O2,"(13Z,16Z)-docosadienoic acid"
+MAM01450,cholesterol,MAM01463,cholesterol-ester-13-eicose,C47H82O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01464,cholesterol-ester-13-octade,C45H78O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01467,"cholesterol-ester-4,7,10,13,16-docosa",C49H78O2,C22O2,"(13Z,16Z)-docosadienoic acid"
+MAM01450,cholesterol,MAM01469,"cholesterol-ester-5,8,11-eico",C47H78O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01470,cholesterol-ester-5-tetra,C41H70O2,C14O2,(7Z)-tetradecenoic acid
+MAM01450,cholesterol,MAM01471,"cholesterol-ester-6,9,12,15,18,21-tetra",C51H80O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01472,"cholesterol-ester-6,9,12,15,18-tetraco",C51H82O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01473,"cholesterol-ester-6,9,12,15-octa",C45H72O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01474,"cholesterol-ester-6,9-octa",C45H76O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01477,cholesterol-ester-7-hexa,C43H74O2,C16O2,7-palmitoleic acid
+MAM01450,cholesterol,MAM01478,cholesterol-ester-7-octade,C45H78O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01479,cholesterol-ester-7-tetrade,C41H70O2,C14O2,(7Z)-tetradecenoic acid
+MAM01450,cholesterol,MAM01480,"cholesterol-ester-8,11,14,17-eico",C47H76O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01481,"cholesterol-ester-8,11-eico",C47H80O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01482,"cholesterol-ester-9,12,15,18,21-tetra",C51H82O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01483,"cholesterol-ester-9,12,15,18-tetraco",C51H84O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01484,cholesterol-ester-9-eicose,C47H82O2,C20O2,"(11Z,14Z)-eicosadienoic acid"
+MAM01450,cholesterol,MAM01485,cholesterol-ester-9-heptade,C44H76O2,C17O2,(10Z)-heptadecenoic acid
+MAM01450,cholesterol,MAM01486,cholesterol-ester-9-octa,C45H78O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01489,cholesterol-ester-cis-vac,C45H78O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01493,cholesterol-ester-gamma-lin,C45H74O2,C18O2,(13Z)-octadecenoic acid
+MAM01450,cholesterol,MAM01494,cholesterol-ester-heneico,C48H86O2,C21O2,20alpha-hydroxy-4-pregnen-3-one
+MAM01450,cholesterol,MAM01496,cholesterol-ester-hexacosa,C53H96O2,C26O2,cerotic acid
+MAM01450,cholesterol,MAM01497,cholesterol-ester-hexecose,C53H94O2,C26O2,cerotic acid
+MAM01450,cholesterol,MAM01508,cholesterol-ester-tetraco,C51H92O2,C24O2,"(6Z,9Z,12Z,15Z,18Z)-TPA"
+MAM01450,cholesterol,MAM01509,cholesterol-ester-trico,C50H90O2,C23O2,tricosanoic acid
+MAM01450,cholesterol,MAM01510,cholesterol-ester-tridec,C40H70O2,C13O2,tridecylic acid

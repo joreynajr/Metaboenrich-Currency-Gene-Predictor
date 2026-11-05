@@ -4,6 +4,51 @@ Network counts are for the analysis network (stage 5): metabolite nodes /
 reaction nodes / edges. The reasons behind each change are in
 [docs/decisions.md](docs/decisions.md).
 
+## three-rule-revision branch (2026-10-28)
+
+Revision of 3-rule pruning after the audit of 27 October (`handoff/`).
+
+- **Rule 3 formula fallback** (`formula_loaded_forms`): a partner with no
+  SMILES joins a carrier's loaded forms when its formula contains the
+  carrier's, the difference plus water is a metabolite in the model, and it is
+  named after the carrier. Cholesterol 33 → 66 loaded forms, CoA 157 → 172.
+  3,808 metabolites / 7,676 reaction nodes / 15,938 edges; largest hub
+  glutamate (122), cholesterol 144 → 45.
+- **Compartment copies merged** (`build_graph(merge_duplicates=True)`, on for
+  the 3-rule stages): 1,102 groups of reactions identical once compartments
+  are merged; nodes carrying the same links become one, with the union of
+  genes and directions (`graph.merged_copies`). Genes, reactions and
+  metabolite-to-metabolite steps unchanged. 3,808 metabolites / 6,099
+  reaction nodes / 12,754 edges; largest hub CO2 (103).
+- **Carbon balance** (`carbon_balance`, `carbon_unbalanced`): carbon in and
+  out per reaction from formulas and stoichiometry; the rules audit flags the
+  unbalanced ones, and a carbon-count rule must exclude them. 21 of the
+  network's reactions, not the 301 in the audit's `carbon_balance_audit.csv`,
+  which counted every coefficient as 1 and only the first C of a formula.
+  Network unchanged.
+- **Rule 4, carbon budget** (`carbon_budget`, `carbon_budget_pairs`, applied
+  in the final stage after the safeguard): a pair no whole-molecule carbon
+  assignment of its reaction can use is removed, unless KEGG RCLASS lists it
+  or it is the reaction's last pair. 48 links (transaminase cross-pairs,
+  ATP → aminoacyl-tRNA, CoA → AMP); the 9 wrong flags in the chemistry
+  review (`handoff/rule4_reviewed.csv`) are all kept. Rules audit: Links tab
+  gains 'carbon budget' and the Rule 4 fate. 3,808 metabolites / 6,066
+  reaction nodes / 12,688 edges.
+- **Safeguard pick switch** (`rescue_pick` in `carbon_method_pairs` /
+  `carbon_method_rules`, `structure.RESCUE_PICK`; default "rarest", network
+  unchanged): "carbon" keeps the pair sharing the most carbons, "central" the
+  pair whose metabolites keep the most links. Group benchmark median 140.5
+  (rarest) / 134.0 (carbon) / 131.5 (central); central restores twice as many
+  hub couples (ATP/ADP, acetyl-CoA/CoA).
+- **Lipid merge experiment** (`fatty_acyl_coas`, `lipid_merge`, stage set
+  `lipid_merge`; the three_rule stages are not changed): the final network with
+  fatty acyl-CoAs (C13-C21 / C22+, or C12+), acyl-[ACP] and 1-acylglycerol-3P
+  C12+ merged. Non-fatty CoAs (bile acid, leukotriene, retinoyl) never merge;
+  acylcarnitines never merge. Close to neutral on the benchmark (median 136-137);
+  emptied reactions come back through NAD(P)/FAD couples. Report and the
+  gene-score bias it found (best-of-k scoring favours many-node genes) in
+  `handoff/report_lipid_lumping_test.md`.
+
 ## flip-orientation branch (2026-10-19)
 
 Network unchanged (3,958 / 6,377 / 16,356; edge-list SHA-256 `942cd8ac…`).

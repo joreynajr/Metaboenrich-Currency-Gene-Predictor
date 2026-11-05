@@ -1,0 +1,49 @@
+node,base,substrate,product,reaction_name,substrate_name,product_name,copies,review,kegg_lists_pair
+MAR00267#1,MAR00267,MAM01597,MAM01334,long-chain-fatty-acid-CoA ligase (elaidate),CoA,AMP,MAR02961,"correct: AMP comes from ATP, not CoA",False
+MAR00706#1,MAR00706,MAM00550,MAM02674,glyceronephosphate O-acyltransferase (1-palmitoyl-dihydroxyacetone-phosphate),1-palmitoyl-dihydroxyacetone-phosphate,palmitate,,WRONG: acyl/alkyl exchange (AGPS); the 16-carbon chains are the real links,False
+MAR00706#2,MAR00706,MAM02114,MAM02017,glyceronephosphate O-acyltransferase (1-palmitoyl-dihydroxyacetone-phosphate),hexadecanol,GO3P,,WRONG: acyl/alkyl exchange (AGPS); the 16-carbon chains are the real links,False
+MAR02541#2,MAR02541,MAM02555,MAM00712,hydroxysteroid 17-beta dehydrogenase,NADPH,"3(S)-hydroxy-docosa-13,16,19-all-cis-trienoyl-CoA",,correct: NADPH gives only a hydride,False
+MAR03787#1,MAR03787,MAM01253,MAM01255,succinyl-CoA:acetoacetate CoA-transferase,acetoacetate,acetoacetyl-CoA,,WRONG: CoA transfer; the 4-carbon backbones are the real links (ketolysis),True
+MAR03787#3,MAR03787,MAM02944,MAM02943,succinyl-CoA:acetoacetate CoA-transferase,succinyl-CoA,succinate,,WRONG: CoA transfer; the 4-carbon backbones are the real links (ketolysis),True
+MAR03793#2,MAR03793,MAM00661,MAM02819,(R)-3-Amino-2-methylpropanoate:pyruvate aminotransferase,2-methyl-3-oxopropanoate,pyruvate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR03793#3,MAR03793,MAM01307,MAM01633,(R)-3-Amino-2-methylpropanoate:pyruvate aminotransferase,alanine,D-3-amino-isobutanoate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR03827#1,MAR03827,MAM01306,MAM02633,L-Aspartate:2-oxoglutarate aminotransferase,AKG,OAA,MAR03829,correct: transaminase cross-pair; only the amino group moves,False
+MAR03827#2,MAR03827,MAM01370,MAM01974,L-Aspartate:2-oxoglutarate aminotransferase,aspartate,glutamate,MAR03829,correct: transaminase cross-pair; only the amino group moves,False
+MAR03841#2,MAR03841,MAM00914,MAM01306,3-Phosphoserine:2-oxoglutarate aminotransferase,3-phosphonooxypyruvate,AKG,,correct: transaminase cross-pair; only the amino group moves,False
+MAR03841#3,MAR03841,MAM01974,MAM00916,3-Phosphoserine:2-oxoglutarate aminotransferase,glutamate,3-phosphoserine,,correct: transaminase cross-pair; only the amino group moves,False
+MAR03861#2,MAR03861,MAM00918,MAM01974,3-sulfino-L-alanine:2-oxoglutarate aminotransferase,3-sulfinoalanine,glutamate,MAR03865,correct: transaminase cross-pair; only the amino group moves,False
+MAR03861#3,MAR03861,MAM01306,MAM00919,3-sulfino-L-alanine:2-oxoglutarate aminotransferase,AKG,3-sulfinylpyruvic acid,MAR03865,correct: transaminase cross-pair; only the amino group moves,False
+MAR03899#1,MAR03899,MAM01306,MAM02819,L-Alanine:2-oxoglutarate aminotransferase,AKG,pyruvate,MAR04109,correct: transaminase cross-pair; only the amino group moves,False
+MAR03899#2,MAR03899,MAM01307,MAM01974,L-Alanine:2-oxoglutarate aminotransferase,alanine,glutamate,MAR04109,correct: transaminase cross-pair; only the amino group moves,False
+MAR03912#1,MAR03912,MAM01306,MAM02464,L-Cysteine:2-oxoglutarate aminotransferase,AKG,mercaptopyruvate,MAR08684,correct: transaminase cross-pair; only the amino group moves,False
+MAR03912#2,MAR03912,MAM01628,MAM01974,L-Cysteine:2-oxoglutarate aminotransferase,cysteine,glutamate,MAR08684,correct: transaminase cross-pair; only the amino group moves,False
+MAR04034#1,MAR04034,MAM01975,MAM01420,"HCO3-:L-glutamine amido-ligase (ADP-forming, carbamate-phosphorylating)",glutamine,carbamoyl-phosphate,,correct: glutamine gives only its amide nitrogen,True
+MAR04131#1,MAR04131,MAM01967,MAM03108,UDP-glucose:alpha-D-galactose-1-phosphate uridylyltransferase,glucose-1-phosphate,UDP-glucose,,WRONG: UMP transfer; the hexose-1-phosphate is carried through,True
+MAR04131#2,MAR04131,MAM03107,MAM01322,UDP-glucose:alpha-D-galactose-1-phosphate uridylyltransferase,UDP-galactose,alpha-D-galactose-1-phosphate,,WRONG: UMP transfer; the hexose-1-phosphate is carried through,True
+MAR04132#2,MAR04132,MAM03108,MAM01967,UDP-glucose:alpha-D-galactose-1-phosphate uridylyltransferase,UDP-glucose,glucose-1-phosphate,,WRONG: UMP transfer; the hexose-1-phosphate is carried through,True
+MAR04196#2,MAR04196,MAM01975,MAM01307,L-Glutamine:pyruvate aminotransferase,glutamine,alanine,MAR04197,correct: transaminase cross-pair; only the amino group moves,False
+MAR04196#3,MAR04196,MAM02819,MAM00672,L-Glutamine:pyruvate aminotransferase,pyruvate,2-oxoglutaramate,MAR04197,correct: transaminase cross-pair; only the amino group moves,False
+MAR04300#2,MAR04300,MAM01975,MAM01963,L-glutamine:D-fructose-6-phosphate isomerase (deaminating),glutamine,glucosamine-6-phosphate,,correct: glutamine gives only its amide nitrogen,True
+MAR04596#1,MAR04596,MAM00670,MAM01306,L-2-aminoadipate:2-oxoglutarate aminotransferase,2-oxoadipate,AKG,MAR04597,correct: transaminase cross-pair; only the amino group moves,False
+MAR04596#3,MAR04596,MAM01974,MAM02322,L-2-aminoadipate:2-oxoglutarate aminotransferase,glutamate,L-2-aminoadipate,MAR04597,correct: transaminase cross-pair; only the amino group moves,False
+MAR04699#1,MAR04699,MAM01393,MAM01708,Trimethylaminoacetate:L-homosysteine S-methyltransferase,betaine,dimethylglycine,,WRONG: methyl transfer; betaine->DMG and Hcy->Met are the real skeletons,True
+MAR04699#2,MAR04699,MAM02133,MAM02471,Trimethylaminoacetate:L-homosysteine S-methyltransferase,homocysteine,methionine,,WRONG: methyl transfer; betaine->DMG and Hcy->Met are the real skeletons,True
+MAR05131#2,MAR05131,MAM01371,MAM02335,L-Alanine:tRNA(Ala) ligase (AMP-forming),ATP,L-alanyl-tRNA(ala),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05133#2,MAR05133,MAM01371,MAM02341,L-Asparagine:tRNA(Asn) ligase (AMP-forming),ATP,L-asparaginyl-tRNA(asn),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05138#1,MAR05138,MAM01371,MAM02006,glycine:tRNA(Gly) ligase (AMP-forming),ATP,glycyl-tRNA(gly),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05142#1,MAR05142,MAM01371,MAM02405,L-lysine:tRNALys ligase (AMP-forming),ATP,L-lysyl-tRNA(lys),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05146#1,MAR05146,MAM01371,MAM02415,L-proline:tRNA(Pro) ligase (AMP-forming),ATP,L-prolyl-tRNA(pro),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05147#1,MAR05147,MAM01371,MAM02416,L-Serine:tRNA(Ser) ligase (AMP-forming),ATP,L-seryl-tRNA(ser),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR05148#1,MAR05148,MAM01371,MAM02419,L-Threonine:tRNA(Thr) ligase (AMP-forming),ATP,L-threonyl-tRNA(thr),,correct: AMP comes from ATP; aminoacyl carbons from the amino acid,False
+MAR06878#1,MAR06878,MAM01043,MAM02356,5-(S-L-cysteinyl)-dopaquinone to 5-S-cysteinyldopa conversion,5-(S-L-cysteinyl)-dopaquinone,L-dopaquinone,,correct: redox exchange; only electrons/hydrogens move,False
+MAR06878#2,MAR06878,MAM02354,MAM01134,5-(S-L-cysteinyl)-dopaquinone to 5-S-cysteinyldopa conversion,L-dopa,5-S-cysteinyldopa,,correct: redox exchange; only electrons/hydrogens move,False
+MAR06970#2,MAR06970,MAM00169,MAM01974,glutamic-pyruvic transaminase ((S)-2-aminobutanoate),(S)-2-aminobutanoate,glutamate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR06970#3,MAR06970,MAM01306,MAM00671,glutamic-pyruvic transaminase ((S)-2-aminobutanoate),AKG,2-oxobutyrate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR08066#1,MAR08066,MAM00920,MAM01306,L-cysteate:2-oxoglutarate aminotransferase,3-sulfopyruvate,AKG,MAR08067,correct: transaminase cross-pair; only the amino group moves,False
+MAR08066#3,MAR08066,MAM01974,MAM02350,L-cysteate:2-oxoglutarate aminotransferase,glutamate,L-cysteate,MAR08067,correct: transaminase cross-pair; only the amino group moves,False
+MAR08098#1,MAR08098,MAM02358,MAM01370,D-aspartate:2-oxoglutarate aminotransferase,L-erythro-4-hydroxyglutamate,aspartate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR08098#2,MAR08098,MAM02633,MAM00989,D-aspartate:2-oxoglutarate aminotransferase,OAA,4-hydroxy-2-oxoglutarate,,correct: transaminase cross-pair; only the amino group moves,False
+MAR09518#1,MAR09518,MAM02037,MAM02820,tRNA-guanosine34:queuine tRNA-D-ribosyltransferase,guanine,queuine,,correct: base-exchange cross-pair,False
+MAR09518#4,MAR09518,MAM03086,MAM03084,tRNA-guanosine34:queuine tRNA-D-ribosyltransferase,tRNA-queuine,tRNA-guanine,,correct: base-exchange cross-pair,False
+MAR09953#1,MAR09953,MAM02471,MAM01307,Methionine Transaminase,methionine,alanine,,correct: transaminase cross-pair; only the amino group moves,False
+MAR09953#3,MAR09953,MAM02819,MAM03276,Methionine Transaminase,pyruvate,4-Methyl-Thio-Oxo-Butyrate,,correct: transaminase cross-pair; only the amino group moves,False

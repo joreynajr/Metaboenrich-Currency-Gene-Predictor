@@ -1,0 +1,2479 @@
+group_id,n_copies,reaction,name
+6402614,6,MAR01043,12-HPETE hydroxymutase
+6402614,6,MAR01045,12-HPETE hydroxymutase
+6402614,6,MAR01048,12-HPETE hydroxymutase
+6402614,6,MAR01049,12-HPETE hydroxymutase
+6402614,6,MAR03918,Glutathione Peroxidase
+6402614,6,MAR03924,Glutathione Peroxidase
+7098980,5,MAR06903,solanesyl-diphosphate:4-hydroxybenzoate nonaprenyltransferase
+7098980,5,MAR20106,MAR20106
+7098980,5,MAR20107,MAR20107
+7098980,5,MAR20108,MAR20108
+7098980,5,MAR20109,MAR20109
+8133018,5,MAR00397,long-chain-fatty-acid-CoA ligase (linole
+8133018,5,MAR02786,long-chain-fatty-acid-CoA ligase
+8133018,5,MAR02802,long-chain-fatty-acid-CoA ligase
+8133018,5,MAR02991,long-chain-fatty-acid-CoA ligase (linole
+8133018,5,MAR07152,Uptake of Linoleic Acid
+11256949,5,MAR03300,1-Phosphatidylinositol 4-Kinase
+11256949,5,MAR03303,1-Phosphatidylinositol 4-Kinase
+11256949,5,MAR03308,Phosphatidylinositol 3-Kinase
+11256949,5,MAR06554,ATP:1-phosphatidyl-1D-myo-inositol-5-pho
+11256949,5,MAR08826,ATP:1-phosphatidyl-1D-myo-inositol-5-pho
+764061,4,MAR02072,glutathione transferase (2-hydroxyestron
+764061,4,MAR02073,glutathione transferase (2-hydroxyestron
+764061,4,MAR02074,glutathione transferase (2-hydroxyestron
+764061,4,MAR02075,glutathione transferase (2-hydroxyestron
+894503,4,MAR02110,glutathione transferase (17beta-estradio
+894503,4,MAR02111,glutathione transferase (17beta-estradio
+894503,4,MAR02112,glutathione transferase (17beta-estradio
+894503,4,MAR02113,glutathione transferase (17beta-estradio
+1194751,4,MAR01157,"long-chain-fatty-acid-CoA ligase (6,7-di"
+1194751,4,MAR01158,"long-chain-fatty-acid-CoA ligase (6,7-di"
+1194751,4,MAR01159,"long-chain-fatty-acid-CoA ligase (6,7-di"
+1194751,4,MAR01160,"long-chain-fatty-acid-CoA ligase (6,7-di"
+1429360,4,MAR20102,MAR20102
+1429360,4,MAR20103,MAR20103
+1429360,4,MAR20104,MAR20104
+1429360,4,MAR20105,MAR20105
+1956584,4,MAR00983,arachidonate:oxygen 15-oxidoreductase
+1956584,4,MAR00985,arachidonate:oxygen 15-oxidoreductase
+1956584,4,MAR00986,arachidonate:oxygen 15-oxidoreductase
+1956584,4,MAR00987,arachidonate:oxygen 15-oxidoreductase
+2565128,4,MAR02106,glutathione transferase (17beta-estradio
+2565128,4,MAR02107,glutathione transferase (17beta-estradio
+2565128,4,MAR02108,glutathione transferase (17beta-estradio
+2565128,4,MAR02109,glutathione transferase (17beta-estradio
+2603622,4,MAR02645,Peroxidase
+2603622,4,MAR02647,Peroxidase
+2603622,4,MAR02694,Peroxidase
+2603622,4,MAR02696,Peroxidase
+2801397,4,MAR03970,uridine 5'-monophosphate phosphohydrolas
+2801397,4,MAR07716,uridine 5'-monophosphate phosphohydrolas
+2801397,4,MAR07717,uridine 5'-monophosphate phosphohydrolas
+2801397,4,MAR08487,uridine 5'-monophosphate phosphohydrolas
+2832184,4,MAR01920,Cholesterol-sulfate sulfohydrolase
+2832184,4,MAR02747,Steryl-Sulfatase
+2832184,4,MAR02749,Steryl-Sulfatase
+2832184,4,MAR07950,Cholesterol-sulfate sulfohydrolase
+2968313,4,MAR00226,long-chain-fatty-acid-CoA ligase (palmit
+2968313,4,MAR02952,long-chain-fatty-acid-CoA ligase (palmit
+2968313,4,MAR03273,long-chain-fatty-acid-CoA ligase
+2968313,4,MAR03274,long-chain-fatty-acid-CoA ligase
+4140447,4,MAR01050,glutathione transferase (GSH)
+4140447,4,MAR01053,glutathione transferase (GSH)
+4140447,4,MAR01054,glutathione transferase (GSH)
+4140447,4,MAR03926,Glutathione Transferase
+4182450,4,MAR01153,"unspecific monooxygenase (6,7-dihydro-5-"
+4182450,4,MAR01154,"unspecific monooxygenase (6,7-dihydro-5-"
+4182450,4,MAR01155,"unspecific monooxygenase (6,7-dihydro-5-"
+4182450,4,MAR01156,"unspecific monooxygenase (6,7-dihydro-5-"
+4351762,4,MAR01963,steroid sulfatase (17alpha-hydroxypregne
+4351762,4,MAR02725,Steryl-Sulfatase
+4351762,4,MAR02728,Steryl-Sulfatase
+4351762,4,MAR02743,Steryl-Sulfatase
+4385907,4,MAR01263,"long-chain-fatty-acid-CoA ligase (10,11-"
+4385907,4,MAR01264,"long-chain-fatty-acid-CoA ligase (10,11-"
+4385907,4,MAR01265,"long-chain-fatty-acid-CoA ligase (10,11-"
+4385907,4,MAR01266,"long-chain-fatty-acid-CoA ligase (10,11-"
+4739525,4,MAR02560,15(R)-HEPE hydrolysis
+4739525,4,MAR02567,15(R)-HEPE hydrolysis
+4739525,4,MAR02571,15(R)-HEPE hydrolysis
+4739525,4,MAR02577,15(R)-HEPE hydrolysis
+5399967,4,MAR01953,Pregnenolone-sulfate sulfohydrolase
+5399967,4,MAR02756,Steryl-Sulfatase
+5399967,4,MAR02763,Steryl-Sulfatase
+5399967,4,MAR07948,Pregnenolone-sulfate sulfohydrolase
+5414026,4,MAR02561,arachidonate 5-lipoxygenase (15(R)-HEPE)
+5414026,4,MAR02568,arachidonate 5-lipoxygenase (15(R)-HEPE)
+5414026,4,MAR02572,arachidonate 5-lipoxygenase (15(R)-HEPE)
+5414026,4,MAR02578,arachidonate 5-lipoxygenase (15(R)-HEPE)
+5463145,4,MAR01149,cytochrome P450 (5-oxo-6-trans-LTB4)
+5463145,4,MAR01150,cytochrome P450 (5-oxo-6-trans-LTB4)
+5463145,4,MAR01151,cytochrome P450 (5-oxo-6-trans-LTB4)
+5463145,4,MAR01152,cytochrome P450 (5-oxo-6-trans-LTB4)
+5652083,4,MAR02095,"glutathione transferase (17beta-estradiol-3,4-quinone)"
+5652083,4,MAR02096,"glutathione transferase (17beta-estradiol-3,4-quinone)"
+5652083,4,MAR02097,"glutathione transferase (17beta-estradiol-3,4-quinone)"
+5652083,4,MAR02098,"glutathione transferase (17beta-estradiol-3,4-quinone)"
+7189874,4,MAR01248,long-chain-fatty-acid-CoA ligase (20-COO
+7189874,4,MAR01249,long-chain-fatty-acid-CoA ligase (20-COO
+7189874,4,MAR01250,long-chain-fatty-acid-CoA ligase (20-COO
+7189874,4,MAR01251,long-chain-fatty-acid-CoA ligase (20-COO
+7955913,4,MAR01200,"long-chain-fatty-acid-CoA ligase (6,7-di"
+7955913,4,MAR01201,"long-chain-fatty-acid-CoA ligase (6,7-di"
+7955913,4,MAR01202,"long-chain-fatty-acid-CoA ligase (6,7-di"
+7955913,4,MAR01203,"long-chain-fatty-acid-CoA ligase (6,7-di"
+8026413,4,MAR01119,glutathione transferase (12-keto-LTB4)
+8026413,4,MAR01120,glutathione transferase (12-keto-LTB4)
+8026413,4,MAR01121,glutathione transferase (12-keto-LTB4)
+8026413,4,MAR01122,glutathione transferase (12-keto-LTB4)
+8243190,4,MAR03318,1-Phosphatidylinositol-4-Phosphate 5-Kin
+8243190,4,MAR03324,1-Phosphatidylinositol-4-Phosphate 5-Kin
+8243190,4,MAR03325,1-Phosphatidylinositol-4-Phosphate 5-Kin
+8243190,4,MAR08815,1-phosphatidylinositol-4-phosphate 5-kin
+9951389,4,MAR04010,adenosine 5'-monophosphate phosphohydrol
+9951389,4,MAR04081,adenosine 5'-monophosphate phosphohydrol
+9951389,4,MAR04082,adenosine 5'-monophosphate phosphohydrol
+9951389,4,MAR07713,adenosine 5'-monophosphate phosphohydrol
+10615270,4,MAR00091,"Biotinidase (Biotin), Mitochondrial"
+10615270,4,MAR07661,N6-D-Biotinyl-L-lysine amidohydrolase
+10615270,4,MAR07662,N6-D-Biotinyl-L-lysine amidohydrolase
+10615270,4,MAR07663,N6-D-Biotinyl-L-lysine amidohydrolase
+10913600,4,MAR02557,prostaglandin-endoperoxide synthase (EPA
+10913600,4,MAR02566,prostaglandin-endoperoxide synthase (EPA
+10913600,4,MAR02570,prostaglandin-endoperoxide synthase (EPA
+10913600,4,MAR02576,prostaglandin-endoperoxide synthase (EPA
+11475852,4,MAR01025,"microsomal epoxide hydrolase (5,6-epoxyt"
+11475852,4,MAR01026,"microsomal epoxide hydrolase (5,6-epoxyt"
+11475852,4,MAR01027,"microsomal epoxide hydrolase (5,6-epoxyt"
+11475852,4,MAR01028,"microsomal epoxide hydrolase (5,6-epoxyt"
+11702755,4,MAR00998,arachidonate 5-lipoxygenase (15(R)-HETE)
+11702755,4,MAR00999,arachidonate 5-lipoxygenase (15(R)-HETE)
+11702755,4,MAR01000,arachidonate 5-lipoxygenase (15(R)-HETE)
+11702755,4,MAR03005,Arachidonate 5-Lipoxygenase
+12056058,4,MAR01100,carbonyl reductase (NADPH) (leukotriene 
+12056058,4,MAR01101,carbonyl reductase (NADPH) (leukotriene 
+12056058,4,MAR01103,carbonyl reductase (NADPH) (leukotriene 
+12056058,4,MAR01106,carbonyl reductase (NADPH) (leukotriene 
+12101311,4,MAR01029,arachidonate:oxygen 12-oxidoreductase
+12101311,4,MAR01030,arachidonate:oxygen 12-oxidoreductase
+12101311,4,MAR01033,arachidonate:oxygen 12-oxidoreductase
+12101311,4,MAR01034,arachidonate:oxygen 12-oxidoreductase
+13552586,4,MAR02599,palmitoyl-CoA:L-carnitine O-palmitoyltra
+13552586,4,MAR02601,palmitoyl-CoA:L-carnitine O-palmitoyltra
+13552586,4,MAR02785,palmitoyl-CoA:L-carnitine O-palmitoyltra
+13552586,4,MAR03028,palmitoyl-CoA:L-carnitine O-palmitoyltra
+13820148,4,MAR01020,"microsomal epoxide hydrolase (5,6-epoxyt"
+13820148,4,MAR01021,"microsomal epoxide hydrolase (5,6-epoxyt"
+13820148,4,MAR01022,"microsomal epoxide hydrolase (5,6-epoxyt"
+13820148,4,MAR01023,"microsomal epoxide hydrolase (5,6-epoxyt"
+14629399,4,MAR01193,unspecific monooxygenase (5-oxo-(6E)-12-
+14629399,4,MAR01194,unspecific monooxygenase (5-oxo-(6E)-12-
+14629399,4,MAR01195,unspecific monooxygenase (5-oxo-(6E)-12-
+14629399,4,MAR01196,unspecific monooxygenase (5-oxo-(6E)-12-
+15122070,4,MAR02068,glutathione transferase (2-hydroxyestron
+15122070,4,MAR02069,glutathione transferase (2-hydroxyestron
+15122070,4,MAR02070,glutathione transferase (2-hydroxyestron
+15122070,4,MAR02071,glutathione transferase (2-hydroxyestron
+15122408,4,MAR02083,glutathione transferase (4-hydroxyestron
+15122408,4,MAR02084,glutathione transferase (4-hydroxyestron
+15122408,4,MAR02085,glutathione transferase (4-hydroxyestron
+15122408,4,MAR02086,glutathione transferase (4-hydroxyestron
+15552302,4,MAR02591,Acetyl-CoA:carnitine O-acetyltransferase
+15552302,4,MAR02593,Acetyl-CoA:carnitine O-acetyltransferase
+15552302,4,MAR02780,Acetyl-CoA:carnitine O-acetyltransferase
+15552302,4,MAR03030,Acetyl-CoA:carnitine O-acetyltransferase
+42504,3,MAR03846,long-chain-fatty-acid-CoA ligase
+42504,3,MAR03872,long-chain-fatty-acid-CoA ligase
+42504,3,MAR03874,long-chain-fatty-acid-CoA ligase
+238752,3,MAR02076,peroxidase (4-hydroxyestrone)
+238752,3,MAR02077,peroxidase (4-hydroxyestrone)
+238752,3,MAR02078,peroxidase (4-hydroxyestrone)
+414717,3,MAR04016,ATP:GDP phosphotransferase
+414717,3,MAR04018,ATP:GDP phosphotransferase
+414717,3,MAR07882,ATP:GDP phosphotransferase
+644837,3,MAR01439,Carnitine Transferase
+644837,3,MAR02915,carnitine O-palmitoyltransferase (hexaco
+644837,3,MAR02917,carnitine O-acetyltransferase (hexacosan
+665412,3,MAR01999,steroid 11beta-monooxygenase (cortisol)
+665412,3,MAR02000,steroid 11beta-monooxygenase (cortisol)
+665412,3,MAR02001,steroid 11beta-monooxygenase (cortisol)
+687680,3,MAR02681,carnitine O-palmitoyltransferase ((13Z)-
+687680,3,MAR02683,carnitine O-acetyltransferase ((13Z)-eic
+687680,3,MAR02844,carnitine O-acetyltransferase ((13Z)-eic
+857146,3,MAR00217,Palmitate:CoA ligase (AMP-forming)
+857146,3,MAR02949,Palmitate:CoA ligase (AMP-forming)
+857146,3,MAR07157,Transport of Hexadecanoate
+886995,3,MAR03932,Arachidonate 12-Lipoxygenase
+886995,3,MAR03934,Arachidonate 12-Lipoxygenase
+886995,3,MAR03936,Arachidonate 12-Lipoxygenase
+909800,3,MAR02675,carnitine O-palmitoyltransferase (nonade
+909800,3,MAR02677,carnitine O-acetyltransferase (nonadecan
+909800,3,MAR02836,carnitine O-acetyltransferase (nonadecan
+930930,3,MAR01697,"3alpha,7alpha-dihydroxy-5beta-cholestana"
+930930,3,MAR01699,"3alpha,7alpha-dihydroxy-5beta-cholestana"
+930930,3,MAR01700,"3alpha,7alpha-dihydroxy-5beta-cholestana"
+1072077,3,MAR01352,phosphatidate phosphatase (1-lyso-2-arac
+1072077,3,MAR03010,Phosphatidate Phosphatase
+1072077,3,MAR03012,Phosphatidate Phosphatase
+1148887,3,MAR01574,Oxysterol 7Alpha-Hydroxylase
+1148887,3,MAR01797,cytochrome P450 (26-hydroxycholesterol)
+1148887,3,MAR01798,cytochrome P450 (26-hydroxycholesterol)
+1228459,3,MAR01132,aldehyde dehydrogenase (NAD(+)) (20-COOH
+1228459,3,MAR01133,aldehyde dehydrogenase (NAD(+)) (20-COOH
+1228459,3,MAR01134,aldehyde dehydrogenase (NAD(+)) (20-COOH
+1349154,3,MAR01440,(R)-Mevalonate:NADP+ oxidoreductase (CoA
+1349154,3,MAR01446,hydroxymethylglutaryl-CoA reductase (Ir)
+1349154,3,MAR04630,(R)-Mevalonate:NADP+ oxidoreductase (CoA
+1371242,3,MAR01398,glutathione transferase (GSH)
+1371242,3,MAR03976,Glutathione Transferase
+1371242,3,MAR03978,Glutathione Transferase
+1459283,3,MAR04177,cytidine-5'-monophosphate phosphohydrola
+1459283,3,MAR04179,cytidine-5'-monophosphate phosphohydrola
+1459283,3,MAR07721,cytidine-5'-monophosphate phosphohydrola
+1472911,3,MAR04570,ATP:dGDP phosphotransferase
+1472911,3,MAR04572,ATP:dGDP phosphotransferase
+1472911,3,MAR07888,ATP:dGDP phosphotransferase
+1593864,3,MAR02602,carnitine O-palmitoyltransferase (dodeca
+1593864,3,MAR02604,carnitine O-acetyltransferase (dodecanoy
+1593864,3,MAR02788,carnitine O-acetyltransferase (dodecanoy
+1612910,3,MAR02726,"carnitine O-palmitoyltransferase ((7Z,10"
+1612910,3,MAR02729,"carnitine O-acetyltransferase ((7Z,10Z,1"
+1612910,3,MAR02868,"carnitine O-acetyltransferase ((7Z,10Z,1"
+1762072,3,MAR01985,cytochrome P450 (17alpha-hydroxyprogesterone)
+1762072,3,MAR01987,cytochrome P450 (17alpha-hydroxyprogesterone)
+1762072,3,MAR02723,cytochrome P450 (17alpha-hydroxyprogesterone)
+1929461,3,MAR01379,glutathione transferase (delta-12-prosta
+1929461,3,MAR03945,Glutathione Transferase
+1929461,3,MAR03961,Glutathione Transferase
+1938163,3,MAR01481,Transport into the Mitochondria (Carnitine)
+1938163,3,MAR02909,carnitine O-palmitoyltransferase (tetracosanoylcarnitine)
+1938163,3,MAR02911,carnitine O-acetyltransferase (tetracosanoylcarnitine)
+1953761,3,MAR02049,cytochrome P450 (estrone)
+1953761,3,MAR02050,cytochrome P450 (estrone)
+1953761,3,MAR02051,cytochrome P450 (estrone)
+1961675,3,MAR00805,globotriaosylceramide 3-beta-N-acetylgal
+1961675,3,MAR00806,globotriaosylceramide 3-beta-N-acetylgal
+1961675,3,MAR08149,"beta-1,3-N-acetylgalactosaminyltransfera"
+2010783,3,MAR03801,long-chain-fatty-acid-CoA ligase
+2010783,3,MAR03803,long-chain-fatty-acid-CoA ligase
+2010783,3,MAR03805,long-chain-fatty-acid-CoA ligase
+2152233,3,MAR00081,"UDP-GlcNac:Betagal Beta-1, 3-N-Acetylglu"
+2152233,3,MAR00890,"beta-1,4-galactosyltransferase (nLc5Cer)"
+2152233,3,MAR08279,"UDP-GlcNAc:betaGal beta-1,3-N-acetylgluc"
+2414627,3,MAR02711,carnitine O-palmitoyltransferase (octade
+2414627,3,MAR02713,carnitine O-acetyltransferase (octadecat
+2414627,3,MAR02859,carnitine O-acetyltransferase (octadecat
+2471293,3,MAR03313,Phosphatidylinositol 3-Kinase
+2471293,3,MAR08824,phosphatidylinositol 3-kinase (1-phospha
+2471293,3,MAR08825,phosphatidylinositol-4-phosphate 3-kinas
+2678960,3,MAR02539,Steryl-Sulfatase
+2678960,3,MAR02589,Steryl-Sulfatase
+2678960,3,MAR06845,"steroid sulfatase (3,5-diiodo-L-thyronin"
+2711052,3,MAR01146,carbonyl reductase (NADPH) (5-oxo-6-tran
+2711052,3,MAR01147,carbonyl reductase (NADPH) (5-oxo-6-tran
+2711052,3,MAR01148,carbonyl reductase (NADPH) (5-oxo-6-tran
+2789191,3,MAR04024,ATP:CMP phosphotransferase
+2789191,3,MAR04026,ATP:CMP phosphotransferase
+2789191,3,MAR08458,ATP:CMP phosphotransferase
+2796933,3,MAR04105,malonyl-CoA carboxy-lyase (acetyl-CoA-fo
+2796933,3,MAR04106,malonyl-CoA carboxy-lyase (acetyl-CoA-fo
+2796933,3,MAR04107,malonyl-CoA carboxy-lyase (acetyl-CoA-fo
+2937516,3,MAR06614,nucleoside-diphosphate kinase (dADP)
+2937516,3,MAR06615,nucleoside-diphosphate kinase (dADP)
+2937516,3,MAR06616,nucleoside-diphosphate kinase (dADP)
+3215824,3,MAR04116,glutathione:hydrogen-peroxide oxidoreduc
+3215824,3,MAR04120,glutathione:hydrogen-peroxide oxidoreduc
+3215824,3,MAR04121,glutathione:hydrogen-peroxide oxidoreduc
+3357294,3,MAR02608,carnitine O-palmitoyltransferase (tetrad
+3357294,3,MAR02610,carnitine O-acetyltransferase (tetradeca
+3357294,3,MAR02792,carnitine O-acetyltransferase (tetradeca
+3361480,3,MAR02774,"carnitine O-palmitoyltransferase (10,13,"
+3361480,3,MAR02776,"carnitine O-acetyltransferase (10,13,16-"
+3361480,3,MAR02905,"carnitine O-acetyltransferase (10,13,16-"
+3494697,3,MAR01526,cholesterol:NADP+ Delta24-oxidoreductase
+3494697,3,MAR03419,3-hydroxyacyl-CoA dehydrogenase (desmost
+3494697,3,MAR08218,Desmosterol Reductase
+3520200,3,MAR00830,beta-galactosidase (GM1)
+3520200,3,MAR00832,beta-galactosidase (GM1)
+3520200,3,MAR02341,galactosidase beta (GM1)
+3538464,3,MAR00314,Docosanoyl-CoA hydrolase
+3538464,3,MAR02504,palmitoyl-CoA hydrolase
+3538464,3,MAR02506,palmitoyl-CoA hydrolase
+3584953,3,MAR02651,carnitine O-palmitoyltransferase (9-hept
+3584953,3,MAR02653,carnitine O-acetyltransferase (9-heptade
+3584953,3,MAR02816,carnitine O-acetyltransferase (9-heptade
+3729735,3,MAR06587,phosphatidylinositol 3-kinase (1-phospha
+3729735,3,MAR06588,phosphatidylinositol 3-kinase (1-phospha
+3729735,3,MAR06589,phosphatidylinositol 3-kinase (1-phospha
+3743305,3,MAR02605,carnitine O-palmitoyltransferase (tridec
+3743305,3,MAR02607,carnitine O-acetyltransferase (tridecano
+3743305,3,MAR02790,carnitine O-acetyltransferase (tridecano
+3841349,3,MAR04635,ATP:dTDP phosphotransferase
+3841349,3,MAR07886,ATP:dTDP phosphotransferase
+3841349,3,MAR07887,ATP:dTDP phosphotransferase
+3848106,3,MAR04027,Microsomal Epoxide Hydrolase
+3848106,3,MAR04029,Microsomal Epoxide Hydrolase
+3848106,3,MAR04031,Microsomal Epoxide Hydrolase
+3850620,3,MAR01370,glutathione transferase (GSH)
+3850620,3,MAR03963,Glutathione Transferase
+3850620,3,MAR03973,Glutathione Transferase
+3851661,3,MAR00263,long-chain-fatty-acid-CoA ligase (oleate
+3851661,3,MAR02959,long-chain-fatty-acid-CoA ligase (oleate
+3851661,3,MAR07156,Uptake of Octadecenoate
+4382575,3,MAR02746,carnitine O-palmitoyltransferase (gamma-linolenoylcarnitine)
+4382575,3,MAR02750,carnitine O-acetyltransferase (gamma-linolenoylcarnitine)
+4382575,3,MAR02886,carnitine O-acetyltransferase (gamma-linolenoylcarnitine)
+4499059,3,MAR04291,ATP:IDP phosphotransferase
+4499059,3,MAR07893,ATP:IDP phosphotransferase
+4499059,3,MAR07895,ATP:IDP phosphotransferase
+4975031,3,MAR02620,carnitine O-palmitoyltransferase (5-tetr
+4975031,3,MAR02622,carnitine O-acetyltransferase (5-tetrade
+4975031,3,MAR02798,carnitine O-acetyltransferase (5-tetrade
+4993392,3,MAR02759,"carnitine O-palmitoyltransferase ((7Z,10"
+4993392,3,MAR02761,"carnitine O-acetyltransferase ((7Z,10Z,1"
+4993392,3,MAR02897,"carnitine O-acetyltransferase ((7Z,10Z,1"
+5160055,3,MAR04043,Microsomal Epoxide Hydrolase
+5160055,3,MAR04045,Microsomal Epoxide Hydrolase
+5160055,3,MAR04047,Microsomal Epoxide Hydrolase
+5168427,3,MAR03815,Aldehyde Dehydrogenase (NAD+)
+5168427,3,MAR03817,Aldehyde Dehydrogenase (NAD+)
+5168427,3,MAR03821,Aldehyde Dehydrogenase (NAD+)
+5293760,3,MAR00331,long-chain-fatty-acid-CoA ligase (lignoc
+5293760,3,MAR02977,long-chain-fatty-acid-CoA ligase (lignoc
+5293760,3,MAR09894,Lignocerate Transport by FATP
+5298677,3,MAR02755,palmitoyl-CoA:L-carnitine O-palmitoyltra
+5298677,3,MAR02758,palmitoyl-CoA:L-carnitine O-palmitoyltra
+5298677,3,MAR02894,palmitoyl-CoA:L-carnitine O-palmitoyltra
+5517917,3,MAR01231,"carbonyl reductase (NADPH) (10,11-dihydr"
+5517917,3,MAR01232,"carbonyl reductase (NADPH) (10,11-dihydr"
+5517917,3,MAR01233,"carbonyl reductase (NADPH) (10,11-dihydr"
+5553551,3,MAR03391,Peroxidase
+5553551,3,MAR03392,Peroxidase
+5553551,3,MAR06808,peroxidase (dopamine)
+5680419,3,MAR02660,carnitine O-palmitoyltransferase (octadecenoylcarnitine(7))
+5680419,3,MAR02662,carnitine O-acetyltransferase (octadecenoylcarnitine(7))
+5680419,3,MAR02824,carnitine O-acetyltransferase (octadecenoylcarnitine(7))
+5709952,3,MAR02687,carnitine O-palmitoyltransferase (9-eico
+5709952,3,MAR02689,carnitine O-acetyltransferase (9-eicosen
+5709952,3,MAR02842,carnitine O-acetyltransferase (9-eicosen
+5714387,3,MAR00961,"arachidonate 12-lipoxygenase, 12S type ("
+5714387,3,MAR00964,"arachidonate 12-lipoxygenase, 12S type ("
+5714387,3,MAR00967,"arachidonate 12-lipoxygenase, 12S type ("
+5812017,3,MAR02768,"carnitine O-palmitoyltransferase ((11Z,1"
+5812017,3,MAR02770,"carnitine O-acetyltransferase ((11Z,14Z)"
+5812017,3,MAR02901,"carnitine O-acetyltransferase ((11Z,14Z)"
+5897885,3,MAR03989,maltose glucohydrolase
+5897885,3,MAR08587,maltose glucohydrolase
+5897885,3,MAR08589,maltose glucohydrolase
+5920185,3,MAR04028,ATP:CDP phosphotransferase
+5920185,3,MAR04030,ATP:CDP phosphotransferase
+5920185,3,MAR07885,ATP:CDP phosphotransferase
+6070856,3,MAR02752,carnitine O-palmitoyltransferase (eicosa
+6070856,3,MAR02754,carnitine O-acetyltransferase (eicosatri
+6070856,3,MAR02890,carnitine O-acetyltransferase (eicosatri
+6120947,3,MAR06509,FAD nucleotidohydrolase
+6120947,3,MAR08968,FAD Diphosphatase
+6120947,3,MAR20117,MAR20117
+6347664,3,MAR01554,"Nicotinate-Nucleotide Adenylyltransferase, Mitochondrial"
+6347664,3,MAR04257,ATP:nicotinamide-nucleotide adenylyltransferase
+6347664,3,MAR04276,ATP:nicotinamide-nucleotide adenylyltransferase
+6348910,3,MAR04008,ATP:UMP phosphotransferase
+6348910,3,MAR07875,ATP:UMP phosphotransferase
+6348910,3,MAR07876,ATP:UMP phosphotransferase
+6589632,3,MAR02693,"carnitine O-palmitoyltransferase ((5Z,8Z"
+6589632,3,MAR02697,"carnitine O-acetyltransferase ((5Z,8Z,11"
+6589632,3,MAR02848,"carnitine O-acetyltransferase ((5Z,8Z,11"
+6612551,3,MAR03268,3-hydroxyacyl-CoA dehydrogenase
+6612551,3,MAR03269,3-hydroxyacyl-CoA dehydrogenase
+6612551,3,MAR03270,3-hydroxyacyl-CoA dehydrogenase
+6728948,3,MAR02720,"carnitine O-palmitoyltransferase ((5Z,8Z"
+6728948,3,MAR02724,"carnitine O-acetyltransferase ((5Z,8Z,11"
+6728948,3,MAR02866,"carnitine O-acetyltransferase ((5Z,8Z,11"
+6903711,3,MAR02941,propionyl-CoA C2-trimethyltridecanoyltra
+6903711,3,MAR02950,propionyl-CoA C2-trimethyltridecanoyltra
+6903711,3,MAR02953,propionyl-CoA C2-trimethyltridecanoyltra
+7346448,3,MAR00227,7-Dehydrocholesterol Reductase
+7346448,3,MAR01519,7-dehydrocholesterol reductase (7-dehydr
+7346448,3,MAR03061,7-Dehydrocholesterol Reductase
+7470356,3,MAR02669,carnitine O-palmitoyltransferase ((7Z)-o
+7470356,3,MAR02671,carnitine O-acetyltransferase ((7Z)-octa
+7470356,3,MAR02832,carnitine O-acetyltransferase ((7Z)-octa
+7519956,3,MAR04670,ATP:dCDP phosphotransferase
+7519956,3,MAR07890,ATP:dCDP phosphotransferase
+7519956,3,MAR07891,ATP:dCDP phosphotransferase
+7605126,3,MAR03262,3-hydroxyacyl-CoA dehydrogenase (cis-(3S
+7605126,3,MAR03267,3-hydroxyacyl-CoA dehydrogenase
+7605126,3,MAR03372,3-hydroxyacyl-CoA dehydrogenase (cis-(3S
+7626283,3,MAR02594,carnitine O-palmitoyltransferase (O-prop
+7626283,3,MAR02598,carnitine O-acetyltransferase (O-propano
+7626283,3,MAR03037,carnitine O-acetyltransferase (O-propano
+7769835,3,MAR04059,UDP phosphohydrolase
+7769835,3,MAR04060,UDP phosphohydrolase
+7769835,3,MAR08485,UDP phosphohydrolase
+7816456,3,MAR02663,carnitine O-palmitoyltransferase (L-oleo
+7816456,3,MAR02665,carnitine O-acetyltransferase (L-oleoylc
+7816456,3,MAR02827,carnitine O-acetyltransferase (L-oleoylc
+7816709,3,MAR08034,cytochrome P450 (PNP)
+7816709,3,MAR20031,MAR20031
+7816709,3,MAR20032,MAR20032
+7956302,3,MAR01618,Phosphatidylinositol 4-Phosphate 3-Kinas
+7956302,3,MAR06548,ATP:1-phosphatidyl-1D-myo-inositol-4-pho
+7956302,3,MAR08819,ATP:1-phosphatidyl-1D-myo-inositol-4-pho
+7965807,3,MAR00409,Arachidonate:CoA ligase (AMP-forming)
+7965807,3,MAR02996,Arachidonate:CoA ligase (AMP-forming)
+7965807,3,MAR09870,Arachidonate (N-C18:1) Transport by FATP
+8175754,3,MAR02061,peroxidase (2-hydroxyestrone)
+8175754,3,MAR02062,peroxidase (2-hydroxyestrone)
+8175754,3,MAR02063,peroxidase (2-hydroxyestrone)
+8252378,3,MAR01784,cholesterol 26-hydroxylase
+8252378,3,MAR01785,cholesterol 26-hydroxylase
+8252378,3,MAR01786,cholesterol 26-hydroxylase
+8268022,3,MAR01129,alcohol dehydrogenase (20-OH-LTB4)
+8268022,3,MAR01130,alcohol dehydrogenase (20-OH-LTB4)
+8268022,3,MAR01131,alcohol dehydrogenase (20-OH-LTB4)
+8402024,3,MAR01649,prolyl 4-hydroxylase (AKG)
+8402024,3,MAR04776,"L-Proline,2-oxoglutarate:oxygen oxidored"
+8402024,3,MAR04777,"L-Proline,2-oxoglutarate:oxygen oxidored"
+8407816,3,MAR02705,carnitine O-palmitoyltransferase ((13Z)-
+8407816,3,MAR02707,carnitine O-acetyltransferase ((13Z)-doc
+8407816,3,MAR02854,carnitine O-acetyltransferase ((13Z)-doc
+8666961,3,MAR04280,(S)-Lactate:NAD+ oxidoreductase
+8666961,3,MAR04281,(S)-Lactate:NAD+ oxidoreductase
+8666961,3,MAR04388,(S)-Lactate:NAD+ oxidoreductase
+8681782,3,MAR01959,cytochrome P450 (17alpha-hydroxypregnenolone)
+8681782,3,MAR01960,cytochrome P450 (17alpha-hydroxypregnenolone)
+8681782,3,MAR02751,cytochrome P450 (17alpha-hydroxypregnenolone)
+8694082,3,MAR04044,ATP:dADP phosphotransferase
+8694082,3,MAR04420,ATP:dADP phosphotransferase
+8694082,3,MAR07892,ATP:dADP phosphotransferase
+8736814,3,MAR03475,Acetyl-CoA hydrolase (peroxisomal)
+8736814,3,MAR04093,Acetyl-CoA hydrolase
+8736814,3,MAR04095,Acetyl-CoA hydrolase
+8775891,3,MAR04048,"Guanosine 3',5'-cyclic phosphate 5'-nucl"
+8775891,3,MAR08083,"Guanosine 3',5'-cyclic phosphate 5'-nucl"
+8775891,3,MAR08085,"Guanosine 3',5'-cyclic phosphate 5'-nucl"
+8902062,3,MAR00828,beta-N-acetylhexosaminidase (GM2)
+8902062,3,MAR12061,"Hexosaminidase A, Lysosomal"
+8902062,3,MAR12063,"Hexosaminidase A, Plasma Membrane"
+9187886,3,MAR02055,cytochrome P450 (estrone)
+9187886,3,MAR02056,cytochrome P450 (estrone)
+9187886,3,MAR02057,cytochrome P450 (estrone)
+9295005,3,MAR04449,guanosine 5'-monophosphate phosphohydrol
+9295005,3,MAR04450,guanosine 5'-monophosphate phosphohydrol
+9295005,3,MAR07728,guanosine 5'-monophosphate phosphohydrol
+9298933,3,MAR03886,Carbonyl Reductase (NADPH)
+9298933,3,MAR03887,Carbonyl Reductase (NADPH)
+9298933,3,MAR03888,Carbonyl Reductase (NADPH)
+9300003,3,MAR02736,"carnitine O-palmitoyltransferase (13,16,"
+9300003,3,MAR02738,"carnitine O-acetyltransferase (13,16,19-"
+9300003,3,MAR02874,"carnitine O-acetyltransferase (13,16,19-"
+9315657,3,MAR00249,long-chain-fatty-acid-CoA ligase (steara
+9315657,3,MAR02957,long-chain-fatty-acid-CoA ligase (steara
+9315657,3,MAR08983,Uptake of Octadecanoate (N-C18:0)
+9345538,3,MAR02742,palmitoyl-CoA:L-carnitine O-palmitoyltra
+9345538,3,MAR02745,carnitine O-acetyltransferase (linoleic-
+9345538,3,MAR02882,palmitoyl-CoA:L-carnitine O-palmitoyltra
+9369504,3,MAR01716,chenodeoxycholoyl-CoA hydrolase
+9369504,3,MAR01718,chenodeoxycholoyl-CoA hydrolase
+9369504,3,MAR02940,palmitoyl-CoA hydrolase
+9469624,3,MAR04643,dUTP nucleotidohydrolase
+9469624,3,MAR08483,dUTP nucleotidohydrolase
+9469624,3,MAR11398,DUTP Diphosphatase
+9493446,3,MAR01542,Nicotinamide-Nucleotide Adenylyltransferase
+9493446,3,MAR04267,nicotinamide-nucleotide adenylyltransferase (nicotinamide D-ribonucleo
+9493446,3,MAR08790,nicotinamide nucleotide adenylyltransferase (nicotinamide D-ribonucleo
+9523333,3,MAR02997,1-Phosphatidylinositol-4-Phosphate 5-Kin
+9523333,3,MAR03004,1-Phosphatidylinositol-4-Phosphate 5-Kin
+9523333,3,MAR06595,1-phosphatidylinositol-4-phosphate 5-kin
+9537403,3,MAR02730,"carnitine O-palmitoyltransferase ((4Z,7Z"
+9537403,3,MAR02732,"carnitine O-acetyltransferase ((4Z,7Z,10"
+9537403,3,MAR02870,"carnitine O-acetyltransferase ((4Z,7Z,10"
+9568579,3,MAR02699,carnitine O-palmitoyltransferase (heneic
+9568579,3,MAR02701,carnitine O-acetyltransferase (heneicosa
+9568579,3,MAR02850,carnitine O-acetyltransferase (heneicosa
+9631246,3,MAR01170,palmitoyl-CoA hydrolase (3-oxo-10(R)-hyd
+9631246,3,MAR01171,palmitoyl-CoA hydrolase (3-oxo-10(R)-hyd
+9631246,3,MAR03810,palmitoyl-CoA hydrolase
+9719701,3,MAR02733,"carnitine O-palmitoyltransferase ((11Z,1"
+9719701,3,MAR02735,"carnitine O-acetyltransferase ((11Z,14Z,"
+9719701,3,MAR02872,"carnitine O-acetyltransferase ((11Z,14Z,"
+9736950,3,MAR02529,Dihydrolipoyl Dehydrogenase
+9736950,3,MAR02531,Dihydrolipoyl Dehydrogenase
+9736950,3,MAR06523,peroxidase (thiocyanate)
+9827791,3,MAR02611,carnitine O-palmitoyltransferase ((9E)-t
+9827791,3,MAR02613,carnitine O-acetyltransferase ((9E)-tetr
+9827791,3,MAR02794,carnitine O-acetyltransferase ((9E)-tetr
+9831937,3,MAR03162,Beta-Glucuronidase
+9831937,3,MAR03165,Beta-Glucuronidase
+9831937,3,MAR06492,klotho (gamma-CEHC-glucuronide)
+9955511,3,MAR02563,"microsomal epoxide hydrolase (5(S),6(S)-"
+9955511,3,MAR02573,"microsomal epoxide hydrolase (5(S),6(S)-"
+9955511,3,MAR02579,"microsomal epoxide hydrolase (5(S),6(S)-"
+10021421,3,MAR00841,"ST8 alpha-N-acetyl-neuraminide alpha-2,8-sialyltransferase (CMP-N-acet"
+10021421,3,MAR08179,"ST8 alpha-N-acetyl-neuraminide alpha-2,8-sialyltransferase (CMP-N-acet"
+10021421,3,MAR12087,"Alpha-N-Acetylneuraminate Alpha-2, 8-Sialyltransferase"
+10192592,3,MAR03826,Beta-Glucuronidase
+10192592,3,MAR03828,Beta-Glucuronidase
+10192592,3,MAR06496,klotho (alpha-CEHC-glucuronide)
+10261834,3,MAR02626,palmitoyl-CoA:L-carnitine O-palmitoyltra
+10261834,3,MAR02630,palmitoyl-CoA:L-carnitine O-palmitoyltra
+10261834,3,MAR02803,palmitoyl-CoA:L-carnitine O-palmitoyltra
+10262258,3,MAR02739,"carnitine O-palmitoyltransferase (10,13,"
+10262258,3,MAR02741,"carnitine O-acetyltransferase (10,13,16,"
+10262258,3,MAR02876,"carnitine O-acetyltransferase (10,13,16,"
+10422505,3,MAR00196,long-chain-fatty-acid-CoA ligase (myrist
+10422505,3,MAR02944,long-chain-fatty-acid-CoA ligase (myrist
+10422505,3,MAR08996,Uptake of Hexadecanoate
+10462941,3,MAR01006,"microsomal epoxide hydrolase ((5S,6S)-ep"
+10462941,3,MAR01007,"microsomal epoxide hydrolase ((5S,6S)-ep"
+10462941,3,MAR01008,"microsomal epoxide hydrolase ((5S,6S)-ep"
+10465682,3,MAR02717,"carnitine O-palmitoyltransferase ((8Z,11"
+10465682,3,MAR02719,"carnitine O-acetyltransferase ((8Z,11Z,1"
+10465682,3,MAR02864,"carnitine O-acetyltransferase ((8Z,11Z,1"
+10556509,3,MAR02536,Steryl-Sulfatase
+10556509,3,MAR02538,Steryl-Sulfatase
+10556509,3,MAR06831,"steroid sulfatase (3,3-diiodo-L-thyronin"
+10640227,3,MAR00250,Stearoyl-CoA hydrolase
+10640227,3,MAR02487,palmitoyl-CoA hydrolase
+10640227,3,MAR02488,palmitoyl-CoA hydrolase
+10785617,3,MAR01228,12-keto-LTB4 reduction
+10785617,3,MAR01229,12-keto-LTB4 reduction
+10785617,3,MAR01230,12-keto-LTB4 reduction
+10812065,3,MAR01261,palmitoyl-CoA hydrolase (18-CoA-18-oxo-d
+10812065,3,MAR01262,palmitoyl-CoA hydrolase (18-CoA-18-oxo-d
+10812065,3,MAR03981,palmitoyl-CoA hydrolase
+10832982,3,MAR02684,carnitine O-palmitoyltransferase ((11Z)-
+10832982,3,MAR02686,carnitine O-acetyltransferase ((11Z)-eic
+10832982,3,MAR02840,carnitine O-acetyltransferase ((11Z)-eic
+10837410,3,MAR00775,3-sn-phosphatidate phosphohydrolase
+10837410,3,MAR00783,3-sn-phosphatidate phosphohydrolase
+10837410,3,MAR08235,3-sn-phosphatidate phosphohydrolase
+10906624,3,MAR04056,thymidylate 5'-phosphohydrolase
+10906624,3,MAR04484,thymidylate 5'-phosphohydrolase
+10906624,3,MAR07725,thymidylate 5'-phosphohydrolase
+10973033,3,MAR02702,carnitine O-palmitoyltransferase (docosa
+10973033,3,MAR02704,carnitine O-acetyltransferase (docosanoy
+10973033,3,MAR02852,carnitine O-acetyltransferase (docosanoy
+10975112,3,MAR01190,carbonyl reductase (NADPH) (5-oxo-(6E)-1
+10975112,3,MAR01191,carbonyl reductase (NADPH) (5-oxo-(6E)-1
+10975112,3,MAR01192,carbonyl reductase (NADPH) (5-oxo-(6E)-1
+10987215,3,MAR01212,palmitoyl-CoA hydrolase (3-oxo-10(S)-hyd
+10987215,3,MAR01213,palmitoyl-CoA hydrolase (3-oxo-10(S)-hyd
+10987215,3,MAR03814,palmitoyl-CoA hydrolase
+10997389,3,MAR10374,"Hexanoyl-CoA hydrolase, Mitochondrial"
+10997389,3,MAR10377,"Hexanoyl-CoA hydrolase, Peroxisome"
+10997389,3,MAR11544,Hexanoyl-CoA hydrolase
+11173176,3,MAR02492,3-hydroxyacyl-CoA dehydrogenase
+11173176,3,MAR03278,3-hydroxyacyl-CoA dehydrogenase ((3S)-3-
+11173176,3,MAR03304,3-hydroxyacyl-CoA dehydrogenase ((3S)-3-
+11177527,3,MAR00067,"Aldehyde Dehydrogenase (Pristanal, NAD)"
+11177527,3,MAR03386,Long-Chain-Aldehyde Dehydrogenase
+11177527,3,MAR20051,MAR20051
+11352083,3,MAR01123,"carbonyl reductase (NADPH) (10,11-dihydr"
+11352083,3,MAR01124,"carbonyl reductase (NADPH) (10,11-dihydr"
+11352083,3,MAR01125,"carbonyl reductase (NADPH) (10,11-dihydr"
+11429930,3,MAR01367,prostaglandin-F synthase (GSH)
+11429930,3,MAR03942,Glutathione Transferase
+11429930,3,MAR03943,Glutathione Transferase
+11456010,3,MAR02820,3-hydroxyacyl-CoA dehydrogenase
+11456010,3,MAR03282,3-hydroxyacyl-CoA dehydrogenase
+11456010,3,MAR03309,3-hydroxyacyl-CoA dehydrogenase
+11457140,3,MAR02762,"carnitine O-palmitoyltransferase ((4Z,7Z"
+11457140,3,MAR02766,"carnitine O-acetyltransferase ((4Z,7Z,10"
+11457140,3,MAR02899,"carnitine O-acetyltransferase ((4Z,7Z,10"
+11493499,3,MAR00973,carbonyl reductase (NADPH) (5(S)-HETE)
+11493499,3,MAR03894,Carbonyl Reductase (NADPH)
+11493499,3,MAR03896,Carbonyl Reductase (NADPH)
+11496328,3,MAR03955,carbonate hydro-lyase (carbon-dioxide-fo
+11496328,3,MAR03956,carbonate hydro-lyase (carbon-dioxide-fo
+11496328,3,MAR05407,carbonate hydro-lyase (carbon-dioxide-fo
+11823254,3,MAR01244,"carbonyl reductase (NADPH) (20-COOH-10,1"
+11823254,3,MAR01245,"carbonyl reductase (NADPH) (20-COOH-10,1"
+11823254,3,MAR01246,"carbonyl reductase (NADPH) (20-COOH-10,1"
+11940066,3,MAR00154,Propanoyl-CoA hydrolase
+11940066,3,MAR03009,Propanoyl-CoA hydrolase (peroxisomal)
+11940066,3,MAR03799,palmitoyl-CoA hydrolase (propanoyl-CoA)
+12132204,3,MAR02826,3-hydroxyacyl-CoA dehydrogenase
+12132204,3,MAR03286,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+12132204,3,MAR03314,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+12317279,3,MAR03254,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+12317279,3,MAR03266,3-hydroxyacyl-CoA dehydrogenase
+12317279,3,MAR03367,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+12462604,3,MAR01384,glutathione transferase (9-deoxy-delta12
+12462604,3,MAR03938,Glutathione Transferase
+12462604,3,MAR03941,Glutathione Transferase
+12497538,3,MAR02781,"Phosphatidylinositol-3,4-Bisphosphate 4-"
+12497538,3,MAR02782,"Phosphatidylinositol-3,4-Bisphosphate 4-"
+12497538,3,MAR06553,"1-phosphatidyl-1D-myo-inositol-4,5-bisph"
+12551588,3,MAR04021,Microsomal Epoxide Hydrolase
+12551588,3,MAR04023,Microsomal Epoxide Hydrolase
+12551588,3,MAR04025,Microsomal Epoxide Hydrolase
+12610619,3,MAR00284,Eicosanoyl-CoA hydrolase
+12610619,3,MAR02500,palmitoyl-CoA hydrolase
+12610619,3,MAR02502,palmitoyl-CoA hydrolase
+12616980,3,MAR02642,carnitine O-palmitoyltransferase (heptad
+12616980,3,MAR02646,carnitine O-acetyltransferase (heptadeca
+12616980,3,MAR02812,carnitine O-acetyltransferase (heptadeca
+12671387,3,MAR02562,"microsomal epoxide hydrolase (5(S),6(S)-"
+12671387,3,MAR02574,"microsomal epoxide hydrolase (5(S),6(S)-"
+12671387,3,MAR02580,"microsomal epoxide hydrolase (5(S),6(S)-"
+12803515,3,MAR01274,3-hydroxyacyl-CoA dehydrogenase
+12803515,3,MAR01275,3-hydroxyacyl-CoA dehydrogenase
+12803515,3,MAR03876,3-hydroxyacyl-CoA dehydrogenase
+12866092,3,MAR04033,Microsomal Epoxide Hydrolase
+12866092,3,MAR04035,Microsomal Epoxide Hydrolase
+12866092,3,MAR04037,Microsomal Epoxide Hydrolase
+12896262,3,MAR02678,carnitine O-palmitoyltransferase (eicosa
+12896262,3,MAR02680,carnitine O-acetyltransferase (eicosanoy
+12896262,3,MAR02838,carnitine O-acetyltransferase (eicosanoy
+13108945,3,MAR04006,ATP:UDP phosphotransferase
+13108945,3,MAR07883,ATP:UDP phosphotransferase
+13108945,3,MAR07884,ATP:UDP phosphotransferase
+13167461,3,MAR03613,Tyrosinase
+13167461,3,MAR03614,Tyrosinase
+13167461,3,MAR06803,tyrosinase (hordenine)
+13235413,3,MAR01015,arachidonate 5-lipoxygenase (15(S)-HPETE
+13235413,3,MAR01016,arachidonate 5-lipoxygenase (15(S)-HPETE
+13235413,3,MAR01017,arachidonate 5-lipoxygenase (15(S)-HPETE
+13298088,3,MAR01002,"microsomal epoxide hydrolase ((5S,6S)-ep"
+13298088,3,MAR01003,"microsomal epoxide hydrolase ((5S,6S)-ep"
+13298088,3,MAR01004,"microsomal epoxide hydrolase ((5S,6S)-ep"
+13363548,3,MAR01055,microsomal epoxide hydrolase (hepoxilin 
+13363548,3,MAR01057,microsomal epoxide hydrolase (hepoxilin 
+13363548,3,MAR01058,microsomal epoxide hydrolase (hepoxilin 
+13422694,3,MAR01257,3-hydroxyacyl-CoA dehydrogenase (20-CoA-
+13422694,3,MAR01258,3-hydroxyacyl-CoA dehydrogenase (20-CoA-
+13422694,3,MAR03983,3-hydroxyacyl-CoA dehydrogenase
+13446577,3,MAR01624,"3alpha,7alpha,12alpha-trihydroxy-5beta-c"
+13446577,3,MAR01625,"3alpha,7alpha,12alpha-trihydroxy-5beta-c"
+13446577,3,MAR01627,"3alpha,7alpha,12alpha-trihydroxy-5beta-c"
+13751627,3,MAR02708,carnitine O-palmitoyltransferase ((11Z)-
+13751627,3,MAR02710,carnitine O-acetyltransferase ((11Z)-doc
+13751627,3,MAR02856,carnitine O-acetyltransferase ((11Z)-doc
+13787498,3,MAR02636,palmitoyl-CoA:L-carnitine O-palmitoyltransferase
+13787498,3,MAR02640,palmitoyl-CoA:L-carnitine O-palmitoyltransferase
+13787498,3,MAR02809,palmitoyl-CoA:L-carnitine O-palmitoyltransferase
+13870803,3,MAR01126,cytochrome P450 (leukotriene B4)
+13870803,3,MAR01127,cytochrome P450 (leukotriene B4)
+13870803,3,MAR01128,cytochrome P450 (leukotriene B4)
+13908338,3,MAR02690,"carnitine O-palmitoyltransferase ((8Z,11"
+13908338,3,MAR02692,"carnitine O-acetyltransferase ((8Z,11Z)-"
+13908338,3,MAR02846,"carnitine O-acetyltransferase ((8Z,11Z)-"
+14044792,3,MAR01278,"palmitoyl-CoA hydrolase (3(S),10(R)-OH-o"
+14044792,3,MAR01279,"palmitoyl-CoA hydrolase (3(S),10(R)-OH-o"
+14044792,3,MAR03844,palmitoyl-CoA hydrolase
+14162454,3,MAR01208,3-hydroxyacyl-CoA dehydrogenase
+14162454,3,MAR01209,3-hydroxyacyl-CoA dehydrogenase
+14162454,3,MAR03812,3-hydroxyacyl-CoA dehydrogenase
+14274529,3,MAR02595,Steryl-Sulfatase
+14274529,3,MAR02597,Steryl-Sulfatase
+14274529,3,MAR06851,steroid sulfatase (3-monoiodo-L-thyronin
+14311301,3,MAR20090,MAR20090
+14311301,3,MAR20091,MAR20091
+14311301,3,MAR20092,MAR20092
+14338061,3,MAR04057,Microsomal Epoxide Hydrolase
+14338061,3,MAR04074,Microsomal Epoxide Hydrolase
+14338061,3,MAR04076,Microsomal Epoxide Hydrolase
+14365081,3,MAR01437,3-hydroxy-3-methylglutaryl-CoA synthase (acetoacetyl-CoA)
+14365081,3,MAR01573,3-hydroxy-3-methylglutaryl-CoA synthase (acetoacetyl-CoA)
+14365081,3,MAR04604,hydroxymethylglutaryl-CoA synthase (acetoacetyl-CoA)
+14503709,3,MAR00163,Octanoyl-CoA:L-carnitine O-octanoyltrans
+14503709,3,MAR03032,Octanoyl-CoA:L-carnitine O-octanoyltrans
+14503709,3,MAR03034,Octanoyl-CoA:L-carnitine O-octanoyltrans
+14703278,3,MAR00995,prostaglandin-endoperoxide synthase (ara
+14703278,3,MAR00996,prostaglandin-endoperoxide synthase (ara
+14703278,3,MAR00997,prostaglandin-endoperoxide synthase (ara
+14918400,3,MAR12066,"Sialidase, Cytosol (Neu2)"
+14918400,3,MAR12071,"Sialidase, Plasma Membrane (Neu3)"
+14918400,3,MAR12077,"Sialidase, Nucleus (Neu3 Or Neu1)"
+14923777,3,MAR07878,ATP:dIDP phosphotransferase
+14923777,3,MAR07881,ATP:dIDP phosphotransferase
+14923777,3,MAR07894,ATP:dIDP phosphotransferase
+15191432,3,MAR01197,"6,7-dihydro-12-epi-LTB4 oxidation"
+15191432,3,MAR01198,"6,7-dihydro-12-epi-LTB4 oxidation"
+15191432,3,MAR01199,"6,7-dihydro-12-epi-LTB4 oxidation"
+15333447,3,MAR03263,Peroxidase
+15333447,3,MAR06602,peroxidase (urate)
+15333447,3,MAR06603,peroxidase (urate)
+15347103,3,MAR02633,carnitine O-palmitoyltransferase (7-hexa
+15347103,3,MAR02635,carnitine O-acetyltransferase (7-hexadec
+15347103,3,MAR02806,carnitine O-acetyltransferase (7-hexadec
+15366017,3,MAR02714,"carnitine O-palmitoyltransferase ((6Z,9Z"
+15366017,3,MAR02716,"carnitine O-acetyltransferase ((6Z,9Z,12"
+15366017,3,MAR02862,"carnitine O-acetyltransferase ((6Z,9Z,12"
+15497850,3,MAR02025,steroid sulfatase (5-alpha-dihydrotestos
+15497850,3,MAR03600,Steryl-Sulfatase
+15497850,3,MAR03601,Steryl-Sulfatase
+15552450,3,MAR01165,3-hydroxyacyl-CoA dehydrogenase
+15552450,3,MAR01166,3-hydroxyacyl-CoA dehydrogenase
+15552450,3,MAR03808,3-hydroxyacyl-CoA dehydrogenase
+15651258,3,MAR02828,3-hydroxyacyl-CoA dehydrogenase
+15651258,3,MAR03292,3-hydroxyacyl-CoA dehydrogenase ((3S)-3-
+15651258,3,MAR03319,3-hydroxyacyl-CoA dehydrogenase ((3S)-3-
+15654085,3,MAR02614,carnitine O-palmitoyltransferase ((7Z)-t
+15654085,3,MAR02618,carnitine O-acetyltransferase ((7Z)-tetr
+15654085,3,MAR02796,carnitine O-acetyltransferase ((7Z)-tetr
+15812061,3,MAR02771,"carnitine O-palmitoyltransferase ((13Z,1"
+15812061,3,MAR02773,"carnitine O-acetyltransferase ((13Z,16Z)"
+15812061,3,MAR02903,"carnitine O-acetyltransferase ((13Z,16Z)"
+15817904,3,MAR00710,Isocitrate:NADP+ oxidoreductase (decarboxylating)
+15817904,3,MAR00712,Isocitrate:NADP+ oxidoreductase (decarboxylating)
+15817904,3,MAR03958,Isocitrate:NADP+ oxidoreductase (decarboxylating)
+15843019,3,MAR01280,"carbonyl reductase (NADPH) (10,11-dihydr"
+15843019,3,MAR01281,"carbonyl reductase (NADPH) (10,11-dihydr"
+15843019,3,MAR01282,"carbonyl reductase (NADPH) (10,11-dihydr"
+15856391,3,MAR02657,carnitine O-palmitoyltransferase ((13Z)-
+15856391,3,MAR02659,carnitine O-acetyltransferase ((13Z)-oct
+15856391,3,MAR02822,carnitine O-acetyltransferase ((13Z)-oct
+15868301,3,MAR00332,Tetracosenoyl-CoA hydrolase
+15868301,3,MAR02507,palmitoyl-CoA hydrolase
+15868301,3,MAR02508,palmitoyl-CoA hydrolase
+15953381,3,MAR00283,long-chain-fatty-acid-CoA ligase (eicosa
+15953381,3,MAR02966,long-chain-fatty-acid-CoA ligase (eicosa
+15953381,3,MAR07807,Uptake of Arachidate
+15961352,3,MAR08581,alpha-amylase (maltotriose)
+15961352,3,MAR08591,alpha-glucosidase (maltotriose)
+15961352,3,MAR08592,alpha glucosidase (maltotriose)
+16410018,3,MAR01521,methylmalonyl-CoA decarboxylase
+16410018,3,MAR01522,"methylmalonyl-CoA decarboxylase, peroxisomal"
+16410018,3,MAR08787,(S)-methylmalonyl-CoA carboxy-lyase (propanoyl-CoA-forming)
+16536025,3,MAR01434,acetyl-CoA:acetyl-CoA C-acetyltransferas
+16536025,3,MAR03105,acetyl-CoA:acetyl-CoA C-acetyltransferas
+16536025,3,MAR03885,acetyl-CoA:acetyl-CoA C-acetyltransferas
+16614889,3,MAR02623,carnitine O-palmitoyltransferase (pentadecanoylcarnitine)
+16614889,3,MAR02625,carnitine O-acetyltransferase (pentadecanoylcarnitine)
+16614889,3,MAR02800,carnitine O-acetyltransferase (pentadecanoylcarnitine)
+16712299,3,MAR02654,carnitine O-palmitoyltransferase (stearo
+16712299,3,MAR02656,carnitine O-acetyltransferase (stearoylc
+16712299,3,MAR02819,carnitine O-acetyltransferase (stearoylc
+16727470,3,MAR02648,carnitine O-palmitoyltransferase ((10Z)-heptadecenoyl-CoA)
+16727470,3,MAR02650,carnitine O-acetyltransferase ((10Z)-heptadecenoyl-CoA)
+16727470,3,MAR02814,carnitine O-acetyltransferase ((10Z)-heptadecenoyl-CoA)
+2195,2,MAR03070,acyl-CoA oxidase (eicosanoyl-CoA)
+2195,2,MAR03111,medium-chain acyl-CoA dehydrogenase (eic
+15467,2,MAR06623,thymidine kinase (deoxyuridine)
+15467,2,MAR06624,thymidine kinase (deoxyuridine)
+31334,2,MAR04835,"2,5-diaminopyrimidine nucleoside triphos"
+31334,2,MAR04836,"2,5-diaminopyrimidine nucleoside triphos"
+55021,2,MAR06978,"signal peptidase I ([protein]-N6,N6,N6-t"
+55021,2,MAR08029,"signal peptidase I ([protein]-N6,N6,N6-t"
+65237,2,MAR04539,4a-hydroxytetrahydrobiopterin dehydratas
+65237,2,MAR04540,4a-hydroxytetrahydrobiopterin dehydratas
+85519,2,MAR03097,Hexanoyl-CoA:acetyl-CoA C-acyltransferas
+85519,2,MAR03153,Hexanoyl-CoA:acetyl-CoA C-acyltransferas
+100731,2,MAR00421,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+100731,2,MAR03000,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+113861,2,MAR04543,4a-hydroxytetrahydrobiopterin hydro-lyas
+113861,2,MAR04544,4a-hydroxytetrahydrobiopterin hydro-lyas
+173563,2,MAR00848,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+173563,2,MAR08178,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+176366,2,MAR00377,long-chain-fatty-acid-CoA ligase (DHA)
+176366,2,MAR02988,long-chain-fatty-acid-CoA ligase (DHA)
+179978,2,MAR03623,enoyl-CoA hydratase (3(S)-hydroxy-cis-9-
+179978,2,MAR03624,ELOVL fatty acid elongase (3(S)-hydroxy-
+191475,2,MAR03073,acetyl-CoA C-acyltransferase (3-oxoeicos
+191475,2,MAR03114,acetyl-CoA C-acyltransferase (3-oxoeicos
+199346,2,MAR00040,3- (4-Hydroxyphenyl-)Lactate Formation
+199346,2,MAR06782,aromatic 2-oxoacid reductase (4-hydroxyp
+202378,2,MAR03133,Quinine 3-Monooxygenase
+202378,2,MAR03134,Quinine 3-Monooxygenase
+228140,2,MAR06675,retinal dehydrogenase (13-cis-retinal)
+228140,2,MAR06676,retinal dehydrogenase (13-cis-retinal)
+229634,2,MAR08450,UMP/CMP kinase (dCDP)
+229634,2,MAR08451,cytidine/uridine monophosphate kinase (d
+237774,2,MAR04525,UDP-N-acetyl-D-glucosamine 2-epimerase
+237774,2,MAR04526,UDP-N-acetyl-D-glucosamine 2-epimerase
+245210,2,MAR20081,MAR20081
+245210,2,MAR20082,MAR20082
+296621,2,MAR08465,cytidine/uridine monophosphate kinase (C
+296621,2,MAR08466,cytidine/uridine monophosphate kinase (C
+304607,2,MAR03545,Steryl-ester acylhydrolase
+304607,2,MAR03691,Steryl-ester acylhydrolase
+330963,2,MAR03082,acyl-CoA oxidase (myristoyl-CoA)
+330963,2,MAR03128,tetradecanoyl-CoA:electron-transfer flav
+385186,2,MAR02544,arachidonate 5-lipoxygenase (EPA)
+385186,2,MAR02565,arachidonate 5-lipoxygenase (EPA)
+390139,2,MAR00327,long-chain-fatty-acid-CoA ligase (tricos
+390139,2,MAR02976,long-chain-fatty-acid-CoA ligase (tricos
+423825,2,MAR01372,"D-Glucuronolactone:NAD+ Oxidoreductase, "
+423825,2,MAR08349,D-Glucuronolactone:NAD+ oxidoreductase
+430253,2,MAR01787,26-hydroxycholesterol oxidation
+430253,2,MAR03259,N-acyl-aliphatic-L-amino acid amidohydro
+430883,2,MAR04338,Formate:tetrahydrofolate ligase (ADP-forming)
+430883,2,MAR04340,Formate:tetrahydrofolate ligase (ADP-forming)
+466239,2,MAR00860,"N-acetyl-beta-D-glucosaminide beta-(1,3)"
+466239,2,MAR08276,"beta-1,3-galactosyltransferase (lc3Cer)"
+470270,2,MAR05179,"Fatty Acid Beta Oxidation (C14->C12), Mi"
+470270,2,MAR05180,"Fatty Acid Beta Oxidation (C14->C12), Pe"
+481678,2,MAR12191,UDP-Glucuronosyltransferase (UGT) cytoso
+481678,2,MAR12192,UDP-Glucuronosyltransferase (UGT) ER (de
+497084,2,MAR12246,UDP-Glucuronosyltransferase (UGT) cytoso
+497084,2,MAR12247,UDP-Glucuronosyltransferase (UGT) (hyoch
+542693,2,MAR06478,leukotriene-B4 20-monooxygenase (13-hydr
+542693,2,MAR06479,leukotriene-B4 20-monooxygenase (13-hydr
+572718,2,MAR00345,long-chain-fatty-acid-CoA ligase (ximeni
+572718,2,MAR02980,long-chain-fatty-acid-CoA ligase (ximeni
+578054,2,MAR00048,4-Hydroxybenzoate Formation
+578054,2,MAR06786,4-Hydroxybenzoyl-CoA hydrolase
+630181,2,MAR02877,"carnitine O-palmitoyltransferase (12,15,18,21-tetracosatetraenoyl-CoA)"
+630181,2,MAR02879,"carnitine O-acetyltransferase (12,15,18,21-tetracosatetraenoyl-CoA)"
+638835,2,MAR01037,"arachidonate 12-lipoxygenase, 12S type ("
+638835,2,MAR01039,"arachidonate 12-lipoxygenase, 12S type ("
+640275,2,MAR01102,carbonyl reductase (NADPH) (leukotriene 
+640275,2,MAR01105,carbonyl reductase (NADPH) (leukotriene 
+652167,2,MAR02415,very-long-chain 3-oxoacyl-CoA synthase (
+652167,2,MAR03494,ELOVL fatty acid elongase (dihomo-gamma-
+658984,2,MAR04201,methanol:hydrogen-peroxide oxidoreductas
+658984,2,MAR08752,peroxidase (methanol)
+668010,2,MAR03224,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+668010,2,MAR03340,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+692249,2,MAR02088,"peroxidase (17beta-estradiol-3,4-semiqui"
+692249,2,MAR02089,"peroxidase (17beta-estradiol-3,4-semiqui"
+695938,2,MAR07256,Dolichyl-diphosphate phosphohydrolase
+695938,2,MAR08691,Dolichyl-diphosphate phosphohydrolase
+717846,2,MAR02930,carnitine O-palmitoyltransferase
+717846,2,MAR02932,"carnitine O-acetyltransferase ((6Z,9Z,12"
+720575,2,MAR01812,"Alpha, Alpha-Trehalase"
+720575,2,MAR04837,"alpha,alpha-trehalose glucohydrolase"
+794387,2,MAR07187,phosphatidylinositol glycan anchor biosy
+794387,2,MAR08381,phosphatidylinositol glycan anchor biosy
+818610,2,MAR04139,(S)-malate:NAD+ oxidoreductase
+818610,2,MAR04141,(S)-malate:NAD+ oxidoreductase
+836206,2,MAR08139,gamma-glutamyl hydrolase (heptaglutamyl-folate(DHF))
+836206,2,MAR08140,gamma-glutamyl hydrolase (heptaglutamyl-folate(DHF))
+871971,2,MAR04020,ATP:GMP phosphotransferase
+871971,2,MAR04135,ATP:GMP phosphotransferase
+900703,2,MAR03585,Steryl-ester acylhydrolase
+900703,2,MAR03731,Steryl-ester acylhydrolase
+912850,2,MAR04984,"Fatty Acid Beta Oxidation (C10:2->C8:1),"
+912850,2,MAR04987,"Fatty Acid Beta Oxidation (C10:2->C8:1),"
+917674,2,MAR03043,Carboxypeptidase A
+917674,2,MAR09482,carboxypeptidase A (kinetensin)
+944200,2,MAR04160,"GTP 7,8-8,9-dihydrolase"
+944200,2,MAR04162,"GTP 7,8-8,9-dihydrolase"
+956783,2,MAR03390,leukotriene-B4 20-monooxygenase ((2R)-pr
+956783,2,MAR03493,solute carrier ((2R)-pristanic acid)
+957012,2,MAR03236,3-hydroxyacyl-CoA dehydrogenase (cis-(3S
+957012,2,MAR03352,3-hydroxyacyl-CoA dehydrogenase (cis-(3S
+982532,2,MAR06476,leukotriene-B4 20-monooxygenase (alpha-t
+982532,2,MAR06477,leukotriene-B4 20-monooxygenase (alpha-t
+1011998,2,MAR00822,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+1011998,2,MAR08171,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+1056317,2,MAR02326,hydroxysteroid 17-beta dehydrogenase (3-
+1056317,2,MAR03615,ELOVL fatty acid elongase (3-oxo-cis-15-
+1059933,2,MAR03557,Steryl-ester acylhydrolase
+1059933,2,MAR03703,Steryl-ester acylhydrolase
+1152966,2,MAR02426,hydroxysteroid 17-beta dehydrogenase (3-
+1152966,2,MAR03487,ELOVL fatty acid elongase (3-oxoeicosa-c
+1155633,2,MAR01817,cytochrome P450 (5beta-cholestane-3alpha
+1155633,2,MAR02933,Quinine 3-Monooxygenase
+1174901,2,MAR05312,Fatty Acid Beta Oxidation (C16:5->C16:4)
+1174901,2,MAR05321,Fatty Acid Beta Oxidation (C16:5->C16:4)
+1192257,2,MAR01116,"carbonyl reductase (NADPH) (12-oxo-10,11"
+1192257,2,MAR01117,"carbonyl reductase (NADPH) (12-oxo-10,11"
+1193568,2,MAR02421,very-long-chain enoyl-CoA reductase
+1193568,2,MAR03497,"ELOVL fatty acid elongase (trans,cis,cis"
+1203261,2,MAR02499,hydroxysteroid 17-beta dehydrogenase
+1203261,2,MAR03417,ELOVL fatty acid elongase (3-oxo-all-cis
+1224994,2,MAR08794,Phenylacetate:CoA ligase
+1224994,2,MAR11295,"phenylacetate-CoA ligase, mitochondrial"
+1225061,2,MAR04786,L-erythro-4-hydroxyglutamate:2-oxoglutar
+1225061,2,MAR11399,L-Erythro-4-Hydroxyglutamate:2-Oxoglutar
+1272315,2,MAR07142,NAD+ glycohydrolase
+1272315,2,MAR07143,NAD+ glycohydrolase
+1279250,2,MAR02319,very-long-chain (3R)-3-hydroxyacyl-CoA d
+1279250,2,MAR03611,ELOVL fatty acid elongase (3(S)-hydroxy-
+1282587,2,MAR08467,cytidine/uridine monophosphate kinase (C
+1282587,2,MAR08468,cytidine/uridine monophosphate kinase (C
+1305896,2,MAR01470,"squalene,NADPH-hemoprotein:oxygen oxidor"
+1305896,2,MAR01714,"Squalene Epoxidase, Endoplasmic Reticula"
+1363610,2,MAR01578,Cholesterol Monooxygenase
+1363610,2,MAR01781,cholesterol 25-hydroxylase (cholesterol)
+1423602,2,MAR05242,Fatty Acid Beta Oxidation (C16:4->C14:3)
+1423602,2,MAR05256,Fatty Acid Beta Oxidation (C16:4->C14:3)
+1432625,2,MAR01523,N4-Acetylaminobutanal:NAD+ Oxidoreductas
+1432625,2,MAR08605,N4-Acetylaminobutanal:NAD+ oxidoreductas
+1492480,2,MAR00289,long-chain-fatty-acid-CoA ligase ((13Z)-
+1492480,2,MAR02968,long-chain-fatty-acid-CoA ligase ((13Z)-
+1526335,2,MAR01804,cytochrome P450 (5beta-cholestane-3alpha
+1526335,2,MAR01805,cytochrome P450 (5beta-cholestane-3alpha
+1566156,2,MAR03246,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+1566156,2,MAR03362,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+1579211,2,MAR02810,"long-chain-acyl-CoA dehydrogenase (cis,c"
+1579211,2,MAR03284,medium-chain acyl-CoA dehydrogenase (cis
+1593033,2,MAR00924,D-galactosyl-N-acylsphingosine to digala
+1593033,2,MAR00925,D-galactosyl-N-acylsphingosine to digala
+1653515,2,MAR08224,solute carrier (acetyl-CoA)
+1653515,2,MAR08226,solute carrier (acetyl-CoA)
+1653705,2,MAR00794,3beta-Hydroxyandrost-5-en-17-one 3-sulfa
+1653705,2,MAR07952,3beta-Hydroxyandrost-5-en-17-one 3-sulfa
+1662513,2,MAR03572,Steryl-ester acylhydrolase
+1662513,2,MAR03718,Steryl-ester acylhydrolase
+1671467,2,MAR06612,deoxythymidylate kinase (dADP)
+1671467,2,MAR06613,deoxythymidylate kinase (dADP)
+1696479,2,MAR01616,"Phenylalanine Transaminase, Mitochondria"
+1696479,2,MAR06725,L-Phenylalanine:2-oxoglutarate aminotran
+1775967,2,MAR04002,ATP:AMP phosphotransferase
+1775967,2,MAR04004,ATP:AMP phosphotransferase
+1784654,2,MAR00746,3-sn-phosphatidate phosphohydrolase
+1784654,2,MAR08233,3-sn-phosphatidate phosphohydrolase
+1798023,2,MAR03583,Steryl-ester acylhydrolase
+1798023,2,MAR03729,Steryl-ester acylhydrolase
+1800136,2,MAR06441,leukotriene-B4 20-monooxygenase (gamma-t
+1800136,2,MAR06442,leukotriene-B4 20-monooxygenase (gamma-t
+1804785,2,MAR03871,ATP:dephospho-CoA 3'-phosphotransferase
+1804785,2,MAR04058,ATP:dephospho-CoA 3'-phosphotransferase
+1812389,2,MAR01970,"steroid Delta-isomerase (5-androstene-3,"
+1812389,2,MAR01971,"steroid Delta-isomerase (5-androstene-3,"
+1823036,2,MAR03967,cytidine/uridine monophosphate kinase (C
+1823036,2,MAR08464,cytidine/uridine monophosphate kinase (C
+1824656,2,MAR03931,NADPH:oxidized-thioredoxin oxidoreductas
+1824656,2,MAR08482,NADPH:oxidized-thioredoxin oxidoreductas
+1847904,2,MAR06700,cytochrome P450 (retinoate)
+1847904,2,MAR06701,cytochrome P450 (retinoate)
+1854640,2,MAR09573,glucuronosyltransferase (4-hydroxy-all-t
+1854640,2,MAR09574,glucuronosyltransferase (4-hydroxy-all-t
+1869600,2,MAR06563,"ATP:1D-myo-inositol-1,4,5-trisphosphate "
+1869600,2,MAR08805,"ATP:1D-myo-inositol-1,4,5-trisphosphate "
+1883229,2,MAR03588,Steryl-ester acylhydrolase
+1883229,2,MAR03734,Steryl-ester acylhydrolase
+1884959,2,MAR01013,"arachidonate 5-lipoxygenase (14,15-DiHET"
+1884959,2,MAR01014,"arachidonate 5-lipoxygenase (14,15-DiHET"
+1901285,2,MAR06768,L-tyrosine:2-oxoglutarate aminotransfera
+1901285,2,MAR06780,L-tyrosine:2-oxoglutarate aminotransfera
+1947907,2,MAR01137,cytochrome P450 (20-OH-LTB4)
+1947907,2,MAR01138,cytochrome P450 (20-OH-LTB4)
+1960397,2,MAR01841,bile acid-CoA:amino acid N-acyltransferase (lithocholate)
+1960397,2,MAR01842,bile acid-CoA:amino acid N-acyltransferase (lithocholate)
+1975170,2,MAR02309,very-long-chain (3R)-3-hydroxyacyl-CoA d
+1975170,2,MAR03608,ELOVL fatty acid elongase (3(S)-hydroxy-
+2015527,2,MAR02482,very-long-chain enoyl-CoA reductase (eic
+2015527,2,MAR03395,"ELOVL fatty acid elongase (eicosa-(2E,8Z"
+2033119,2,MAR20016,MAR20016
+2033119,2,MAR20048,MAR20048
+2036189,2,MAR01088,N-acetyl-LTE4 to leukotriene E4 conversi
+2036189,2,MAR01091,N-acetyl-LTE4 to leukotriene E4 conversi
+2081498,2,MAR02195,3-Methoxy-4-Hydroxyphenylacetaldehyde:NA
+2081498,2,MAR06767,3-Methoxy-4-hydroxyphenylacetaldehyde:NA
+2092588,2,MAR03476,Formyl-CoA hydrolase
+2092588,2,MAR03477,Formyl-CoA hydrolase
+2104048,2,MAR01255,hydroxyacyl-CoA dehydrogenase trifunctio
+2104048,2,MAR01256,enoyl-CoA hydratase ((18E)-20-oxo-20-CoA
+2168340,2,MAR12174,UDP-Glucuronosyltransferase (UGT) cytoso
+2168340,2,MAR12175,UDP-Glucuronosyltransferase (UGT) (cheno
+2172080,2,MAR06666,glucuronosyltransferase (9-cis-retinoate
+2172080,2,MAR06667,glucuronosyltransferase (9-cis-retinoate
+2173551,2,MAR00259,long-chain-fatty-acid-CoA ligase (cis-va
+2173551,2,MAR02963,long-chain-fatty-acid-CoA ligase (cis-va
+2186811,2,MAR02666,carnitine O-palmitoyltransferase ((9E)-octadecenoyl-CoA)
+2186811,2,MAR02668,carnitine O-acetyltransferase ((9E)-octadecenoyl-CoA)
+2224824,2,MAR03260,hydroxyacyl-CoA dehydrogenase trifunctio
+2224824,2,MAR03370,"enoyl-CoA hydratase (trans,cis-myristo-2"
+2272872,2,MAR06677,cytochrome P450 (13-cis-retinal)
+2272872,2,MAR06678,cytochrome P450 (13-cis-retinal)
+2284939,2,MAR04618,2'-deoxyuridine 5'-triphosphate:oxydized
+2284939,2,MAR06622,2'-deoxyuridine 5'-triphosphate:oxydized
+2344702,2,MAR02524,hydroxysteroid 17-beta dehydrogenase
+2344702,2,MAR03518,ELOVL fatty acid elongase (3-oxo-tetraco
+2391830,2,MAR03283,"acetyl-CoA C-acyltransferase (3-oxo-cis,"
+2391830,2,MAR03310,"acetyl-CoA C-acyltransferase (3-oxo-cis,"
+2393288,2,MAR04039,Unspecific Monooxygenase
+2393288,2,MAR04041,Unspecific Monooxygenase
+2397362,2,MAR12065,"Sialidase, Lysosomal (Neu1)"
+2397362,2,MAR12070,"Sialidase, Plasma Membrane (Neu3)"
+2422153,2,MAR01835,bile acid-CoA:amino acid N-acyltransferase (taurodeoxycholate)
+2422153,2,MAR01837,bile acid-CoA:amino acid N-acyltransferase (taurodeoxycholate)
+2441016,2,MAR02455,unspecific monooxygenase (linoleate)
+2441016,2,MAR02456,unspecific monooxygenase (linoleate)
+2477752,2,MAR06574,"ATP:1D-myo-inositol-1,4,5,6-tetrakisphos"
+2477752,2,MAR08803,"ATP:1D-myo-inositol-1,4,5,6-tetrakisphos"
+2497652,2,MAR02053,unspecific monooxygenase (estrone)
+2497652,2,MAR02054,unspecific monooxygenase (estrone)
+2507434,2,MAR00044,3-Hydroxypropionate Dehydrogenase
+2507434,2,MAR04497,3-hydroxypropanoate:NAD+ oxidoreductase
+2519536,2,MAR00401,long-chain-fatty-acid-CoA ligase (gamma-
+2519536,2,MAR02992,long-chain-fatty-acid-CoA ligase (gamma-
+2533717,2,MAR04694,deoxyadenosine aminohydrolase
+2533717,2,MAR08473,deoxyadenosine aminohydrolase
+2535071,2,MAR03546,Steryl-ester acylhydrolase
+2535071,2,MAR03692,Steryl-ester acylhydrolase
+2535550,2,MAR02197,3-Methoxy-4-Hydroxyphenylglycolaldehyde:
+2535550,2,MAR06749,3-Methoxy-4-hydroxyphenylglycolaldehyde:
+2562291,2,MAR02586,arachidonate 5-lipoxygenase ((18R)-HEPE)
+2562291,2,MAR03900,Arachidonate 5-Lipoxygenase
+2565126,2,MAR00857,"beta-1,3-galactosyltransferase (GT2)"
+2565126,2,MAR08187,"beta-1,3-galactosyltransferase (GT2)"
+2573715,2,MAR00337,long-chain-fatty-acid-CoA ligase (nervon
+2573715,2,MAR02978,long-chain-fatty-acid-CoA ligase (nervon
+2593417,2,MAR04015,Methionine Synthase
+2593417,2,MAR06822,noradrenaline to noradrenochrome convers
+2616633,2,MAR07702,glycolate:NADP+ oxidoreductase
+2616633,2,MAR08779,glycolate:NADP+ oxidoreductase
+2617549,2,MAR06854,"3,3',5-triiodo-L-thyronine,iodide:accept"
+2617549,2,MAR06855,"3,3',5-triiodo-L-thyronine,iodide:accept"
+2632262,2,MAR00101,C-14 Sterol Reductase
+2632262,2,MAR01484,"4,4-dimethyl-5a-cholesta-8,24-dien-3b-ol"
+2638285,2,MAR02765,Kynurenine-Oxoglutarate Transaminase
+2638285,2,MAR04222,kynurenine-oxoglutarate transaminase (AK
+2640772,2,MAR01044,"Ferrochelatase, Mitochondrial"
+2640772,2,MAR11406,"Ferrochelatase, Cytosol"
+2735695,2,MAR02906,carnitine O-palmitoyltransferase (tricos
+2735695,2,MAR02908,carnitine O-acetyltransferase (tricosano
+2751371,2,MAR08448,cytidine/uridine monophosphate kinase (C
+2751371,2,MAR08449,cytidine/uridine monophosphate kinase (C
+2762369,2,MAR04623,"6-Phospho-D-glucono-1,5-lactone lactonoh"
+2762369,2,MAR04625,"6-Phospho-D-glucono-1,5-lactone lactonoh"
+2779395,2,MAR04755,protoporphyrinogen-IX:oxygen oxidoreduct
+2779395,2,MAR04757,protoporphyrinogen-IX:oxygen oxidoreduct
+2779720,2,MAR08068,(R)-2-hydroxyacid:NAD+ oxidoreductase
+2779720,2,MAR08069,(R)-2-hydroxyacid:NAD+ oxidoreductase
+2787062,2,MAR20075,MAR20075
+2787062,2,MAR20076,MAR20076
+2793252,2,MAR00074,"Proteolysis of ApoC-Lys-Biotin, Mitochon"
+2793252,2,MAR07671,apoC-lys_btn hydrolysis
+2802896,2,MAR05306,"Isomerization (C16:4), Mitochondrial"
+2802896,2,MAR05309,"Isomerization (C16:4), Peroxisomal"
+2812564,2,MAR01655,"propenoyl-CoA hydrolase, peroxisomal"
+2812564,2,MAR04735,3-Hydroxypropionyl-CoA hydro-lyase
+2905157,2,MAR08610,L-proline:(acceptor) oxidoreductase
+2905157,2,MAR08611,L-proline:(acceptor) oxidoreductase
+2927782,2,MAR03225,acetyl-CoA C-acyltransferase (3-oxo-11-c
+2927782,2,MAR03341,acetyl-CoA C-acyltransferase (3-oxo-11-c
+2938957,2,MAR08129,gamma-glutamyl hydrolase (pentaglutamyl-folate(DHF))
+2938957,2,MAR08130,gamma-glutamyl hydrolase (pentaglutamyl-folate(DHF))
+2953622,2,MAR03744,L-Valine:2-oxoglutarate aminotransferase
+2953622,2,MAR03747,L-Valine:2-oxoglutarate aminotransferase
+2972367,2,MAR05177,Fatty Acid Beta Oxidation (C14:3->C12:3)
+2972367,2,MAR05178,Fatty Acid Beta Oxidation (C14:3->C12:3)
+2982591,2,MAR06549,"1-phosphatidyl-1D-myo-inositol-3,4-bisph"
+2982591,2,MAR08810,"1-phosphatidyl-1D-myo-inositol-3,4-bisph"
+2996716,2,MAR12167,UDP-Glucuronosyltransferase (UGT) cytoso
+2996716,2,MAR12168,UDP-Glucuronosyltransferase (UGT) (choli
+2998483,2,MAR02457,unspecific monooxygenase (linoleate)
+2998483,2,MAR02458,unspecific monooxygenase (linoleate)
+3010477,2,MAR02583,prostaglandin-E synthase (PGH3)
+3010477,2,MAR02584,prostaglandin-E synthase (PGH3)
+3035962,2,MAR05001,Fatty Acid Beta Oxidation (C10:3->C10:2)
+3035962,2,MAR05017,Fatty Acid Beta Oxidation (C10:3->C10:2)
+3040023,2,MAR00757,Beta Oxidation of Long Chain Fatty Acid
+3040023,2,MAR00759,Beta Oxidation of Long Chain Fatty Acid
+3069941,2,MAR12272,UDP-Glucuronosyltransferase (UGT) cytoso
+3069941,2,MAR12273,UDP-Glucuronosyltransferase (UGT) ER (li
+3119994,2,MAR03582,Steryl-ester acylhydrolase
+3119994,2,MAR03728,Steryl-ester acylhydrolase
+3127424,2,MAR02191,3-hydroxyoctadecanoyl-CoA:NADP+ oxidored
+3127424,2,MAR02521,ELOVL fatty acid elongase (3-oxooctadeca
+3128189,2,MAR01569,Oxysterol 7-Alpha-Hydroxylase
+3128189,2,MAR01737,cytochrome P450 (24-hydroxycholesterol)
+3148457,2,MAR05104,Formation of Dodecanedioyl Carnitine
+3148457,2,MAR05106,Production of Dodecanedioyl Carnitine
+3150996,2,MAR04088,Unspecific Monooxygenase
+3150996,2,MAR04090,Unspecific Monooxygenase
+3177341,2,MAR04072,S-Adenosyl-L-methionine:DNA (cytosine-5-
+3177341,2,MAR08641,S-adenosyl-L-methionine:DNA (cytosine-5-
+3189443,2,MAR01059,leukotriene-B4 20-monooxygenase (hepoxil
+3189443,2,MAR01061,leukotriene-B4 20-monooxygenase (hepoxil
+3238797,2,MAR03816,L-Arginine amidinohydrolase
+3238797,2,MAR08426,L-Arginine amidinohydrolase
+3249766,2,MAR03287,"acetyl-CoA C-acyltransferase (3-oxo-cis,"
+3249766,2,MAR03315,"acetyl-CoA C-acyltransferase (3-oxo-cis,"
+3260997,2,MAR01973,testosterone:NADP+ 17-oxidoreductase
+3260997,2,MAR01974,testosterone:NADP+ 17-oxidoreductase
+3263564,2,MAR02046,cytochrome P450 (estradiol-17beta)
+3263564,2,MAR02047,cytochrome P450 (estradiol-17beta)
+3267266,2,MAR02641,angiotensin I converting enzyme (neocasomorphin)
+3267266,2,MAR09479,angiotensin I converting enzyme (neocasomorphin)
+3275262,2,MAR03081,myristoyl-CoA:acetylCoA C-myristoyltransferase
+3275262,2,MAR03125,myristoyl-CoA:acetylCoA C-myristoyltransferase
+3285920,2,MAR00471,Endo-Beta-N-Acetylglucosaminidase
+3285920,2,MAR07575,endo-beta-N-acetylglucosaminidase (de-Fu
+3295275,2,MAR02493,very-long-chain enoyl-CoA reductase
+3295275,2,MAR03403,"ELOVL fatty acid elongase (2-trans-7,10,"
+3299962,2,MAR03990,Carbonyl Reductase (NADPH)
+3299962,2,MAR03994,Carbonyl Reductase (NADPH)
+3361286,2,MAR02520,very-long-chain enoyl-CoA reductase (tra
+3361286,2,MAR03499,ELOVL fatty acid elongase
+3392078,2,MAR03237,acetyl-CoA C-acyltransferase (3-oxomyris
+3392078,2,MAR03353,acetyl-CoA C-acyltransferase (3-oxomyris
+3418569,2,MAR02818,long-chain-acyl-CoA dehydrogenase (4-cis
+3418569,2,MAR03294,medium-chain acyl-CoA dehydrogenase (4-c
+3423612,2,MAR00369,"long-chain-fatty-acid-CoA ligase ((9Z,12"
+3423612,2,MAR02986,"long-chain-fatty-acid-CoA ligase ((9Z,12"
+3433949,2,MAR01792,cytochrome P450 (3beta-hydroxy-5-cholest
+3433949,2,MAR02939,quinine 3-monooxygenase (3beta-hydroxy-5
+3441283,2,MAR06956,"N1,N12-diacetylspermine to N1-acetylsper"
+3441283,2,MAR06957,"N1,N12-diacetylspermine to N1-acetylsper"
+3452442,2,MAR02475,very-long-chain 3-oxoacyl-CoA synthase (
+3452442,2,MAR03399,"microsomal epoxide hydrolase ((6Z,9Z,12Z"
+3484338,2,MAR03420,Delta14-Sterol Reductase
+3484338,2,MAR03434,Delta14-Sterol Reductase
+3491685,2,MAR07654,5-Diphosphoinositol pentakisphosphate di
+3491685,2,MAR07655,5-Diphosphoinositol pentakisphosphate di
+3534609,2,MAR06653,cytochrome P450 (9-cis-retinal)
+3534609,2,MAR06654,cytochrome P450 (9-cis-retinal)
+3569826,2,MAR06941,primary-amine oxidase (spermidine)
+3569826,2,MAR06942,primary-amine oxidase (spermidine)
+3607338,2,MAR00906,glucosaminyl (N-acetyl) transferase 2 (I
+3607338,2,MAR08316,glucosaminyl (N-acetyl) transferase 2 (I
+3627359,2,MAR03589,Steryl-ester acylhydrolase
+3627359,2,MAR03735,Steryl-ester acylhydrolase
+3659432,2,MAR00947,unspecific monooxygenase (arachidonate)
+3659432,2,MAR00948,unspecific monooxygenase (arachidonate)
+3703442,2,MAR01445,ATP:(R)-mevalonate 5-phosphotransferase
+3703442,2,MAR01520,Mevalonate Kinase (ATP)
+3723309,2,MAR04423,Putrescine:oxygen oxidoreductase (deamin
+3723309,2,MAR08606,Putrescine:oxygen oxidoreductase (deamin
+3773443,2,MAR00357,long-chain-fatty-acid-CoA ligase (omega-
+3773443,2,MAR02983,long-chain-fatty-acid-CoA ligase (omega-
+3785571,2,MAR03077,acetyl-CoA C-acyltransferase (3-oxooctad
+3785571,2,MAR03118,acetyl-CoA C-acyltransferase (3-oxooctad
+3786054,2,MAR04014,"adenosine 3',5'-phosphate 5'-nucleotidoh"
+3786054,2,MAR08087,"adenosine 3',5'-phosphate 5'-nucleotidoh"
+3814353,2,MAR06573,"ATP:1D-myo-inositol-1,4,5-trisphosphate "
+3814353,2,MAR08804,"ATP:1D-myo-inositol-1,4,5-trisphosphate "
+3821756,2,MAR01474,"Lactaldehyde Dehydrogenase, Mitochondria"
+3821756,2,MAR08504,(R)-Lactaldehyde:NAD+ 2-oxidoreductase
+3861296,2,MAR04165,tetrahydrobiopterin:NADP+ oxidoreductase
+3861296,2,MAR08739,tetrahydrobiopterin:NADP+ oxidoreductase
+3863557,2,MAR04351,D-ribose-5-phosphate aldose-ketose-isome
+3863557,2,MAR04352,D-ribose-5-phosphate aldose-ketose-isome
+3898203,2,MAR04017,Unspecific Monooxygenase
+3898203,2,MAR04019,Unspecific Monooxygenase
+3937653,2,MAR00433,"long-chain-fatty-acid-CoA ligase ((13Z,1"
+3937653,2,MAR03003,"long-chain-fatty-acid-CoA ligase ((13Z,1"
+3938287,2,MAR03776,"Phosphatidylinositol-3,4,5-Trisphosphate"
+3938287,2,MAR06558,"phosphatidylinositol-3,4,5-trisphosphate"
+3956916,2,MAR08456,cytidine/uridine monophosphate kinase (d
+3956916,2,MAR08457,cytidine/uridine monophosphate kinase (d
+4010912,2,MAR07919,gamma-glutamyl hydrolase (10-formyl-THF-glu(6))
+4010912,2,MAR07921,gamma-glutamyl hydrolase (10-formyl-THF-glu(6))
+4013379,2,MAR06668,glucuronosyltransferase (4-oxo-9-cis-ret
+4013379,2,MAR06669,glucuronosyltransferase (4-oxo-9-cis-ret
+4052356,2,MAR02324,very-long-chain 3-oxoacyl-CoA synthase (
+4052356,2,MAR03606,ELOVL fatty acid elongase ((13Z)-docosen
+4056278,2,MAR00245,long-chain-fatty-acid-CoA ligase (9-hept
+4056278,2,MAR02956,long-chain-fatty-acid-CoA ligase (9-hept
+4078795,2,MAR02632,Glucuronosyltransferase
+4078795,2,MAR02637,Glucuronosyltransferase
+4099207,2,MAR00114,C-3 Sterol Dehydrogenase (4-Methylzymosterol)
+4099207,2,MAR01496,NAD(P) dependent steroid dehydrogenase-like
+4121408,2,MAR03547,Steryl-ester acylhydrolase
+4121408,2,MAR03693,Steryl-ester acylhydrolase
+4209121,2,MAR03457,"2,4-dienoyl-CoA reductase ((2E,4Z,7Z,10Z"
+4209121,2,MAR03471,"2,4-dienoyl-CoA reductase ((2E,4Z,7Z,10Z"
+4252687,2,MAR00456,D-Glyceraldehyde:NAD+ oxidoreductase
+4252687,2,MAR00459,D-Glyceraldehyde:NAD+ oxidoreductase
+4340457,2,MAR20079,MAR20079
+4340457,2,MAR20080,MAR20080
+4377292,2,MAR03222,medium-chain acyl-CoA dehydrogenase ((11
+4377292,2,MAR03338,acyl-CoA oxidase ((11Z)-eicosenoyl-CoA)
+4393310,2,MAR01210,acetyl-CoA C-acyltransferase
+4393310,2,MAR01211,acetyl-CoA C-acyltransferase
+4396433,2,MAR01392,prostaglandin-endoperoxide synthase (pro
+4396433,2,MAR01393,prostaglandin-endoperoxide synthase (pro
+4401639,2,MAR03090,acyl-CoA oxidase (decanoyl-CoA)
+4401639,2,MAR03142,decanoyl-CoA:electron-transfer flavoprot
+4402957,2,MAR03578,Steryl-ester acylhydrolase
+4402957,2,MAR03724,Steryl-ester acylhydrolase
+4444913,2,MAR02328,very-long-chain (3R)-3-hydroxyacyl-CoA d
+4444913,2,MAR03616,ELOVL fatty acid elongase (3(S)-hydroxy-
+4466169,2,MAR03245,hydroxyacyl-CoA dehydrogenase trifunctio
+4466169,2,MAR03361,"enoyl-CoA hydratase (trans,cis-octadeca-"
+4475463,2,MAR02387,hydroxysteroid 17-beta dehydrogenase
+4475463,2,MAR03451,ELOVL fatty acid elongase (3-oxo-docosa-
+4482062,2,MAR03293,acetyl-CoA C-acyltransferase (3-oxolaur-
+4482062,2,MAR03320,acetyl-CoA C-acyltransferase (3-oxolaur-
+4493237,2,MAR07873,cytidine/uridine monophosphate kinase (d
+4493237,2,MAR07874,cytidine/uridine monophosphate kinase (d
+4494213,2,MAR01276,acetyl-CoA C-acyltransferase
+4494213,2,MAR01277,acetyl-CoA C-acyltransferase
+4500484,2,MAR01570,24-dehydrocholesterol reductase (zymoste
+4500484,2,MAR02337,Delta24-Sterol Reductase
+4501103,2,MAR04009,Flavin-Containing Monooxygenase
+4501103,2,MAR07138,flavin-containing monooxygenase (selenom
+4527701,2,MAR04097,Acetate:CoA ligase (AMP-forming)
+4527701,2,MAR04099,Acetate:CoA ligase (AMP-forming)
+4579650,2,MAR03243,acetyl-CoA C-acyltransferase (3-oxo-13-c
+4579650,2,MAR03359,acetyl-CoA C-acyltransferase (3-oxo-13-c
+4589021,2,MAR03579,Steryl-ester acylhydrolase
+4589021,2,MAR03725,Steryl-ester acylhydrolase
+4591699,2,MAR03244,medium-chain acyl-CoA dehydrogenase (cis
+4591699,2,MAR03360,acyl-CoA oxidase (cis-vaccenoyl-CoA)
+4623892,2,MAR12250,UDP-Glucuronosyltransferase (UGT) cytoso
+4623892,2,MAR12251,UDP-Glucuronosyltransferase (UGT) ER (hy
+4654165,2,MAR09565,"trans-2-Methyl-5-isopropylhexa-2,5-dieno"
+4654165,2,MAR09566,"trans-2-Methyl-5-isopropylhexa-2,5-dieno"
+4655167,2,MAR04408,(S)-malate hydro-lyase (fumarate-forming
+4655167,2,MAR04410,(S)-malate hydro-lyase (fumarate-forming
+4664266,2,MAR02491,very-long-chain (3R)-3-hydroxyacyl-CoA d
+4664266,2,MAR03410,ELOVL fatty acid elongase
+4669753,2,MAR00448,ATP:glycerol 3-phosphotransferase
+4669753,2,MAR00450,ATP:glycerol 3-phosphotransferase
+4698040,2,MAR03555,Steryl-ester acylhydrolase
+4698040,2,MAR03701,Steryl-ester acylhydrolase
+4732458,2,MAR05456,Succ->C4Dcc
+4732458,2,MAR06847,Production of Succinyl Carnitine
+4732879,2,MAR01081,leukotriene C4 synthase (GSH)
+4732879,2,MAR08550,leukotriene C4 synthase (GSH)
+4758428,2,MAR02469,"glucuronosyltransferase (12,13-hydroxyoc"
+4758428,2,MAR02470,"glucuronosyltransferase (12,13-hydroxyoc"
+4826095,2,MAR02378,very-long-chain enoyl-CoA reductase
+4826095,2,MAR03394,"ELOVL fatty acid elongase (trans-2-cis,c"
+4826792,2,MAR08137,gamma-glutamyl hydrolase (hexaglutamyl-folate(THF))
+4826792,2,MAR08138,gamma-glutamyl hydrolase (hexaglutamyl-folate(THF))
+4829266,2,MAR02461,"glucuronosyltransferase (9,10-hydroxyoct"
+4829266,2,MAR02462,"glucuronosyltransferase (9,10-hydroxyoct"
+4835644,2,MAR01660,choloyl-CoA hydrolase
+4835644,2,MAR01663,choloyl-CoA hydrolase
+4854456,2,MAR03223,hydroxyacyl-CoA dehydrogenase trifunctio
+4854456,2,MAR03339,"enoyl-CoA hydratase (trans,cis-2,11-eico"
+4892408,2,MAR01371,"Glycine Hydroxymethyltransferase, Mitochondrial"
+4892408,2,MAR06980,"serine hydroxymethyltransferase (3-hydroxy-N6,N6,N6-trimethyl-L-lysine"
+4925132,2,MAR03101,butanoyl-CoA:acetyl-CoA C-butanoyltransf
+4925132,2,MAR03160,butanoyl-CoA:acetyl-CoA C-butanoyltransf
+4948721,2,MAR02133,"cytochrome P450 (23S,25,26-trihydroxyvit"
+4948721,2,MAR02134,"cytochrome P450 (23S,25,26-trihydroxyvit"
+5045675,2,MAR03447,Delta(3)-Delta(2)-enoyl-CoA isomerase (t
+5045675,2,MAR03462,Delta(3)-Delta(2)-enoyl-CoA isomerase (t
+5062495,2,MAR06464,leukotriene-B4 20-monooxygenase (gamma-t
+5062495,2,MAR06465,leukotriene-B4 20-monooxygenase (gamma-t
+5067735,2,MAR03550,Steryl-ester acylhydrolase
+5067735,2,MAR03696,Steryl-ester acylhydrolase
+5081249,2,MAR07867,cytidine/uridine monophosphate kinase (G
+5081249,2,MAR07868,cytidine/uridine monophosphate kinase (G
+5087811,2,MAR06840,"thyroxine 5'-deiodinase (3,5-diiodo-L-th"
+5087811,2,MAR06841,"thyroxine 5'-deiodinase (3,5-diiodo-L-th"
+5099869,2,MAR00878,4-galactosyl-N-acetylglucosaminide 3-alp
+5099869,2,MAR08326,fucosyltransferase (GDP-L-fucose)
+5109967,2,MAR03480,Phytanate:CoA ligase (AMP-forming)
+5109967,2,MAR03482,Phytanate:CoA ligase (AMP-forming)
+5129588,2,MAR02330,very-long-chain enoyl-CoA reductase (tra
+5129588,2,MAR03617,"ELOVL fatty acid elongase (trans,cis-2,1"
+5144645,2,MAR03104,(S)-3-Hydroxybutanoyl-CoA:NAD+ oxidoredu
+5144645,2,MAR03166,(S)-3-Hydroxybutanoyl-CoA:NAD+ oxidoredu
+5191356,2,MAR03291,acyl-CoA dehydrogenase long chain (trans
+5191356,2,MAR03295,medium-chain acyl-CoA dehydrogenase (tra
+5208812,2,MAR02005,cytochrome P450 (allopregnanolone)
+5208812,2,MAR03038,Steroid 21-Monooxygenase
+5239105,2,MAR04196,L-Glutamine:pyruvate aminotransferase
+5239105,2,MAR04197,L-Glutamine:pyruvate aminotransferase
+5267027,2,MAR02389,very-long-chain (3R)-3-hydroxyacyl-CoA d
+5267027,2,MAR03465,ELOVL fatty acid elongase
+5315547,2,MAR01958,cytochrome P450 (17alpha-hydroxypregnenolone)
+5315547,2,MAR07936,cytochrome P450 (17alpha-hydroxypregnenolone)
+5336556,2,MAR04295,acetyl-CoA:carbon-dioxide ligase (ADP-forming)
+5336556,2,MAR07673,carboxybiotin-carboxyl-carrier-protein:acetyl-CoA carboxytransferase
+5337428,2,MAR08141,gamma-glutamyl hydrolase (heptaglutamyl-folate(THF))
+5337428,2,MAR08142,gamma-glutamyl hydrolase (heptaglutamyl-folate(THF))
+5386682,2,MAR02397,hydroxysteroid 17-beta dehydrogenase
+5386682,2,MAR03474,ELOVL fatty acid elongase (3-oxo-tetraco
+5404026,2,MAR03576,Steryl-ester acylhydrolase
+5404026,2,MAR03722,Steryl-ester acylhydrolase
+5426684,2,MAR00267,long-chain-fatty-acid-CoA ligase (elaidate)
+5426684,2,MAR02961,long-chain-fatty-acid-CoA ligase (elaidate)
+5428168,2,MAR08784,Imidazole acetaldehyde:NAD+ oxidoreducta
+5428168,2,MAR08786,Imidazole acetaldehyde:NAD+ oxidoreducta
+5452640,2,MAR03085,Lauroyl-CoA:acetyl-CoA C-acyltransferase
+5452640,2,MAR03132,Lauroyl-CoA:acetyl-CoA C-acyltransferase
+5477234,2,MAR03439,"ELOVL fatty acid elongase ((7Z,10Z,13Z,1"
+5477234,2,MAR03440,"ELOVL fatty acid elongase ((7Z,10Z,13Z,1"
+5496460,2,MAR04328,L-cysteinylglycine dipeptidase
+5496460,2,MAR04329,L-cysteinylglycine dipeptidase
+5509107,2,MAR03242,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+5509107,2,MAR03358,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+5515847,2,MAR04688,4-aminobutanal:NAD+ 1-oxidoreductase
+5515847,2,MAR04689,4-aminobutanal:NAD+ 1-oxidoreductase
+5528486,2,MAR03088,(S)-3-hydroxydodecanoyl-CoA:NAD+ oxidore
+5528486,2,MAR03137,(S)-3-hydroxydodecanoyl-CoA:NAD+ oxidore
+5555727,2,MAR04632,2'-deoxyadenosine 5'-monophosphate phosp
+5555727,2,MAR08494,2'-deoxyadenosine 5'-monophosphate phosp
+5555754,2,MAR01234,"leukotriene-B4 20-monooxygenase (10,11-d"
+5555754,2,MAR01235,"leukotriene-B4 20-monooxygenase (10,11-d"
+5592123,2,MAR06592,1-phosphatidylinositol-4-phosphate 5-kin
+5592123,2,MAR08811,"1-phosphatidyl-1D-myo-inositol-3,4-bisph"
+5598824,2,MAR08063,3-sulfinoalanine to L-cysteate conversio
+5598824,2,MAR08064,3-sulfinoalanine to L-cysteate conversio
+5618652,2,MAR03071,enoyl-CoA hydratase ((2E)-eicosenoyl-CoA
+5618652,2,MAR03112,hydroxyacyl-CoA dehydrogenase trifunctio
+5641893,2,MAR01820,UDP-Glucuronosyltransferase 1-10 Precurs
+5641893,2,MAR11321,UDP-Glucuronosyltransferase 1-10 Precurs
+5642231,2,MAR06556,"Phosphatidylinositol-3,4,5-trisphosphate"
+5642231,2,MAR08807,"Phosphatidylinositol-3,4,5-trisphosphate"
+5647096,2,MAR02371,very-long-chain 3-oxoacyl-CoA synthase (
+5647096,2,MAR03393,microsomal epoxide hydrolase (gamma-lino
+5648392,2,MAR02022,3beta-hydroxy-Delta(5)-steroid dehydroge
+5648392,2,MAR02024,3beta-hydroxy-Delta(5)-steroid dehydroge
+5682566,2,MAR03091,(S)-Hydroxydecanoyl-CoA hydro-lyase
+5682566,2,MAR03143,(S)-Hydroxydecanoyl-CoA hydro-lyase
+5692676,2,MAR00943,unspecific monooxygenase (arachidonate)
+5692676,2,MAR00944,unspecific monooxygenase (arachidonate)
+5701614,2,MAR03094,acyl-CoA oxidase (octanoyl-CoA)
+5701614,2,MAR03149,octanoyl-CoA:electron-transfer flavoprot
+5735985,2,MAR06657,unspecific monooxygenase (retinoate)
+5735985,2,MAR06658,unspecific monooxygenase (retinoate)
+5741290,2,MAR01508,Lathosterol Oxidase
+5741290,2,MAR01516,"sterol-C5-desaturase (5alpha-cholesta-7,"
+5754663,2,MAR06661,13-cis-retinoate to retinoate conversion
+5754663,2,MAR06662,13-cis-retinoate to retinoate conversion
+5802823,2,MAR00429,"long-chain-fatty-acid-CoA ligase ((11Z,1"
+5802823,2,MAR03002,"long-chain-fatty-acid-CoA ligase ((11Z,1"
+5822566,2,MAR00819,beta-galactosidase (GA1)
+5822566,2,MAR12037,"Beta-Galactosidase, Lysosomal"
+5826551,2,MAR01075,arachidonate 5-lipoxygenase (12(S)-HETE)
+5826551,2,MAR01077,arachidonate 5-lipoxygenase (12(S)-HETE)
+5830934,2,MAR03288,"cis,cis-3,6-Dodecadienoyl-CoA delta3-cis"
+5830934,2,MAR03316,"cis,cis-3,6-Dodecadienoyl-CoA delta3-cis"
+5864141,2,MAR03455,"acetyl-CoA C-acyltransferase ((4Z,7Z,10Z"
+5864141,2,MAR03469,"acetyl-CoA C-acyltransferase ((4Z,7Z,10Z"
+5907136,2,MAR07930,Pregnenolone:NAD+ 3-oxidoreductase
+5907136,2,MAR07931,Pregnenolone:NAD+ 3-oxidoreductase
+5907756,2,MAR03998,ADP phosphohydrolase
+5907756,2,MAR03999,ADP phosphohydrolase
+5968206,2,MAR06681,cytochrome P450 (13-cis-retinoate)
+5968206,2,MAR06682,cytochrome P450 (13-cis-retinoate)
+6004740,2,MAR01967,dehydroepiandrosterone:NAD+ oxidoreducta
+6004740,2,MAR01968,dehydroepiandrosterone:NAD+ oxidoreducta
+6035700,2,MAR08110,folylpolyglutamate synthase (glutamate)
+6035700,2,MAR08117,folylpolyglutamate synthase (glutamate)
+6058573,2,MAR03079,(S)-3-Hydroxyhexadecanoyl-CoA hydro-lyas
+6058573,2,MAR03122,(S)-3-Hydroxyhexadecanoyl-CoA hydro-lyas
+6058863,2,MAR08775,glycolaldehyde:NAD+ oxidoreductase
+6058863,2,MAR08778,glycolaldehyde:NAD+ oxidoreductase
+6063204,2,MAR06702,cytochrome P450 (4-hydroxy-all-trans-ret
+6063204,2,MAR06703,cytochrome P450 (4-hydroxy-all-trans-ret
+6104984,2,MAR06938,diamine N-acetyltransferase (N1-acetylsp
+6104984,2,MAR06939,diamine N-acetyltransferase (N1-acetylsp
+6124271,2,MAR03552,Steryl-ester acylhydrolase
+6124271,2,MAR03700,Steryl-ester acylhydrolase
+6129955,2,MAR02099,"peroxidase (17beta-estradiol-2,3-semiqui"
+6129955,2,MAR02100,"peroxidase (17beta-estradiol-2,3-semiqui"
+6169465,2,MAR03766,"5beta-cholestane-3alpha,7alpha,12alpha,2"
+6169465,2,MAR03768,cytochrome P450 (5beta-cholestane-3alpha
+6186228,2,MAR00417,"long-chain-fatty-acid-CoA ligase ((9Z,12"
+6186228,2,MAR02999,"long-chain-fatty-acid-CoA ligase ((9Z,12"
+6203868,2,MAR02194,octadecanoyl-CoA:NADP+ trans-2-oxidoredu
+6203868,2,MAR02525,anaphase promoting complex ((2E)-octadec
+6217280,2,MAR00323,long-chain-fatty-acid-CoA ligase (cis-ce
+6217280,2,MAR02975,long-chain-fatty-acid-CoA ligase (cis-ce
+6242196,2,MAR02144,"cytochrome P450 (24-oxo-1alpha,25-dihydr"
+6242196,2,MAR02145,"cytochrome P450 (24-oxo-1alpha,25-dihydr"
+6301360,2,MAR03452,medium-chain acyl-CoA dehydrogenase (gam
+6301360,2,MAR03466,acyl-CoA oxidase (gamma-linolenoyl-CoA)
+6321645,2,MAR02210,very-long-chain enoyl-CoA reductase ((2E
+6321645,2,MAR02496,(2E)-docosenoyl-CoA reduction
+6322831,2,MAR01236,leukotriene-B4 20-monooxygenase (20-OH-1
+6322831,2,MAR01237,leukotriene-B4 20-monooxygenase (20-OH-1
+6329169,2,MAR01510,Lathosterol Oxidase
+6329169,2,MAR01558,"lathosterol,ferrocytochrome b5:oxygen ox"
+6346024,2,MAR03093,Octanoyl-CoA:acetyl-CoA C-acyltransferase
+6346024,2,MAR03146,Octanoyl-CoA:acetyl-CoA C-acyltransferase
+6356863,2,MAR01608,cytochrome P450 (5beta-cholestane-3alpha
+6356863,2,MAR01609,cytochrome P450 (5beta-cholestane-3alpha
+6381461,2,MAR03541,Steryl-ester acylhydrolase
+6381461,2,MAR03687,Steryl-ester acylhydrolase
+6402567,2,MAR03833,L-Proline:NADP+ 5-oxidoreductase
+6402567,2,MAR08609,L-Proline:NADP+ 5-oxidoreductase
+6429347,2,MAR03228,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+6429347,2,MAR03344,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+6436956,2,MAR05367,"Isomerization of (C18:4), Mitochondrial"
+6436956,2,MAR05368,"Isomerization (C18:4), Peroxisomal"
+6438011,2,MAR01720,"3alpha,7alpha-dihydroxy-5beta-cholanoyl-CoA:taurine N-choloyltransfera"
+6438011,2,MAR01723,"3alpha,7alpha-dihydroxy-5beta-cholanoyl-CoA:taurine N-choloyltransfera"
+6439602,2,MAR04049,Unspecific Monooxygenase
+6439602,2,MAR04051,Unspecific Monooxygenase
+6445294,2,MAR03568,Steryl-ester acylhydrolase
+6445294,2,MAR03714,Steryl-ester acylhydrolase
+6457778,2,MAR00153,Propanoate:CoA ligase (AMP-forming)
+6457778,2,MAR03797,Propanoate:CoA ligase (AMP-forming)
+6462222,2,MAR00213,long-chain-fatty-acid-CoA ligase (pentadecylic acid)
+6462222,2,MAR02948,long-chain-fatty-acid-CoA ligase (pentadecylic acid)
+6466230,2,MAR01473,"(S)-2,3-Epoxysqualene mutase (cyclizing,"
+6466230,2,MAR01498,Lanosterol Synthase
+6474609,2,MAR00843,"beta-1,3-galactosyltransferase (GD2)"
+6474609,2,MAR08186,"beta-1,3-galactosyltransferase (GD2)"
+6489121,2,MAR04333,"5,6,7,8-tetrahydrofolate:NADP+ oxidoredu"
+6489121,2,MAR04335,"5,6,7,8-tetrahydrofolate:NADP+ oxidoredu"
+6511711,2,MAR01497,Cytochrome P450 Lanosterol 14-Alpha-Demethylase (NADP)
+6511711,2,MAR02200,"Lanosterol, NADPH:Oxygen Oxidoreductase (14-Methyl Cleaving)"
+6515153,2,MAR00847,exo-alpha-sialidase (GQ1b)
+6515153,2,MAR12075,"Sialidase, Plasma Membrane (Neu3)"
+6547169,2,MAR03232,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+6547169,2,MAR03348,3-hydroxyacyl-CoA dehydrogenase ((S)-3-h
+6555770,2,MAR03554,Steryl-ester acylhydrolase
+6555770,2,MAR03699,Steryl-ester acylhydrolase
+6592328,2,MAR05090,"Isomerization (C12:3), Mitochondrial"
+6592328,2,MAR05093,"Isomerization (C12:3), Peroxisomal"
+6596423,2,MAR00846,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+6596423,2,MAR08181,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+6597498,2,MAR00449,sn-Glycerol-3-phosphate:(acceptor) 2-oxi
+6597498,2,MAR01169,Glycerol-3-Phosphate Dehydrogenase (FAD)
+6612398,2,MAR01604,"cytochrome P450 (5beta-cholestan-3alpha,"
+6612398,2,MAR01605,"cytochrome P450 (5beta-cholestan-3alpha,"
+6626491,2,MAR00188,long-chain-fatty-acid-CoA ligase (lauric
+6626491,2,MAR02942,long-chain-fatty-acid-CoA ligase (lauric
+6657987,2,MAR06281,"Isomerization (C6:1), Mitochondrial"
+6657987,2,MAR06282,"Isomerization (C6:1), Peroxisomal"
+6688047,2,MAR01667,Choloyl-CoA:glycine N-choloyltransferase
+6688047,2,MAR01668,Choloyl-CoA:glycine N-choloyltransferase
+6753029,2,MAR04778,trans-4-Hydroxy-L-proline:NAD+ 5-oxidore
+6753029,2,MAR04779,trans-4-Hydroxy-L-proline:NAD+ 5-oxidore
+6773984,2,MAR03538,Steryl-ester acylhydrolase
+6773984,2,MAR03684,Steryl-ester acylhydrolase
+6777965,2,MAR04012,ATP:adenosine 5'-phosphotransferase
+6777965,2,MAR04083,ATP:adenosine 5'-phosphotransferase
+6806705,2,MAR00955,unspecific monooxygenase (arachidonate)
+6806705,2,MAR00956,unspecific monooxygenase (arachidonate)
+6839605,2,MAR00842,"beta-1,4-N-acetyl-galactosaminyltransfer"
+6839605,2,MAR08191,"beta-1,4-N-acetyl-galactosaminyltransfer"
+6863678,2,MAR01800,cytochrome P450
+6863678,2,MAR03216,methionine synthase (cholest-5-ene-3beta
+6868281,2,MAR00255,long-chain-fatty-acid-CoA ligase ((13Z)-
+6868281,2,MAR02962,long-chain-fatty-acid-CoA ligase ((13Z)-
+6894190,2,MAR00293,long-chain-fatty-acid-CoA ligase (cis-go
+6894190,2,MAR02967,long-chain-fatty-acid-CoA ligase (cis-go
+6921813,2,MAR01815,cytochrome P450 (5beta-cholestane-3alpha
+6921813,2,MAR02893,Quinine 3-Monooxygenase
+6955573,2,MAR02038,Estrone 3-sulfate sulfohydrolase
+6955573,2,MAR07945,Estrone 3-sulfate sulfohydrolase
+6983819,2,MAR04440,"5,10-methylenetetrahydrofolate:NAD+ oxid"
+6983819,2,MAR08144,"5,10-methylenetetrahydrofolate:NAD+ oxid"
+6994574,2,MAR01981,cytochrome P450 (progesterone)
+6994574,2,MAR07937,cytochrome P450 (progesterone)
+6999927,2,MAR00405,long-chain-fatty-acid-CoA ligase (dihomo
+6999927,2,MAR02994,long-chain-fatty-acid-CoA ligase (dihomo
+7086571,2,MAR04536,CTP:N-acetylneuraminate cytidylyltransferase
+7086571,2,MAR08377,CTP:N-acetylneuraminate cytidylyltransferase
+7120975,2,MAR01818,UDPglucose:Dolichyl-Phosphate Beta-D-Glucosyltransferase (Liver)
+7120975,2,MAR07278,UDPglucose:dolichyl-phosphate beta-D-glucosyltransferase
+7123808,2,MAR06934,primary-amine oxidase (spermine monoalde
+7123808,2,MAR06935,primary-amine oxidase (spermine monoalde
+7125986,2,MAR02317,hydroxysteroid 17-beta dehydrogenase (3-
+7125986,2,MAR03610,ELOVL fatty acid elongase (3-oxo-13cis-d
+7129561,2,MAR06466,leukotriene-B4 20-monooxygenase (13-hydr
+7129561,2,MAR06467,leukotriene-B4 20-monooxygenase (13-hydr
+7136836,2,MAR03765,L-Leucine:2-oxoglutarate aminotransferas
+7136836,2,MAR06923,L-Leucine:2-oxoglutarate aminotransferas
+7167493,2,MAR03868,glutathione:NAD+ oxidoreductase
+7167493,2,MAR03869,glutathione:NAD+ oxidoreductase
+7176967,2,MAR02205,very-long-chain 3-oxoacyl-CoA synthase (
+7176967,2,MAR02494,lysyl oxidase like (eicosanoyl-CoA)
+7187606,2,MAR04470,"5,6-dihydrothymine:NAD+ oxidoreductase"
+7187606,2,MAR04471,"5,6-dihydrothymine:NAD+ oxidoreductase"
+7189385,2,MAR03892,L-glutamine amidohydrolase
+7189385,2,MAR09802,L-glutamine amidohydrolase
+7189948,2,MAR03861,3-sulfino-L-alanine:2-oxoglutarate aminotransferase
+7189948,2,MAR03865,3-sulfino-L-alanine:2-oxoglutarate aminotransferase
+7201406,2,MAR04124,UDP-D-glucuronate carboxy-lyase (UDP-D-xylose-forming)
+7201406,2,MAR08672,UDP-D-glucuronate carboxy-lyase (UDP-D-xylose-forming)
+7204000,2,MAR04686,Aldehyde:NADP+ oxidoreductase
+7204000,2,MAR04687,Aldehyde:NADP+ oxidoreductase
+7228510,2,MAR00228,7-Dehydrocholesterol Reductase
+7228510,2,MAR01565,cholesterol:NADP+ delta7-oxidoreductase
+7241815,2,MAR08106,folylpolyglutamate synthase (glutamate)
+7241815,2,MAR08113,folylpolyglutamate synthase (glutamate)
+7248910,2,MAR00051,5-Hydroxyindoleacetaldehyde:NAD+ Oxidore
+7248910,2,MAR04559,5-Hydroxyindoleacetaldehyde:NAD+ oxidore
+7260524,2,MAR04697,p-cumic alcohol:NAD+ oxidoreductase
+7260524,2,MAR08440,p-cumic alcohol:NAD+ oxidoreductase
+7302079,2,MAR00279,long-chain-fatty-acid-CoA ligase (nonade
+7302079,2,MAR02965,long-chain-fatty-acid-CoA ligase (nonade
+7343946,2,MAR02198,Uroporphyrinogen I Carboxy-Lyase
+7343946,2,MAR04772,Uroporphyrinogen I carboxy-lyase
+7359403,2,MAR04429,S-Adenosyl-L-methionine:histamine N-tele
+7359403,2,MAR11777,S-Adenosyl-L-Methionine:Histamine N-Tele
+7387206,2,MAR04683,Phenylacetaldehyde:NAD+ oxidoreductase
+7387206,2,MAR04685,Phenylacetaldehyde:NAD+ oxidoreductase
+7455036,2,MAR03560,Steryl-ester acylhydrolase
+7455036,2,MAR03706,Steryl-ester acylhydrolase
+7520223,2,MAR01454,isopentenyl-diphosphate Delta3-Delta2-is
+7520223,2,MAR01468,Isopentenyl-Diphosphate D-Isomerase
+7550462,2,MAR02007,cytochrome P450 (progesterone)
+7550462,2,MAR07932,cytochrome P450 (progesterone)
+7648146,2,MAR12187,UDP-Glucuronosyltransferase (UGT) cytoso
+7648146,2,MAR12188,UDP-Glucuronosyltransferase (UGT) ER (de
+7674253,2,MAR02305,very-long-chain 3-oxoacyl-CoA synthase (
+7674253,2,MAR03604,ELOVL fatty acid elongase (malonyl-CoA)
+7698557,2,MAR00043,3-hydroxyisobutyryl-CoA hydrolase
+7698557,2,MAR04741,3-hydroxyisobutyryl-CoA hydrolase (3-hyd
+7749190,2,MAR03593,Steryl-ester acylhydrolase
+7749190,2,MAR03739,Steryl-ester acylhydrolase
+7772865,2,MAR07611,1-Alkyl-2-acetyl-sn-glycero-3-phosphocholine acetohydrolase
+7772865,2,MAR07612,1-Alkyl-2-acetyl-sn-glycero-3-phosphocholine acetohydrolase
+7784466,2,MAR00085,bile acid-CoA: amino acid N-acyltransferase
+7784466,2,MAR01722,"3alpha,7alpha-dihydroxy-5beta-cholanoyl-CoA:glycine N-choloyltransfera"
+7787550,2,MAR07939,17alpha-Hydroxypregnenolone:NAD+ 3-oxido
+7787550,2,MAR07973,17alpha-Hydroxypregnenolone:NAD+ 3-oxido
+7811037,2,MAR06659,9-cis-retinoate to retinoate conversion
+7811037,2,MAR06660,9-cis-retinoate to retinoate conversion
+7818131,2,MAR07186,phosphatidylinositol glycan anchor biosynthesis class L
+7818131,2,MAR08380,phosphatidylinositol glycan anchor biosynthesis class L
+7899067,2,MAR02889,Delta(3)-Delta(2)-enoyl-CoA isomerase
+7899067,2,MAR02891,"cytochrome P450 (3alpha,7alpha-dihydroxy"
+7943521,2,MAR04491,Production of Sebacoylcarnitine
+7943521,2,MAR06809,Production of Sebacoyl Carnitine
+7944673,2,MAR01726,chenodeoxycholate:CoA ligase (AMP-formin
+7944673,2,MAR01727,chenodeoxycholate:CoA ligase (AMP-formin
+7951873,2,MAR02014,"5alpha-androstane-3,17-dione:NADP+ delta"
+7951873,2,MAR02015,"5alpha-androstane-3,17-dione:NADP+ delta"
+7955895,2,MAR03558,Steryl-ester acylhydrolase
+7955895,2,MAR03704,Steryl-ester acylhydrolase
+7969083,2,MAR02924,"carnitine O-palmitoyltransferase ((9Z,12"
+7969083,2,MAR02926,"carnitine O-acetyltransferase ((9Z,12Z,1"
+7973551,2,MAR12276,UDP-Glucuronosyltransferase (UGT) cytoso
+7973551,2,MAR12277,UDP-Glucuronosyltransferase (UGT) ER (li
+7994368,2,MAR03083,(S)-3-Hydroxytetradecanoyl-CoA hydro-lya
+7994368,2,MAR03129,(S)-3-Hydroxytetradecanoyl-CoA hydro-lya
+8009697,2,MAR02142,cytochrome P450 (calcitetrol)
+8009697,2,MAR02143,cytochrome P450 (calcitetrol)
+8019990,2,MAR03834,FMN reductase (NADPH) (prostaglandin J2)
+8019990,2,MAR03836,prostaglandin J2 to delta-12-prostagland
+8024119,2,MAR03234,medium-chain acyl-CoA dehydrogenase (5-t
+8024119,2,MAR03350,acyl-CoA oxidase (5-tetradecenoyl-CoA)
+8032364,2,MAR03591,Steryl-ester acylhydrolase
+8032364,2,MAR03737,Steryl-ester acylhydrolase
+8044251,2,MAR01724,4-Hydroxycinnamate Formation
+8044251,2,MAR06783,3-(4-hydroxyphenyl)lactate hydro-lyase (
+8060492,2,MAR01206,hydroxyacyl-CoA dehydrogenase trifunctio
+8060492,2,MAR01207,enoyl-CoA hydratase (5-oxo-12(S)-hydroxy
+8080530,2,MAR03618,acetyl-CoA C-acyltransferase (malonyl-Co
+8080530,2,MAR03619,acetyl-CoA C-acyltransferase (malonyl-Co
+8116838,2,MAR08835,inositol-hexakisphosphate 5-kinase
+8116838,2,MAR08836,inositol-hexakisphosphate 5-kinase
+8122998,2,MAR00923,Beta Oxidation of Fatty Acid
+8122998,2,MAR00927,Beta Oxidation of Long Chain Fatty Acid
+8158242,2,MAR02643,angiotensin I converting enzyme (apelin-13)
+8158242,2,MAR09480,angiotensin I converting enzyme (apelin-13)
+8181957,2,MAR07672,biotin-carboxyl-carrier-protein:carbon-dioxide ligase (ADP-forming)
+8181957,2,MAR20112,MAR20112
+8197268,2,MAR07627,NADP+:nicotinate ADP-ribosyltransferase
+8197268,2,MAR08788,NADP+:nicotinate ADP-ribosyltransferase
+8212276,2,MAR00237,long-chain-fatty-acid-CoA ligase (margar
+8212276,2,MAR02954,long-chain-fatty-acid-CoA ligase (margar
+8242282,2,MAR00855,"alpha-N-acetylneuraminate alpha-2,8-sialyltransferase (CMP-N-acetylneu"
+8242282,2,MAR08180,"ST8 alpha-N-acetyl-neuraminide alpha-2,8-sialyltransferase (CMP-N-acet"
+8247727,2,MAR00915,3'-Phosphoadenylylsulfate:galactosylsphi
+8247727,2,MAR03251,Galactosylceramide Sulfotransferase
+8274935,2,MAR03450,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+8274935,2,MAR03464,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+8278380,2,MAR03298,Delta(3)-Delta(2)-enoyl-CoA isomerase ((
+8278380,2,MAR03323,Delta(3)-Delta(2)-enoyl-CoA isomerase ((
+8288712,2,MAR04596,L-2-aminoadipate:2-oxoglutarate aminotransferase
+8288712,2,MAR04597,L-2-aminoadipate:2-oxoglutarate aminotransferase
+8312837,2,MAR02921,"carnitine O-palmitoyltransferase ((9Z,12"
+8312837,2,MAR02923,"carnitine O-acetyltransferase ((9Z,12Z,1"
+8332298,2,MAR00856,"beta-1,4-N-acetyl-galactosaminyltransfer"
+8332298,2,MAR08192,"beta-1,4-N-acetyl-galactosaminyltransfer"
+8339324,2,MAR00839,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+8339324,2,MAR08182,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+8341408,2,MAR03281,hydroxyacyl-CoA dehydrogenase trifunctio
+8341408,2,MAR03307,"enoyl-CoA hydratase (trans,cis,cis-2,7,1"
+8347431,2,MAR03561,Steryl-ester acylhydrolase
+8347431,2,MAR03707,Steryl-ester acylhydrolase
+8348710,2,MAR04646,xanthine:NAD+ oxidoreductase
+8348710,2,MAR04648,xanthine:NAD+ oxidoreductase
+8374073,2,MAR03285,hydroxyacyl-CoA dehydrogenase trifunctio
+8374073,2,MAR03312,"enoyl-CoA hydratase (trans-2-cis,cis-5,8"
+8392307,2,MAR03290,"enoyl-CoA hydratase (trans,cis-lauro-2,6"
+8392307,2,MAR03317,"enoyl-CoA hydratase (trans,cis-lauro-2,6"
+8419443,2,MAR04512,ATP:dCMP phosphotransferase
+8419443,2,MAR08459,ATP:dCMP phosphotransferase
+8431397,2,MAR08518,1-Alkyl-2-acetyl-sn-glycero-3-phosphocholine acetohydrolase
+8431397,2,MAR08519,1-Alkyl-2-acetyl-sn-glycero-3-phosphocholine acetohydrolase
+8463217,2,MAR03095,(S)-Hydroxyoctanoyl-CoA hydro-lyase
+8463217,2,MAR03150,(S)-Hydroxyoctanoyl-CoA hydro-lyase
+8473554,2,MAR03592,Steryl-ester acylhydrolase
+8473554,2,MAR03738,Steryl-ester acylhydrolase
+8493538,2,MAR03067,enoyl-CoA hydratase ((2E)-docosenoyl-CoA
+8493538,2,MAR03108,hydroxyacyl-CoA dehydrogenase trifunctio
+8510433,2,MAR06646,retinal:NAD+ oxidoreductase
+8510433,2,MAR06647,retinal:NAD+ oxidoreductase
+8526409,2,MAR04730,ATP:pantothenate 4'-phosphotransferase
+8526409,2,MAR04731,ATP:pantothenate 4'-phosphotransferase
+8574681,2,MAR03596,Steryl-ester acylhydrolase
+8574681,2,MAR03742,Steryl-ester acylhydrolase
+8591015,2,MAR01687,cytochrome P450 (5beta-cholestane-3alpha
+8591015,2,MAR02935,alcohol dehydrogenase (5beta-cholestane-
+8597672,2,MAR03086,acyl-CoA oxidase (lauroyl-CoA)
+8597672,2,MAR03135,lauroyl-CoA:electron-transfer flavoprote
+8610641,2,MAR00192,long-chain-fatty-acid-CoA ligase (tridec
+8610641,2,MAR02943,long-chain-fatty-acid-CoA ligase (tridec
+8621819,2,MAR03620,acetyl-CoA C-acyltransferase (3-oxo-cis-
+8621819,2,MAR03621,ELOVL fatty acid elongase (3-oxo-cis-9-o
+8628804,2,MAR04970,"Reduction (C10:2->C10:1), Mitochondrial"
+8628804,2,MAR04974,Fatty Acid Beta Oxidation (C10:2->C10:1)
+8635614,2,MAR03221,acetyl-CoA C-acyltransferase (3-oxo-13ci
+8635614,2,MAR03337,acetyl-CoA C-acyltransferase (3-oxo-13ci
+8643859,2,MAR00739,fatty-acid-CoA ligase
+8643859,2,MAR05183,"Fatty Acid Activation (C15), Peroxisomal"
+8702965,2,MAR04510,2'-deoxycytidine 5'-monophosphate phosph
+8702965,2,MAR08493,2'-deoxycytidine 5'-monophosphate phosph
+8706668,2,MAR02131,"cytochrome P450 (23s,25-dihydroxyvitamin"
+8706668,2,MAR02132,"cytochrome P450 (23s,25-dihydroxyvitamin"
+8746069,2,MAR02423,very-long-chain 3-oxoacyl-CoA synthase (
+8746069,2,MAR03485,ELOVL fatty acid elongase (linoleoyl-CoA
+8788029,2,MAR04175,glutathione gamma-glutamylaminopeptidase
+8788029,2,MAR04176,glutathione gamma-glutamylaminopeptidase
+8790572,2,MAR03819,aldehyde dehydrogenase (1-pyrroline-5-ca
+8790572,2,MAR03820,aldehyde dehydrogenase (1-pyrroline-5-ca
+8845599,2,MAR08813,1-phosphatidylinositol-4-phosphate 5-kin
+8845599,2,MAR08814,1-phosphatidyl-1D-myo-inositol-3-phospha
+8856861,2,MAR04442,"5,10-methylenetetrahydrofolate:NADP+ oxi"
+8856861,2,MAR04444,"5,10-methylenetetrahydrofolate:NADP+ oxi"
+8858372,2,MAR00414,"(7Z,10Z,13Z,16Z)-docosatetraenoyl-CoA hy"
+8858372,2,MAR01677,peroxisomal acyl-CoA thioesterase
+8868392,2,MAR04473,6-phospho-D-gluconate:NADP+ 2-oxidoreductase (decarboxylating)
+8868392,2,MAR04474,Phosphogluconate dehydrogenase
+8892641,2,MAR07910,folylpolyglutamate synthase (10-formyl-THF-glu(5))
+8892641,2,MAR07911,folylpolyglutamate synthase (10-formyl-THF-glu(5))
+8902670,2,MAR03570,Steryl-ester acylhydrolase
+8902670,2,MAR03716,Steryl-ester acylhydrolase
+8906724,2,MAR05380,Fatty Acid Beta Oxidation (C22:5->C22:6)
+8906724,2,MAR05382,Fatty Acid Beta Oxidation (C22:5->C22:6)
+8922990,2,MAR00641,Acetylcholine aectylhydrolase
+8922990,2,MAR08421,Acetylcholine aectylhydrolase
+8941004,2,MAR02135,cytochrome P450 (25-hydroxyvitamin D3-26
+8941004,2,MAR02136,cytochrome P450 (25-hydroxyvitamin D3-26
+8942633,2,MAR03045,Carboxypeptidase A
+8942633,2,MAR09473,carboxypeptidase A (neuromedin N)
+8955262,2,MAR00877,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+8955262,2,MAR08327,"ST8 alpha-N-acetyl-neuraminide alpha-2,8"
+8967581,2,MAR06631,retinol:NAD+ oxidoreductase
+8967581,2,MAR06633,retinol:NAD+ oxidoreductase
+8969420,2,MAR04602,2'-deoxyguanosine 5'-monophosphate phosp
+8969420,2,MAR08495,2'-deoxyguanosine 5'-monophosphate phosp
+8988283,2,MAR01832,"cholate-CoA ligase (3alpha,12alpha-dihyd"
+8988283,2,MAR01833,"cholate-CoA ligase (3alpha,12alpha-dihyd"
+9003750,2,MAR08417,"2(S),6-dimethyl-heptanoyl-CoA to 2,6-dim"
+9003750,2,MAR08419,"2(S),6-dimethyl-heptanoyl-CoA to 2,6-dim"
+9003920,2,MAR04212,L-ornithine carboxy-lyase (putrescine-forming)
+9003920,2,MAR04422,L-ornithine carboxy-lyase (putrescine-forming)
+9009982,2,MAR03227,hydroxyacyl-CoA dehydrogenase trifunctio
+9009982,2,MAR03343,"enoyl-CoA hydratase (trans,cis-octadeca-"
+9018256,2,MAR05378,Fatty Acid Beta Oxidation (C22:5->C20:4)
+9018256,2,MAR05379,Fatty Acid Beta Oxidation (C22:5->C20:4)
+9060203,2,MAR00472,Endo-Beta-N-Acetylglucosaminidase
+9060203,2,MAR07586,endo-beta-N-acetylglucosaminidase (n2m2n
+9063793,2,MAR03549,Steryl-ester acylhydrolase
+9063793,2,MAR03695,Steryl-ester acylhydrolase
+9070526,2,MAR03435,"acetyl-CoA C-acyltransferase (24,25,26,2"
+9070526,2,MAR03436,"cytochrome P450 (24,25,26,27-Tetranor-23"
+9080906,2,MAR01794,cytochrome P450 (3beta-hydroxy-5-cholest
+9080906,2,MAR02937,3beta-hydroxy-5-cholestene-27-oate hydro
+9133486,2,MAR01944,cytochrome P450 (pregnenolone)
+9133486,2,MAR01945,cytochrome P450 (pregnenolone)
+9147716,2,MAR00457,ATP:(R)-glycerate 3-phosphotransferase
+9147716,2,MAR00460,ATP:(R)-glycerate 3-phosphotransferase
+9167495,2,MAR01272,hydroxyacyl-CoA dehydrogenase trifunctio
+9167495,2,MAR01273,enoyl-CoA hydratase
+9168566,2,MAR06714,Indole-3-acetaldehyde:NAD+ oxidoreductas
+9168566,2,MAR08563,Indole-3-acetaldehyde:NAD+ oxidoreductas
+9175088,2,MAR02211,very-long-chain 3-oxoacyl-CoA synthase (
+9175088,2,MAR02498,HIRA interacting protein (docosanoyl-CoA
+9175292,2,MAR01634,"Pantothenate Kinase, Mitochondrial"
+9175292,2,MAR04718,ATP:pantothenate 4'-phosphotransferase
+9179594,2,MAR01571,"Cytochrome P450, Family 46, Subfamily A,"
+9179594,2,MAR01735,"cholesterol,NADPH-hemoprotein reductase:"
+9200792,2,MAR00349,long-chain-fatty-acid-CoA ligase (linole
+9200792,2,MAR02981,long-chain-fatty-acid-CoA ligase (linole
+9271300,2,MAR02310,Long-Chain-Fatty-Acid-Coa Ligase
+9271300,2,MAR02312,Long-Chain-Fatty-Acid-Coa Ligase
+9300101,2,MAR00073,"Apocarboxylase Formation, Mitochondrial"
+9300101,2,MAR07669,[apocarboxylase] to apoC-lys conversion
+9313892,2,MAR00381,"long-chain-fatty-acid-CoA ligase ((11Z,1"
+9313892,2,MAR02989,"long-chain-fatty-acid-CoA ligase ((11Z,1"
+9335521,2,MAR02501,very-long-chain (3R)-3-hydroxyacyl-CoA d
+9335521,2,MAR03418,ELOVL fatty acid elongase
+9338455,2,MAR00930,Beta Oxidation of Long Chain Fatty Acid
+9338455,2,MAR00952,Beta Oxidation of Long Chain Fatty Acid
+9340966,2,MAR02480,very-long-chain (3R)-3-hydroxyacyl-CoA d
+9340966,2,MAR03402,ELOVL fatty acid elongase (3(S)-hydroxy-
+9351241,2,MAR01332,prostaglandin J2 hydrolysis
+9351241,2,MAR01333,prostaglandin J2 hydrolysis
+9374290,2,MAR00135,P-coumaroyl-CoA formation
+9374290,2,MAR06784,4-Coumarate:CoA ligase (AMP-forming)
+9374747,2,MAR00092,"Holocarboxylase Synthestase (Biotin Protein Ligase), Mitochondrial"
+9374747,2,MAR07670,Biotinyl-5'-AMP:apo-[carboxylase] ligase (AMP-forming)
+9382111,2,MAR03388,phytanate-CoA ligase
+9382111,2,MAR03389,phytanate-CoA ligase
+9389141,2,MAR01163,hydroxyacyl-CoA dehydrogenase trifunctio
+9389141,2,MAR01164,enoyl-CoA hydratase (5-oxo-12(R)-hydroxy
+9397281,2,MAR07373,alpha-L-fucosidase (keratan sulfate I)
+9397281,2,MAR07375,alpha-L-fucosidase (keratan sulfate I)
+9414583,2,MAR03759,(S)-Methylmalonate semialdehyde:NAD+ oxi
+9414583,2,MAR04797,(S)-Methylmalonate semialdehyde:NAD+ oxi
+9431906,2,MAR03080,(S)-3-Hydroxyhexadecanoyl-CoA:NAD+ oxido
+9431906,2,MAR03123,(S)-3-Hydroxyhexadecanoyl-CoA:NAD+ oxido
+9469098,2,MAR01436,Acetoacetate:CoA ligase (AMP-forming)
+9469098,2,MAR01576,Acetoacetate:CoA ligase (AMP-forming)
+9496995,2,MAR00898,"type 1 galactoside alpha-(1,2)-fucosyltr"
+9496995,2,MAR08291,"type 1 galactoside alpha-(1,2)-fucosyltr"
+9525282,2,MAR01071,leukotriene-B4 20-monooxygenase (12(S)-H
+9525282,2,MAR01072,leukotriene-B4 20-monooxygenase (12(S)-H
+9539152,2,MAR01517,"malonyl-CoA-acp transacylase, mitochondr"
+9539152,2,MAR02151,Malonyl-CoA:[acyl-carrier-protein] S-malonyltransferase
+9545192,2,MAR04459,ATP:propanoate adenylyltransferase
+9545192,2,MAR04460,ATP:propanoate adenylyltransferase
+9577247,2,MAR03096,(S)-hydroxyoctanoyl-CoA:NAD+ oxidoreduct
+9577247,2,MAR03151,(S)-hydroxyoctanoyl-CoA:NAD+ oxidoreduct
+9615396,2,MAR02628,Glucuronosyltransferase
+9615396,2,MAR02631,Glucuronosyltransferase
+9635832,2,MAR02196,3-Methoxy-4-Hydroxyphenylglycolaldehyde:
+9635832,2,MAR06748,3-Methoxy-4-hydroxyphenylglycolaldehyde:
+9646958,2,MAR01844,bile acid-CoA:amino acid N-acyltransferase (glycine)
+9646958,2,MAR01845,bile acid-CoA:amino acid N-acyltransferase (glycine)
+9682496,2,MAR04833,formamidopyrimidine nucleoside triphosphate amidohydrolase
+9682496,2,MAR04834,formamidopyrimidine nucleoside triphosphate amidohydrolase
+9692670,2,MAR07916,gamma-glutamyl hydrolase (10-formyl-THF-glu(5))
+9692670,2,MAR07920,gamma-glutamyl hydrolase (10-formyl-THF-glu(5))
+9714173,2,MAR01790,cytochrome P450 (26-hydroxycholesterol)
+9714173,2,MAR02936,steroid Delta-isomerase (26-hydroxychole
+9745522,2,MAR12258,UDP-Glucuronosyltransferase (UGT) cytoso
+9745522,2,MAR12259,UDP-Glucuronosyltransferase (UGT) ER (hy
+9749679,2,MAR08792,pantetheine-4'-phosphate phosphohydrolas
+9749679,2,MAR08984,"Phosphatase, Extracellular"
+9787515,2,MAR08643,cocaine benzoylhydrolase
+9787515,2,MAR08645,cocaine benzoylhydrolase
+9791754,2,MAR03569,Steryl-ester acylhydrolase
+9791754,2,MAR03715,Steryl-ester acylhydrolase
+9798232,2,MAR00818,Beta Oxidation of Fatty Acid
+9798232,2,MAR00833,Beta Oxidation of Long Chain Fatty Acid
+9832006,2,MAR12067,"Sialidase, Cytosol (Neu2)"
+9832006,2,MAR12072,"Sialidase, Plasma Membrane (Neu3)"
+9879674,2,MAR00062,"ADPribose Diphosphatase, Mitochondrial"
+9879674,2,MAR07144,ADP-ribose ribophosphohydrolase
+9884662,2,MAR02311,very-long-chain enoyl-CoA reductase (tra
+9884662,2,MAR03609,"ELOVL fatty acid elongase (trans,cis-2,1"
+9884727,2,MAR04101,GTP:oxaloacetate carboxy-lyase (adding GTP
+9884727,2,MAR04103,GTP:oxaloacetate carboxy-lyase (adding GTP
+9898627,2,MAR03835,L-Proline:NAD+ 5-oxidoreductase
+9898627,2,MAR03837,L-Proline:NAD+ 5-oxidoreductase
+9917079,2,MAR03297,enoyl-CoA hydratase
+9917079,2,MAR03299,enoyl-CoA hydratase
+9960256,2,MAR02918,carnitine O-palmitoyltransferase (hexacosenoylcarnitine)
+9960256,2,MAR02920,carnitine O-acetyltransferase (hexacosenoylcarnitine)
+9963227,2,MAR00301,"long-chain-fatty-acid-CoA ligase (8,11-e"
+9963227,2,MAR02970,"long-chain-fatty-acid-CoA ligase (8,11-e"
+9973116,2,MAR08503,aldehyde dehydrogenase (NADP(+)) (lactal
+9973116,2,MAR08506,aldehyde dehydrogenase (NAD(+)) (lactald
+9983774,2,MAR03857,(R)-S-Lactoylglutathione hydrolase
+9983774,2,MAR08511,(R)-S-Lactoylglutathione hydrolase
+10019573,2,MAR04011,Methionine Synthase
+10019573,2,MAR04013,Methionine Synthase
+10030149,2,MAR00071,alpha-methylacyl-CoA racemase
+10030149,2,MAR01632,"3alpha,7alpha,12alpha-trihydroxy-5beta-c"
+10043332,2,MAR03827,L-Aspartate:2-oxoglutarate aminotransferase
+10043332,2,MAR03829,L-Aspartate:2-oxoglutarate aminotransferase
+10043483,2,MAR01397,Geranyltranstransferase
+10043483,2,MAR01460,Geranyl-diphosphate:isopentenyl-diphosphate geranyltrans-transferase
+10066053,2,MAR00829,"beta-1,3-galactosyltransferase (GM2)"
+10066053,2,MAR08185,"beta-1,3-galactosyltransferase (GM2)"
+10119997,2,MAR03927,Arachidonate 12-Lipoxygenase
+10119997,2,MAR03930,Arachidonate 12-Lipoxygenase
+10188097,2,MAR00934,arachidonic acid:oxygen 1-oxidoreductase
+10188097,2,MAR08556,cytochrome P450 (arachidonate)
+10188528,2,MAR01643,"Protoporphyrinogen Oxidase, Mitochondria"
+10188528,2,MAR11316,Protoporphyrinogen Oxidase (Aerobic)
+10209682,2,MAR04759,Production of Suberylcarnitine
+10209682,2,MAR06832,Production of Suberyl Carnitine
+10211285,2,MAR08227,solute carrier (acetyl-CoA)
+10211285,2,MAR08228,solute carrier (acetyl-CoA)
+10253490,2,MAR12254,UDP-Glucuronosyltransferase (UGT) cytoso
+10253490,2,MAR12255,UDP-Glucuronosyltransferase (UGT) (hyode
+10279629,2,MAR00116,"C-4 Sterol Methyl Oxidase (4, 4-Dimethyl"
+10279629,2,MAR02300,Methylsterol Monooxygenase
+10290010,2,MAR08135,gamma-glutamyl hydrolase (hexaglutamyl-folate(DHF))
+10290010,2,MAR08136,gamma-glutamyl hydrolase (hexaglutamyl-folate(DHF))
+10303762,2,MAR04304,D-glucose-6-phosphate:NADP+ 1-oxidoreduc
+10303762,2,MAR08971,Glucose 6-Phosphate Dehydrogenase
+10314907,2,MAR03586,Steryl-ester acylhydrolase
+10314907,2,MAR03732,Steryl-ester acylhydrolase
+10321054,2,MAR03565,Steryl-ester acylhydrolase
+10321054,2,MAR03711,Steryl-ester acylhydrolase
+10389048,2,MAR07908,10-Formyltetrahydrofolate:L-glutamate ligase (ADP-forming)
+10389048,2,MAR07909,10-Formyltetrahydrofolate:L-glutamate ligase (ADP-forming)
+10394193,2,MAR12178,UDP-Glucuronosyltransferase (UGT) cytoso
+10394193,2,MAR12179,UDP-Glucuronosyltransferase (UGT) ER (ch
+10435433,2,MAR08452,cytidine/uridine monophosphate kinase (d
+10435433,2,MAR08453,cytidine/uridine monophosphate kinase (d
+10437413,2,MAR00309,long-chain-fatty-acid-CoA ligase (heneic
+10437413,2,MAR02972,long-chain-fatty-acid-CoA ligase (heneic
+10453895,2,MAR06550,"1-Phosphatidyl-1D-myo-inositol 3,4-bisph"
+10453895,2,MAR08809,"1-Phosphatidyl-1D-myo-inositol 3,4-bisph"
+10481141,2,MAR03543,Steryl-ester acylhydrolase
+10481141,2,MAR03689,Steryl-ester acylhydrolase
+10507432,2,MAR06685,"glucuronosyltransferase (5,6-epoxy-13-ci"
+10507432,2,MAR06686,"glucuronosyltransferase (5,6-epoxy-13-ci"
+10512207,2,MAR04163,6-pyruvoyltetrahydropterin synthase
+10512207,2,MAR08738,6-pyruvoyltetrahydropterin synthase
+10525254,2,MAR03250,medium-chain acyl-CoA dehydrogenase (pal
+10525254,2,MAR03276,medium-chain acyl-CoA dehydrogenase (pal
+10526834,2,MAR03169,Glucuronosyltransferase
+10526834,2,MAR03207,Glucuronosyltransferase
+10560273,2,MAR02672,"carnitine O-palmitoyltransferase ((6Z,9Z"
+10560273,2,MAR02674,"carnitine O-acetyltransferase ((6Z,9Z)-o"
+10573475,2,MAR00233,long-chain-fatty-acid-CoA ligase (7-palm
+10573475,2,MAR02951,long-chain-fatty-acid-CoA ligase (7-palm
+10630423,2,MAR00960,Glutathione: 5-HPETE oxidoreductase
+10630423,2,MAR00963,Glutathione: 5-HPETE oxidoreductase
+10633127,2,MAR20073,MAR20073
+10633127,2,MAR20074,MAR20074
+10645094,2,MAR00896,4-galactosyl-N-acetylglucosaminide 3-alp
+10645094,2,MAR08332,fucosyltransferase (GDP-L-fucose)
+10660703,2,MAR07869,cytidine/uridine monophosphate kinase (d
+10660703,2,MAR07870,cytidine/uridine monophosphate kinase (d
+10662533,2,MAR04089,(S)-Malate:NADP+ oxidoreductase(oxaloacetate-decarboxylating)
+10662533,2,MAR04091,(S)-Malate:NADP+ oxidoreductase(oxaloacetate-decarboxylating)
+10709175,2,MAR00837,"beta-galactoside alpha-2,3-sialyltransferase (CMP-N-acetylneuraminate)"
+10709175,2,MAR08188,"beta-galactoside alpha-2,3-sialyltransferase (CMP-N-acetylneuraminate)"
+10710213,2,MAR03539,Steryl-ester acylhydrolase
+10710213,2,MAR03685,Steryl-ester acylhydrolase
+10717335,2,MAR03581,Steryl-ester acylhydrolase
+10717335,2,MAR03727,Steryl-ester acylhydrolase
+10745051,2,MAR07731,"acid phosphatase 2, lysosomal (CoA)"
+10745051,2,MAR08978,Lysosomal Acid Phosphorylase (CoA)
+10756290,2,MAR03571,Steryl-ester acylhydrolase
+10756290,2,MAR03717,Steryl-ester acylhydrolase
+10763963,2,MAR03127,Peptidyl-Dipeptidase A
+10763963,2,MAR09477,angiotensin I converting enzyme (N-acetyl-seryl-aspartyl-lysyl-proline
+10781823,2,MAR08461,adenylate kinase (dCDP)
+10781823,2,MAR08462,cytidine/uridine monophosphate kinase (d
+10799196,2,MAR02192,3-Methoxy-4-Hydroxyphenylacetaldehyde:NA
+10799196,2,MAR06766,3-Methoxy-4-hydroxyphenylacetaldehyde:NA
+10799859,2,MAR02486,ELOVL fatty acid elongase
+10799859,2,MAR03404,"long-chain-aldehyde dehydrogenase ((5Z,8"
+10834171,2,MAR08109,folylpolyglutamate synthase (glutamate)
+10834171,2,MAR08116,folylpolyglutamate synthase (glutamate)
+10884318,2,MAR00817,"beta-galactoside alpha-2,3-sialyltransferase (CMP-N-acetylneuraminate)"
+10884318,2,MAR08167,"beta-galactoside alpha-2,3-sialyltransferase (CMP-N-acetylneuraminate)"
+10893218,2,MAR06630,retinol: NADP+ oxidoreductase
+10893218,2,MAR06632,retinol: NADP+ oxidoreductase
+10918084,2,MAR02115,"calciol,NADPH-hemoprotein reductase:oxyg"
+10918084,2,MAR02117,"calciol,NADPH-hemoprotein reductase:oxyg"
+10924421,2,MAR06704,glucuronosyltransferase (4-hydroxy-all-t
+10924421,2,MAR06705,glucuronosyltransferase (4-hydroxy-all-t
+10933303,2,MAR03777,L-Leucine:2-oxoglutarate aminotransferas
+10933303,2,MAR03778,L-Leucine:2-oxoglutarate aminotransferas
+10954435,2,MAR03594,Steryl-ester acylhydrolase
+10954435,2,MAR03740,Steryl-ester acylhydrolase
+10981719,2,MAR02193,very-long-chain (3R)-3-hydroxyacyl-CoA d
+10981719,2,MAR02523,HIRA interacting protein (3-hydroxyoctad
+10993146,2,MAR03540,Steryl-ester acylhydrolase
+10993146,2,MAR03686,Steryl-ester acylhydrolase
+10997568,2,MAR03564,Steryl-ester acylhydrolase
+10997568,2,MAR03710,Steryl-ester acylhydrolase
+11000308,2,MAR00911,4-galactosyl-N-acetylglucosaminide 3-alp
+11000308,2,MAR08334,fucosyltransferase (GDP-L-fucose)
+11013870,2,MAR00816,"beta-1,3-galactosyltransferase (GA2)"
+11013870,2,MAR08166,"beta-1,3-galactosyltransferase (GA2)"
+11019282,2,MAR11430,Oxaloacetate Decarboxylase
+11019282,2,MAR20110,MAR20110
+11034283,2,MAR00844,"beta-galactoside alpha-2,3-sialyltransfe"
+11034283,2,MAR08189,"beta-galactoside alpha-2,3-sialyltransfe"
+11041325,2,MAR03580,Steryl-ester acylhydrolase
+11041325,2,MAR03726,Steryl-ester acylhydrolase
+11056580,2,MAR02399,very-long-chain (3R)-3-hydroxyacyl-CoA d
+11056580,2,MAR03479,ELOVL fatty acid elongase
+11084162,2,MAR08460,cytidine/uridine monophosphate kinase (C
+11084162,2,MAR08463,cytidine/uridine monophosphate kinase (C
+11090442,2,MAR03454,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+11090442,2,MAR03468,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+11094793,2,MAR03099,(S)-Hydroxyhexanoyl-CoA hydro-lyase
+11094793,2,MAR03157,(S)-Hydroxyhexanoyl-CoA hydro-lyase
+11111477,2,MAR05298,Fatty Acid Beta Oxidation (C16:4->C16:5)
+11111477,2,MAR05300,Fatty Acid Beta Oxidation (C16:4->C16:5)
+11123366,2,MAR06679,glucuronosyltransferase (13-cis-retinoat
+11123366,2,MAR08717,glucuronosyltransferase (13-cis-retinoat
+11123575,2,MAR01449,hydroxymethylglutaryl-CoA lyase
+11123575,2,MAR01577,(S)-3-hydroxy-3-methylglutaryl-CoA acetoacetate-lyase (acetyl-CoA-form
+11125503,2,MAR00113,C-3 Sterol Dehydrogenase (4-Methylzymosterol)
+11125503,2,MAR01495,NAD(P) dependent steroid dehydrogenase-like
+11127813,2,MAR02553,leukotriene-B4 20-monooxygenase (leukotr
+11127813,2,MAR02555,leukotriene-B4 20-monooxygenase (leukotr
+11170931,2,MAR01988,cytochrome P450 (17alpha-hydroxyprogeste
+11170931,2,MAR07928,cytochrome P450 (17alpha-hydroxyprogeste
+11175856,2,MAR01010,"arachidonate 12-lipoxygenase, 12S type ("
+11175856,2,MAR01011,"arachidonate 12-lipoxygenase, 12S type ("
+11188013,2,MAR03548,Steryl-ester acylhydrolase
+11188013,2,MAR03694,Steryl-ester acylhydrolase
+11188904,2,MAR04600,ATP:deoxyguanosine 5'-phosphotransferase
+11188904,2,MAR04601,ATP:deoxyguanosine 5'-phosphotransferase
+11189134,2,MAR08796,phenylacetyl-CoA:glycine N-phenylacetyltransferase
+11189134,2,MAR10459,Glycine-N-Acetyltransferase
+11200311,2,MAR20071,MAR20071
+11200311,2,MAR20072,MAR20072
+11206962,2,MAR07800,adenylate kinase (ADP)
+11206962,2,MAR07801,adenylate kinase (ADP)
+11207326,2,MAR00892,"UDP-GlcNAc:betaGal beta-1,3-N-acetylgluc"
+11207326,2,MAR08306,"UDP-GlcNAc:betaGal beta-1,3-N-acetylgluc"
+11228682,2,MAR08108,folylpolyglutamate synthase (glutamate)
+11228682,2,MAR08115,folylpolyglutamate synthase (glutamate)
+11254843,2,MAR08477,ATP:deoxycitidine 5'-phosphotransferase
+11254843,2,MAR08478,ATP:deoxycitidine 5'-phosphotransferase
+11259872,2,MAR06931,primary-amine oxidase (spermine)
+11259872,2,MAR06932,primary-amine oxidase (spermine)
+11261367,2,MAR01467,presqualene-diphosphate diphosphate-lyas
+11261367,2,MAR02147,Presqualene Diphosphate:Farnesyl-Diphosp
+11262612,2,MAR00275,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+11262612,2,MAR02964,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+11343427,2,MAR04503,"5,10-Methenyltetrahydrofolate 5-hydrolas"
+11343427,2,MAR04505,"5,10-Methenyltetrahydrofolate 5-hydrolas"
+11347708,2,MAR02522,very-long-chain 3-oxoacyl-CoA synthase (
+11347708,2,MAR03516,"ELOVL fatty acid elongase (10,13,16,19-d"
+11350098,2,MAR00297,long-chain-fatty-acid-CoA ligase (9-eico
+11350098,2,MAR02969,long-chain-fatty-acid-CoA ligase (9-eico
+11358158,2,MAR04169,"GTP 8,9-hydrolase"
+11358158,2,MAR04170,"GTP 8,9-hydrolase"
+11376131,2,MAR03235,hydroxyacyl-CoA dehydrogenase trifunctio
+11376131,2,MAR03351,"enoyl-CoA hydratase (trans,cis-myristo-2"
+11380706,2,MAR03595,Steryl-ester acylhydrolase
+11380706,2,MAR03741,Steryl-ester acylhydrolase
+11468115,2,MAR00443,"3-Beta-Hydroxysteroid-Delta (8), Delta ("
+11468115,2,MAR01512,"delta8,24-Cholestadien-3beta-ol delta7-d"
+11494870,2,MAR03602,Steryl-Sulfatase
+11494870,2,MAR03603,Steryl-Sulfatase
+11507116,2,MAR00827,"beta-1,4-N-acetyl-galactosaminyltransfer"
+11507116,2,MAR08190,"beta-1,4-N-acetyl-galactosaminyltransfer"
+11533113,2,MAR02018,Androsterone:NADP+ oxidoreductase
+11533113,2,MAR02019,Androsterone:NADP+ oxidoreductase
+11584124,2,MAR01238,"leukotriene-B4 20-monooxygenase (10,11-d"
+11584124,2,MAR01239,"leukotriene-B4 20-monooxygenase (10,11-d"
+11600259,2,MAR00869,Beta Oxidation of Long Chain Fatty Acid
+11600259,2,MAR00872,Beta Oxidation of Long Chain Fatty Acid
+11619734,2,MAR04673,ATP:dUDP phosphotransferase
+11619734,2,MAR07889,ATP:dUDP phosphotransferase
+11656788,2,MAR04725,N-[(R)-4'-Phosphopantothenoyl]-L-cysteine carboxy-lyase
+11656788,2,MAR04733,N-[(R)-4'-Phosphopantothenoyl]-L-cysteine carboxy-lyase
+11664034,2,MAR06683,cytochrome P450 (13-cis-retinoate)
+11664034,2,MAR06684,cytochrome P450 (13-cis-retinoate)
+11674015,2,MAR06426,leukotriene-B4 20-monooxygenase (alpha-t
+11674015,2,MAR06427,leukotriene-B4 20-monooxygenase (alpha-t
+11722388,2,MAR04717,(R)-pantetheine amidohydrolase
+11722388,2,MAR08986,(R)-Pantetheine Amidohydrolase
+11726040,2,MAR02042,unspecific monooxygenase (estradiol-17be
+11726040,2,MAR02043,unspecific monooxygenase (estradiol-17be
+11734739,2,MAR03566,Steryl-ester acylhydrolase
+11734739,2,MAR03712,Steryl-ester acylhydrolase
+11736264,2,MAR00055,Alpha-Mannosidase
+11736264,2,MAR07428,alpha-mannosidase ((alpha-D-mannosyl)2-beta-D-mannosyl-N-acetylglucosa
+11772179,2,MAR01315,thromboxane A2 hydrolysis
+11772179,2,MAR10406,Formation of Thromboxane B2
+11776482,2,MAR02489,hydroxysteroid 17-beta dehydrogenase
+11776482,2,MAR03405,ELOVL fatty acid elongase (3-oxo-docosa-
+11783954,2,MAR00156,Butanoate:CoA ligase (AMP-forming)
+11783954,2,MAR00742,"fatty-acid-CoA ligase (butanoate), mitoc"
+11788997,2,MAR02383,very-long-chain 3-oxoacyl-CoA synthase (
+11788997,2,MAR03443,3beta-hydroxy-Delta(5)-steroid dehydroge
+11818467,2,MAR00353,long-chain-fatty-acid-CoA ligase (steari
+11818467,2,MAR02982,long-chain-fatty-acid-CoA ligase (steari
+11826010,2,MAR02188,"3, 4-Dihydroxymandelaldehyde:NAD+ Oxidor"
+11826010,2,MAR06753,"3,4-Dihydroxymandelaldehyde:NAD+ oxidore"
+11846545,2,MAR03851,3-sulfinylpyruvic acid hydrolysis
+11846545,2,MAR03866,3-sulfinylpyruvic acid hydrolysis
+11871036,2,MAR03446,"2,4-dienoyl-CoA reductase"
+11871036,2,MAR03461,"2,4-dienoyl-CoA reductase"
+11873409,2,MAR08107,folylpolyglutamate synthase (glutamate)
+11873409,2,MAR08114,folylpolyglutamate synthase (glutamate)
+11912490,2,MAR03239,3-cis-Dodecenoyl-CoA delta3-cis-delta2-t
+11912490,2,MAR03355,3-cis-Dodecenoyl-CoA delta3-cis-delta2-t
+11938575,2,MAR03445,enoyl-CoA delta isomerase
+11938575,2,MAR03460,Delta(3)-Delta(2)-enoyl-CoA isomerase
+11989500,2,MAR06947,primary-amine oxidase (spermidine monoal
+11989500,2,MAR06948,primary-amine oxidase (spermidine monoal
+12030806,2,MAR02615,Glucuronosyltransferase
+12030806,2,MAR02617,Glucuronosyltransferase
+12051095,2,MAR03563,Steryl-ester acylhydrolase
+12051095,2,MAR03709,Steryl-ester acylhydrolase
+12065173,2,MAR00840,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+12065173,2,MAR08175,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+12070399,2,MAR04580,Cytidine aminohydrolase
+12070399,2,MAR08446,Cytidine aminohydrolase
+12079297,2,MAR01107,leukotriene-B4 20-monooxygenase (12-keto
+12079297,2,MAR01108,leukotriene-B4 20-monooxygenase (12-keto
+12104752,2,MAR03226,medium-chain acyl-CoA dehydrogenase (ole
+12104752,2,MAR03342,acyl-CoA oxidase (oleoyl-CoA)
+12117246,2,MAR00951,unspecific monooxygenase (arachidonate)
+12117246,2,MAR03788,Unspecific Monooxygenase
+12125375,2,MAR00068,Alkaline Phosphatase
+12125375,2,MAR04390,Glycerone phosphate phosphohydrolase
+12134108,2,MAR03069,acetyl-CoA C-acyltransferase (3-oxodocos
+12134108,2,MAR03110,acetyl-CoA C-acyltransferase (3-oxodocos
+12150626,2,MAR01796,"cytochrome P450 (3beta,7alpha-dihydroxy-"
+12150626,2,MAR02938,"3beta,7alpha-dihydroxy-5-cholestenoate o"
+12179292,2,MAR06977,S-adenosyl-L-methionine:cytochrome-c-L-l
+12179292,2,MAR08027,S-adenosyl-L-methionine:cytochrome-c-L-l
+12197012,2,MAR00086,"biotin-[acetyl-CoA-carboxylase] ligase, mitochondrial"
+12197012,2,MAR07668,biotin:CoA ligase (AMP-forming)
+12198337,2,MAR01085,membrane dipeptidase (LTD4)
+12198337,2,MAR08552,LTD4 hydrolysis
+12203477,2,MAR06664,cytochrome P450 (9-cis-retinoate)
+12203477,2,MAR06665,cytochrome P450 (9-cis-retinoate)
+12221841,2,MAR02190,very-long-chain 3-oxoacyl-CoA synthase (malonyl-CoA)
+12221841,2,MAR02519,very-long-chain 3-oxoacyl-CoA synthase (malonyl-CoA)
+12222096,2,MAR02912,carnitine O-palmitoyltransferase ((15Z)-
+12222096,2,MAR02914,carnitine O-acetyltransferase ((15Z)-tet
+12224759,2,MAR04053,Unspecific Monooxygenase
+12224759,2,MAR04055,Unspecific Monooxygenase
+12241001,2,MAR03068,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+12241001,2,MAR03109,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+12242366,2,MAR04114,2-oxoglutaramate amidohydrolase
+12242366,2,MAR04115,2-oxoglutaramate amidohydrolase
+12252934,2,MAR08774,hydroxypyruvate carboxy-lyase (glycolaldehyde-forming)
+12252934,2,MAR08777,hydroxypyruvate carboxy-lyase (glycolaldehyde-forming)
+12289116,2,MAR00223,Palmitoyl-CoA hydrolase
+12289116,2,MAR00709,palmitoyl-CoA hydrolase
+12297684,2,MAR01310,6-oxo-prostaglandin F1alpha to prostagla
+12297684,2,MAR01318,6-oxo-prostaglandin F1alpha to prostagla
+12395644,2,MAR04445,Production of Adipoyl Carnitine
+12395644,2,MAR04745,Production of Adipoylcarnitine
+12396055,2,MAR02546,carbonyl reductase (NADPH) (5(S)-HEPE)
+12396055,2,MAR02548,carbonyl reductase (NADPH) (5(S)-HEPE)
+12434121,2,MAR06834,"thyroxine 5'-deiodinase (3,3-diiodo-L-th"
+12434121,2,MAR06835,"thyroxine 5'-deiodinase (3,3-diiodo-L-th"
+12463879,2,MAR01830,cytochrome P450 (cholate)
+12463879,2,MAR01831,cytochrome P450 (cholate)
+12466361,2,MAR08471,cytidine/uridine monophosphate kinase (C
+12466361,2,MAR08472,cytidine/uridine monophosphate kinase (C
+12474357,2,MAR04679,Cysteamine:oxygen oxidoreductase
+12474357,2,MAR07817,"Cysteamine:Oxygen Oxidoreductase, Extrac"
+12477373,2,MAR09567,"3-hydroxy-2,6-dimethyl-5-methylene-hepta"
+12477373,2,MAR09568,"3-hydroxy-2,6-dimethyl-5-methylene-hepta"
+12482165,2,MAR04796,leukotriene-C4 hydrolase
+12482165,2,MAR08548,leukotriene-C4 hydrolase
+12535212,2,MAR06568,"ATP:1D-myo-inositol-1,3,4,6-tetrakisphos"
+12535212,2,MAR08800,"ATP:1D-myo-inositol-1,3,4,6-tetrakisphos"
+12559438,2,MAR02021,UDPglucose Pyrophosphohydrolase
+12559438,2,MAR04127,UDP-glucose glucophosphohydrolase
+12567992,2,MAR02307,hydroxysteroid 17-beta dehydrogenase (3-
+12567992,2,MAR03607,ELOVL fatty acid elongase (3-oxo-11-cis-
+12568630,2,MAR01976,dihydrotestosterone:NADP+ delta4-oxidore
+12568630,2,MAR01977,dihydrotestosterone:NADP+ delta4-oxidore
+12659000,2,MAR00970,Beta Oxidation of Long Chain Fatty Acid
+12659000,2,MAR00972,Beta Oxidation of Long Chain Fatty Acid
+12675444,2,MAR06537,L-gulonate:NADP+ 6-oxidoreductase
+12675444,2,MAR08344,L-gulonate:NADP+ 6-oxidoreductase
+12690290,2,MAR03066,acyl-CoA oxidase (docosanoyl-CoA)
+12690290,2,MAR03107,medium-chain acyl-CoA dehydrogenase (doc
+12691253,2,MAR00373,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+12691253,2,MAR02987,"long-chain-fatty-acid-CoA ligase ((6Z,9Z"
+12705873,2,MAR01350,prostaglandin-endoperoxide synthase (2-a
+12705873,2,MAR03006,Prostaglandin-Endoperoxide Synthase
+12796022,2,MAR00088,Beta-Aminopropion Aldehyde:NAD+ Oxidored
+12796022,2,MAR07993,aldehyde dehydrogenase (NAD(+)) (3-amino
+12807220,2,MAR06320,"Fatty Acid Beta Oxidation (C8:1->C6:1), "
+12807220,2,MAR06322,"Fatty Acid Beta Oxidation (C8:1->C6:1), "
+12841211,2,MAR02497,ELOVL fatty acid elongase
+12841211,2,MAR03415,"3-hydroxyacyl-CoA dehydrogenase ((7Z,10Z"
+12884056,2,MAR02465,microsomal epoxide hydrolase (12(13)-EpO
+12884056,2,MAR02466,microsomal epoxide hydrolase (12(13)-EpO
+12893221,2,MAR02958,"2',3'-Cyclic-Nucleotide 3'-Phosphodieste"
+12893221,2,MAR09471,"2',3'-Cyclic UMP 3'-nucleotidohydrolase"
+12893532,2,MAR06552,"Phosphatidyl-myo-inositol-4,5-bisphospha"
+12893532,2,MAR08817,"Phosphatidyl-myo-inositol-4,5-bisphospha"
+12930110,2,MAR08454,cytidine/uridine monophosphate kinase (d
+12930110,2,MAR08455,cytidine/uridine monophosphate kinase (d
+12933312,2,MAR00413,long-chain-fatty-acid-CoA ligase (adreni
+12933312,2,MAR02998,long-chain-fatty-acid-CoA ligase (adreni
+12950440,2,MAR00047,4-hydroxybenzoyl-CoA formation
+12950440,2,MAR06785,4-coumaroyl-CoA oxidation
+12976750,2,MAR20077,MAR20077
+12976750,2,MAR20078,MAR20078
+12993209,2,MAR00907,G00077 to iso-nLc8Cer conversion
+12993209,2,MAR08317,"UDP-GlcNAc:betaGal beta-1,3-N-acetylgluc"
+12994644,2,MAR02189,"3, 4-Dihydroxymandelaldehyde:NADP+ Oxido"
+12994644,2,MAR06754,"3,4-Dihydroxymandelaldehyde:NADP+ oxidor"
+12996985,2,MAR00209,long-chain-fatty-acid-CoA ligase (physet
+12996985,2,MAR02945,long-chain-fatty-acid-CoA ligase (physet
+13027747,2,MAR03890,L-Glutamate:ammonia ligase (ADP-forming)
+13027747,2,MAR20191,L-Glutamate:ammonia ligase (ADP-forming)
+13037647,2,MAR02528,very-long-chain enoyl-CoA reductase (tra
+13037647,2,MAR03507,ELOVL fatty acid elongase
+13066359,2,MAR00425,"long-chain-fatty-acid-CoA ligase ((4Z,7Z"
+13066359,2,MAR03001,"long-chain-fatty-acid-CoA ligase ((4Z,7Z"
+13077221,2,MAR02401,very-long-chain enoyl-CoA reductase
+13077221,2,MAR03442,"ELOVL fatty acid elongase (2-trans-9,12,"
+13109747,2,MAR04268,ATP:NAD+ 2'-phosphotransferase
+13109747,2,MAR04269,ATP:NAD+ 2'-phosphotransferase
+13154824,2,MAR03458,Delta(3)-Delta(2)-enoyl-CoA isomerase ((
+13154824,2,MAR03472,Delta(3)-Delta(2)-enoyl-CoA isomerase ((
+13158945,2,MAR04737,L-2-aminoadipate-6-semialdehyde:NAD+ 6-o
+13158945,2,MAR04739,L-2-aminoadipate-6-semialdehyde:NAD+ 6-o
+13183967,2,MAR06848,"thyroxine 5'-deiodinase (3,5-diiodo-L-th"
+13183967,2,MAR06849,"thyroxine 5'-deiodinase (3,5-diiodo-L-th"
+13195549,2,MAR03124,Glutathione Transferase
+13195549,2,MAR06723,glutathione transferase (3-hydroxykynurenine-O-beta-D-glucoside)
+13235829,2,MAR06828,"glucuronosyltransferase (3,3-diiodo-L-th"
+13235829,2,MAR06830,"glucuronosyltransferase (3,3-diiodo-L-th"
+13246784,2,MAR03042,Chymase
+13246784,2,MAR09481,chymase (kinetensin)
+13255408,2,MAR03048,Kynurenine-Oxoglutarate Transaminase
+13255408,2,MAR04246,kynurenine-oxoglutarate transaminase (3-
+13298492,2,MAR04727,ATP:pantetheine-4'-phosphate adenylyltransferase
+13298492,2,MAR04734,ATP:pantetheine-4'-phosphate adenylyltransferase
+13351372,2,MAR02927,"carnitine O-palmitoyltransferase ((6Z,9Z"
+13351372,2,MAR02929,"carnitine O-acetyltransferase ((6Z,9Z,12"
+13356934,2,MAR00969,leukotriene-B4 20-monooxygenase (5(S)-HE
+13356934,2,MAR03891,Leukotriene-B4 20-Monooxygenase
+13357919,2,MAR00241,long-chain-fatty-acid-CoA ligase ((10Z)-heptadecenoic acid)
+13357919,2,MAR02955,long-chain-fatty-acid-CoA ligase ((10Z)-heptadecenoic acid)
+13370111,2,MAR03252,hydroxyacyl-CoA dehydrogenase trifunctio
+13370111,2,MAR03365,"enoyl-CoA hydratase (trans,cis-hexadeca-"
+13412992,2,MAR02483,Phosphatidylethanolamine N-Methyltransfe
+13412992,2,MAR02485,Phosphatidylethanolamine N-Methyltransfe
+13444832,2,MAR03562,Steryl-ester acylhydrolase
+13444832,2,MAR03708,Steryl-ester acylhydrolase
+13484727,2,MAR03092,(S)-hydroxydecanoyl-CoA:NAD+ oxidoreduct
+13484727,2,MAR03144,(S)-hydroxydecanoyl-CoA:NAD+ oxidoreduct
+13533614,2,MAR01810,"cytochrome P450 (5beta-cholestan-3alpha,"
+13533614,2,MAR02887,Quinine 3-Monooxygenase
+13543011,2,MAR09563,Aldehyde:NAD+ oxidoreductase
+13543011,2,MAR09564,Aldehyde:NAD+ oxidoreductase
+13546110,2,MAR03233,acetyl-CoA C-acyltransferase (3-oxo-7-he
+13546110,2,MAR03349,acetyl-CoA C-acyltransferase (3-oxo-7-he
+13551981,2,MAR00807,beta-N-acetylhexosaminidase (globoside)
+13551981,2,MAR00808,beta-N-acetylhexosaminidase (globoside)
+13568792,2,MAR04261,deamido-NAD+:ammonia ligase (AMP-forming
+13568792,2,MAR04278,deamido-NAD+:ammonia ligase (AMP-forming
+13620444,2,MAR03258,medium-chain acyl-CoA dehydrogenase ((7Z
+13620444,2,MAR03289,medium-chain acyl-CoA dehydrogenase ((7Z
+13637314,2,MAR02619,Glucuronosyltransferase
+13637314,2,MAR02627,Glucuronosyltransferase
+13649293,2,MAR00069,alpha-methylacyl-CoA racemase (reductase
+13649293,2,MAR00070,alpha-methylacyl-CoA racemase (reductase
+13664683,2,MAR00083,bile acid-CoA: amino acid N-acyltransferase
+13664683,2,MAR01670,Choloyl-CoA:glycine N-choloyltransferase
+13691461,2,MAR05325,"Fatty Acid Beta Oxidation (C16->C14), Mi"
+13691461,2,MAR05327,"Fatty Acid Beta Oxidation (C16->C14), Pe"
+13695435,2,MAR08066,L-cysteate:2-oxoglutarate aminotransferase
+13695435,2,MAR08067,L-cysteate:2-oxoglutarate aminotransferase
+13722588,2,MAR06950,primary-amine oxidase (spermidine monoal
+13722588,2,MAR06951,primary-amine oxidase (spermidine monoal
+13748241,2,MAR03072,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+13748241,2,MAR03113,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+13771077,2,MAR00385,"long-chain-fatty-acid-CoA ligase (13,16,"
+13771077,2,MAR02990,"long-chain-fatty-acid-CoA ligase (13,16,"
+13790022,2,MAR03567,Steryl-ester acylhydrolase
+13790022,2,MAR03713,Steryl-ester acylhydrolase
+13816287,2,MAR03218,medium-chain acyl-CoA dehydrogenase ((13
+13816287,2,MAR03334,acyl-CoA oxidase ((13Z)-docosenoyl-CoA)
+13828834,2,MAR06655,cytochrome P450 (4-OH-9-cis-retinal)
+13828834,2,MAR06656,cytochrome P450 (4-OH-9-cis-retinal)
+13835894,2,MAR00773,ATP:sphingosine 1-phosphotransferase
+13835894,2,MAR12082,Sphingosine Kinase 2
+13851429,2,MAR03444,medium-chain acyl-CoA dehydrogenase (ara
+13851429,2,MAR03459,acyl-CoA oxidase (arachidonyl-CoA)
+13877451,2,MAR03051,Glucuronosyltransferase
+13877451,2,MAR06495,glucuronosyltransferase (3-carboxy-alpha
+13911774,2,MAR03437,"(4Z,7Z,10Z,13Z,16Z,19Z)-docosahexaenoyl-"
+13911774,2,MAR03438,"ELOVL fatty acid elongase ((4Z,7Z,10Z,13"
+13919098,2,MAR03745,"alpha-methylacyl-CoA racemase (trans,cis"
+13919098,2,MAR03749,"ELOVL fatty acid elongase (trans,cis-2,9"
+13934752,2,MAR03044,Tripeptidyl-Peptidase I
+13934752,2,MAR09472,tripeptidyl peptidase (neuromedin B)
+13970483,2,MAR06555,"ATP:1-phosphatidyl-1D-myo-inositol-4,5-b"
+13970483,2,MAR08816,"ATP:1-phosphatidyl-1D-myo-inositol-4,5-b"
+13979366,2,MAR03912,L-Cysteine:2-oxoglutarate aminotransferase
+13979366,2,MAR08684,L-Cysteine:2-oxoglutarate aminotransferase
+14001773,2,MAR04780,trans-4-Hydroxy-L-proline:NADP+ 5-oxidor
+14001773,2,MAR04781,trans-4-Hydroxy-L-proline:NADP+ 5-oxidor
+14002072,2,MAR03556,Steryl-ester acylhydrolase
+14002072,2,MAR03702,Steryl-ester acylhydrolase
+14066169,2,MAR03230,medium-chain acyl-CoA dehydrogenase (7-h
+14066169,2,MAR03346,acyl-CoA oxidase (7-hexadecenoyl-CoA)
+14070872,2,MAR03577,Steryl-ester acylhydrolase
+14070872,2,MAR03723,Steryl-ester acylhydrolase
+14075588,2,MAR02804,long-chain-acyl-CoA dehydrogenase (linol
+14075588,2,MAR03275,medium-chain acyl-CoA dehydrogenase (lin
+14097452,2,MAR03098,acyl-CoA oxidase (hexanoyl-CoA)
+14097452,2,MAR03156,hexanoyl-CoA:electron-transfer flavoprot
+14123582,2,MAR01114,12-oxo-20-carboxy-LTB4 hydrolysis
+14123582,2,MAR01115,12-oxo-20-carboxy-LTB4 hydrolysis
+14165066,2,MAR00200,long-chain-fatty-acid-CoA ligase ((9E)-t
+14165066,2,MAR02946,long-chain-fatty-acid-CoA ligase ((9E)-t
+14188713,2,MAR00887,G00058 to G00059 conversion
+14188713,2,MAR08288,G00058 to G00059 conversion
+14216456,2,MAR00410,Arachidonyl-CoA hydrolase
+14216456,2,MAR03015,palmitoyl-CoA hydrolase (arachidonyl-CoA
+14231567,2,MAR05083,Fatty Acid Beta Oxidation (C12:3->C10:2)
+14231567,2,MAR05086,Fatty Acid Beta Oxidation (C12:3->C10:2)
+14259173,2,MAR06443,leukotriene-B4 20-monooxygenase (13-hydr
+14259173,2,MAR06444,leukotriene-B4 20-monooxygenase (13-hydr
+14266760,2,MAR03089,Decanoyl-CoA:acetyl-CoA C-acyltransferase
+14266760,2,MAR03139,Decanoyl-CoA:acetyl-CoA C-acyltransferase
+14291670,2,MAR02467,"glucuronosyltransferase (12,13-hydroxyoc"
+14291670,2,MAR02468,"glucuronosyltransferase (12,13-hydroxyoc"
+14309494,2,MAR01109,leukotriene-B4 20-monooxygenase (12-oxo-
+14309494,2,MAR01110,leukotriene-B4 20-monooxygenase (12-oxo-
+14309687,2,MAR02515,very-long-chain 3-oxoacyl-CoA synthase (
+14309687,2,MAR03500,"ELOVL fatty acid elongase ((8Z,11Z,14Z,1"
+14322429,2,MAR04415,Lactose galactohydrolase
+14322429,2,MAR08764,lactase (lactose)
+14349852,2,MAR02036,Estradiol-17beta:NADP+ 17-oxidoreductase
+14349852,2,MAR02041,17-beta-estradiol 17-dehydrogenase
+14354161,2,MAR03840,Leukotriene-B4 20-Monooxygenase
+14354161,2,MAR03842,Leukotriene-B4 20-Monooxygenase
+14383811,2,MAR01839,cytochrome P450 (lithocholate)
+14383811,2,MAR01840,cytochrome P450 (lithocholate)
+14392202,2,MAR03272,3-cis-Dodecenoyl-CoA delta3-cis-delta2-t
+14392202,2,MAR03375,Delta(3)-Delta(2)-enoyl-CoA isomerase ((
+14407456,2,MAR03559,Steryl-ester acylhydrolase
+14407456,2,MAR03705,Steryl-ester acylhydrolase
+14417137,2,MAR01390,prostaglandin-endoperoxide synthase (dih
+14417137,2,MAR01391,prostaglandin-endoperoxide synthase (dih
+14436289,2,MAR02581,prostaglandin-endoperoxide synthase (EPA
+14436289,2,MAR02582,prostaglandin-endoperoxide synthase (EPA
+14453880,2,MAR03796,Propionyladenylate:CoA propionyltransferase
+14453880,2,MAR04331,Propionyladenylate:CoA propionyltransferase
+14465816,2,MAR03220,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+14465816,2,MAR03336,3-hydroxyacyl-CoA dehydrogenase (3(S)-hy
+14497699,2,MAR01111,leukotriene-B4 20-monooxygenase (12-oxo-
+14497699,2,MAR01112,leukotriene-B4 20-monooxygenase (12-oxo-
+14513247,2,MAR07580,alpha-L-fucosidase (PA6)
+14513247,2,MAR07582,alpha-L-fucosidase (PA6)
+14530878,2,MAR03542,Steryl-ester acylhydrolase
+14530878,2,MAR03688,Steryl-ester acylhydrolase
+14538537,2,MAR01259,"acetyl-CoA C-acyltransferase (18,20-diox"
+14538537,2,MAR01260,"acetyl-CoA C-acyltransferase (18,20-diox"
+14581461,2,MAR03264,acetyl-CoA C-acyltransferase (3-oxomyris
+14581461,2,MAR03373,acetyl-CoA C-acyltransferase (3-oxomyris
+14596958,2,MAR05383,"Isomerization (C22:5), Mitochondrial"
+14596958,2,MAR05402,"Isomerization (C22:5), Peroxisomal"
+14610402,2,MAR00441,Diphosphomevalonate Decarboxylase
+14610402,2,MAR01451,ATP:(R)-5-diphosphomevalonate carboxy-lyase (adding ATP
+14624122,2,MAR00809,"beta-1,3-galactosyltransferase (globosid"
+14624122,2,MAR08150,"beta-1,3-galactosyltransferase (globosid"
+14661784,2,MAR02516,hydroxysteroid 17-beta dehydrogenase
+14661784,2,MAR03502,ELOVL fatty acid elongase (3-oxo-docosa-
+14675878,2,MAR01139,leukotriene-B4 20-monooxygenase (20-dihy
+14675878,2,MAR01140,leukotriene-B4 20-monooxygenase (20-dihy
+14692342,2,MAR03247,acetyl-CoA C-acyltransferase (3-oxo-11-c
+14692342,2,MAR03363,acetyl-CoA C-acyltransferase (3-oxo-11-c
+14694584,2,MAR02016,Androsterone:NAD+ oxidoreductase
+14694584,2,MAR02017,Androsterone:NAD+ oxidoreductase
+14705045,2,MAR04198,L-Serine:pyruvate aminotransferase
+14705045,2,MAR04467,L-Serine:pyruvate aminotransferase
+14722873,2,MAR06944,primary-amine oxidase (spermidine)
+14722873,2,MAR06945,primary-amine oxidase (spermidine)
+14755281,2,MAR02118,"calcidiol,adrenodoxin:oxygen oxidoreduct"
+14755281,2,MAR08008,"calcidiol,adrenodoxin:oxygen oxidoreduct"
+14760898,2,MAR03078,acyl-CoA oxidase (palmitoyl-CoA)
+14760898,2,MAR03121,palmitoyl-CoA:electron-transfer flavopro
+14767098,2,MAR04978,Fatty Acid Beta Oxidation (C10:2->C10:3)
+14767098,2,MAR04981,Fatty Acid Beta Oxidation (C10:2->C10:3)
+14767169,2,MAR05283,apoA1 phosphorylation
+14767169,2,MAR05284,apoA1 phosphorylation
+14769862,2,MAR03231,hydroxyacyl-CoA dehydrogenase trifunctio
+14769862,2,MAR03347,"enoyl-CoA hydratase (trans,cis-hexadeca-"
+14789991,2,MAR03587,Steryl-ester acylhydrolase
+14789991,2,MAR03733,Steryl-ester acylhydrolase
+14803556,2,MAR04208,Thiamin diphosphate phosphohydrolase
+14803556,2,MAR08744,Thiamin diphosphate phosphohydrolase
+14810163,2,MAR03553,Steryl-ester acylhydrolase
+14810163,2,MAR03698,Steryl-ester acylhydrolase
+14815140,2,MAR06551,ATP:1-phosphatidyl-1D-myo-inositol-4-pho
+14815140,2,MAR08821,ATP:1-phosphatidyl-1D-myo-inositol-4-pho
+14843625,2,MAR02808,"long-chain-acyl-CoA dehydrogenase (cis,c"
+14843625,2,MAR03280,medium-chain acyl-CoA dehydrogenase (cis
+14852877,2,MAR00891,"N-acetyllactosaminide beta-1,3-N-acetylg"
+14852877,2,MAR08305,"UDP-GlcNAc:betaGal beta-1,3-N-acetylgluc"
+14856806,2,MAR03076,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+14856806,2,MAR03117,3-hydroxyacyl-CoA dehydrogenase (3-hydro
+14915245,2,MAR03210,"3alpha,7alpha,12alpha-trihydroxy-5beta-c"
+14915245,2,MAR03214,"cytochrome P450 (3alpha,7alpha,12alpha-t"
+14956997,2,MAR03574,Steryl-ester acylhydrolase
+14956997,2,MAR03720,Steryl-ester acylhydrolase
+14971539,2,MAR03241,hydroxyacyl-CoA dehydrogenase trifunctio
+14971539,2,MAR03357,"enoyl-CoA hydratase (trans,cis-2,13-eico"
+14974383,2,MAR00159,carnitine O-palmitoyltransferase (butyry
+14974383,2,MAR04678,Esterification of Butyrylcoa to Butyrylc
+14988342,2,MAR08132,tetrahydropteroyl-poly-gamma-glutamate gamma-glutamylhydrolase
+14988342,2,MAR08133,tetrahydropteroyl-poly-gamma-glutamate gamma-glutamylhydrolase
+15001615,2,MAR03862,L-asparagine amidohydrolase
+15001615,2,MAR04172,L-asparagine amidohydrolase
+15032707,2,MAR00285,Dimethylallyltranstransferase
+15032707,2,MAR01457,Dimethylallyl-diphosphate:isopentenyl-diphosphate dimethylallyltranstr
+15037412,2,MAR04180,ATP:cytidine 5'-phosphotransferase
+15037412,2,MAR08445,ATP:cytidine 5'-phosphotransferase
+15049258,2,MAR03870,glutathione:NADP+ oxidoreductase
+15049258,2,MAR04118,glutathione:NADP+ oxidoreductase
+15088798,2,MAR00319,long-chain-fatty-acid-CoA ligase (cis-er
+15088798,2,MAR02974,long-chain-fatty-acid-CoA ligase (cis-er
+15114361,2,MAR00341,long-chain-fatty-acid-CoA ligase (ceroti
+15114361,2,MAR02979,long-chain-fatty-acid-CoA ligase (ceroti
+15129557,2,MAR03453,hydroxyacyl-CoA dehydrogenase trifunctio
+15129557,2,MAR03467,"enoyl-CoA hydratase ((2E,6Z,9Z,12Z)-octa"
+15144362,2,MAR03100,(S)-hydroxyhexanoyl-CoA:NAD+ oxidoreduct
+15144362,2,MAR03158,(S)-hydroxyhexanoyl-CoA:NAD+ oxidoreduct
+15150193,2,MAR06507,riboflavin-5-phosphate phosphohydrolase
+15150193,2,MAR08969,"Acid Phosphatase (FMN), Extracellular"
+15160520,2,MAR06557,"1-phosphatidyl-1D-myo-inositol-3,4,5-tri"
+15160520,2,MAR08808,"1-phosphatidyl-1D-myo-inositol-3,4,5-tri"
+15177601,2,MAR04085,AMP:diphosphate phospho-D-ribosyltransferase
+15177601,2,MAR04086,AMP:diphosphate phospho-D-ribosyltransferase
+15190386,2,MAR01568,Acetaldehyde:NAD+ oxidoreductase
+15190386,2,MAR08357,Acetaldehyde:NAD+ oxidoreductase
+15207315,2,MAR08557,prostaglandin-endoperoxide synthase (ara
+15207315,2,MAR08558,prostaglandin-endoperoxide synthase (ara
+15221871,2,MAR00858,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+15221871,2,MAR08176,"ST6 N-acetylgalactosaminide alpha-2,6-si"
+15227417,2,MAR00910,"ST3 beta-galactoside alpha-2,3-sialyltra"
+15227417,2,MAR08337,"ST3 beta-galactoside alpha-2,3-sialyltra"
+15229737,2,MAR04788,L-Alanine:glyoxylate aminotransferase
+15229737,2,MAR04791,L-Alanine:glyoxylate aminotransferase
+15232815,2,MAR00305,long-chain-fatty-acid-CoA ligase (mead a
+15232815,2,MAR02971,long-chain-fatty-acid-CoA ligase (mead a
+15235695,2,MAR00870,3-galactosyl-N-acetylglucosaminide 4-alp
+15235695,2,MAR08264,3-galactosyl-N-acetylglucosaminide 4-alp
+15304906,2,MAR00744,ATP:sphinganine 1-phosphotransferase
+15304906,2,MAR12083,Sphingosine Kinase 2
+15331578,2,MAR02639,angiotensin I converting enzyme (beta-casomorphin)
+15331578,2,MAR09478,angiotensin I converting enzyme (beta-casomorphin)
+15340420,2,MAR07863,cytidine/uridine monophosphate kinase (C
+15340420,2,MAR07864,cytidine/uridine monophosphate kinase (C
+15352409,2,MAR00845,exo-alpha-sialidase (GT1b)
+15352409,2,MAR12073,"Sialidase, Plasma Membrane (Neu3)"
+15359862,2,MAR03277,hydroxyacyl-CoA dehydrogenase trifunctio
+15359862,2,MAR03302,"enoyl-CoA hydratase (trans,cis,cis-2,9,1"
+15363084,2,MAR02321,very-long-chain enoyl-CoA reductase (tra
+15363084,2,MAR03612,"ELOVL fatty acid elongase (trans,cis-2,1"
+15364566,2,MAR02428,very-long-chain (3R)-3-hydroxyacyl-CoA d
+15364566,2,MAR03490,ELOVL fatty acid elongase ((3S)-hydroxy-
+15411214,2,MAR04642,2'-deoxyuridine 5'-monophosphate phospho
+15411214,2,MAR06626,2'-deoxyuridine 5'-monophosphate phospho
+15415996,2,MAR03575,Steryl-ester acylhydrolase
+15415996,2,MAR03721,Steryl-ester acylhydrolase
+15418322,2,MAR04541,4a-hydroxytetrahydrobiopterin dehydratas
+15418322,2,MAR04542,4a-hydroxytetrahydrobiopterin dehydratas
+15423999,2,MAR04655,dihydrofolate:NADP+ oxidoreductase
+15423999,2,MAR04656,dihydrofolate:NADP+ oxidoreductase
+15425206,2,MAR01819,cytochrome P450 (5beta-cholestane-3alpha
+15425206,2,MAR02934,Quinine 3-Monooxygenase
+15437828,2,MAR02058,S-adenosyl-L-methionine:2-Hydroxyestrone
+15437828,2,MAR02059,S-adenosyl-L-methionine:2-Hydroxyestrone
+15453212,2,MAR04514,deoxycytidine aminohydrolase
+15453212,2,MAR08480,deoxycytidine aminohydrolase
+15461713,2,MAR02518,very-long-chain (3R)-3-hydroxyacyl-CoA d
+15461713,2,MAR03504,ELOVL fatty acid elongase
+15469343,2,MAR03039,8-Dehydrocholesterol hydroxylation
+15469343,2,MAR03040,cytochrome P450 (8-Dehydrocholesterol)
+15470342,2,MAR02459,9(10)-EpOME hydrolase
+15470342,2,MAR02460,9(10)-EpOME hydrolase
+15487409,2,MAR00743,fatty-acyl-CoA elongation (N-C18:3CoA)
+15487409,2,MAR02375,long-chain-acyl-CoA dehydrogenase
+15503620,2,MAR05341,Fatty Acid Omega Oxidation (C16->W-Ohc16
+15503620,2,MAR08038,Hexadecanoic acid:fatty acid omega-hydro
+15511770,2,MAR04719,Production of Hexanoylcarnitine
+15511770,2,MAR04722,Esterification of Of Hexanoylcoa for Tra
+15535228,2,MAR02139,"cytochrome P450 ((24R)-24,25-dihydroxyca"
+15535228,2,MAR02140,"cytochrome P450 ((24R)-24,25-dihydroxyca"
+15561214,2,MAR03573,Steryl-ester acylhydrolase
+15561214,2,MAR03719,Steryl-ester acylhydrolase
+15563742,2,MAR03449,hydroxyacyl-CoA dehydrogenase trifunctio
+15563742,2,MAR03463,"enoyl-CoA hydratase (trans-2-cis,cis,cis"
+15597936,2,MAR02186,"alkaline phosphatase, biomineralization "
+15597936,2,MAR04816,"7,8-dihydroneopterin-3'-triphosphate pho"
+15611794,2,MAR03519,"4(R),8-dimethyl-nonanoyl-CoA to 4,8-dime"
+15611794,2,MAR03521,"4(R),8-dimethyl-nonanoyl-CoA to 4,8-dime"
+15630911,2,MAR06648,cytochrome P450 (retinal)
+15630911,2,MAR06649,cytochrome P450 (retinal)
+15671880,2,MAR03590,Steryl-ester acylhydrolase
+15671880,2,MAR03736,Steryl-ester acylhydrolase
+15681543,2,MAR05404,Fatty Acid Beta Oxidation (C22:6->C22:5)
+15681543,2,MAR05405,Fatty Acid Beta Oxidation (C22:6->C22:5)
+15688111,2,MAR06641,cytochrome P450 (retinol)
+15688111,2,MAR06642,cytochrome P450 (retinol)
+15766207,2,MAR04666,5-Formyltetrahydrofolate cyclo-ligase (A
+15766207,2,MAR08143,5-Formyltetrahydrofolate cyclo-ligase (A
+15769745,2,MAR06672,13-cis-retinal to retinal conversion
+15769745,2,MAR06673,13-cis-retinal to retinal conversion
+15783659,2,MAR00361,long-chain-fatty-acid-CoA ligase (EPA)
+15783659,2,MAR02984,long-chain-fatty-acid-CoA ligase (EPA)
+15788941,2,MAR04641,ATP:deoxyuridine 5'-phosphotransferase
+15788941,2,MAR06625,ATP:deoxyuridine 5'-phosphotransferase
+15796548,2,MAR04732,Dephospho-CoA nucleotidohydrolase
+15796548,2,MAR08204,"pyrophasphatase (dephospho-CoA, extracellular)"
+15817530,2,MAR07865,cytidine/uridine monophosphate kinase (U
+15817530,2,MAR07866,cytidine/uridine monophosphate kinase (U
+15826456,2,MAR02430,very-long-chain enoyl-CoA reductase (tra
+15826456,2,MAR03492,"ELOVL fatty acid elongase (trans,cis,cis"
+15832991,2,MAR03551,Steryl-ester acylhydrolase
+15832991,2,MAR03697,Steryl-ester acylhydrolase
+15834141,2,MAR01681,cytochrome P450 (5beta-cholestane-3alpha
+15834141,2,MAR01682,cytochrome P450 (5beta-cholestane-3alpha
+15884009,2,MAR03909,Leukotriene-B4 20-Monooxygenase
+15884009,2,MAR03913,Leukotriene-B4 20-Monooxygenase
+15907409,2,MAR03075,enoyl-CoA hydratase ((2E)-octadecenoyl-C
+15907409,2,MAR03116,hydroxyacyl-CoA dehydrogenase trifunctio
+15908997,2,MAR05365,Fatty Acid Beta Oxidation (C18:4->C16:4)
+15908997,2,MAR05366,Fatty Acid Beta Oxidation (C18:4->C16:4)
+15916498,2,MAR01167,acetyl-CoA C-acyltransferase
+15916498,2,MAR01168,acetyl-CoA C-acyltransferase
+15924530,2,MAR03544,Steryl-ester acylhydrolase
+15924530,2,MAR03690,Steryl-ester acylhydrolase
+15941140,2,MAR03087,(S)-3-Hydroxydodecanoyl-CoA hydro-lyase
+15941140,2,MAR03136,(S)-3-Hydroxydodecanoyl-CoA hydro-lyase
+15980077,2,MAR02419,very-long-chain (3R)-3-hydroxyacyl-CoA d
+15980077,2,MAR03496,ELOVL fatty acid elongase (3(S)-hydroxy-
+16022625,2,MAR06929,diamine N-acetyltransferase (N1-acetylsp
+16022625,2,MAR06930,diamine N-acetyltransferase (N1-acetylsp
+16044312,2,MAR02137,cytochrome P450 (calcidiol)
+16044312,2,MAR02138,cytochrome P450 (calcidiol)
+16046684,2,MAR01713,Sialidase
+16046684,2,MAR07576,"carboxypeptidase C (de-Fuc, GlcNAc remov"
+16051226,2,MAR03899,L-Alanine:2-oxoglutarate aminotransferase
+16051226,2,MAR04109,L-Alanine:2-oxoglutarate aminotransferase
+16080370,2,MAR03240,medium-chain acyl-CoA dehydrogenase ((13
+16080370,2,MAR03356,acyl-CoA oxidase ((13Z)-eicosenoyl-CoA)
+16111050,2,MAR07912,folylpolyglutamate synthase (10-formyl-THF-glu(6))
+16111050,2,MAR07913,folylpolyglutamate synthase (10-formyl-THF-glu(6))
+16121147,2,MAR05095,"Fatty Acid Beta Oxidation (C12->C10), Mi"
+16121147,2,MAR05097,"Fatty Acid Beta Oxidation (C12->C10), Pe"
+16153323,2,MAR06428,leukotriene-B4 20-monooxygenase (13-hydr
+16153323,2,MAR06429,leukotriene-B4 20-monooxygenase (13-hydr
+16171510,2,MAR00313,long-chain-fatty-acid-CoA ligase (beheni
+16171510,2,MAR02973,long-chain-fatty-acid-CoA ligase (beheni
+16177494,2,MAR03279,acetyl-CoA C-acyltransferase (3-oxolinol
+16177494,2,MAR03305,acetyl-CoA C-acyltransferase (3-oxolinol
+16184162,2,MAR03074,acyl-CoA oxidase (stearoyl-CoA)
+16184162,2,MAR03115,medium-chain acyl-CoA dehydrogenase (ste
+16230707,2,MAR01500,4alpha-methylzymosterol:NADP+ 3-oxidored
+16230707,2,MAR02301,Hydroxysteroid (17-Beta) Dehydrogenase 7
+16271894,2,MAR07922,gamma-glutamyl hydrolase (10-formyl-THF-glu(7))
+16271894,2,MAR07925,gamma-glutamyl hydrolase (10-formyl-THF-glu(7))
+16329639,2,MAR08469,cytidine/uridine monophosphate kinase (C
+16329639,2,MAR08470,cytidine/uridine monophosphate kinase (C
+16337309,2,MAR04481,Adenosine aminohydrolase
+16337309,2,MAR04482,Adenosine aminohydrolase
+16340084,2,MAR03584,Steryl-ester acylhydrolase
+16340084,2,MAR03730,Steryl-ester acylhydrolase
+16345567,2,MAR03256,acetyl-CoA C-acyltransferase (3-oxopalmi
+16345567,2,MAR03368,acetyl-CoA C-acyltransferase (3-oxopalmi
+16359796,2,MAR04817,GTP cyclohydrolase
+16359796,2,MAR04818,GTP cyclohydrolase
+16362440,2,MAR00479,sn-Glycerol-3-phosphate:NAD+ 2-oxidoredu
+16362440,2,MAR00481,sn-Glycerol-3-phosphate:NAD+ 2-oxidoredu
+16367925,2,MAR04714,ATP:pantothenate 4'-phosphotransferase
+16367925,2,MAR04715,ATP:pantothenate 4'-phosphotransferase
+16409064,2,MAR01465,farnesyl-diphosphate:farnesyl-diphosphat
+16409064,2,MAR02026,Farnesyl-Diphosphate:Farnesyl-Diphosphat
+16434130,2,MAR04054,ATP:thymidine 5'-phosphotransferase
+16434130,2,MAR04483,ATP:thymidine 5'-phosphotransferase
+16458357,2,MAR04988,"Isomerization (C10:2), Mitochondrial"
+16458357,2,MAR04991,"Isomerization (C10:2), Peroxisomal"
+16458437,2,MAR01584,7alpha-Hydroxycholesterol:NAD+ 3-oxidore
+16458437,2,MAR02860,Steroid Delta-Isomerase
+16470178,2,MAR00204,long-chain-fatty-acid-CoA ligase ((7Z)-t
+16470178,2,MAR02947,long-chain-fatty-acid-CoA ligase ((7Z)-t
+16503365,2,MAR03052,Glucuronosyltransferase
+16503365,2,MAR06490,glucuronosyltransferase (gamma-carboxyet
+16520911,2,MAR03084,(S)-3-Hydroxytetradecanoyl-CoA:NAD+ oxid
+16520911,2,MAR03130,(S)-3-Hydroxytetradecanoyl-CoA:NAD+ oxid
+16536672,2,MAR01783,3beta-hydroxy-Delta(5)-steroid dehydroge
+16536672,2,MAR02881,Steroid Delta-Isomerase
+16538549,2,MAR02478,hydroxysteroid 17-beta dehydrogenase
+16538549,2,MAR03401,ELOVL fatty acid elongase (3-keto-eicosa
+16559939,2,MAR08105,folylpolyglutamate synthase (dihydrofolate)
+16559939,2,MAR08112,folylpolyglutamate synthase (dihydrofolate)
+16575595,2,MAR08375,chitobiose N-acetylglucosaminohydrolase
+16575595,2,MAR08376,chitobiose N-acetylglucosaminohydrolase
+16581469,2,MAR02315,very-long-chain 3-oxoacyl-CoA synthase (
+16581469,2,MAR03605,ELOVL fatty acid elongase ((11Z)-eicosen
+16598197,2,MAR08484,ATP:inosine 5'-phosphotransferase
+16598197,2,MAR08975,Insosine Kinase
+16598272,2,MAR02526,very-long-chain (3R)-3-hydroxyacyl-CoA d
+16598272,2,MAR03535,ELOVL fatty acid elongase
+16616187,2,MAR03219,hydroxyacyl-CoA dehydrogenase trifunctio
+16616187,2,MAR03335,"enoyl-CoA hydratase (trans,cis-2,13-doco"
+16635605,2,MAR03229,acetyl-CoA C-acyltransferase (3-oxooleoy
+16635605,2,MAR03345,acetyl-CoA C-acyltransferase (3-oxooleoy
+16667890,2,MAR02698,Neurolysin
+16667890,2,MAR09468,neurolysin (neurotensin)
+16679069,2,MAR07871,cytidine/uridine monophosphate kinase (d
+16679069,2,MAR07872,cytidine/uridine monophosphate kinase (d
+16689796,2,MAR00365,long-chain-fatty-acid-CoA ligase (DPA)
+16689796,2,MAR02985,long-chain-fatty-acid-CoA ligase (DPA)
+16696815,2,MAR02417,hydroxysteroid 17-beta dehydrogenase
+16696815,2,MAR03495,ELOVL fatty acid elongase (3-oxo-docosa-
+16768511,2,MAR06826,"thyroxine 5'-deiodinase (3,3-diiodo-L-th"
+16768511,2,MAR06827,"thyroxine 5'-deiodinase (3,3-diiodo-L-th"

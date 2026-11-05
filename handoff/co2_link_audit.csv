@@ -1,0 +1,122 @@
+node,co2_role,partner,reaction,verdict
+MAR00113#2,product,4alpha-carboxy-4beta-methyl-,C-3 Sterol Dehydrogenase (4-Methylzymost,inconclusive
+MAR00114#2,product,4alpha-carboxy-4beta-methyl-,C-3 Sterol Dehydrogenase (4-Methylzymost,inconclusive
+MAR00117#1,product,3-keto-4-methylzymosterol,C-4 Methyl Sterol Oxidase [3-keto-4-meth,inconclusive
+MAR00118#1,product,3-keto-4-methylzymosterol,C-4 Methyl Sterol Oxidase [3-keto-4-meth,inconclusive
+MAR00441#1,product,(R)-5-diphosphomevalonate,Diphosphomevalonate Decarboxylase [(R)-5,inconclusive
+MAR00710#2,product,isocitrate,Isocitrate:NADP+ oxidoreductase (decarbo,inconclusive
+MAR00712#2,product,isocitrate,Isocitrate:NADP+ oxidoreductase (decarbo,inconclusive
+MAR00738#3,product,serine,Palmitoyl-CoA:L-serine C-palmitoyltransf,inconclusive
+MAR01036,product,malonyl-CoA; octanoyl-CoA,"fatty acyl-CoA synthase (N-C8:0CoA), lum",inconclusive
+MAR01451#1,product,(R)-5-diphosphomevalonate,ATP:(R)-5-diphosphomevalonate carboxy-ly,inconclusive
+MAR01471#1,product,acetyl-CoA,"B-Ketoacyl Synthetase (Palmitate, N-C16:",inconclusive
+MAR01495#2,product,4alpha-carboxy-4beta-methyl-,NAD(P) dependent steroid dehydrogenase-l,inconclusive
+MAR01496#2,product,4alpha-carboxy-4beta-methyl-,NAD(P) dependent steroid dehydrogenase-l,inconclusive
+MAR01505#2,product,4alpha-carboxy-5alpha-choles,NAD(P) dependent steroid dehydrogenase-l,inconclusive
+MAR01521#1,product,methylmalonyl-CoA,methylmalonyl-CoA decarboxylase [methylm,inconclusive
+MAR01522#1,product,methylmalonyl-CoA,"methylmalonyl-CoA decarboxylase, peroxis",inconclusive
+MAR01546#2,product,4alpha-carboxy-4beta-methyl-,NAD(P) dependent steroid dehydrogenase-l,inconclusive
+MAR01551#2,product,4alpha-carboxy-5alpha-choles,NAD(P) dependent steroid dehydrogenase-l,inconclusive
+MAR01711#2,substrate,propanoyl-CoA,Peroxisomal Thiolase 2 [CO2 → propanoyl-,inconclusive
+MAR02152#3,product,acetyl-[ACP],fatty-acid synthase system (acetyl-[ACP],inconclusive
+MAR02156#4,product,malonyl-[ACP],fatty-acid synthase system (butyryl-[ACP,inconclusive
+MAR02160#4,product,malonyl-[ACP],fatty-acid synthase system (hexanoyl-[AC,inconclusive
+MAR02164#2,product,malonyl-[ACP],fatty-acid synthase system (malonyl-[ACP,inconclusive
+MAR02168#4,product,malonyl-[ACP],fatty-acid synthase system (decanoyl-[AC,inconclusive
+MAR02173#4,product,malonyl-[ACP],fatty-acid synthase system (dodecanoyl-[,inconclusive
+MAR02178#2,product,malonyl-[ACP],fatty-acid synthase system (malonyl-[ACP,inconclusive
+MAR02198#1,product,uroporphyrinogen I,Uroporphyrinogen I Carboxy-Lyase [uropor,inconclusive
+MAR02228,product,malonyl-[ACP]; propanoyl-[ACP]; [ACP]; 3-oxopentanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02232,product,malonyl-[ACP]; pentanoyl-[ACP]; [ACP]; 3-oxoheptanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02236,product,heptanoyl-[ACP]; malonyl-[ACP]; [ACP]; 3-oxononanoyl-[ACP],fatty acid synthase (heptanoyl-[ACP]),inconclusive
+MAR02240,product,malonyl-[ACP]; nonanoyl-[ACP]; [ACP]; 3-oxoundecanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02244,product,malonyl-[ACP]; undecanoyl-[ACP]; [ACP]; 3-oxotridecanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02249,product,malonyl-[ACP]; tridecanoyl-[ACP]; [ACP]; 3-oxopentadecanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02254,product,malonyl-[ACP]; pentadecanoyl-[ACP]; [ACP]; 3-oxoheptadecanoyl-[ACP],fatty acid synthase (malonyl-[ACP]),inconclusive
+MAR02302#1,product,4alpha-methylzymosterol,Biosynthesis of Steroids Enzyme Catalyze,inconclusive
+MAR03536,substrate,"24,25-dihydrolanosterol; 4,4-Dimethylcholesta-8(9),14; One Carbon Unit","24,25-dihydrolanosterol to 4,4-Dimethylc",admissible
+MAR03598,substrate,"lanosterol; 4,4-dimethyl-5alpha-cholesta; One Carbon Unit","lanosterol to 4,4-dimethyl-5alpha-choles",admissible
+MAR03795#1,product,2-methyl-3-oxopropanoate,2-Methyl-3-oxopropanoate:NAD+ oxidoreduc,inconclusive
+MAR03860#2,product,L-2-amino-3-oxobutanoic acid,L-2-amino-3-oxobutanoic acid decarboxyla,inconclusive
+MAR03873,substrate,carbamoyl-phosphate,Carbon-dioxide:ammonia ligase (ADP-formi,admissible
+MAR03910#1,product,3-sulfinoalanine,3-sulfino-L-alanine carboxy-lyase [3-sul,inconclusive
+MAR03955,substrate,HCO3-,carbonate hydro-lyase (carbon-dioxide-fo,admissible
+MAR03956,substrate,HCO3-,carbonate hydro-lyase (carbon-dioxide-fo,admissible
+MAR03957#2,product,isocitrate,isocitrate:NAD+ oxidoreductase (decarbox,inconclusive
+MAR03958#2,product,isocitrate,Isocitrate:NADP+ oxidoreductase (decarbo,inconclusive
+MAR04036#1,product,orotidine-5-phosphate,orotidine-5'-phosphate carboxy-lyase (UM,inconclusive
+MAR04073#1,product,SAM,adenosylmethionine decarboxylase (SAM) [,inconclusive
+MAR04087#1,product,malate,(S)-malate:NAD+ oxidoreductase (decarbox,inconclusive
+MAR04089#1,product,malate,(S)-Malate:NADP+ oxidoreductase(oxaloace,inconclusive
+MAR04091#1,product,malate,(S)-Malate:NADP+ oxidoreductase(oxaloace,inconclusive
+MAR04101#1,product,OAA,GTP:oxaloacetate carboxy-lyase (adding G,inconclusive
+MAR04103#1,product,OAA,GTP:oxaloacetate carboxy-lyase (adding G,inconclusive
+MAR04124#1,product,UDP-glucuronate,UDP-D-glucuronate carboxy-lyase (UDP-D-x,inconclusive
+MAR04174#2,product,aspartate,L-aspartate 1-carboxy-lyase (beta-alanin,inconclusive
+MAR04191#2,product,arginine,L-arginine carboxy-lyase (agmatine-formi,inconclusive
+MAR04212#1,product,ornithine,L-ornithine carboxy-lyase (putrescine-fo,inconclusive
+MAR04231#2,product,2-amino-3-carboxymuconate se,2-Amino-3-carboxymuconate semialdehyde c,inconclusive
+MAR04243#1,product,glutaryl-CoA,glutaryl-CoA:electron-transfer flavoprot,inconclusive
+MAR04251#2,product,quinolinate,Nicotinate-nucleotide:pyrophosphate phos,inconclusive
+MAR04282#2,product,3-oxopropanoate,3-Oxopropanoate:NAD+ oxidoreductase (dec,inconclusive
+MAR04336#1,product,10-formyl-THF,10-formyltetrahydrofolate:NADP+ oxidored,inconclusive
+MAR04347#2,product,3-ureidopropionate,3-ureidopropanoate amidohydrolase [3-ure,inconclusive
+MAR04422#1,product,ornithine,L-ornithine carboxy-lyase (putrescine-fo,inconclusive
+MAR04428#1,product,histidine,L-histidine carboxy-lyase (histamine-for,inconclusive
+MAR04464#2,product,acetoacetate,Acetoacetate carboxy-lyase (acetone-form,inconclusive
+MAR04473#1,product,6-phospho-D-gluconate,6-phospho-D-gluconate:NADP+ 2-oxidoreduc,inconclusive
+MAR04474#1,product,6-phospho-D-gluconate,Phosphogluconate dehydrogenase [6-phosph,inconclusive
+MAR04545#1,product,5-hydroxy-L-tryptophan,5-Hydroxy-L-tryptophan decarboxy-lyase [,inconclusive
+MAR04551#1,product,formyl-N-acetyl-5-methoxykyn,formyl-N-acetyl-5-methoxykynurenamine de,inconclusive
+MAR04657#2,product,2-amino-3-oxoadipate,5-aminolevulinate synthase (2-amino-3-ox,inconclusive
+MAR04681#1,product,phenylalanine,L-phenylalanine carboxy-lyase (phenyleth,inconclusive
+MAR04690#2,product,glutamate,L-glutamate 1-carboxy-lyase (4-aminobuta,inconclusive
+MAR04702#1,product,homogentisate,homogentisate hydroxylation [homogentisa,inconclusive
+MAR04716#1,product,N-pantothenoylcysteine,N-((R)-Pantothenoyl)-L-cysteine carboxy-,inconclusive
+MAR04725#1,product,(R)-4-phosphopantothenoyl-cy,N-[(R)-4'-Phosphopantothenoyl]-L-cystein,inconclusive
+MAR04733#1,product,(R)-4-phosphopantothenoyl-cy,N-[(R)-4'-Phosphopantothenoyl]-L-cystein,inconclusive
+MAR04742#3,product,succinyl-CoA,succinyl-CoA:glycine C-succinyltransfera,inconclusive
+MAR04750#1,product,uroporphyrinogen III,Uroporphyrinogen-III carboxy-lyase [urop,inconclusive
+MAR04752#1,product,coproporphyrinogen III,Coproporphyrinogen:oxygen oxidoreductase,inconclusive
+MAR04772#1,product,uroporphyrinogen I,Uroporphyrinogen I carboxy-lyase [uropor,inconclusive
+MAR04804#2,product,5-phosphoribosyl-4-carboxy-5,1-(5-phospho-D-ribosyl)-5-amino-4-imidaz,inconclusive
+MAR04819#1,product,3-ureidoisobutyrate,(R)-3-ureidoisobutyrate amidohydrolase [,inconclusive
+MAR05407,substrate,HCO3-,carbonate hydro-lyase (carbon-dioxide-fo,admissible
+MAR06461,product,nitrosoperoxycarbonate,nitrosoperoxycarbonate decarboxylation,admissible
+MAR06610#2,product,5-hydroxyisourate,5-hydroxyisourate decarboxylation [5-hyd,inconclusive
+MAR06707#1,product,tryptophan,L-tryptophan decarboxy-lyase [tryptophan,inconclusive
+MAR06718#2,product,5-hydroxykynurenine,5-Hydroxykynurenamine decarboxy-lyase [5,inconclusive
+MAR06726#2,product,phenylpyruvate,Phenylpyruvate:oxygen oxidoreductase (hy,inconclusive
+MAR06731#1,product,L-dopa,"3,4-Dihydroxy-L-phenylalanine carboxy-ly",inconclusive
+MAR06740#2,product,salsolinol-1-carboxylate,dopa decarboxylase (salsolinol-1-carboxy,inconclusive
+MAR06772#1,product,4-hydroxyphenylpyruvate,4-Hydroxyphenylpyruvate:oxygen oxidoredu,inconclusive
+MAR06787#1,product,tyrosine,L-tyrosine carboxy-lyase (tyramine-formi,inconclusive
+MAR06881#2,product,"3,4-dihydro-1,4-benzothiazin","3,4-dihydro-1,4-benzothiazine-3-carboxyl",inconclusive
+MAR06906#2,product,3-methoxy-4-hydroxy-5-all-tr,3-methoxy-4-hydroxy-5-all-trans-decapren,inconclusive
+MAR06924#2,product,4-methyl-2-oxopentanoate,4-methyl-2-oxopentanoate decarboxylation,inconclusive
+MAR07628#2,product,phenylalanine,L-phenylalanine:oxygen 2-oxidoreductase ,inconclusive
+MAR08065#1,product,L-cysteate,3-sulfo-L-alanine carboxy-lyase (taurine,inconclusive
+MAR08091#2,product,3-hydroxy-L-kynurenine,dopa decarboxylase (3-hydroxy-L-kynureni,inconclusive
+MAR08353#1,product,3-dehydro-L-gulonate,3-Dehydro-L-gulonate carboxy-lyase [3-de,inconclusive
+MAR08433,product,[protein]-N6-(lipoyl)lysine; glycine; S-aminomethyldihydrolipoamid,dihydrolipoyl dehydrogenase ([protein]-N,inconclusive
+MAR08442#1,product,2-oxobutyrate,2-oxobutyrate oxidation [2-oxobutyrate →,inconclusive
+MAR08622#1,product,"2,3-diketo-L-gulonate","2,3-diketo-L-gulonate decarboxylation [2",inconclusive
+MAR08623#1,product,"2,3-diketo-L-gulonate","2,3-diketo-L-gulonate decarboxylation [2",inconclusive
+MAR08652#1,product,carbamoyl-phosphate,glucose-6-phosphatase (carbamoyl-phospha,admissible
+MAR08672#1,product,UDP-glucuronate,UDP-D-glucuronate carboxy-lyase (UDP-D-x,inconclusive
+MAR08746#2,product,pyruvate,pyruvate:thiamin diphosphate acetaldehyd,inconclusive
+MAR08758,product,formate,formate:NAD+ oxidoreductase,admissible
+MAR08774#1,product,hydroxypyruvate,hydroxypyruvate carboxy-lyase (glycolald,inconclusive
+MAR08777#1,product,hydroxypyruvate,hydroxypyruvate carboxy-lyase (glycolald,inconclusive
+MAR08787#1,product,methylmalonyl-CoA,(S)-methylmalonyl-CoA carboxy-lyase (pro,inconclusive
+MAR09572#2,product,L-3-cyanoalanine,gamma-glutamyl-beta-aminopropiononitrile,inconclusive
+MAR09954#1,product,4-Methyl-Thio-Oxo-Butyrate,Methionine Decarboxylase [4-Methyl-Thio-,inconclusive
+MAR10116#2,product,"5-Hydroxy-2-oxo-4-ureido-2,5",ureidoimidazoline (2-oxo-4-hydroxy-4-car,inconclusive
+MAR11430#1,product,OAA,Oxaloacetate Decarboxylase [OAA → CO2],inconclusive
+MAR11464#1,product,Succinyl-Acetoacetate,Alternative Route for Formation of Succi,inconclusive
+MAR11551#2,substrate,ethylmalonyl-CoA,Formation of Ethylmalonyl Coa [CO2 → eth,admissible
+MAR12012#1,product,L-dopachrome,L-Dopachrome Decarboxylation [L-dopachro,inconclusive
+MAR13003,product,UDP-glucuronate; udp-ribose,UDPRIBc,inconclusive
+MAR13087#1,product,cis-aconitate,cis-aconitate carboxy-lyase [cis-aconita,inconclusive
+MAR20110#1,product,OAA,MAR20110 [OAA → CO2],inconclusive
+MAR20173#2,product,thiamin-PP,2-oxoadipate decarboxylation [thiamin-PP,inconclusive

@@ -70,6 +70,8 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         st = {s[0]: s for s in structure.stages(cls.model, "three_rule", atom_dir=str(ROOT / "data"))}
         s = st["rules12_keep_rarest"]
         cls.g = build_graph(cls.model, s[3], s[4], s[5], **s[6])
+        s = st["three_rule"]
+        cls.g3 = build_graph(cls.model, s[3], s[4], s[5], **s[6])
         cls.names = {sp.met_id: sp.name for sp in cls.model.species.values()}
 
     def links(self, gene):
@@ -121,6 +123,73 @@ class HumanGemThreeRuleTest(unittest.TestCase):
         for a, b in (("acetyl-CoA", "acetoacetyl-CoA"), ("glycine", "5-aminolevulinate")):
             self.assertNotIn(tuple(sorted((ids[a], ids[b]))), remove, (a, b))
         self.assertIn(tuple(sorted((ids["CoA"], ids["(R)-methylmalonyl-CoA"]))), remove)
+
+    def test_structureless_loaded_forms(self):
+        # esters Human-GEM gives no SMILES join cholesterol by formula and name,
+        # so the carrier stops being the largest hub (144 links before)
+        from metaboenrich import structure
+        g, ids = self.g3, {n: m for m, n in self.names.items()}
+        chol = structure.CARRIERS_FOUND[ids["cholesterol"]]
+        self.assertEqual(len(chol), 66)
+        self.assertIn("MAM01452", chol)             # cholesterol-ester-10,13,16,19-docosa, no SMILES
+        self.assertEqual(len(structure.CARRIERS_FOUND[ids["CoA"]]), 172)
+        self.assertEqual(int((g.edges[:, 0] == g.index[ids["cholesterol"]]).sum()), 35)
+
+    def test_carbon_unbalanced(self):
+        # with stoichiometry, 21 of the network's reactions do not balance carbon;
+        # the sterol demethylations and peroxisomal thiolase that consume CO2 do
+        from metaboenrich.atoms import carbon_unbalanced
+        g, bad = self.g3, carbon_unbalanced(self.model)
+        rxns = {r for i in range(g.n) if g.is_reaction[i] for r in g.reactions_of(i)}
+        self.assertEqual(len(rxns & bad), 21)
+        self.assertIn("R_MAR08433", bad)            # dihydrolipoyl dehydrogenase, [protein] lipoyl-lysine
+        for rid in ("R_MAR00055", "R_MAR03536", "R_MAR03598", "R_MAR01711"):
+            self.assertNotIn(rid, bad)
+
+    def test_carbon_budget(self):
+        # Rule 4 removes ATP -> alanyl-tRNA and the AST cross-pairs, keeps aspartate -> OAA
+        # (AKG -> glutamate is a Rule 2 couple) and SCOT's CoA-transfer links (KEGG-listed)
+        g = self.g3
+
+        def pairs(rid):
+            out = set()
+            for i in range(g.n):
+                if g.is_reaction[i] and rid in g.reactions_of(i):
+                    e = {side: g.node_ids[a] for (a, b), side in zip(g.edges.tolist(), g.edge_side) if b == i}
+                    out.add((self.names[e["substrate"]], self.names[e["product"]]))
+            return out
+        self.assertNotIn(("ATP", "L-alanyl-tRNA(ala)"), pairs("R_MAR05131"))
+        self.assertIn(("alanine", "L-alanyl-tRNA(ala)"), pairs("R_MAR05131"))
+        self.assertEqual(pairs("R_MAR03827"), {("aspartate", "OAA")})
+        self.assertIn(("acetoacetate", "acetoacetyl-CoA"), pairs("R_MAR03787"))
+
+    def test_compartment_copies_merged(self):
+        # carbonic anhydrase is written three times (MAR03955, MAR03956, MAR05407);
+        # merging the copies loses no gene, reaction or metabolite-to-metabolite step
+        from metaboenrich import structure
+        g = self.g3
+        s = {x[0]: x for x in structure.stages(self.model, "three_rule", atom_dir=str(ROOT / "data"))}["three_rule"]
+        g0 = self.build(self.model, s[3], s[4], s[5], **{**s[6], "merge_duplicates": False})
+        k = g.index["R_MAR03955"]
+        self.assertEqual(sorted(g.merged_copies[k]), ["R_MAR03956", "R_MAR05407"])
+        self.assertNotIn("R_MAR03956", g.index)
+        self.assertLess(int(g.is_reaction.sum()), int(g0.is_reaction.sum()))
+
+        def genes(x):
+            return {y for v in x.reaction_genes.values() for y in v}
+
+        def reactions(x):
+            return set(x.base_reaction.values()) | {r for v in x.merged_copies.values() for r in v}
+
+        def steps(x):
+            succ = {}
+            for u, v in x.arcs.tolist():
+                succ.setdefault(u, []).append(v)
+            return {(x.node_ids[u], x.node_ids[w]) for u, rs in succ.items() if not x.is_reaction[u]
+                    for r in rs for w in succ.get(r, []) if w != u}
+        self.assertEqual(genes(g), genes(g0))
+        self.assertEqual(reactions(g), reactions(g0))
+        self.assertEqual(steps(g), steps(g0))
 
     def test_atp_not_a_hub_again(self):
         g = self.g

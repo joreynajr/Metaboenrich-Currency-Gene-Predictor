@@ -128,8 +128,15 @@ carbon–carbon bond is an extension of the carbon skeleton, not a loaded carrie
 glycine → 5-aminolevulinate (heme synthesis) and acetyl-CoA → acetoacetyl-CoA (thiolase) are not
 carrier links.
 
-Carriers found: **CoA** (157 loaded forms), **L-carnitine** (74), **glutathione** (38) and
-**cholesterol** (33). Glycine just misses: 36 of its 37 conjugates attach at the nitrogen.
+Carriers found: **CoA** (172 loaded forms), **L-carnitine** (74), **glutathione** (38) and
+**cholesterol** (66). Glycine just misses: 36 of its 37 conjugates attach at the nitrogen.
+
+The substructure search cannot see a loaded form that Human-GEM gives no SMILES, and 51% of
+cholesterol's esters have none. Once the carriers are found, a partner with no structure is also
+counted as a loaded form when its formula contains the carrier's, the difference plus water is the
+formula of some metabolite in the model, and it is named after the carrier. Formulas are compared
+on heavy atoms only, so protonation does not matter. This adds 33 cholesterol esters and 15 CoA
+esters (mostly pravastatin-CoAs); it finds no new carriers.
 
 The links between a carrier and its loaded forms are removed everywhere. Examples are CoA /
 methylmalonyl-CoA and carnitine / propionylcarnitine. Links between two loaded forms, and the
@@ -150,13 +157,59 @@ example, glutamate dehydrogenase keeps glutamate/2-oxoglutarate (41) over NAD+/N
 Reactions that carry any metabolite across a membrane are never rescued, so ion pumps do not return
 ATP links.
 
-Reactions kept by the safeguard: **212**. Among them are GLUD1/2, GLS/GLS2, GLUL, GSR and the
+Reactions kept by the safeguard: **217**. Among them are GLUD1/2, GLS/GLS2, GLUL, GSR and the
 nucleotide kinases.
+
+### Rule 4: carbon budget
+
+Some pairs the atom maps assert are ruled out by the reaction's own carbon counts. Alanyl-tRNA
+ligase: ATP's ten carbons all go to AMP, and alanyl-tRNA's three come from alanine, so no carbon
+can pass from ATP to alanyl-tRNA.
+
+The test assumes each substrate molecule's carbon goes whole into one product molecule. It looks
+for every way to assign the substrate molecules (stoichiometry counted) to product molecules so
+that their carbon counts match exactly. A pair that no such assignment uses is impossible. Where
+no assignment exists (a substrate must split, as in ornithine transcarbamylase written in reverse),
+the test says nothing; carbon-unbalanced reactions are left out.
+
+The assumption fails for group transfers whose swapped molecules happen to match in carbon: in
+succinyl-CoA:acetoacetate CoA-transferase, UDP-glucose:galactose-1-phosphate uridylyltransferase and
+betaine-homocysteine methyltransferase it rules out exactly the real links. So a pair KEGG RCLASS
+lists is never removed, and a reaction is never left with no pair. Of the 48 pairs the test flags
+in this network, a chemistry review found 39 correct and 9 wrong (`handoff/rule4_reviewed.csv`);
+with these two guards, Rule 4 removes 33 of the correct ones and none of the wrong ones.
+
+Removed: **48 links** (33, plus the same links in compartment copies): transaminase cross-pairs,
+ATP → aminoacyl-tRNA in 7 tRNA ligases, CoA → AMP in acyl-CoA ligases, the queuine
+base-exchange cross-pairs. Dropped: none. Queuine and tRNA-queuine are cut off as a result: the
+atom map has only the cross-pairs for that reaction.
 
 ### Size limit
 
 Reactions still listing more than 20 metabolites are dropped: 47 reactions, mostly protein
 synthesis pseudo-reactions built from tRNAs.
+
+### Compartment copies
+
+Human-GEM writes many reactions once per compartment. Once compartments are merged, 2,478 of the
+remaining reactions fall into 1,102 groups that list the same substrates and the same products
+(12-HPETE hydroxymutase six times; carbonic anhydrase three times, each adding its own
+CO2 ↔ HCO3- link). Each copy would add its own nodes and edges, inflating hub degrees by the
+model's multiplicity. Within a group, reaction nodes that carry the same links become one node with
+the union of the copies' genes and directions (81 become reversible because one copy runs each
+way). No gene, reaction, link or direction is lost: the metabolite-to-metabolite steps are the same
+before and after.
+
+Merged: **1,562 reaction nodes**, into 1,253 (after Rule 4).
+
+### Carbon balance
+
+Carbon in and out of each reaction is counted from the formulas times the stoichiometry. 78 raw
+reactions do not balance, 21 of them in the final network: mostly protein, tRNA and DNA/RNA
+pseudo-reactions with unspecified R groups or average nucleotide formulas, and the lipoyl-protein
+reactions. They stay in the network, since nothing in Rules 1–3 depends on carbon counts, and are
+flagged in the workbook ('carbon unbalanced'). A rule that reasons from carbon counts must leave
+them out (`carbon_unbalanced`).
 
 ### Result
 
@@ -164,19 +217,20 @@ synthesis pseudo-reactions built from tRNAs.
 |---|---|---|
 | Metabolites | 4,035 | 3,808 |
 | Human-GEM reactions represented | 7,080 | 6,219 |
-| Reaction nodes (one per carbon link) | 7,080 | 7,676 |
-| Edges | 38,766 | 16,060 |
+| Reaction nodes (one per carbon link) | 7,080 | 6,066 |
+| Edges | 38,766 | 12,688 |
 | Genes | 2,483 | 2,191 |
-| Metabolites in 100 or more reactions | 32 | 4 |
-| Largest hub | H+ (4,061 reactions) | cholesterol (143) |
-| Share of structural current through the busiest 1% of nodes | 34.1% | 17.1% |
-| Metabolites cut off from the main network | 4 | 395 |
+| Metabolites in 100 or more reactions | 32 | 1 |
+| Largest hub | H+ (4,061 reactions) | CO2 (103) |
+| Share of structural current through the busiest 1% of nodes | 34.1% | 15.5% |
+| Metabolites cut off from the main network | 4 | 411 |
 
 Structural current is the mean current per node over 150 × 150 random source–sink pairs, with no
 data.
 
-The 395 cut-off metabolites include 84 that Rule 3 separates. Most of those are xenobiotics
-(naphthalene derivatives, halogenated solvents) and their glutathione conjugates.
+The 411 cut-off metabolites include 96 that Rule 3 separates and 2 that Rule 4 does (queuine). Most of those are xenobiotics
+(naphthalene derivatives, halogenated solvents) and their glutathione conjugates, plus pravastatin
+and its metabolites, which reach the network only through their CoA esters.
 
 ## Benchmark
 
@@ -215,9 +269,10 @@ With 20 disorders, differences of a few dozen ranks are within the noise.
 
 ## Known limitations
 
-1. **Cross-links from tied atom maps.** About 65 reactions keep false carbon links, for example
-   aspartate → glutamate in aspartate aminotransferase. The union adds RXNMapper pairs that the
-   mapper scored as tied with the correct ones. A fix is under evaluation.
+1. **Cross-links from tied atom maps.** The union adds RXNMapper pairs that the mapper scored as tied
+   with the correct ones, for example aspartate → glutamate in aspartate aminotransferase. Rule 4
+   removes those its carbon counts rule out; others remain where the counts allow them, where a
+   substrate must split, or where the false pair is a reaction's only one.
 2. **Couple cutoff.** The cutoff of 10 is a convention shared by Rules 2 and 3. On the carbon method
    (Rules 1 + 2, without name lookup) the benchmark median was 85.5 at a cutoff of 5, 129.5 at 10
    and 113.5 at 20, so results are sensitive to it.
