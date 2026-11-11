@@ -298,6 +298,21 @@ accumulated substrates and the blocked enzyme lies on their way to the
 depleted products. With sources = down they start on the product side, so the
 faulty enzyme is seldom on a successful route.
 
+### D22. Evaluation data rules for the null calibration (2026-11-11, DM)
+`benchmarks/data_registry.tsv` lists every evaluation unit (collections
+A_inborn_errors, B_published, C_workbench), dropped ones included with a
+reason; every run reports against all of it.
+1. A text p-value such as "NR (IPA filter p<0.05 only…)" counts as
+   significant (p = 0.049, as `published_predictions.clean_p` already does).
+2. Per-subject z-score sources (Burrage 2019, Alaimo 2020, Kennedy 2019,
+   Wangler 2018, Glinton 2024) collapse to a group mean, as `group_daa` and
+   D21. A unit whose subjects all have different disorders (Alaimo 2020) has
+   no group and is not run.
+3. Workbench comparisons: Welch t-test, significant if raw p < 0.05, no
+   multiple-testing correction (several designs are n = 5 vs 5).
+4. Reaction nodes with no null traffic (zero null variance, no z-score) keep
+   their raw score, ranked alongside the corrected nodes.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
