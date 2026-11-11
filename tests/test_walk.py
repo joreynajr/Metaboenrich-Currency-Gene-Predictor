@@ -4,7 +4,7 @@ import numpy as np
 
 from metaboenrich.flow import current_flow
 from metaboenrich.network import Graph
-from metaboenrich.walk import ANY, absorbing_walk
+from metaboenrich.walk import ANY, absorbing_walk, prepare_walk
 
 
 def rxn_graph(n_mets, reactions):
@@ -106,6 +106,18 @@ class AbsorbingWalkTest(unittest.TestCase):
         res = absorbing_walk(g, [0], [], {0: 1.0}, ground=[2])
         np.testing.assert_allclose(res.conductivity[[3, 4]], 1.0)
         self.assertEqual(res.pairs, [(0, ANY)])
+
+    def test_prepared_targets_reused(self):
+        # One prepare_walk per target set; other source sets reuse its LU unchanged.
+        g = rxn_graph(5, [([0], [2], *IRR), ([1], [2], *REV), ([2], [3], *IRR), ([1], [4], *IRR), ([4], [3], *IRR)])
+        phi, kappa = {0: 2.0, 1: 0.5, 3: 1.0}, 0.7
+        prep = prepare_walk(g, [3], {3: 1 - np.exp(-kappa * phi[3])})
+        for sources in ([0], [1], [0, 1]):
+            a = absorbing_walk(g, sources, [3], phi, kappa=kappa)
+            b = absorbing_walk(g, sources, [3], phi, kappa=kappa, prep=prep)
+            np.testing.assert_array_equal(a.conductivity, b.conductivity)
+            np.testing.assert_array_equal(a.bottleneck, b.bottleneck)
+            self.assertEqual(a.pairs, b.pairs)
 
     def test_matches_monte_carlo(self):
         # Branches, a reversible reaction, a directed cycle, a dead end, partial

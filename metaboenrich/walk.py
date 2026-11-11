@@ -136,7 +136,72 @@ def _can_reach(n_states, arc_u, arc_v, goals):
     return seen
 
 
-def absorbing_walk(graph, sources, targets, phi, kappa=None, tau=0.5, ground=None, chunk=128):
+@dataclass
+class WalkPrep:
+    """Everything absorbing_walk computes from the graph and the targets alone
+    (prepare_walk). One LU of I - Q per target set; any number of source sets
+    can then reuse it."""
+    ws: WalkStates
+    targets: list
+    absorb: np.ndarray      # absorption probability per state
+    tgt_states: np.ndarray
+    live_idx: np.ndarray
+    pos: np.ndarray
+    au: np.ndarray          # live arcs
+    av: np.ndarray
+    ae: np.ndarray
+    asg: np.ndarray
+    q: np.ndarray
+    h: np.ndarray           # probability of reaching a target, per state
+    lu: object
+    absB_T: object
+    M: object
+    S_fwd: object
+    G: object
+    k_of: dict
+
+
+def prepare_walk(graph, targets, absorb_p, ws=None):
+    """The target side of the walk: absorption, live states, the LU of I - Q
+    and h. absorb_p: {target: absorption probability}. ws: walk_states(graph),
+    passed in to reuse it across target sets."""
+    targets = list(targets)
+    n, m_edges = graph.n, len(graph.edges)
+    ws = ws if ws is not None else walk_states(graph)
+    k_of = {t: k for k, t in enumerate(targets)}
+    absorb = np.zeros(ws.n_states)
+    tgt_states = np.flatnonzero(ws.arrival & np.isin(ws.node, targets))
+    absorb[tgt_states] = [absorb_p[t] for t in ws.node[tgt_states]]
+    goals = tgt_states[absorb[tgt_states] > 0]
+    live = _can_reach(ws.n_states, ws.arc_u, ws.arc_v, goals) if len(goals) else np.zeros(ws.n_states, bool)
+
+    outdeg = np.bincount(ws.arc_u, minlength=ws.n_states)
+    keep = live[ws.arc_u] & live[ws.arc_v]
+    au, av, ae, asg = ws.arc_u[keep], ws.arc_v[keep], ws.arc_edge[keep], ws.arc_sign[keep]
+    q = (1.0 - absorb[au]) / outdeg[au]                       # Q_uv on live arcs
+
+    live_idx = np.flatnonzero(live)
+    pos = np.full(ws.n_states, -1)
+    pos[live_idx] = np.arange(len(live_idx))
+    h = np.zeros(ws.n_states)
+    lu = None
+    if len(live_idx):
+        Q = sp.csc_matrix((q, (pos[au], pos[av])), shape=(len(live_idx),) * 2)
+        lu = splu((sp.identity(len(live_idx), format="csc") - Q).tocsc())
+        h[live_idx] = lu.solve(absorb[live_idx])
+
+    absB_T = abs(graph.incidence()).T.tocsr()                 # node x edge
+    M = sp.csr_matrix((asg, (ae, np.arange(len(ae)))), shape=(m_edges, len(ae)))   # arc -> net edge flow
+    is_sub = np.array([side != "product" for side in graph.edge_side], dtype=bool)
+    S_fwd = sp.csr_matrix((np.ones(int(is_sub.sum())), (graph.edges[is_sub, 1], np.flatnonzero(is_sub))),
+                          shape=(n, m_edges))                 # substrate-edge net flow summed per reaction
+    G = sp.csr_matrix((absorb[tgt_states], ([k_of[t] for t in ws.node[tgt_states]], tgt_states)),
+                      shape=(len(targets), ws.n_states))      # absorption at each target
+    return WalkPrep(ws, targets, absorb, tgt_states, live_idx, pos, au, av, ae, asg, q, h, lu,
+                    absB_T, M, S_fwd, G, k_of)
+
+
+def absorbing_walk(graph, sources, targets, phi, kappa=None, tau=0.5, ground=None, chunk=128, prep=None):
     """Run the absorbing walk. Returns a FlowResult, so scoring is shared with
     current_flow.
 
@@ -145,6 +210,9 @@ def absorbing_walk(graph, sources, targets, phi, kappa=None, tau=0.5, ground=Non
     ground: optional node list for one-sided data. With no targets, the ground
             nodes absorb every walker; with no sources, walkers start evenly
             from the ground nodes.
+    prep:   prepare_walk(...) for these targets and the same absorption, to
+            reuse its LU across source sets (null permutations); rebuilt if
+            the targets differ. The caller keeps the targets' phi unchanged.
 
     FlowResult fields as in current_flow, except: the leave-one-out columns are
     NaN (not defined here); endpoint["eff_conductance"] is, for a source, the
@@ -169,28 +237,10 @@ def absorbing_walk(graph, sources, targets, phi, kappa=None, tau=0.5, ground=Non
     real_sources = sources if one_sided != "ground releases" else []
 
     n, m_edges = graph.n, len(graph.edges)
-    ws = walk_states(graph)
-    k_of = {t: k for k, t in enumerate(targets)}
-    absorb = np.zeros(ws.n_states)
-    tgt_states = np.flatnonzero(ws.arrival & np.isin(ws.node, targets))
-    absorb[tgt_states] = [absorb_p[t] for t in ws.node[tgt_states]]
-    goals = tgt_states[absorb[tgt_states] > 0]
-    live = _can_reach(ws.n_states, ws.arc_u, ws.arc_v, goals) if len(goals) else np.zeros(ws.n_states, bool)
-
-    outdeg = np.bincount(ws.arc_u, minlength=ws.n_states)
-    keep = live[ws.arc_u] & live[ws.arc_v]
-    au, av, ae, asg = ws.arc_u[keep], ws.arc_v[keep], ws.arc_edge[keep], ws.arc_sign[keep]
-    q = (1.0 - absorb[au]) / outdeg[au]                       # Q_uv on live arcs
-
-    live_idx = np.flatnonzero(live)
-    pos = np.full(ws.n_states, -1)
-    pos[live_idx] = np.arange(len(live_idx))
-    h = np.zeros(ws.n_states)
-    lu = None
-    if len(live_idx):
-        Q = sp.csc_matrix((q, (pos[au], pos[av])), shape=(len(live_idx),) * 2)
-        lu = splu((sp.identity(len(live_idx), format="csc") - Q).tocsc())
-        h[live_idx] = lu.solve(absorb[live_idx])
+    if prep is None or prep.targets != list(targets):
+        prep = prepare_walk(graph, targets, absorb_p)
+    ws, absorb, tgt_states, live_idx, pos = prep.ws, prep.absorb, prep.tgt_states, prep.live_idx, prep.pos
+    au, av, ae, asg, q, h, lu, k_of = prep.au, prep.av, prep.ae, prep.asg, prep.q, prep.h, prep.lu, prep.k_of
 
     reached = [s for s in sources if h[s] > _EPS]
     w_raw = np.array([weight[s] * h[s] for s in reached])
@@ -204,13 +254,7 @@ def absorbing_walk(graph, sources, targets, phi, kappa=None, tau=0.5, ground=Non
         if h[s] <= _EPS:
             excluded += [(s, t, "no directed path to a target") for t in (real_targets or [ANY])]
 
-    absB_T = abs(graph.incidence()).T.tocsr()                 # node x edge
-    M = sp.csr_matrix((asg, (ae, np.arange(len(ae)))), shape=(m_edges, len(ae)))   # arc -> net edge flow
-    is_sub = np.array([side != "product" for side in graph.edge_side], dtype=bool)
-    S_fwd = sp.csr_matrix((np.ones(int(is_sub.sum())), (graph.edges[is_sub, 1], np.flatnonzero(is_sub))),
-                          shape=(n, m_edges))                 # substrate-edge net flow summed per reaction
-    G = sp.csr_matrix((absorb[tgt_states], ([k_of[t] for t in ws.node[tgt_states]], tgt_states)),
-                      shape=(len(targets), ws.n_states))      # absorption at each target
+    absB_T, M, S_fwd, G = prep.absB_T, prep.M, prep.S_fwd, prep.G
     tgt = np.array(targets, dtype=np.int64)
     tgt_share, tgt_edge_share = np.zeros(len(tgt)), np.zeros(len(tgt))
     tgt_pairs = np.zeros(len(tgt), dtype=int)

@@ -1,0 +1,118 @@
+collection	study	sub_unit	label	n_samples	n_metabolites	n_in_network	n_significant	n_sources	n_targets	effect_type	has_p	causal_genes	quality	status	drop_reason	small_flag	recoverable
+A_inborn_errors	Thistlethwaite2020	pku	Phenylketonuria	8.0	477.0		46.0			group mean z	derived from z	PAH		active			
+A_inborn_errors	Thistlethwaite2020	msud	Maple syrup urine disease	18.0	477.0		84.0	18.0	20.0	group mean z	derived from z	BCKDHA;BCKDHB;DBT		active			
+A_inborn_errors	Thistlethwaite2020	abat	GABA-transaminase deficiency	7.0	642.0		9.0			group mean z	derived from z	ABAT		active			
+A_inborn_errors	Thistlethwaite2020	aadc	Aromatic L-amino acid decarboxylase deficiency	3.0	655.0		62.0	24.0	2.0	group mean z	derived from z	DDC		active			
+A_inborn_errors	Thistlethwaite2020	gamt	GAMT deficiency	8.0	477.0		47.0	20.0	9.0	group mean z	derived from z	GAMT		active			
+A_inborn_errors	Thistlethwaite2020	otc	Ornithine transcarbamylase deficiency	34.0	515.0		31.0	17.0	5.0	group mean z	derived from z	OTC		active			
+A_inborn_errors	Thistlethwaite2020	cit	Citrullinemia type I	9.0	477.0		116.0	48.0	16.0	group mean z	derived from z	ASS1		active			
+A_inborn_errors	Thistlethwaite2020	asld	Argininosuccinic aciduria	13.0	497.0		25.0	12.0	6.0	group mean z	derived from z	ASL		active			
+A_inborn_errors	Thistlethwaite2020	arg	Argininemia	17.0	451.0		69.0	31.0	17.0	group mean z	derived from z	ARG1		active			
+A_inborn_errors	Thistlethwaite2020	mma	Methylmalonic aciduria	9.0	477.0		76.0	14.0	25.0	group mean z	derived from z	MMUT;MMAA;MMAB		active			
+A_inborn_errors	Thistlethwaite2020	pa	Propionic aciduria	9.0	477.0		84.0	15.0	29.0	group mean z	derived from z	PCCA;PCCB		active			
+A_inborn_errors	Thistlethwaite2020	ga	Glutaric aciduria type I	5.0	477.0		7.0	1.0	3.0	group mean z	derived from z	GCDH		active			
+A_inborn_errors	Thistlethwaite2020	adsl	Adenylosuccinate lyase deficiency	3.0	641.0		10.0	2.0	6.0	group mean z	derived from z	ADSL		active			
+A_inborn_errors	Miller2015	mcc	3-Methylcrotonyl-CoA carboxylase deficiency	4.0	1203.0		12.0	1.0	5.0	group mean z	derived from z	MCCC1;MCCC2		active			
+A_inborn_errors	Miller2015	tmlhe	TMLHE deficiency	4.0	1203.0		53.0	1.0	6.0	group mean z	derived from z	TMLHE		active			
+A_inborn_errors	Miller2015	hmgcl	HMG-CoA lyase deficiency	2.0	1203.0		26.0			group mean z	derived from z	HMGCL		active			
+A_inborn_errors	Miller2015	hcu	Homocystinuria	2.0	1203.0		74.0	1.0	22.0	group mean z	derived from z	CBS		active			
+A_inborn_errors	Miller2015	iva	Isovaleric aciduria	2.0	1203.0		18.0	1.0	4.0	group mean z	derived from z	IVD		active			
+A_inborn_errors	Miller2015	tp	Thymidine phosphorylase deficiency	2.0	1203.0		17.0	1.0	4.0	group mean z	derived from z	TYMP		active			
+A_inborn_errors	Miller2015	hlcs	Holocarboxylase synthetase deficiency	1.0	1203.0		15.0			group mean z	derived from z	HLCS		active			
+A_inborn_errors	Thistlethwaite2020	cob	Cobalamin biosynthesis defects	6.0	477.0		17.0	1.0	9.0	group mean z	derived from z	MMACHC;MMADHC;MMAA;MMAB;MTR;MTRR;LMBRD1;ABCD4		active			
+A_inborn_errors	Thistlethwaite2020	zsd	Zellweger spectrum disorder	18.0	609.0		110.0			group mean z	derived from z	PEX1		dropped	marked excluded in cases.tsv		
+A_inborn_errors	Thistlethwaite2020	rcdp	Rhizomelic chondrodysplasia punctata	21.0	633.0		144.0			group mean z	derived from z	PEX7;GNPAT;AGPS		dropped	marked excluded in cases.tsv		
+A_inborn_errors	Miller2015	mcad	MCAD deficiency	2.0	1203.0		52.0			group mean z	derived from z	ACADM		dropped	marked excluded in cases.tsv		
+A_inborn_errors	Miller2015	vlcad	VLCAD deficiency	2.0	1203.0		14.0			group mean z	derived from z	ACADVL		dropped	marked excluded in cases.tsv		
+A_inborn_errors	Miller2015	lpi	Lysinuric protein intolerance	2.0	1203.0		19.0			group mean z	derived from z	SLC7A7		dropped	marked excluded in cases.tsv		
+B_published	Adam et al 2013	KO vs CONT	kidney	0.0	121.0					log2FC	yes	FH		active			
+B_published	Adam et al 2013	KO vs KO+FH	kidney	0.0	121.0					log2FC	yes	FH		active			
+B_published	Adam et al 2013	KO vs KO+FHcyt	kidney	0.0	121.0					log2FC	yes	FH		active			
+B_published	Adam et al 2013	KO vs WT	kidney	0.0	131.0					log2FC	yes	FH		active			
+B_published	Adam et al 2013	Tumor vs Normal	kidney tumor (HLRCC, type 2 papillary)	0.0	173.0					log2FC	yes	FH		active			
+B_published	Alaimo et al 2020	patient vs reference population	plasma (default; see Notes for urine/CSF	74.0	133.0					z-score	no	AASS;ABAT;ABCC8;ABCD4;ABHD5;ACADL;ACADM;		active			
+B_published	Burrage et al 2019	patient vs reference population	plasma	48.0	24.0					z-score	no			active			
+B_published	Cappuccio et al 2017	GLUT1-DS on KD vs reference population (group mean)	plasma	0.0	18.0					z-score	yes	SLC2A1		active		FLAG <20 metabolites	
+B_published	Cappuccio et al 2017	patient vs reference population	CSF;EDTA Plasma;Urine	9.0	9.0					z-score	no	SLC2A1		active		FLAG <20 metabolites	
+B_published	Du et al 2023	MELAS vs Healthy Control	plasma	0.0	588.0					log2FC	yes			active			
+B_published	Du et al 2023	MNGIE vs Healthy Control	plasma	0.0	588.0					log2FC	yes			active			
+B_published	Glinton et al 2024	patient vs reference population	plasma;urine	13.0	6.0					z-score	no	ALDH5A1		active		FLAG <20 metabolites	
+B_published	Hou et al 2017	Fumarase-insufficient (siRNA knockdown) HUVEC vs negative co	cell extract	0.0	62.0					log2FC	yes			active			
+B_published	Kennedy et al 2019	ABAT (GABA-transaminase deficiency patients) vs reference po	EDTA plasma	0.0	1.0					z-score	no	ABAT		active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	All other (non-ABAT, no relevant medication) vs reference po	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	Baclofen (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	Levetiracetam (non-ABAT) vs reference population (group mean	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	Topiramate (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	Valproate (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	Vigabatrin (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	patient vs reference population	CSF;EDTA plasma;Urine	11.0	11.0					z-score	no	ABAT		active		FLAG <20 metabolites	
+B_published	Kennedy et al 2019	vigabatrin-treated non-ABAT group vs reference population (g	EDTA plasma	0.0	4.0					z-score	no			active		FLAG <20 metabolites	
+B_published	Reisz et al 2023	Carrier (mother) RBC vs Control (father) RBC	red blood cells	0.0	15.0					log2FC	yes			active		FLAG <20 metabolites	
+B_published	Reisz et al 2023	Lesch-Nyhan (LN) RBC vs Control (father) RBC	red blood cells	0.0	19.0					log2FC	yes			active		FLAG <20 metabolites	
+B_published	Sebaa et al 2023	VLCADD newborn DBS vs healthy newborn DBS	dried blood spot	0.0	204.0					log2FC	yes			active			
+B_published	Sidorina et al 2024	MMA vs CblC	urine	0.0	285.0					log2FC	yes			active			
+B_published	Sidorina et al 2024	PA vs CblC	urine	0.0	285.0					log2FC	yes			active			
+B_published	Sidorina et al 2024	PA vs MMA	urine	0.0	285.0					log2FC	yes			active			
+B_published	Wangler et al 2018	PBD-ZSD patients vs reference population (group mean)	plasma	0.0	126.0					z-score	no	PEX1 (predominantly), other PEX genes		active			
+B_published	Wangler et al 2018	patient raw concentration (targeted assay)	plasma	20.0	1.0					z-score	no	PEX1 (predominantly)		active		FLAG <20 metabolites	
+B_published	Dooijeweert2021	(not processed)												blocked	folder present; zero rows in published_test_predictions.xlsx - must be processed		
+B_published	Thistlethwaite2022	(not processed)												blocked	folder present; zero rows in published_test_predictions.xlsx - must be processed		
+C_workbench	ST000276	AN000440	HILIC	10.0	25.0	21.0				raw per-sample (DAA not computed)	must compute	IDH1	B: use with caution	active			
+C_workbench	ST000276	AN000441	GC	10.0	9.0	21.0				raw per-sample (DAA not computed)	must compute	IDH1	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST000458	AN000000	Reversed-phase	21.0	20.0	20.0				raw per-sample (DAA not computed)	must compute	BCAT1	C: weak	active			
+C_workbench	ST000687	AN001060	HILIC	10.0	17.0	4.0				raw per-sample (DAA not computed)	must compute	AK4	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST000698	AN001083	Reversed-phase	30.0	226.0	78.0				raw per-sample (DAA not computed)	must compute	SIRT5	B: use with caution	active			
+C_workbench	ST000698	AN001084	Reversed-phase	30.0	247.0	78.0				raw per-sample (DAA not computed)	must compute	SIRT5	B: use with caution	active			
+C_workbench	ST000824	AN001310	HILIC	23.0	20.0	4.0				raw per-sample (DAA not computed)	must compute	IDH1	C: weak	active			
+C_workbench	ST001375	AN002295	unspecified (NMR)	19.0	24.0	22.0				raw per-sample (DAA not computed)	must compute	FN3K	B: use with caution	active			
+C_workbench	ST002115	AN003513	Reversed-phase	12.0	71.0	40.0				raw per-sample (DAA not computed)	must compute	GPX4	A: good	active			
+C_workbench	ST002115	AN003514	HILIC	12.0	20.0	40.0				raw per-sample (DAA not computed)	must compute	GPX4	A: good	active			
+C_workbench	ST003262	AN005346	HILIC	12.0	162.0	65.0				raw per-sample (DAA not computed)	must compute	CKB	A: good	active			
+C_workbench	ST003267	AN005352	CE	8.0	72.0	66.0				raw per-sample (DAA not computed)	must compute	FDX2	A: good	active			
+C_workbench	ST003267	AN005353	CE	8.0	63.0	66.0				raw per-sample (DAA not computed)	must compute	FDX2	A: good	active			
+C_workbench	ST003417	AN005616	HILIC	42.0	24.0	5.0				raw per-sample (DAA not computed)	must compute	FASN	B: use with caution	active			
+C_workbench	ST003486	AN005724	Reversed-phase	12.0	18.0	12.0				raw per-sample (DAA not computed)	must compute	TDO2	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST003487	AN005725	Reversed-phase	12.0	18.0	12.0				raw per-sample (DAA not computed)	must compute	TDO2	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST003488	AN005726	Reversed-phase	30.0	15.0	10.0				raw per-sample (DAA not computed)	must compute	TDO2	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST003490	AN005729	Reversed-phase	18.0	45.0	55.0				raw per-sample (DAA not computed)	must compute	TDO2	A: good	active			
+C_workbench	ST003490	AN005730	Reversed-phase	18.0	68.0	55.0				raw per-sample (DAA not computed)	must compute	TDO2	A: good	active			
+C_workbench	ST003499	AN005743	HILIC	15.0	173.0	128.0				raw per-sample (DAA not computed)	must compute	ADSL	A: good	active			
+C_workbench	ST003544	AN005821	GC	10.0	16.0	6.0				raw per-sample (DAA not computed)	must compute	NDUFS4	B: use with caution	active		FLAG <20 metabolites	
+C_workbench	ST003551	AN005837	HILIC	31.0	178.0	65.0				raw per-sample (DAA not computed)	must compute	ALDH7A1	A: good	active			
+C_workbench	ST003556	AN005845	HILIC	48.0	37.0	18.0				raw per-sample (DAA not computed)	must compute	ALDH7A1	A: good	active			
+C_workbench	ST004125	AN006838	HILIC	12.0	137.0	51.0				raw per-sample (DAA not computed)	must compute	GK	A: good	active			
+C_workbench	ST004410	AN007374	HILIC	18.0	152.0	118.0				raw per-sample (DAA not computed)	must compute	DHODH	A: good	active			
+C_workbench	ST004441	AN007437	Reversed-phase	16.0	68.0	61.0				raw per-sample (DAA not computed)	must compute	NAMPT	A: good	active			
+C_workbench	ST004441	AN007438	Reversed-phase	16.0	55.0	61.0				raw per-sample (DAA not computed)	must compute	NAMPT	A: good	active			
+C_workbench	ST004490	AN007532	HILIC	12.0	96.0	15.0				raw per-sample (DAA not computed)	must compute	TIGAR	A: good	active			
+C_workbench	ST004493	AN007535	HILIC	6.0	160.0	97.0				raw per-sample (DAA not computed)	must compute	TIGAR	A: good	active			
+C_workbench	ST004825	AN008164	HILIC	28.0	125.0	70.0				raw per-sample (DAA not computed)	must compute	MPST	A: good	active			
+C_workbench	ST004985	AN008452	HILIC	18.0	114.0	43.0				raw per-sample (DAA not computed)	must compute	ACADVL	A: good	active			
+C_workbench	ST005017	AN008524	HILIC	6.0	158.0	113.0				raw per-sample (DAA not computed)	must compute	LOX	A: good	active			
+C_workbench	ST005225	AN008930	HILIC	20.0	159.0	93.0				raw per-sample (DAA not computed)	must compute	ALDH1B1	A: good	active			
+C_workbench	ST002400	(all analyses)			50.0	0.0						ADH1B	C: weak	dropped	lipid panels only (LPC/Cer/CE); 0 network metabolites - user decision: lipid-only is useless		
+C_workbench	ST005246	(study)		50.0	0.0							GAA		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST004515	(study)		15.0	0.0							MTAP		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST004253	(study)		13.0	2.0							MAT2A		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST004225	(study)		13.0	4.0							MAT2A		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST004221	(study)		13.0	1.0							MAT2A		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST004220	(study)		12.0	0.0							MAT2A		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST003952	(study)		216.0	0.0							HSD3B1		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST003485	(study)		21.0	13.0							TDO2		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST003345	(study)		34.0	1.0							OGDH		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST003325	(study)		420.0	0.0							STS		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST003324	(study)		420.0	0.0							STS		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST003116	(study)		146.0	0.0							HMGCS2		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST003115	(study)		146.0	0.0							HMGCS2		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST002564	(study)		16.0	1.0							AKR1B1		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST002563	(study)		80.0	2.0							AKR1B1		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST001941	(study)		54.0	0.0							CTBP1		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST001093	(study)		24.0	0.0							ALDH1A1		dropped	no processed table (raw only)	FLAG <20 metabolites	YES - reprocess
+C_workbench	ST000548	(study)		86.0	8.0							IDH1		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST000199	(study)		10.0	30.0							IDH1		dropped	usable table		
+C_workbench	ST003489	(study)		9.0	4.0							TDO2		dropped	<15 metabolites (targeted panel)	FLAG <20 metabolites	
+C_workbench	ST001139	(study)		6.0	22.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
+C_workbench	ST001138	(study)		8.0	187.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
+C_workbench	ST001129	(study)		6.0	175.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
+C_workbench	ST001050	(study)		8.0	308.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
+C_workbench	ST001049	(study)		6.0	300.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
