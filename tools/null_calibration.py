@@ -15,6 +15,7 @@ Every registry row appears in the output: run, or not run with the reason
   A_inborn_errors  the benchmark's group DAA (benchmarks/cases.tsv)
   B_published      predictions/published_v2/<unit>/daa_mapping.tsv, group-level units only (D21, D22)
   C_workbench      results/workbench_daa/<study>_<analysis>.csv (Welch t, raw p < 0.05, D22)
+  D_metabolights   results/metabolights_daa/<study>_<assay>.csv (same rule, D23)
 
     python tools/null_calibration.py --perms 1000
     python tools/null_calibration.py --perms 200 --threshold cit arg aadc     # source-count experiment
@@ -45,7 +46,9 @@ from published_predictions import rule_settings             # noqa: E402
 
 REGISTRY = Path("benchmarks/data_registry.tsv")
 PUBLISHED_RUN = Path("predictions/published_v2")
-WORKBENCH_DAA = Path("results/workbench_daa")
+# Collections read from per-unit DAA tables: folder of <study>_<sub_unit>.csv, identifier columns.
+DAA_TABLES = {"C_workbench": (Path("results/workbench_daa"), ["KEGG", "HMDB", "name"]),
+              "D_metabolights": (Path("results/metabolights_daa"), ["CHEBI", "name"])}
 KEYS = ["collection", "study", "sub_unit", "n_metabolites", "small_flag"]
 SCORES = ("conductivity", "bottleneck")
 HUBS = ("hub_max", "hub_sum")
@@ -57,10 +60,10 @@ def loose(s):
     return "".join(ch for ch in str(s).lower() if ch.isalnum())
 
 
-def registry_units(model, graph, bridge, orientation, published_run=PUBLISHED_RUN, workbench=WORKBENCH_DAA):
+def registry_units(model, graph, bridge, orientation, published_run=PUBLISHED_RUN, registry=REGISTRY):
     """Every registry row as runnable units, or as a not-run row with the reason.
     Unit: dict of the registry KEYS plus label, sources, targets, phi, ground, measured."""
-    reg = pd.read_csv(REGISTRY, sep="\t", dtype=str).fillna("")
+    reg = pd.read_csv(registry, sep="\t", dtype=str).fillna("")
     cases = pd.read_csv(B.CASES, sep="\t").fillna("").set_index("case_id")
     pub = pd.read_csv(published_run / "units.tsv", sep="\t", dtype=str).fillna("")
     data = {}
@@ -116,11 +119,12 @@ def registry_units(model, graph, bridge, orientation, published_run=PUBLISHED_RU
                 m = pd.read_csv(published_run / u.unit / "daa_mapping.tsv", sep="\t")
                 df = pd.DataFrame({"name": m.met_id, "log2FC": m.log2fc, "p": m.p})
                 units.append({**keys, "label": u.unit, **config(df, ["name"], *rule_settings(u.rule))})
-        else:
-            f = workbench / f"{r.study}_{r.sub_unit}.csv"
+        elif r.collection in DAA_TABLES:
+            folder, id_cols = DAA_TABLES[r.collection]
+            f = folder / f"{r.study}_{r.sub_unit}.csv"
             if not f.exists():
                 why = "no DAA table"
-                c = workbench / "contrasts.tsv"
+                c = folder / "contrasts.tsv"
                 if c.exists():
                     ct = pd.read_csv(c, sep="\t", dtype=str).fillna("")
                     hit = ct[(ct.study == r.study) & (ct.analysis == r.sub_unit)]
@@ -128,9 +132,10 @@ def registry_units(model, graph, bridge, orientation, published_run=PUBLISHED_RU
                         why = hit.status.iloc[0]
                 not_run.append({**keys, "label": r.sub_unit, "reason": why})
                 continue
-            df = pd.read_csv(f, dtype={"HMDB": str, "KEGG": str}).replace("", np.nan)
-            units.append({**keys, "label": f"{r.study}_{r.sub_unit}",
-                          **config(df, ["KEGG", "HMDB", "name"], 0.05, 0.0)})
+            df = pd.read_csv(f, dtype={c: str for c in id_cols}).replace("", np.nan)
+            units.append({**keys, "label": f"{r.study}_{r.sub_unit}", **config(df, id_cols, 0.05, 0.0)})
+        else:
+            not_run.append({**keys, "label": r.sub_unit, "reason": f"unknown collection {r.collection}"})
     return units, not_run
 
 
@@ -328,7 +333,7 @@ def main(argv=None):
                         "unit's data (default)")
     p.add_argument("--perms", type=int, default=200)
     p.add_argument("--kappa", type=float, default=None, help="partial absorption (default: none, as the benchmark)")
-    p.add_argument("--collections", nargs="+", default=["A_inborn_errors", "B_published", "C_workbench"])
+    p.add_argument("--collections", nargs="+", default=["A_inborn_errors", "B_published", "C_workbench", "D_metabolights"])
     p.add_argument("--threshold", nargs="*", default=[], metavar="UNIT",
                    help="units for the source-count experiment (e.g. cit arg aadc)")
     p.add_argument("--sizes", nargs="+", type=int, default=[1, 2, 3, 5, 8, 12, 20])

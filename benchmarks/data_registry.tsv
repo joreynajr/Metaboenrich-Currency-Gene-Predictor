@@ -116,3 +116,11 @@ C_workbench	ST001138	(study)		8.0	187.0							P4HA1		dropped	13C/15N tracing gro
 C_workbench	ST001129	(study)		6.0	175.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
 C_workbench	ST001050	(study)		8.0	308.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
 C_workbench	ST001049	(study)		6.0	300.0							P4HA1		dropped	13C/15N tracing groups (P4HA1) - exclude		
+D_metabolights	MTBLS3628	HILIC	FH-deficient RCC vs FH-wildtype RCC (HILIC)	30.0	259.0					raw per-sample (DAA not computed)	must compute	FH	A: good	active			
+D_metabolights	MTBLS3628	PHILIC	FH-deficient RCC vs FH-wildtype RCC (PHILIC)	30.0	88.0					raw per-sample (DAA not computed)	must compute	FH	A: good	active			
+D_metabolights	MTBLS387	(study)										PFKP		dropped	no values deposited: MAF value cells empty (0 of 440)		NO - user decision
+D_metabolights	MTBLS3873	(study)										IDH1		dropped	no values deposited: MAF value columns empty; deposit is metadata only		NO - user decision
+D_metabolights	MTBLS10743	(study)										GBA1		dropped	no values deposited: MAFs carry m/z, charge, RT only; no identifications		NO - user decision
+D_metabolights	MTBLS1967	(study)										IDH1		dropped	lipid-focused; no polar assay		NO
+D_metabolights	MTBLS337	(study)										PARP1		dropped	weak design: PARP inhibitor plus radiation, near-zero signal		NO - user decision
+D_metabolights	MTBLS6215	(study)										PFKFB3		dropped	weak design: PFKFB3 inhibitor 3PO, limited coverage		NO - user decision

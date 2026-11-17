@@ -313,6 +313,18 @@ reason; every run reports against all of it.
 4. Reaction nodes with no null traffic (zero null variance, no z-score) keep
    their raw score, ranked alongside the corrected nodes.
 
+### D23. MTBLS3628 added to the evaluation data (2026-11-17, DM)
+MetaboLights was excluded on 2026-11-11 (D22 context). One deposit is now admitted:
+MTBLS3628 (Zheng 2023, FH-deficient RCC), the only screened MetaboLights study with
+per-sample values for polar assays. Collection `D_metabolights`. Contrast FH-deficient
+RCC vs FH-wildtype RCC (10 vs 10), normal kidney unused, so the difference is FH status
+rather than tumour vs normal. HILIC (259 metabolites) and PHILIC (88) are two units on
+the same samples. DAA as D22 item 3 (Welch t on log2, raw p < 0.05;
+`benchmarks/metabolights_daa.py`). Six other MetaboLights deposits are registered as
+dropped with reasons: three deposited no values (MTBLS387, MTBLS3873, MTBLS10743), one
+is lipid-only (MTBLS1967), two are weak pharmacological designs (MTBLS337, MTBLS6215).
+Reverse-phase (lipid) assays and the 2-metabolite assay of MTBLS3628 are not used.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
