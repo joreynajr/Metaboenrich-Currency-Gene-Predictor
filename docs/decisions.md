@@ -325,6 +325,18 @@ dropped with reasons: three deposited no values (MTBLS387, MTBLS3873, MTBLS10743
 is lipid-only (MTBLS1967), two are weak pharmacological designs (MTBLS337, MTBLS6215).
 Reverse-phase (lipid) assays and the 2-metabolite assay of MTBLS3628 are not used.
 
+### D24. Degree-bias corrections evaluated, none adopted (2026-11-18, DM)
+Published corrections (DADA alpha_SD, alpha_CD and its uniform rules, Erten 2011;
+empirical permutation p, Phipson and Smyth 2010) were compared with no correction on
+the causal-gene rank, using the null calibration run
+`results/null_calibration/three_rule_decreased_measurable_kNone_n1000_exceed`
+(the 1,000-permutation run plus exceedance counts; null identical to the run
+without them). Tool `tools/correction_eval.py`, results `results/correction_eval/`.
+This records that the evaluation was run; no correction is adopted. The negative control
+(no correction) is rebuilt from `nodes.tsv`; it matches Ranker.run's causal-gene
+ranks in every unit but not every other gene's rank, because float noise breaks exact
+score ties differently (accepted by DM, 2026-11-17).
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.

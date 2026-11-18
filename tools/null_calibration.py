@@ -224,11 +224,14 @@ class Calibrator:
             absorb_p = {g: 1.0 for g in eff_t}
         return eff_t, prepare_walk(self.graph, eff_t, absorb_p, ws=self.ws)
 
-    def null(self, src, tgt, phi, ground, prep, exclude, pool, perms, rng):
-        """Null moments per reaction node, plus the per-permutation rows and the draws."""
+    def null(self, src, tgt, phi, ground, prep, exclude, pool, perms, rng, observed=None):
+        """Null moments per reaction node, plus the per-permutation rows and the draws.
+        With observed ({score: array over reaction nodes}), also counts per node the
+        permutations whose null score >= the observed one (for empirical p)."""
         cands = candidate_pools(src, self.degree, pool, exclude)
         n = len(self.rxn)
         s1, s2 = {s: np.zeros(n) for s in SCORES}, {s: np.zeros(n) for s in SCORES}
+        exceed = {s: np.zeros(n, dtype=int) for s in SCORES}
         traffic, rows, drawn = np.zeros(n, dtype=int), [], []
         for k in range(perms):
             rs = draw(cands, rng)
@@ -239,13 +242,15 @@ class Calibrator:
                 v = getattr(res, s)[self.rxn]
                 s1[s] += v
                 s2[s] += v * v
+                if observed is not None:
+                    exceed[s] += v >= observed[s]
             traffic += res.conductivity[self.rxn] > _EPS
             rows.append({"perm": k, "n_sources": len(rs), "success_fraction": res.walk_info["walk_success_fraction"],
                          "sources_unreached": int(sum(prep.h[r] <= _EPS for r in rs)),
                          "sources_off_main": int(sum(not self.main_comp[r] for r in rs))})
         mean = {s: s1[s] / perms for s in SCORES}
         sd = {s: np.sqrt(np.maximum(s2[s] / perms - mean[s] ** 2, 0.0)) for s in SCORES}
-        return mean, sd, traffic, rows, drawn, cands
+        return mean, sd, traffic, rows, drawn, cands, exceed
 
 
 def run_units(cal, units, pool, perms, rng):
@@ -262,7 +267,9 @@ def run_units(cal, units, pool, perms, rng):
         eff_t, prep = cal.prepare(src, tgt, phi, ground)
         obs = absorbing_walk(cal.graph, src, tgt, phi, kappa=cal.kappa, ground=ground, prep=prep)
         exclude = set(eff_t) | set(tgt) | set(ground or [])
-        mean, sd, traffic, rows, drawn, cands = cal.null(src, tgt, phi, ground, prep, exclude, pool, perms, rng)
+        observed = {s: getattr(obs, s)[cal.rxn] for s in SCORES}
+        mean, sd, traffic, rows, drawn, cands, exceed = cal.null(src, tgt, phi, ground, prep, exclude, pool, perms, rng,
+                                                                 observed)
         df = cal.base.copy()
         df.insert(0, "unit", u["label"])
         df["n_sources"], df["n_targets"] = len(src), len(eff_t)
@@ -271,6 +278,7 @@ def run_units(cal, units, pool, perms, rng):
             o = getattr(obs, s)[cal.rxn]
             df[f"null_mean_{s}"], df[f"null_sd_{s}"], df[f"observed_{s}"] = mean[s], sd[s], o
             df[f"z_{s}"] = np.where(sd[s] > _EPS, (o - mean[s]) / np.where(sd[s] > _EPS, sd[s], 1.0), np.nan)
+            df[f"n_null_ge_observed_{s}"] = exceed[s]
         node_frames.append(df)
         perm_rows += [{"unit": u["label"], **r} for r in rows]
         perm_rows.append({"unit": u["label"], "perm": "observed", "n_sources": len(src),
@@ -314,7 +322,7 @@ def threshold_experiment(cal, units, labels, sizes, reps, perms, pool, rng):
                 sub = sorted(rng.choice(src, k, replace=False).tolist()) if k < len(src) else src
                 eff_t, prep = cal.prepare(sub, tgt, phi, ground)
                 exclude = set(eff_t) | set(tgt) | set(ground or [])
-                mean, _, _, rows_k, drawn, _ = cal.null(sub, tgt, phi, ground, prep, exclude, pool, perms, rng)
+                mean, _, _, rows_k, drawn, _, _ = cal.null(sub, tgt, phi, ground, prep, exclude, pool, perms, rng)
                 y = mean["conductivity"]
                 rows.append({"unit": u["label"], "k": k, "full": k == len(src), "rep": rep,
                              "rho_null": spearmanr(hub, y).correlation, "ratio_null": effect_ratio(hub, y),
@@ -340,6 +348,7 @@ def main(argv=None):
     p.add_argument("--reps", type=int, default=20, help="random source subsets per size (threshold experiment)")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", default="results/null_calibration")
+    p.add_argument("--suffix", default="", help="appended to the run folder name (e.g. _exceed)")
     args = p.parse_args(argv)
 
     model = load_sbml("data/Human-GEM.xml")
@@ -359,7 +368,7 @@ def main(argv=None):
             t0 = time.time()
             rng = np.random.default_rng(args.seed)
             pool = cal.all_mets if pool_name == "all" else np.array(sorted(measured))
-            run = Path(args.out) / f"{key}_{orientation}_{pool_name}_k{args.kappa}_n{args.perms}"
+            run = Path(args.out) / f"{key}_{orientation}_{pool_name}_k{args.kappa}_n{args.perms}{args.suffix}"
             run.mkdir(parents=True, exist_ok=True)
             node_frames, perm_rows, draw_rows, slopes, summary = run_units(cal, units, pool, args.perms, rng)
             nodes = pd.concat(node_frames, ignore_index=True)
