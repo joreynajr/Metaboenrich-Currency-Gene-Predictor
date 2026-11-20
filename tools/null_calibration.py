@@ -39,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "benchmarks"))
 from metaboenrich import benchmark as B, structure          # noqa: E402
 from metaboenrich.daa import load_daa, load_name_bridge     # noqa: E402
+from metaboenrich.flow import current_flow                   # noqa: E402
 from metaboenrich.gem import load_sbml                      # noqa: E402
 from metaboenrich.network import build_graph                # noqa: E402
 from metaboenrich.walk import _EPS, absorbing_walk, prepare_walk, walk_states   # noqa: E402
@@ -197,9 +198,9 @@ def slope_rows(df, label, rng, n_boot=500):
 class Calibrator:
     """The graph-side pieces every unit shares."""
 
-    def __init__(self, graph, kappa):
-        self.graph, self.kappa = graph, kappa
-        self.ws = walk_states(graph)
+    def __init__(self, graph, kappa, method="walk"):
+        self.graph, self.kappa, self.method = graph, kappa, method      # "walk" or "flow" (current flow)
+        self.ws = walk_states(graph) if method == "walk" else None
         isr = graph.is_reaction
         self.degree = np.bincount(graph.edges.ravel(), minlength=graph.n).astype(float)
         adj = sp.coo_matrix((np.ones(len(graph.edges)), (graph.edges[:, 0], graph.edges[:, 1])), shape=(graph.n,) * 2)
@@ -222,7 +223,20 @@ class Calibrator:
         else:                                              # one-sided: the measured, unchanged absorb
             eff_t = [g for g in ground if g not in set(src)]
             absorb_p = {g: 1.0 for g in eff_t}
+        if self.method == "flow":
+            return eff_t, None
         return eff_t, prepare_walk(self.graph, eff_t, absorb_p, ws=self.ws)
+
+    def score(self, src, tgt, phi, ground, prep):
+        if self.method == "flow":
+            return current_flow(self.graph, src, tgt, ground=ground)
+        return absorbing_walk(self.graph, src, tgt, phi, kappa=self.kappa, ground=ground, prep=prep)
+
+    def walk_stats(self, res, prep, src):
+        """Success fraction and sources that reach no target (NaN for current flow)."""
+        if self.method == "flow":
+            return np.nan, np.nan
+        return res.walk_info["walk_success_fraction"], int(sum(prep.h[r] <= _EPS for r in src))
 
     def null(self, src, tgt, phi, ground, prep, exclude, pool, perms, rng, observed=None):
         """Null moments per reaction node, plus the per-permutation rows and the draws.
@@ -237,7 +251,7 @@ class Calibrator:
             rs = draw(cands, rng)
             drawn.append(rs)
             phi_k = {**{t: phi.get(t, 0.0) for t in tgt}, **{r: phi[s] for r, s in zip(rs, src)}}
-            res = absorbing_walk(self.graph, rs, tgt, phi_k, kappa=self.kappa, ground=ground, prep=prep)
+            res = self.score(rs, tgt, phi_k, ground, prep)
             for s in SCORES:
                 v = getattr(res, s)[self.rxn]
                 s1[s] += v
@@ -245,8 +259,8 @@ class Calibrator:
                 if observed is not None:
                     exceed[s] += v >= observed[s]
             traffic += res.conductivity[self.rxn] > _EPS
-            rows.append({"perm": k, "n_sources": len(rs), "success_fraction": res.walk_info["walk_success_fraction"],
-                         "sources_unreached": int(sum(prep.h[r] <= _EPS for r in rs)),
+            success, unreached = self.walk_stats(res, prep, rs)
+            rows.append({"perm": k, "n_sources": len(rs), "success_fraction": success, "sources_unreached": unreached,
                          "sources_off_main": int(sum(not self.main_comp[r] for r in rs))})
         mean = {s: s1[s] / perms for s in SCORES}
         sd = {s: np.sqrt(np.maximum(s2[s] / perms - mean[s] ** 2, 0.0)) for s in SCORES}
@@ -265,7 +279,8 @@ def run_units(cal, units, pool, perms, rng):
             summary.append({**row, "status": "not run: " + ("no sources" if not src else "no targets")})
             continue
         eff_t, prep = cal.prepare(src, tgt, phi, ground)
-        obs = absorbing_walk(cal.graph, src, tgt, phi, kappa=cal.kappa, ground=ground, prep=prep)
+        obs = cal.score(src, tgt, phi, ground, prep)
+        obs_success, obs_unreached = cal.walk_stats(obs, prep, src)
         exclude = set(eff_t) | set(tgt) | set(ground or [])
         observed = {s: getattr(obs, s)[cal.rxn] for s in SCORES}
         mean, sd, traffic, rows, drawn, cands, exceed = cal.null(src, tgt, phi, ground, prep, exclude, pool, perms, rng,
@@ -282,8 +297,7 @@ def run_units(cal, units, pool, perms, rng):
         node_frames.append(df)
         perm_rows += [{"unit": u["label"], **r} for r in rows]
         perm_rows.append({"unit": u["label"], "perm": "observed", "n_sources": len(src),
-                          "success_fraction": obs.walk_info["walk_success_fraction"],
-                          "sources_unreached": obs.walk_info["walk_sources_unreached"],
+                          "success_fraction": obs_success, "sources_unreached": obs_unreached,
                           "sources_off_main": int(sum(not cal.main_comp[s] for s in src))})
         # How much of each degree bucket's shortlist the draws actually used.
         flat = np.concatenate(drawn)
@@ -303,7 +317,7 @@ def run_units(cal, units, pool, perms, rng):
                         "rho_null": spearmanr(hub, y_null).correlation, "rho_observed": spearmanr(hub, y_obs).correlation,
                         "ratio_null": effect_ratio(hub, y_null), "ratio_observed": effect_ratio(hub, y_obs),
                         "undefined_z": float(np.isnan(df.z_conductivity).mean()),
-                        "success_observed": obs.walk_info["walk_success_fraction"],
+                        "success_observed": obs_success,
                         "success_null": null_p.success_fraction.median(),
                         "distinct_source_sets": len({tuple(sorted(d)) for d in drawn})})
         print(f"{u['label'][:50]:50s} {len(src):3d} sources {len(eff_t):3d} targets {time.time() - t0:5.0f}s", flush=True)
@@ -334,6 +348,7 @@ def threshold_experiment(cal, units, labels, sizes, reps, perms, pool, rng):
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--stage", default="three_rule:three_rule", metavar="SET:KEY")
+    p.add_argument("--method", default="walk", choices=["walk", "flow"], help="absorbing walk or current flow")
     p.add_argument("--orientation", nargs="+", default=["decreased"], choices=B.ORIENTATIONS,
                    help="'increased' runs, but its null is not comparable (success fraction) until matched on h(s)")
     p.add_argument("--pool", nargs="+", default=["measurable"], choices=["all", "measurable"],
@@ -356,7 +371,7 @@ def main(argv=None):
     st = next(s for s in structure.stages(model, sset, atom_dir="data") if s[0] == key)
     graph = build_graph(model, st[3], st[4], st[5], **st[6])
     bridge = load_name_bridge("data/id_translation.csv")
-    cal = Calibrator(graph, args.kappa)
+    cal = Calibrator(graph, args.kappa, args.method)
 
     for orientation in args.orientation:
         units, not_run = registry_units(model, graph, bridge, orientation)
@@ -368,7 +383,8 @@ def main(argv=None):
             t0 = time.time()
             rng = np.random.default_rng(args.seed)
             pool = cal.all_mets if pool_name == "all" else np.array(sorted(measured))
-            run = Path(args.out) / f"{key}_{orientation}_{pool_name}_k{args.kappa}_n{args.perms}{args.suffix}"
+            name = key if args.method == "walk" else f"{key}_flow"
+            run = Path(args.out) / f"{name}_{orientation}_{pool_name}_k{args.kappa}_n{args.perms}{args.suffix}"
             run.mkdir(parents=True, exist_ok=True)
             node_frames, perm_rows, draw_rows, slopes, summary = run_units(cal, units, pool, args.perms, rng)
             nodes = pd.concat(node_frames, ignore_index=True)
@@ -398,7 +414,8 @@ def main(argv=None):
                 thr.to_csv(run / "threshold.tsv", sep="\t", index=False)
             info = {"stage": args.stage, "metabolites": int((~graph.is_reaction).sum()),
                     "reaction_nodes": int(graph.is_reaction.sum()), "edges": len(graph.edges),
-                    "walk_states": int(cal.ws.n_states), "method": "walk", "orientation": orientation,
+                    "walk_states": int(cal.ws.n_states) if cal.ws else None, "method": args.method,
+                    "orientation": orientation,
                     "kappa": args.kappa, "kappa_mode": "every walker absorbs at the first target (target phi unused)"
                     if args.kappa is None else "partial absorption, real target phi",
                     "source_pool": pool_name, "pool_size": int(len(pool)), "perms": args.perms, "seed": args.seed,

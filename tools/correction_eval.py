@@ -1,7 +1,7 @@
 """Do published degree-bias corrections move known causal genes up the ranking?
 
 Compared with no correction (M0, the negative control), on the null calibration
-run's units that have a known causal gene in the network. Every correction acts
+run's units (its method, walk or current flow, and orientation) that have a known causal gene in the network. Every correction acts
 on `conductivity` and `bottleneck` separately, the two are combined with the
 same rank_score, and each gene takes its best reaction as in Ranker.run. The set
 of scored reactions (conductivity > 0) and the tail rank for unscored genes are
@@ -15,6 +15,7 @@ the same for every method, so corrections only reorder.
            of nearest hub_sum in the same run (DADA alpha_CD); M2-hub_max as a sensitivity run
   M3       empirical p = (b + 1) / (perms + 1) from the same permutations (Phipson and Smyth 2010)
   UNI-C, UNI-O, UNI-S   DADA's uniform prioritization of M0 with each of M1-D22, M1-last, M2, M3
+  M0-LOO   current flow only: the benchmark's leave-one-out scores, uncorrected (context)
 
 No method is adopted here (handoff_correction_methods_evaluation.md).
 
@@ -36,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "benchmarks"))
 from metaboenrich import benchmark as B, structure              # noqa: E402
 from metaboenrich.daa import load_name_bridge                    # noqa: E402
+from metaboenrich.flow import current_flow                       # noqa: E402
 from metaboenrich.gem import load_sbml                           # noqa: E402
 from metaboenrich.network import build_graph                     # noqa: E402
 from metaboenrich.scoring import gene_table, node_table, rank_score, reaction_table   # noqa: E402
@@ -53,7 +55,7 @@ ADJUSTED = ["M1-D22", "M1-last", "M2", "M3"]
 UNI = ["UNI-C", "UNI-O", "UNI-S"]
 RANKINGS = ["M0"] + ADJUSTED + [f"{u}/{a}" for a in ADJUSTED for u in UNI]
 SENSITIVITY = ["M2-hub_max"]
-CONTEXT = ["neighbour", "random"]
+CONTEXT = ["M0-LOO", "neighbour", "random"]
 
 
 # ---- corrections (pure functions, unit-tested) ---------------------------------
@@ -157,9 +159,9 @@ def p_auc(ranks, universe, k_max=100):
 
 # ---- per unit ------------------------------------------------------------------
 class Evaluator:
-    def __init__(self, model, graph, bridge, cal):
-        self.model, self.graph, self.cal = model, graph, cal
-        self.ranker = B.Ranker(model, graph, "walk", None, bridge, "decreased")
+    def __init__(self, model, graph, bridge, cal, method="walk", orientation="decreased"):
+        self.model, self.graph, self.cal, self.method = model, graph, cal, method
+        self.ranker = B.Ranker(model, graph, method, None, bridge, orientation)
         self.universe = self.ranker.universe
         self.hub_sum = cal.base.hub_sum.to_numpy(float)
         self.nbrs = {"hub_sum": nearest(self.hub_sum), "hub_max": nearest(cal.base.hub_max.to_numpy(float))}
@@ -186,9 +188,12 @@ class Evaluator:
         return pd.Series({x: rank.get(x, tail) for x in self.universe}), g
 
     def reference(self, u):
-        """Ranker.run for this unit's sources and targets: the walk, the gene ranks, the neighbour baseline."""
+        """Ranker.run for this unit's sources and targets: the walk or flow, the gene ranks, the neighbour baseline."""
         src, tgt, phi, ground = u["sources"], u["targets"], u["phi"], u["ground"]
-        flow = absorbing_walk(self.graph, src, tgt, phi, kappa=None, ground=ground)
+        if self.method == "flow":
+            flow = current_flow(self.graph, src, tgt, ground=ground)
+        else:
+            flow = absorbing_walk(self.graph, src, tgt, phi, kappa=None, ground=ground)
         nodes = node_table(self.graph, flow)
         rxn = reaction_table(nodes, self.graph, self.model, set(src) | set(tgt), ["conductivity", "bottleneck"])
         ranks, _ = self.gene_ranks(rxn, rxn.final_score)
@@ -202,6 +207,12 @@ class Evaluator:
                     nb[g] = max(nb.get(g, 0.0), s)
         nb_rank = pd.Series({g: nb.get(g, 0.0) for g in self.universe}).rank(ascending=False, method="average")
         return nodes, ranks, nb_rank
+
+    def loo_ranks(self, nodes, u):
+        """Current flow's leave-one-out gene ranks, as the benchmark's default flow ranking."""
+        rxn = reaction_table(nodes, self.graph, self.model, set(u["sources"]) | set(u["targets"]),
+                             ["conductivity_loo", "bottleneck_loo"])
+        return self.gene_ranks(rxn, rxn.final_score)[0]
 
     def m0_ranks(self, nodes, cond, bott, decimals=None):
         """M0 gene ranks with the given reaction scores (optionally rounded) in place of the walk's."""
@@ -281,8 +292,10 @@ def main(argv=None):
     st = next(s for s in structure.stages(model, sset, atom_dir="data") if s[0] == key)
     graph = build_graph(model, st[3], st[4], st[5], **st[6])
     bridge = load_name_bridge("data/id_translation.csv")
-    cal = Calibrator(graph, None)
-    ev = Evaluator(model, graph, bridge, cal)
+    method = info.get("method", "walk")
+    cal = Calibrator(graph, None, method)
+    ev = Evaluator(model, graph, bridge, cal, method, info["orientation"])
+    scorer = "current_flow" if method == "flow" else "absorbing_walk"
     U = len(ev.universe)
     units, _ = registry_units(model, graph, bridge, info["orientation"])
     units = {u["label"]: u for u in units}
@@ -314,11 +327,12 @@ def main(argv=None):
                 data[c.dataset] = B.load_t2020() if c.dataset == "t2020" else B.load_miller()
             z_, ann, cohorts = data[c.dataset]
             samples = [s for s in cohorts.get(c.cohort, []) if s in z_.columns]
-            walks, B.absorbing_walk = [], lambda *a, **k: walks.append(absorbing_walk(*a, **k)) or walks[-1]
+            fn, walks = getattr(B, scorer), []
+            setattr(B, scorer, lambda *a, **k: walks.append(fn(*a, **k)) or walks[-1])
             try:
                 _, me, nb, _ = ev.ranker.run(B.group_daa(z_, ann, samples), out / "_daa_tmp.csv", 0.05, 1.0)
             finally:
-                B.absorbing_walk = absorbing_walk
+                setattr(B, scorer, fn)
             assert not rank_mismatch(nb_rank, nb)
             if me["raw"] is None:
                 path = f"Ranker.run returns no ranking (walk pairs: {len(walks[0].pairs) if walks else 'no walk'}); " + path
@@ -353,6 +367,8 @@ def main(argv=None):
                                  "hub_metabolites": ";".join(sorted(graph.node_names[m] for m in mets)),
                                  **{m: res[m]["ranks"][g] for m in res}})
         ranks = {m: best(res[m]["ranks"], genes) for m in res}
+        if method == "flow":
+            ranks["M0-LOO"] = best(ev.loo_ranks(nodes, u), genes)
         ranks["neighbour"] = best(nb_rank, genes)
         ranks["random"] = (U + 1) / 2
         rank_rows += [{"unit": r.label, "ranking": m, "rank": v} for m, v in ranks.items()]
@@ -381,7 +397,7 @@ def main(argv=None):
     bias.to_csv(out / "bias.tsv", sep="\t", index=False)
     hub = pd.DataFrame(hub_rows)
     hub.to_csv(out / "hub_genes.tsv", sep="\t", index=False)
-    run_info = {"run": run.as_posix(), "perms": perms, "has_exceedance": has_exceed, "universe": U,
+    run_info = {"run": run.as_posix(), "method": method, "orientation": info["orientation"], "perms": perms, "has_exceedance": has_exceed, "universe": U,
                 "reaction_nodes": len(cal.rxn), "lambda_hub_sum": ev.lam, "network_metabolite_mean_degree": ev.net_degree,
                 "hub_metabolite_degree_min": float(min(cal.degree[m] for m in ev.hub_mets)),
                 "n_hub_metabolites": len(ev.hub_mets), "gene_degree_mean": float(ev.gene_degree.mean()),
@@ -410,7 +426,7 @@ def metric_rows(rk, U):
             rows.append({"set": set_name, "ranking": m, "units": len(x),
                          "clusters": g[g.ranking == m].cluster.nunique(), "median_rank": np.median(x),
                          "top10": int((x <= 10).sum()), "top100": int((x <= 100).sum()),
-                         "pAUC_1_100": p_auc(x, U) if m != "random" else 0.5})
+                         "pAUC_1_100": p_auc(x, U) if m != "random" else 50 / (U - 1)})   # random: the diagonal, FPR(100) / 2
     return pd.DataFrame(rows)
 
 
@@ -483,7 +499,7 @@ def write_report(out, rk, uinfo, bias, hub, m0, skipped, info, ran):
     L += ["", "## 1. Main table", "",
           "pAUC_1_100: DADA's ROC with ranks 1-100 as predicted positives (sensitivity = share of units with the "
           "causal gene in the top k; 1 - specificity = share of the other genes in the top k), area over k = 0..100 "
-          "divided by its width, so random placement = 0.5.", ""]
+          "divided by its width, so random placement = FPR(100) / 2 = 50 / (U - 1), about 0.023.", ""]
     for set_name in ["primary, viable", "primary"]:
         L += [f"### {set_name}", ""] + md(summary[summary.set == set_name].drop(columns="set"),
                                           {"pAUC_1_100": ".3f"}) + [""]
