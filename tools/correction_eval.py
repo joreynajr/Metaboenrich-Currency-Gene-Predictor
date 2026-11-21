@@ -312,6 +312,10 @@ def main(argv=None):
     ran["viable"] = ran.viable.astype(str).eq("True")
     skipped = ran[(ran.causal_genes != "") & (ran.causal_in_net.str.len() == 0)]
     ev_units = ran[ran.causal_in_net.str.len() > 0].reset_index(drop=True)
+    gone = ev_units[~ev_units.label.isin(units)]           # dropped from the registry after the run (e.g. D25)
+    if len(gone):
+        print(f"skipping {len(gone)} units no longer active in the registry: {', '.join(gone.label)}")
+        ev_units = ev_units[ev_units.label.isin(units)].reset_index(drop=True)
 
     cases, data = pd.read_csv(B.CASES, sep="\t").fillna("").set_index("case_id"), {}
     rank_rows, unit_rows, bias_rows, hub_rows, m0_rows = [], [], [], [], []
