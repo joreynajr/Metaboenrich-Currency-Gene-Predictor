@@ -25,10 +25,10 @@ A_inborn_errors	Thistlethwaite2020	rcdp	Rhizomelic chondrodysplasia punctata	21.
 A_inborn_errors	Miller2015	mcad	MCAD deficiency	2.0	1203.0		52.0			group mean z	derived from z	ACADM		dropped	marked excluded in cases.tsv		
 A_inborn_errors	Miller2015	vlcad	VLCAD deficiency	2.0	1203.0		14.0			group mean z	derived from z	ACADVL		dropped	marked excluded in cases.tsv		
 A_inborn_errors	Miller2015	lpi	Lysinuric protein intolerance	2.0	1203.0		19.0			group mean z	derived from z	SLC7A7		dropped	marked excluded in cases.tsv		
-B_published	Adam et al 2013	KO vs CONT	kidney	0.0	121.0					log2FC	yes	FH		active			
-B_published	Adam et al 2013	KO vs KO+FH	kidney	0.0	121.0					log2FC	yes	FH		active			
-B_published	Adam et al 2013	KO vs KO+FHcyt	kidney	0.0	121.0					log2FC	yes	FH		active			
-B_published	Adam et al 2013	KO vs WT	kidney	0.0	131.0					log2FC	yes	FH		active			
+B_published	Adam et al 2013	KO vs CONT	kidney	0.0	121.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)		
+B_published	Adam et al 2013	KO vs KO+FH	kidney	0.0	121.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)		
+B_published	Adam et al 2013	KO vs KO+FHcyt	kidney	0.0	121.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)		
+B_published	Adam et al 2013	KO vs WT	kidney	0.0	131.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)		
 B_published	Adam et al 2013	Tumor vs Normal	kidney tumor (HLRCC, type 2 papillary)	0.0	173.0					log2FC	yes	FH		active			
 B_published	Alaimo et al 2020	patient vs reference population	plasma (default; see Notes for urine/CSF	74.0	133.0					z-score	no	AASS;ABAT;ABCC8;ABCD4;ABHD5;ACADL;ACADM;		active			
 B_published	Burrage et al 2019	patient vs reference population	plasma	48.0	24.0					z-score	no			active			

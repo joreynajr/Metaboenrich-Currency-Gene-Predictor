@@ -337,6 +337,14 @@ This records that the evaluation was run; no correction is adopted. The negative
 ranks in every unit but not every other gene's rank, because float noise breaks exact
 score ties differently (accepted by DM, 2026-11-17).
 
+### D25. Evaluation data is human only (2026-11-21, DM)
+The four Adam 2013 comparisons on Fh1-knockout mouse kidney (KO vs CONT, KO vs KO+FH,
+KO vs KO+FHcyt, KO vs WT) are dropped from `benchmarks/data_registry.tsv`, reason
+"mouse". They had been active and were in every earlier evaluation set, including
+`results/correction_eval/` (D24); runs made before this date include them. Adam 2013
+Tumor vs Normal (human HLRCC tumour) stays. Every other active unit is human (Workbench
+mwTab SUBJECT_SPECIES, MTBLS3628 sample sheet, published unit metadata).
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
