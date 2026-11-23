@@ -47,9 +47,13 @@ from null_calibration import KEYS, SCORES, Calibrator, registry_units   # noqa: 
 RUN = Path("results/null_calibration/three_rule_decreased_measurable_kNone_n1000_exceed")
 UNIT_MASTER = Path.home() / "Desktop/Electrical Conductivity/unit_master_v2.csv"
 PRIMARY = {"inherited defect", "gene removed or lost"}
-# One experiment registered as two studies.
+# One experiment (or shared samples) registered as two studies.
 MERGED = {"ST004490": "TIGAR (ST004490/ST004493)", "ST004493": "TIGAR (ST004490/ST004493)",
-          "ST003551": "ALDH7A1 (ST003551/ST003556)", "ST003556": "ALDH7A1 (ST003551/ST003556)"}
+          "ST003551": "ALDH7A1 (ST003551/ST003556)", "ST003556": "ALDH7A1 (ST003551/ST003556)",
+          # D26: the same patients' cells (ADSL R309H/c.1191+5G>C in both); the same TVB-2640 dose series,
+          # probably the same extracts (polar run 2023-02-06, acylcarnitine run 2023-02-17)
+          "ST003347": "ADSL (ST003347/ST003499)", "ST003499": "ADSL (ST003347/ST003499)",
+          "ST003412": "FASN TVB-2640 (ST003412/ST003417)", "ST003417": "FASN TVB-2640 (ST003412/ST003417)"}
 N_NEIGHBOURS = 1000                 # DADA's n for the candidate-degree model
 ADJUSTED = ["M1-D22", "M1-last", "M2", "M3"]
 UNI = ["UNI-C", "UNI-O", "UNI-S"]
@@ -285,7 +289,6 @@ def main(argv=None):
     nodes_tsv = pd.read_csv(run / "nodes.tsv", sep="\t", low_memory=False)
     has_exceed = "n_null_ge_observed_conductivity" in nodes_tsv.columns
     reg = pd.read_csv(Path("benchmarks/data_registry.tsv"), sep="\t", dtype=str).fillna("")
-    um = pd.read_csv(args.unit_master, dtype=str).fillna("")
 
     model = load_sbml("data/Human-GEM.xml")
     sset, key = info["stage"].split(":", 1)
@@ -301,10 +304,13 @@ def main(argv=None):
     units = {u["label"]: u for u in units}
 
     ran = units_tsv[units_tsv.status == "run"].merge(
-        reg[["collection", "study", "sub_unit", "causal_genes"]], on=["collection", "study", "sub_unit"], how="left")
-    ran = ran.merge(um[["label", "perturbation"]], on="label", how="left")
+        reg[["collection", "study", "sub_unit", "causal_genes", "perturbation"]],
+        on=["collection", "study", "sub_unit"], how="left")
     ran["perturbation"] = ran.perturbation.fillna("")
-    ran.loc[ran.study == "MTBLS3628", "perturbation"] = "gene removed or lost"     # registered after unit_master_v2's run
+    if (ran.perturbation == "").any():          # the registry column is the source (D26); unit_master is a fallback
+        um = pd.read_csv(args.unit_master, dtype=str).fillna("").drop_duplicates("label").set_index("label")
+        gap = ran.perturbation == ""
+        ran.loc[gap, "perturbation"] = ran.loc[gap, "label"].map(um.perturbation).fillna("")
     ran["causal_genes"] = ran.causal_genes.fillna("")
     ran["causal_in_net"] = [ev.ranker.causal([s for s in c.split(";") if s])[1] for c in ran.causal_genes]
     ran["cluster"] = [cluster_of(r) for r in ran.itertuples()]

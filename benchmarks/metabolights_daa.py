@@ -8,6 +8,7 @@ log2FC = mean log2(case) - mean log2(control), significant if raw p < 0.05.
 
 Writes results/metabolights_daa/<study>_<assay>.csv (name, CHEBI, log2FC, p,
 n_case, n_control) and contrasts.tsv, which tools/null_calibration.py reads.
+Units added under D26 read per-sample tables built by benchmarks/metabolights_per_sample.py.
 
     python benchmarks/metabolights_daa.py
 """
@@ -29,6 +30,35 @@ CONTRASTS = {
     ("MTBLS3628", "PHILIC"): ("Zheng2023/MTBLS3628_PHILIC_per_sample.csv", "FH-deficient RCC", "FH wildtype RCC",
                               "as HILIC; same 30 samples (D23)"),
 }
+
+# D26: per-sample tables written by benchmarks/metabolights_per_sample.py from the MAF + ISA sheets.
+GLY = "Sample type:Celly lysate | Medium:{} | Treatment:{}"
+PRODH = "Pluripotency:{} | Genotype:{}"
+for _assay in ("RP_pos", "RP_neg"):
+    for _state, _lv in (("naive", "Naïve"), ("primed", "Primed")):
+        CONTRASTS[("MTBLS7840", f"{_state}_{_assay}")] = (
+            f"MTBLS7840/MTBLS7840_{_assay}_per_sample.csv", PRODH.format(_lv, "shPRODH"), PRODH.format(_lv, "PLKO.1"),
+            f"shPRODH vs empty pLKO.1 in {_state} H9 hESC (Replicate factor dropped; QC and blank excluded)")
+    CONTRASTS[("MTBLS11858", f"AK4_{_assay}")] = (
+        f"MTBLS11858/MTBLS11858_{_assay}_per_sample.csv", "adenylate kinase 4, mitochondrial", "Control",
+        "shAK4 vs control shRNA, MT-4 ATL cells (shRHOC arm: RHOC not in the network; QC excluded)")
+for _assay in ("HILIC", "RP"):
+    for _gly, _lv in (("withGly", "with glycine"), ("noGly", "No glycine")):
+        CONTRASTS[("MTBLS405", f"{_gly}_{_assay}")] = (
+            f"MTBLS405/MTBLS405_Cell_{_assay}_per_sample.csv", GLY.format(_lv, "SHMT2-Down-regulated"),
+            GLY.format(_lv, "control cell"),
+            f"IPTG-induced shSHMT2 vs uninduced HeLa-SHMT2-shSHMT2 cells, medium {_lv} on both sides "
+            "(SHMT2-up arm, benzoate and xenograft experiments not used; standards excluded)")
+    CONTRASTS[("MTBLS10469", _assay)] = (
+        f"MTBLS10469/MTBLS10469_{_assay}_per_sample.csv", "0.2μm dznep", "DMSO",
+        "Pharmacological: DZNep (AHCY inhibitor) 0.2 uM vs DMSO, human erythroid cells")
+CONTRASTS.update({
+    ("MTBLS4722", "LCMS"): ("MTBLS4722/MTBLS4722_LCMS_per_sample.csv", "Gene Knockout", "Wild Type",
+                            "Only design: IDH1 KO vs WT MiaPaCa-2"),
+    ("MTBLS4223", "HILIC_neg"): ("MTBLS4223/MTBLS4223_HILIC_neg_per_sample.csv", "Gene Knockdown", "Wild Type",
+                                 "Only design: OGDH knockdown vs WT primed hESC (Replicate factor dropped; QC and "
+                                 "blank excluded)"),
+})
 
 
 def daa(path, case, control):

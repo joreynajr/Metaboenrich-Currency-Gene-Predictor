@@ -345,6 +345,55 @@ KO vs KO+FHcyt, KO vs WT) are dropped from `benchmarks/data_registry.tsv`, reaso
 Tumor vs Normal (human HLRCC tumour) stays. Every other active unit is human (Workbench
 mwTab SUBJECT_SPECIES, MTBLS3628 sample sheet, published unit metadata).
 
+### D26. Inclusion rule for evaluation units; 43 units added (2026-11-23, DM)
+Rule: include every comparison that makes a clear, testable prediction, i.e. one named
+human gene in the three_rule network was perturbed, so its rank can be scored. Human;
+group level with >= 3 samples per side; >= 20 named metabolites with per-sample values in
+the assay; polar abundance data (not isotope tracing, not lipid-only); one specific target
+gene in the network. Loss of function (knockout, knockdown, sh/si/sgRNA, patient loss of
+function, targeted degradation) is primary; chemical inhibition of one specific enzyme and
+overexpression or gain of function of one gene are included as non-primary. Excluded:
+genes not in the network, isotope tracing, lipid-only panels, n < 3, drugs without one
+specific in-network target, diseases with no single causal gene.
+Candidates came from `tools/find_test_data.py` (repository and literature sweep) and
+`tools/screen_candidates.py` (data check), curated in `results/data_discovery/curated.tsv`;
+each contrast was then checked against the deposited sample groups.
+1. Added (status active): Workbench ST003033 (OGDH KO), ST002234 (PRDX1 KO), ST004104
+   (PTEN KO), ST002876 (NSD2 shRNA, NSD2-high and NSD2-low lines as two units), ST003787
+   (G6PD KO; AN006223 = Polar_GSH injections only), ST003347 (ADSL patient fibroblasts),
+   ST003121 (ALG13-CDG organoids), ST003691 (PMM1 KO in PMM2-CDG fibroblasts), ST001441
+   (SUCLA2 patient fibroblasts, Day0; the controls are patients with other
+   mitochondrial diseases), ST002323 (SETD1A dTAG degradation, 24 h and 48 h); MetaboLights
+   MTBLS4722 (IDH1 KO), MTBLS4223 (OGDH KD), MTBLS7840 (PRODH shRNA, naive and primed),
+   MTBLS11858 (AK4 shRNA), MTBLS405 (SHMT2 shRNA, with and without glycine). Non-primary:
+   FASN inhibitors in BT-474 at the highest dose vs control, intracellular samples
+   (ST003365 GSK2194069, ST003411 C75, ST003412 TVB-2640, ST003430 GSK2194069), ST002231
+   (IDH1-R132H overexpression vs empty vector; DHODH inhibitor BAY2402234 vs DMSO),
+   MTBLS10469 (DZNep, AHCY inhibitor). Each polar assay is a unit, as before (pos/neg,
+   HILIC/RP). Clusters (`tools/correction_eval.py` MERGED): ST003347 with ST003499 (the
+   same ADSL patients), ST003412 with ST003417 (same TVB-2640 series, probably the same
+   extracts).
+2. Excluded: SNAP25, RHOC, N6AMT1 knockdowns (not in the network); MTBLS14024 (ACOD1
+   knockdown per the study description, but the assay sheet swaps the DPC and DPC_sh
+   sample/file names and itaconate is not in the panel, so the groups cannot be
+   verified); Fasnall arms and ST003429/ST003433 (Fasnall also inhibits complex I, PMID
+   38766222); ST003367 (same samples as ST003411); ST003427 dimethylmalonate, ST003428
+   rotenone (multi-subunit complexes), ST003432 LW6 (no single accepted target); ST003431
+   (n = 2, no control); ST003409 (giredestrant, ESR1 not in the network; lipid panel);
+   ST003123, ST003147, ST003869, MTBLS12643 (isotope tracing); MTBLS1973/1974 (technical
+   replicates of single organelle fractions); MTBLS13702 (circRNA), MTBLS11711 (SET, not
+   in the network); lipid-only, nutrient, disease-only and n < 3 rejects of curated.tsv.
+3. `benchmarks/data_registry.tsv` has a `perturbation` column (inherited defect, gene
+   removed or lost, chemically blocked, gene added or altered, not recorded) for every
+   row, copied for existing rows from unit_master_v2 (MTBLS3628: gene removed or lost).
+   The registry is now the source; `correction_eval` reads it and falls back to
+   unit_master only where it is empty (no existing unit changes).
+4. Code: `benchmarks/workbench_per_sample.py` writes the Workbench per-sample tables from
+   the mwTab (reproduces the existing ones), `benchmarks/metabolights_per_sample.py` builds
+   them from MAF + ISA sheets (QC, blank, pool and standard samples dropped). A Workbench
+   sub_unit `AN..._<suffix>` is a further contrast from one analysis; selectors may match
+   the sample id (`@sample`). Existing DAA outputs are unchanged.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.

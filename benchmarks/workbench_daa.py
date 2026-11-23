@@ -12,8 +12,11 @@ For each active Metabolomics Workbench analysis in benchmarks/data_registry.tsv
      - mean log2(control); significance = raw p < 0.05 (no multiple-testing correction);
   4. attaches KEGG / HMDB ids from the METABOLITES section of the raw .mwtab file when
      present (first valid id if several are listed);
-  5. writes <STUDY>_<ANALYSIS>.csv and contrasts.tsv into results/workbench_daa/,
-     which tools/null_calibration.py reads (D22).
+  5. writes <STUDY>_<SUB_UNIT>.csv and contrasts.tsv into results/workbench_daa/,
+     which tools/null_calibration.py reads (D22). The sub_unit is the analysis id, or
+     <ANALYSIS>_<suffix> when one analysis gives more than one contrast (D26).
+
+The per-sample inputs are written by benchmarks/workbench_per_sample.py.
 
     python benchmarks/workbench_daa.py
 """
@@ -37,9 +40,11 @@ P_CUT = 0.05
 # ---------------------------------------------------------------------------
 # Contrast definitions. Each selector is a list of factor dicts (OR across dicts,
 # AND within a dict); factor values are matched exactly against the parsed
-# "Factor:Value | Factor:Value" #GROUP label.
+# "Factor:Value | Factor:Value" #GROUP label; the key "@sample" is instead a regex on the
+# sample id. A sub_unit "AN..._<suffix>" is a further contrast from analysis AN... (D26).
 # ---------------------------------------------------------------------------
 C = {}
+SAMPLE_KEY = "@sample"   # selector key matched as a regex against the sample id instead of a factor
 
 
 def add(study, analyses, case, control, reason, not_computable=None):
@@ -152,6 +157,81 @@ add("ST005225", ["AN008930"],
     [{"Sample source": "KO-ALDH1B1", "Treatment": "DMSO"}], [{"Sample source": "KO-EGFP", "Treatment": "DMSO"}],
     "Genetic preferred: ALDH1B1 KO vs EGFP-KO control, both DMSO (IGUANA-5 inhibitor arms not used).")
 
+# ---- D26: units added under the inclusion rule of 2026-11-23 -----------------------------------
+add("ST003033", ["AN004973", "AN004974"],
+    [{"Genotype": "OGDH KO", "Treatment": "control"}], [{"Genotype": "wild type", "Treatment": "control"}],
+    "OGDH KO vs WT A375, both unstarved (glucose-starvation arms not used; 2 QC injections excluded).")
+add("ST002234", ["AN003644"],
+    [{"Genotype": "PRDX1 KO", "Treatment": "Untreated"}], [{"Genotype": "WT", "Treatment": "Untreated"}],
+    "PRDX1 KO vs WT U2OS, untreated (etoposide / nocodazole arms not used).")
+add("ST004104", ["AN006805", "AN006806"],
+    [{"Genotype": "KO"}], [{"Genotype": "Wild-type"}],
+    "Only design: CRISPR PTEN KO vs WT iPSC-derived mesendoderm.")
+add("ST002876", ["AN004713_highNSD2"],
+    [{"Genotype": "High NSD2", "Treatment": "Knockdown 1"}, {"Genotype": "High NSD2", "Treatment": "Knockdown 2"}],
+    [{"Genotype": "High NSD2", "Treatment": "Control"}],
+    "shNSD2 (two hairpins pooled) vs control shRNA in the NSD2-high (t(4;14)) myeloma line.")
+add("ST002876", ["AN004713_lowNSD2"],
+    [{"Genotype": "Low NSD2", "Treatment": "Knockdown 1"}, {"Genotype": "Low NSD2", "Treatment": "Knockdown 2"}],
+    [{"Genotype": "Low NSD2", "Treatment": "Control"}],
+    "As highNSD2, in the NSD2-low isogenic line; lines kept apart.")
+add("ST003787", ["AN006223"],
+    [{"G6PD_status": "KO_clone1", "Treatment": "Vehicle"}, {"G6PD_status": "KO_clone2", "Treatment": "Vehicle"}],
+    [{"G6PD_status": "WT", "Treatment": "Vehicle"}],
+    "G6PD KO (two CRISPR clones pooled) vs WT HCT-15, vehicle. AN006223 holds only the Method:Polar_GSH "
+    "injections; AN006222 (NAD method) not used. Asparaginase arms not used.")
+add("ST003347", ["AN005482"],
+    [{"Genotype": "A3V/R337X"}, {"Genotype": "M26L/R396H"}, {"Genotype": "R309H/c.1191+5G-&gt;C"}],
+    [{"Genotype": "Wildtype"}],
+    "ADSL-deficient patient fibroblasts (4 patients) vs 3 control donors, 5 cultures each (pseudo-replication, "
+    "as ST003499; R309H/c.1191+5G>C is also an ST003499 patient).")
+add("ST003121", ["AN005115"],
+    [{"Genotype": "ALG13"}], [{"Genotype": "CTR"}],
+    "Only design: ALG13-CDG vs control iPSC brain organoids (day 77).")
+add("ST003691", ["AN006057"],
+    [{"Class": "-/-PMM1"}], [{"Class": "+/+PMM1"}],
+    "PMM1 KO vs PMM1 intact, both in the same PMM2-CDG (R141H/F119L) fibroblast line, so the contrast "
+    "isolates PMM1 (NMR).")
+add("ST001441", ["AN002407", "AN002408"],
+    [{"Sample Source": "Patient", "Treatment Duration": "Day0"}],
+    [{"Sample Source": "Control", "Treatment Duration": "Day0"}],
+    "SUCLA2 patient fibroblasts vs control fibroblasts, Day0 (proliferative; Day5 low-serum not used). "
+    "Disease controls: the controls are patients with OTHER mitochondrial diseases, not healthy donors.")
+add("ST002323", ["AN003791_24h", "AN003792_24h"],
+    [{"Condition": "dTAG-13_24h"}], [{"Condition": "DMSO_24h"}],
+    "dTAG-13 degradation of FKBP12F36V-SETD1A vs DMSO, 24 h (MOLM-13): targeted protein loss.")
+add("ST002323", ["AN003791_48h", "AN003792_48h"],
+    [{"Condition": "dTAG-13_48h"}], [{"Condition": "DMSO_48h"}],
+    "As 24h, 48 h vs time-matched DMSO.")
+add("ST003365", ["AN005514", "AN005515"],
+    [{"Drug Treatment": "1000 nM GSK2194069", SAMPLE_KEY: r"BT474 cells "}],
+    [{"Drug Treatment": "Control", SAMPLE_KEY: r"BT474 cells "}],
+    "Pharmacological FASN inhibitor GSK2194069, highest dose (1000 nM) vs control, intracellular samples "
+    "only (no Sample Type factor; 'cells' vs 'med' in the sample id). Fasnall arms not used (Fasnall also "
+    "inhibits complex I, PMID 38766222).")
+add("ST003411", ["AN005602", "AN005603"],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "100 uM C75"}],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "Control"}],
+    "Pharmacological FASN inhibitor C75, highest dose (100 uM) vs control, intracellular. ST003367 is the "
+    "same samples deposited again (same sample ids, medium arms mislabelled) and is not registered.")
+add("ST003412", ["AN005604", "AN005605"],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "5 uM TVB-2640"}],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "Control", SAMPLE_KEY: r"TVB-2640 0 nM"}],
+    "Pharmacological FASN inhibitor TVB-2640, highest dose (5 uM) vs its own vehicle control (sample ids "
+    "'TVB-2640 0 nM cells'), intracellular. Cerulenin and TVB-3166 arms not used (as ST003417).")
+add("ST003430", ["AN005633", "AN005634"],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "500 nM GSK214069"}],
+    [{"Sample Type": "Intracellular", "Drug Treatment": "Control"}],
+    "Pharmacological FASN inhibitor GSK2194069 (deposited as GSK214069), highest dose (500 nM) vs control, "
+    "intracellular.")
+add("ST002231", ["AN003640_R132H", "AN003641_R132H"],
+    [{"Genotype": "HOG R132H", "Treatment": "DMSO"}], [{"Genotype": "HOG EV", "Treatment": "DMSO"}],
+    "Genetic gain of function: IDH1-R132H overexpression vs empty vector, both DMSO. NOTE: neomorphic "
+    "mutant, not loss.")
+add("ST002231", ["AN003640_BAY", "AN003641_BAY"],
+    [{"Genotype": "HOG EV", "Treatment": "BAY2402234"}], [{"Genotype": "HOG EV", "Treatment": "DMSO"}],
+    "Pharmacological: selective DHODH inhibitor BAY2402234 (10 nM, 24 h) vs DMSO in empty-vector HOG cells.")
+
 QC_PAT = re.compile(r"\b(qc|pool(ed)?|blank)\b", re.I)
 
 
@@ -170,7 +250,8 @@ def select(labels: pd.Series, sel: list[dict]) -> list[str]:
         if QC_PAT.search(str(lab)):
             continue
         f = parse_label(lab)
-        if any(all(f.get(k) == v for k, v in d.items()) for d in sel):
+        if any(all(re.search(v, str(col)) if k == SAMPLE_KEY else f.get(k) == v for k, v in d.items())
+               for d in sel):
             cols.append(col)
     return cols
 
@@ -229,7 +310,8 @@ def mwtab_ids(study: str, analysis: str) -> dict:
 
 
 def run_one(study, an, spec):
-    raw = pd.read_csv(PER_SAMPLE / f"{study}_{an}.csv", dtype=str)
+    analysis = an.split("_")[0]     # sub_unit AN..._<suffix>: another contrast from the same analysis
+    raw = pd.read_csv(PER_SAMPLE / f"{study}_{analysis}.csv", dtype=str)
     meta_mask = raw.iloc[:, 0].astype(str).str.startswith("#")
     labels = raw.loc[raw.iloc[:, 0] == "#GROUP"].iloc[0, 1:]
     body = raw.loc[~meta_mask].copy()
@@ -244,7 +326,7 @@ def run_one(study, an, spec):
     if not case or not ctrl:
         raise ValueError(f"{study} {an}: empty group (case={len(case)}, control={len(ctrl)})")
 
-    ids = mwtab_ids(study, an)
+    ids = mwtab_ids(study, analysis)
     vals = body.iloc[:, 1:].apply(pd.to_numeric, errors="coerce")
     vals.index = body.index
     df = pd.DataFrame({"raw": body.iloc[:, 0].astype(str)})
