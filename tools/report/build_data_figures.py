@@ -438,7 +438,7 @@ def overview(t, out):
 
 
 # ---- figure 3: one row per testable unit ---------------------------------------------------
-def unit_map(t, out):
+def unit_map(t, out, ranks=None):
     ts = t[t.testable].copy()
     ts["o"] = ts.c.map("ABCD".index)
     ts = ts.sort_values(["o", "primary", "cluster", "label"], ascending=[True, False, True, True]).reset_index(drop=True)
@@ -456,10 +456,14 @@ def unit_map(t, out):
     H = y
     fig = plt.figure(figsize=(12.4, 0.155 * H + 2.4))
     FH = fig.get_figheight()
-    gs = fig.add_gridspec(1, 4, width_ratios=[7.0, 1.3, 1.9, 1.25], wspace=0.07, left=0.012, right=0.995,
+    if ranks is not None:
+        fig.set_figwidth(14.2)
+    wr = [7.0, 1.3, 1.9, 1.25] + ([1.55] if ranks is not None else [])
+    gs = fig.add_gridspec(1, len(wr), width_ratios=wr, wspace=0.07, left=0.012, right=0.995,
                           top=1 - 1.05 / FH, bottom=1.15 / FH)
-    axT, axM, axC, axF = (fig.add_subplot(gs[0, i]) for i in range(4))
-    for ax in (axT, axM, axC, axF):
+    axs = [fig.add_subplot(gs[0, i]) for i in range(len(wr))]
+    axT, axM, axC, axF = axs[:4]
+    for ax in axs:
         ax.set_ylim(H, -1.4); ax.set_yticks([])
         for sp in ("left", "bottom"):
             ax.spines[sp].set_visible(False)
@@ -470,7 +474,7 @@ def unit_map(t, out):
                         ("What was done to the gene", X["pert"], "left"), ("n", X["n"], "right")]:
         axT.text(x, -0.9, name, ha=ha, va="bottom", fontsize=7.2, weight="bold", color=INK)
     for y0, c, n, k in heads:
-        for ax in (axT, axM, axC, axF):
+        for ax in axs:
             ax.axhline(y0 + 0.55, color=RULE, lw=0.7, zorder=0)
         axT.text(X["cond"] - 1.0, y0 + 0.15, f"{COLL[c]}  ·  {n} comparisons, {k} cluster{'s' if k > 1 else ''}",
                  fontsize=7.6, weight="bold", color=CT[c], va="center")
@@ -521,6 +525,8 @@ def unit_map(t, out):
             on = bool(getattr(r, kf))
             axF.plot(i, r.y, marker="o", ms=4.0, mfc="#126b63" if on else "white", mec="#126b63" if on else "#9aa0a6",
                      mew=0.8)
+    if ranks is not None:
+        rank_strip(axs[4], ts, ranks)
     fig.text(0.012, 1 - 0.3 / FH, f"Every testable comparison: {len(ts)} in {ts.cluster.nunique()} clusters",
              fontsize=10.5, weight="bold", color=INK, va="top")
     hand = [Rectangle((0, 0), 1, 1, color=PERT[k]) for k in PERT if (ts.perturbation == k).any()]
@@ -532,11 +538,37 @@ def unit_map(t, out):
                handlelength=1.0, columnspacing=1.3)
     fig.text(0.012, 0.08 / FH, "Viable: ≥ 3 sources and ≥ 20 metabolites in that orientation (↓src: decreased "
              "metabolites are the sources; ↑src: increased). Brackets join comparisons in one cluster. n: samples in "
-             "both groups as registered. Workbench and MetaboLights significance: Welch t-test, raw p < 0.05.",
+             "both groups as registered. Workbench and MetaboLights significance: Welch t-test, raw p < 0.05." +
+             ("\nCausal gene percentile: rank among 2,191 network genes (0 = top; Reafect: among the enzymes it "
+              "scored); a ranking with no sources is at the mid-rank, 50; × Reafect cannot score the gene."
+              if ranks is not None else ""),
              fontsize=6.0, color=INK2, va="bottom")
     for ext in ("png", "pdf"):
         fig.savefig(out / f"test_set_map.{ext}", dpi=220)
     plt.close(fig)
+
+
+RANK_COLS = [("Walk, sources = increased | M0", "Walk\n↑src"), ("Current flow, sources = increased | M3", "Flow\n↑src M3"),
+             ("neighbour", "One-\nhop"), ("Reafect", "Rea-\nfect")]
+
+
+def rank_strip(ax, ts, ranks):
+    """Causal-gene percentile per method, one cell per comparison; darker = ranked nearer the top."""
+    cmap = plt.get_cmap("Blues_r")
+    ax.set_xlim(-0.55, len(RANK_COLS) - 0.45); ax.set_xticks([])
+    for i, (k, lab) in enumerate(RANK_COLS):
+        ax.text(i, -0.9, lab, ha="center", va="bottom", fontsize=6.4, weight="bold", color=INK)
+        for r in ts.itertuples():
+            v = ranks.at[r.label, k] if r.label in ranks.index else float("nan")
+            if pd.isna(v) or (k == "Reafect" and v >= 100):
+                ax.text(i, r.y, "×", ha="center", va="center", fontsize=6, color="#9aa0a6")
+                continue
+            x = min(1.0, max(0.0, np.log10(max(v, 0.5) / 0.5) / np.log10(100)))
+            ax.add_patch(Rectangle((i - 0.42, r.y - 0.4), 0.84, 0.8, color=cmap(0.08 + 0.85 * x), lw=0))
+            ax.text(i, r.y, f"{v:.0f}" if v >= 1 else "<1", ha="center", va="center", fontsize=5.2,
+                    color="white" if v < 5 else INK)
+    ax.text((len(RANK_COLS) - 1) / 2, -3.2, "Causal gene percentile", ha="center", va="bottom", fontsize=7.2,
+            weight="bold", color=INK)
 
 
 def main(argv=None):
@@ -544,6 +576,8 @@ def main(argv=None):
     p.add_argument("--down", required=True, help="null calibration run, sources = decreased (walk)")
     p.add_argument("--up", required=True, help="null calibration run, sources = increased (walk)")
     p.add_argument("--out", default="results/data_figures")
+    p.add_argument("--ranks", help="unit_percentiles.tsv from tools/benchmark_matrix.py: adds a results strip "
+                                   "to test_set_map")
     args = p.parse_args(argv)
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     style()
@@ -551,7 +585,7 @@ def main(argv=None):
     t.drop(columns=["c"]).to_csv(out / "units.tsv", sep="\t", index=False)
     data_map(t, out)
     overview(t, out)
-    unit_map(t, out)
+    unit_map(t, out, pd.read_csv(args.ranks, sep="	", index_col=0) if args.ranks else None)
     ts = t[t.testable]
     info = {"comparisons": len(t), "testable": int(t.testable.sum()), "testable_clusters": int(ts.cluster.nunique()),
             "primary": int((ts.primary).sum()), "primary_clusters": int(ts[ts.primary].cluster.nunique()),
