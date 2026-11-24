@@ -12,10 +12,11 @@ Figures (png + pdf):
   overlap            hand search vs repository sweep, at study level
   failure_ledger     every swept study has its raw response cached; failed fetches per source
   drop_funnel        176 comparisons -> 95 testable -> 65 primary, every drop with its reason and rule
-  contrast_diagrams  deposited sample groups per study, case and control marked, unused arms grey
+  contrast_table     all C/D contrasts: what separates case from control, what is matched, groups pooled
+  contrast_diagrams  four worked examples: every deposited group, case and control marked, unused arms grey
   quality_flags      green / amber / red per testable unit, with the rule that set it
   daa_recheck        every metabolite of every C/D comparison re-tested row by row vs the DAA output
-JSON: cards.json (one card per comparison), candidates.json (top sweep candidates with evidence
+JSON: cards.json (one card per comparison), contrasts.json (contrast_table's rows), candidates.json (top sweep candidates with evidence
 and cache receipts), figures.json (file, title, caption).
 
 Reads results/data_discovery/, benchmarks/data_registry.tsv, results/data_figures/units.tsv,
@@ -432,62 +433,136 @@ def contrast_of(row):
 
 ROLE = {"case": ("#126b63", "white"), "control": ("#8fc4bf", INK), "not used": ("#eef0f2", INK2),
         "QC / blank": ("white", INK2)}
+SKIP_FACTORS = {"Sample Group", "Injection order"}
+# Contrasts where case and control differ in more than one factor, read by hand (DM, 2026-11-24).
+REVIEWED = {"ST003412": ("same", "Drug and Drug Treatment record the same drug"),
+            "ST000698": ("same", "the knockdown is recorded across three yes/no columns"),
+            "ST003499": ("differs", "patients and controls also differ in sex and age")}
+NOTES = {"ST004410": "case: antimycin blocks the electron transport chain, so DHODH has no electron acceptor; "
+                     "control: the yeast enzyme ScURA1 bypasses that, on the same drug"}
 
 
-def contrast_diagrams(u, out, figs):
-    ts = u[u.testable == "True"]
-    seen, panels = set(), []
-    for r in ts.itertuples():
-        if r.study in seen or not r.collection[0] in "CD":
-            continue
-        g = contrast_of(r)
-        if g is None:
-            continue
-        seen.add(r.study)
-        panels.append((r, g))
-    panels.sort(key=lambda p: -len(p[1]["groups"]))
-    genes, pick = set(), []
-    for r, g in panels:                               # most-armed studies, one per gene
-        gene = r.causal_genes.split(";")[0]
-        if gene not in genes:
-            genes.add(gene); pick.append((r, g))
-    panels = pick[:9]
-    nc, nshow, h = 3, 7, 0.105
-    nr = int(np.ceil(len(panels) / nc))
-    fig, axs = plt.subplots(nr, nc, figsize=(9.6, 1.75 * nr + 0.5))
+def factors(lab):
+    """A deposited group label as {factor: value}; a bare label (MetaboLights) is one factor, 'group'."""
+    import html
+    import workbench_daa as W
+    d = {k: html.unescape(v) for k, v in W.parse_label(lab).items() if k not in SKIP_FACTORS}
+    return d or {"group": html.unescape(str(lab).strip())}
+
+
+def contrast_summary(r, g):
+    """What separates case from control in one comparison, what they share, and how many groups were pooled."""
+    cs = [factors(g["labels"][c]) for c in g["case"]]
+    ct = [factors(g["labels"][c]) for c in g["control"]]
+    keys = sorted(set().union(*cs, *ct))
+    val = lambda ds, k: sorted({d.get(k, "–") for d in ds})          # noqa: E731
+    differ = [k for k in keys if val(cs, k) != val(ct, k)]
+    same = [k for k in keys if k not in differ and len(val(cs, k)) == 1]
+    rev = REVIEWED.get(r.study)
+    status = "one factor" if len(differ) == 1 else ("reviewed: one perturbation" if rev and rev[0] == "same"
+                                                    else "several factors")
+    return {"label": r.label, "study": r.study, "gene": r.causal_genes.split(";")[0], "primary": r.primary == "True",
+            "differ": [{"factor": k, "case": val(cs, k), "control": val(ct, k)} for k in differ],
+            "matched": [{"factor": k, "value": val(cs, k)[0]} for k in same],
+            "n_case_groups": len({str(sorted(d.items())) for d in cs}),
+            "n_control_groups": len({str(sorted(d.items())) for d in ct}),
+            "n_case": len(g["case"]), "n_control": len(g["control"]), "status": status,
+            "note": (rev[1] if rev else NOTES.get(r.study, "")), "reason": g.get("reason", "")}
+
+
+def short(s, n):
+    s = str(s)
+    return s if len(s) <= n else s[:n - 1] + "…"
+
+
+def contrast_table(u, groups, out, figs):
+    ts = u[(u.testable == "True") & u.collection.str[0].isin(["C", "D"])].drop_duplicates("label")
+    rows = [contrast_summary(r, groups[r.label]) for r in ts.itertuples() if groups.get(r.label)]
+    order = {"several factors": 0, "reviewed: one perturbation": 1, "one factor": 2}
+    rows.sort(key=lambda x: (order[x["status"]], x["gene"], x["label"]))
+    MARK = {"one factor": ("✓", "#126b63"), "reviewed: one perturbation": ("✓*", "#126b63"),
+            "several factors": ("!", "#b7791f")}
+    h = 0.142
+    H = h * (len(rows) + 1.2) + 0.9
+    fig = plt.figure(figsize=(10.4, H))
+    ax = fig.add_axes([0.005, 0.45 / H, 0.99, h * (len(rows) + 1.2) / H])
+    ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(len(rows), -1.2)
+    X = [0.0, 0.025, 0.215, 0.6, 0.86]
+    for x, t in zip(X, ["", "comparison · gene", "what differs:  case → control", "matched in both",
+                        "groups pooled  case / ctrl"]):
+        ax.text(x, -0.6, t, fontsize=5.8, color=INK2, weight="bold")
+    for i, x in enumerate(rows):
+        if i % 2 == 0:
+            ax.add_patch(Rectangle((0, i), 1, 1, color="#f5f6f7", lw=0))
+        m, c = MARK[x["status"]]
+        ax.text(X[0] + 0.006, i + 0.55, m, fontsize=6, color=c, weight="bold", va="center")
+        ax.text(X[1], i + 0.55, f"{short(x['label'], 30)} · {x['gene']}", fontsize=5.4, va="center", color=INK)
+        d = "; ".join(f"{e['factor']}: {'/'.join(e['case'])} → {'/'.join(e['control'])}" for e in x["differ"])
+        ax.text(X[2], i + 0.55, short(d, 92), fontsize=5.4, va="center", color=INK)
+        mt = ", ".join(f"{e['factor']}={e['value']}" for e in x["matched"]) or "—"
+        ax.text(X[3], i + 0.55, short(mt, 58), fontsize=5.2, va="center", color=INK2)
+        pool = f"{x['n_case_groups']} / {x['n_control_groups']}   (n {x['n_case']} / {x['n_control']})"
+        ax.text(X[4], i + 0.55, pool, fontsize=5.4, va="center", color=INK)
+    n = {k: sum(x["status"] == k for x in rows) for k in MARK}
+    title = (f"All {len(rows)} case-vs-control contrasts: {n['one factor']} differ in exactly one factor, "
+             f"{n['reviewed: one perturbation']} record one perturbation in several columns, "
+             f"{n['several factors']} {'differs' if n['several factors'] == 1 else 'differ'} in more")
+    fig.suptitle(title, x=0.008, ha="left", fontsize=9, weight="bold", y=0.995)
+    flagged = [x for x in rows if x["note"] and x["status"] != "one factor"]
+    fig.text(0.008, 0.008, "✓ case and control differ in one factor only.  ✓* several columns, one perturbation "
+             "(read by hand).  ! a real second difference.  Matched: factors with one shared value.  "
+             "Collections C (Workbench) and D (MetaboLights).\n" +
+             "  ".join(f"{x['study']}: {x['note']}." for x in {x['study']: x for x in flagged}.values()),
+             fontsize=5.8, color=INK2)
+    save(fig, out, "contrast_table", figs, title,
+         "One row per comparison: the middle column is the only thing that should separate case from control; "
+         "everything in 'matched in both' is held equal. Amber rows need a reader's judgement.")
+    return rows
+
+
+def contrast_diagrams(u, groups, out, figs, studies=("ST004410", "ST003551", "ST003412", "ST003499")):
+    ts = u[(u.testable == "True")].drop_duplicates("label")
+    panels = []
+    for s in studies:
+        r = next((r for r in ts.itertuples() if r.study == s and groups.get(r.label)), None)
+        if r is not None:
+            panels.append((r, groups[r.label], contrast_summary(r, groups[r.label])))
+    fig, axs = plt.subplots(2, 2, figsize=(10.4, 5.0))
+    nshow, h = 7, 0.092
     for ax in np.ravel(axs):
-        ax.axis("off")
-    for ax, (r, g) in zip(np.ravel(axs), panels):
+        ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+    for ax, (r, g, cs) in zip(np.ravel(axs), panels):
         gs = sorted(g["groups"], key=lambda x: ["case", "control", "not used", "QC / blank"].index(x["role"]))
-        parsed = [dict(p.split(":", 1) for p in x["group"].split(" | ") if ":" in p) for x in gs]
-        keys = {k for d in parsed for k in d}
-        vary = [k for k in keys if len({d.get(k, "") for d in parsed}) > 1]
-        ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-        n_unused = sum(x["role"] != "case" and x["role"] != "control" for x in gs)
-        ax.text(0, 1.0, f"{r.study} · {r.causal_genes.split(';')[0]}", fontsize=7.2, weight="bold", va="top",
-                color=INK)
-        ax.text(1.0, 1.0, f"{len(gs)} groups, {n_unused} unused", fontsize=6, va="top", ha="right", color=INK2)
+        parsed = [factors(x["group"].replace(" | ", "|")) if ":" in x["group"] else {"group": x["group"]} for x in gs]
+        vary = [k for k in sorted({k for d in parsed for k in d}) if len({d.get(k, "") for d in parsed}) > 1]
+        ax.text(0, 1.0, f"{r.study} · {cs['gene']}", fontsize=7.4, weight="bold", va="top", color=INK)
+        ax.text(1.0, 1.0, f"{len(gs)} groups deposited", fontsize=6, va="top", ha="right", color=INK2)
+        dif = "; ".join(f"{e['factor']}: {'/'.join(e['case'])} → {'/'.join(e['control'])}" for e in cs["differ"])
+        ax.text(0, 0.915, "differs: " + short(dif, 86), fontsize=6, va="top", color="#126b63", weight="bold")
+        import textwrap
+        note = textwrap.wrap(cs["note"], 115)
+        for j, line in enumerate(note):
+            ax.text(0, 0.86 - 0.05 * j, line, fontsize=5.6, va="top", color=INK2, style="italic")
+        top = 0.81 - 0.05 * max(0, len(note) - 1)
+        dk = {e["factor"] for e in cs["differ"]}
         for i, (x, d) in enumerate(zip(gs[:nshow], parsed[:nshow])):
-            y = 0.86 - (i + 1) * h
+            y = top - (i + 1) * h
             fc, tc = ROLE[x["role"]]
-            ax.add_patch(FancyBboxPatch((0.0, y + 0.012), 0.99, h - 0.024, boxstyle="round,pad=0,rounding_size=0.015",
-                                        fc=fc, ec=INK2 if x["role"] == "QC / blank" else "none", lw=0.5,
-                                        ls=(0, (2, 2))))
-            lab = " | ".join(f"{k.strip()}: {d[k].strip()}" for k in sorted(vary) if k in d) if d else x["group"]
-            lab = lab or x["group"]
-            lab = lab if len(lab) <= 50 else lab[:48] + "…"
-            ax.text(0.02, y + h / 2, lab, fontsize=5.4, va="center", color=tc)
-            ax.text(0.97, y + h / 2, f"{x['role']} · n={x['n']}", fontsize=5.4, va="center", ha="right", color=tc)
+            ax.add_patch(FancyBboxPatch((0.0, y + 0.01), 0.99, h - 0.02, boxstyle="round,pad=0,rounding_size=0.012",
+                                        fc=fc, ec=INK2 if x["role"] == "QC / blank" else "none", lw=0.5, ls=(0, (2, 2))))
+            lab = "  ·  ".join(f"{k}: {d[k]}" for k in sorted(vary, key=lambda k: k not in dk) if k in d) or x["group"]
+            ax.text(0.015, y + h / 2, f"{x['role']} · n={x['n']}", fontsize=5.5, va="center", color=tc,
+                    weight="bold" if x["role"] in ("case", "control") else "normal")
+            ax.text(0.15, y + h / 2, short(lab, 98), fontsize=5.5, va="center", color=tc)
         if len(gs) > nshow:
-            ax.text(0.02, 0.86 - (nshow + 1) * h + h / 2, f"+ {len(gs) - nshow} more unused groups", fontsize=5.4,
+            ax.text(0.015, top - (nshow + 1) * h + h / 2, f"+ {len(gs) - nshow} more unused groups", fontsize=5.5,
                     color=INK2, va="center")
-    title = "Each case-vs-control contrast is picked from the deposited groups; unused arms stay visible"
+    title = "Worked examples: every deposited group, with the factor that separates case from control first"
     fig.suptitle(title, x=0.012, ha="left", fontsize=9.5, weight="bold")
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    fig.subplots_adjust(left=0.012, right=0.988, top=0.9, bottom=0.02, wspace=0.06, hspace=0.18)
     save(fig, out, "contrast_diagrams", figs, title,
-         "For the most-armed study of each gene, every group the authors deposited is a box (only the factors that "
-         "differ are shown): dark = case, light "
-         "= control, grey = not used (other treatment, time point or arm), dashed = QC or blank.")
+         "Four contrasts worth reading closely (DHODH's rescue design, ALDH7A1's matched treatments, FASN's two drug "
+         "columns, a patient study): dark = case, light = control, grey = deposited but not used.")
 
 
 # ---- quality flags -----------------------------------------------------------------
@@ -802,8 +877,10 @@ def main(argv=None):
     ledger, failed = failure_ledger(out, figs)
     drops = drop_funnel(u, D, out, figs)
     groups = {row.label: contrast_of(row) for row in u.itertuples()}
-    contrast_diagrams(u, out, figs)
+    crow = contrast_table(u, groups, out, figs)
+    contrast_diagrams(u, groups, out, figs)
     flags = quality_flags(u, groups, out, figs)
+    (out / "contrasts.json").write_text(json.dumps(crow, indent=1, ensure_ascii=False), encoding="utf-8")
     audit = daa_recheck(u, groups, out, figs)
     cards = unit_cards(u, groups, flags, D, audit)
     (out / "cards.json").write_text(json.dumps(cards, indent=1, default=str), encoding="utf-8")
