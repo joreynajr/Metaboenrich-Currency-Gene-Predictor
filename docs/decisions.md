@@ -393,6 +393,11 @@ each contrast was then checked against the deposited sample groups.
    them from MAF + ISA sheets (QC, blank, pool and standard samples dropped). A Workbench
    sub_unit `AN..._<suffix>` is a further contrast from one analysis; selectors may match
    the sample id (`@sample`). Existing DAA outputs are unchanged.
+5. Correction (2026-11-23, DM): two B rows recorded as "not recorded" are inherited
+   defects and now count as primary: Adam et al 2013 Tumor vs Normal (HLRCC kidney tumour,
+   germline FH defect) and Kennedy et al 2019 patient vs reference population (GABA-
+   transaminase deficiency patients, ABAT). Ranks are unchanged; only the primary label
+   moves (primary 65 -> 67 units, non-primary 30 -> 28).
 
 ## Open
 

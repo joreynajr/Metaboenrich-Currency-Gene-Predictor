@@ -98,41 +98,82 @@ def reproduction_badge(rep, out):
 
 # ---------- 2. cluster scoreboard ----------
 def clusters(u):
-    g = u.groupby("cluster").agg(group=("group", "first"), reafect=("reafect_common_pct", "median"),
+    """Per cluster: median percentiles, the winner, the gap, and whether either method failed to run."""
+    v = u.assign(walk_ran=u.walk_up_rank_reported.notna(), rea_ran=u.causal_scored_by_reafect.astype(bool))
+    g = v.groupby("cluster").agg(group=("group", "first"), reafect=("reafect_common_pct", "median"),
                                  walk=("walk_up_common_pct", "median"), gene=("causal_genes", "first"),
-                                 n=("label", "size"))
+                                 n=("label", "size"), walk_ran=("walk_ran", "any"), rea_ran=("rea_ran", "any"))
+    g["winner"] = np.where(g.reafect < g.walk, "Reafect", np.where(g.walk < g.reafect, "Walk", "tie"))
+    g["gap"] = (g.reafect - g.walk).abs()
+    g["gene1"] = g.gene.str.split(";").str[0]
+    return g
+
+
+def tally(s):
+    w, r = int((s.winner == "Walk").sum()), int((s.winner == "Reafect").sum())
+    return w, r, int((s.winner == "tie").sum()), (binomtest(w, w + r).pvalue if w + r else 1.0)
+
+
+def by_gene(s):
+    """Merge clusters that share a causal gene (median over them), so a gene studied five times counts once."""
+    g = s.groupby("gene1").agg(reafect=("reafect", "median"), walk=("walk", "median"))
     g["winner"] = np.where(g.reafect < g.walk, "Reafect", np.where(g.walk < g.reafect, "Walk", "tie"))
     return g
 
 
+def shade(col, gap, full=20.0):
+    """Blend toward white for small gaps: a 1-point win is pale, a >= 20-point win is the full colour."""
+    t = 0.22 + 0.78 * min(gap / full, 1.0)
+    c = np.array(matplotlib.colors.to_rgb(col))
+    return tuple(1 - t * (1 - c))
+
+
 def cluster_scoreboard(u, out):
     g = clusters(u)
-    fig, axs = plt.subplots(1, 3, figsize=(9.6, 2.9), gridspec_kw={"width_ratios": [1, 1, 1], "wspace": 0.15})
-    tot = g.winner.value_counts()
+    lab = {"A": "Inborn errors (A)", "B-D primary": "Other gene loss (B–D)", "non-primary": "Inhibitor / gain"}
+    fig, axs = plt.subplots(1, 3, figsize=(10.4, 3.0), gridspec_kw={"wspace": 0.12})
+    cols = 6
     for ax, sub in zip(axs, SUBSET_ORDER):
         s = g[g.group == sub].copy()
         s["o"] = s.winner.map({"Walk": 0, "tie": 1, "Reafect": 2})
-        s = s.sort_values(["o", "gene"])
-        cols = 6
+        s = s.sort_values(["o", "gap"], ascending=[True, False])
         for i, (cl, r) in enumerate(s.iterrows()):
             x, y = i % cols, i // cols
-            col = {"Walk": OURS, "Reafect": THEIRS, "tie": TIE}[r.winner]
-            ax.add_patch(Rectangle((x + 0.06, -y - 0.94), 0.88, 0.88, color=col, lw=0))
-            ax.text(x + 0.5, -y - 0.5, r.gene.split(";")[0], ha="center", va="center", fontsize=4.4,
-                    color="white" if r.winner != "tie" else INK, style="italic")
-        rows = int(np.ceil(len(s) / cols))
-        ax.set_xlim(0, cols); ax.set_ylim(-5, 0.05); ax.set_aspect("equal"); ax.axis("off")
-        w, r_, t = (s.winner == "Walk").sum(), (s.winner == "Reafect").sum(), (s.winner == "tie").sum()
-        p = binomtest(int(w), int(w + r_)).pvalue if w + r_ else 1
-        lab = {"A": "Inborn errors (A)", "B-D primary": "Other gene-loss (B–D)", "non-primary": "Inhibitor / gain (non-primary)"}
-        ax.text(0, 0.35, f"{lab[sub]}\nwalk {w} – {r_} Reafect" + (f", {t} tie" if t else "") + f"  (p = {p:.2g})",
-                fontsize=7.5, color=INK, va="bottom")
-    hand = [Rectangle((0, 0), 1, 1, color=c) for c in (OURS, THEIRS, TIE)]
-    fig.legend(hand, ["walk (sources = increased) ranks the gene higher", "Reafect ranks it higher", "tie"],
-               loc="lower left", bbox_to_anchor=(0.02, 0.0), ncol=3, frameon=False, fontsize=7)
-    fig.suptitle(f"Overall a draw (Reafect {tot.get('Reafect', 0)} clusters, walk {tot.get('Walk', 0)}): the walk "
-                 "leads on inborn errors, Reafect on inhibitors, other gene loss is even", x=0.02, ha="left",
-                 fontsize=9, weight="bold", color=INK, y=1.08)
+            base = {"Walk": OURS, "Reafect": THEIRS, "tie": TIE}[r.winner]
+            fill = base if r.winner == "tie" else shade(base, r.gap)
+            dark = r.winner != "tie" and r.gap >= 8
+            ax.add_patch(Rectangle((x + 0.06, -y - 0.94), 0.88, 0.88, facecolor=fill, lw=0,
+                                   hatch="////" if not r.walk_ran else None, edgecolor="white" if dark else INK2))
+            box = dict(boxstyle="square,pad=0.12", fc=fill, lw=0) if not r.walk_ran else None
+            ax.text(x + 0.5, -y - 0.42, r.gene1, ha="center", va="center", fontsize=4.4,
+                    color="white" if dark else INK, style="italic", bbox=box)
+            ax.text(x + 0.5, -y - 0.72, "×" if not r.rea_ran else f"{r.gap:.0f}", ha="center", va="center",
+                    fontsize=5.6 if not r.rea_ran else 4.2, color="white" if dark else INK2,
+                    weight="bold" if not r.rea_ran else "normal", bbox=box)
+        ax.set_xlim(0, cols); ax.set_ylim(-5.05, 0.05); ax.set_aspect("equal"); ax.axis("off")
+        w, r_, t, p = tally(s)
+        both = s[s.walk_ran & s.rea_ran]
+        bw, br, bt, bp = tally(both)
+        gw, gr, gt, gp = tally(by_gene(s))
+        ax.text(0, 0.3, f"{lab[sub]}\n"
+                f"all {len(s)} clusters:  walk {w} – {r_} Reafect" + (f", {t} tie" if t else "") + f"   p {p:.2g}\n"
+                f"both ran ({len(both)}):  {bw} – {br}   p {bp:.2g}\n"
+                f"by gene ({gw + gr + gt}):  {gw} – {gr}   p {gp:.2g}",
+                fontsize=6.8, color=INK, va="bottom", linespacing=1.45)
+    hand = [Rectangle((0, 0), 1, 1, color=OURS), Rectangle((0, 0), 1, 1, color=THEIRS),
+            Rectangle((0, 0), 1, 1, color=shade(OURS, 1)), Rectangle((0, 0), 1, 1, facecolor="white", hatch="////",
+                                                                    edgecolor=INK2)]
+    fig.legend(hand, ["walk (sources = increased) ranks the gene higher", "Reafect ranks it higher",
+                      "pale = gap under ~5 points (number = gap in percentile points)", "walk had no sources (mid-rank)"],
+               loc="lower left", bbox_to_anchor=(0.02, -0.01), ncol=4, frameon=False, fontsize=6.6, handlelength=1.4)
+    fig.text(0.02, -0.035, "× Reafect cannot score the causal gene (put in its tail).  Square = one cluster (comparisons "
+             "from one study and gene); common gene universe; two-sided sign test, ties dropped.",
+             fontsize=6.4, color=INK2)
+    tot = tally(g)
+    both = tally(g[g.walk_ran & g.rea_ran])
+    fig.suptitle(f"Overall a draw (walk {tot[0]}, Reafect {tot[1]}; {both[0]}–{both[1]} where both ran): the walk leads "
+                 "on inborn errors, Reafect on inhibitors, mostly FASN and TDO2", x=0.02, ha="left", fontsize=9,
+                 weight="bold", color=INK, y=1.19)
     save(fig, out, "cluster_scoreboard")
 
 

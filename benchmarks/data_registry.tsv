@@ -29,7 +29,7 @@ B_published	Adam et al 2013	KO vs CONT	kidney	0.0	121.0					log2FC	yes	FH		dropp
 B_published	Adam et al 2013	KO vs KO+FH	kidney	0.0	121.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)			gene removed or lost	tissue	fold change	
 B_published	Adam et al 2013	KO vs KO+FHcyt	kidney	0.0	121.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)			gene removed or lost	tissue	fold change	
 B_published	Adam et al 2013	KO vs WT	kidney	0.0	131.0					log2FC	yes	FH		dropped	mouse (Fh1 knockout kidney); benchmark is human only (D25)			gene removed or lost	tissue	fold change	
-B_published	Adam et al 2013	Tumor vs Normal	kidney tumor (HLRCC, type 2 papillary)	0.0	173.0					log2FC	yes	FH		active				not recorded	tissue	fold change	
+B_published	Adam et al 2013	Tumor vs Normal	kidney tumor (HLRCC, type 2 papillary)	0.0	173.0					log2FC	yes	FH		active				inherited defect	tissue	fold change	
 B_published	Alaimo et al 2020	patient vs reference population	plasma (default; see Notes for urine/CSF	74.0	133.0					z-score	no	AASS;ABAT;ABCC8;ABCD4;ABHD5;ACADL;ACADM;		active				not recorded	patient body fluid	z-score	
 B_published	Burrage et al 2019	patient vs reference population	plasma	48.0	24.0					z-score	no			active				not recorded	patient body fluid	z-score	
 B_published	Cappuccio et al 2017	GLUT1-DS on KD vs reference population (group mean)	plasma	0.0	18.0					z-score	yes	SLC2A1		active		FLAG <20 metabolites		gene removed or lost	patient body fluid	z-score	
@@ -45,7 +45,7 @@ B_published	Kennedy et al 2019	Levetiracetam (non-ABAT) vs reference population 
 B_published	Kennedy et al 2019	Topiramate (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites		not recorded	patient body fluid	z-score	
 B_published	Kennedy et al 2019	Valproate (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites		not recorded	patient body fluid	z-score	
 B_published	Kennedy et al 2019	Vigabatrin (non-ABAT) vs reference population (group mean)	EDTA plasma	0.0	1.0					z-score	no			active		FLAG <20 metabolites		not recorded	patient body fluid	z-score	
-B_published	Kennedy et al 2019	patient vs reference population	CSF;EDTA plasma;Urine	11.0	11.0					z-score	no	ABAT		active		FLAG <20 metabolites		not recorded	patient body fluid	z-score	
+B_published	Kennedy et al 2019	patient vs reference population	CSF;EDTA plasma;Urine	11.0	11.0					z-score	no	ABAT		active		FLAG <20 metabolites		inherited defect	patient body fluid	z-score	
 B_published	Kennedy et al 2019	vigabatrin-treated non-ABAT group vs reference population (g	EDTA plasma	0.0	4.0					z-score	no			active		FLAG <20 metabolites		chemically blocked	patient body fluid	z-score	
 B_published	Reisz et al 2023	Carrier (mother) RBC vs Control (father) RBC	red blood cells	0.0	15.0					log2FC	yes			active		FLAG <20 metabolites		not recorded	patient body fluid	fold change	
 B_published	Reisz et al 2023	Lesch-Nyhan (LN) RBC vs Control (father) RBC	red blood cells	0.0	19.0					log2FC	yes			active		FLAG <20 metabolites		not recorded	patient body fluid	fold change	
