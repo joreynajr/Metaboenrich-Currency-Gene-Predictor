@@ -208,20 +208,27 @@ def shuffle(units, out, figs, cards, perms=1000):
 
 
 # ---------------------------------------------------------------- rank ladders
+# drawn on the gene list both our methods and Reafect can score (reafect_bench units-compare, about 1,060 genes)
+SHARED = [("walk_up_common_pct", "Walk ↑src", DEC, "o"), ("reafect_common_pct", "Reafect", "#126b63", "D"),
+          ("neighbour_common_pct", "One-hop", "#8a8f96", "^")]
+
+
 def ladders(units, pct, out, figs):
-    order = units.assign(o=units.collection.str[0].map("ABCD".index), w=pct[WALK_UP]).sort_values(["o", "w"])
+    pu = pd.read_csv(R / "reafect_bench/units/per_unit.tsv", sep="\t").set_index("label").reindex(units.index)
+    order = units.assign(o=units.collection.str[0].map("ABCD".index), w=pu.walk_up_common_pct).sort_values(["o", "w"])
     x = np.arange(len(order))
     fig, ax = plt.subplots(figsize=(13, 4.0))
-    P = pct.loc[order.index]
-    lo = P[[m[0] for m in METHODS]].min(axis=1).clip(lower=0.05)
-    hi = P[[m[0] for m in METHODS]].max(axis=1).clip(lower=0.05)
+    P = pu.loc[order.index]
+    cols = [m[0] for m in SHARED]
+    lo = P[cols].min(axis=1).clip(lower=0.05)
+    hi = P[cols].max(axis=1).clip(lower=0.05)
     ax.vlines(x, lo, hi, color=RULE, lw=1.2, zorder=1)
-    for col, name, c, mk in METHODS:
+    for col, name, c, mk in SHARED:
         v = P[col].clip(lower=0.05).to_numpy()
-        miss = (col == "Reafect") & (P[col] >= 100)
+        miss = (col == "reafect_common_pct") & ~P.causal_scored_by_reafect.astype(bool)
         ax.scatter(x[~miss], v[~miss], s=16, color=c, marker=mk, lw=0.4, edgecolor="white", zorder=3, label=name)
         if miss.any():
-            ax.scatter(x[miss], np.full(miss.sum(), 100), s=16, marker="x", color=c, lw=0.9, zorder=3)
+            ax.scatter(x[miss], v[miss], s=16, marker="x", color=c, lw=0.9, zorder=3)
     ax.set_yscale("log"); ax.set_ylim(130, 0.04)
     ax.set_yticks([0.1, 1, 10, 50, 100], ["0.1%", "1%", "10%", "50%", "100%"])
     ax.axhline(10, color=INK2, lw=0.6, ls=(0, (3, 3)), zorder=0)
@@ -235,14 +242,16 @@ def ladders(units, pct, out, figs):
                     ha="center", va="top", fontsize=7, color=INK2)
             if s[0] > 0:
                 ax.axvline(s[0] - 0.5, color=INK2, lw=0.5)
-    ax.set_ylabel("causal-gene percentile (top = better)")
-    top = {name: int((P[col] <= 10).sum()) for col, name, _, _ in METHODS}
-    title = (f"Causal gene in the top 10%: walk ↑src {top['Walk ↑src']} of {len(P)} comparisons, flow M3 "
-             f"{top['Flow ↑src M3']}, Reafect {top['Reafect']}, one-hop {top['One-hop']}")
+    ax.set_ylabel("causal-gene percentile among\nshared genes (top = better)")
+    top = {name: int((P[col] <= 10).sum()) for col, name, _, _ in SHARED}
+    title = (f"Causal gene in the top 10% of the shared gene list: walk ↑src {top['Walk ↑src']} of {len(P)} "
+             f"comparisons, Reafect {top['Reafect']}, one-hop {top['One-hop']}")
     ax.set_title(title, loc="left", fontsize=9, weight="bold")
-    ax.legend(loc="lower left", ncol=4, frameon=False, fontsize=7, bbox_to_anchor=(0, -0.2), handletextpad=0.3)
-    fig.text(0.99, 0.02, "× Reafect cannot score the gene. Comparisons sorted by walk ↑src within each collection; "
-             "the grey line spans best to worst method.", ha="right", fontsize=6.3, color=INK2)
+    ax.legend(loc="lower left", ncol=3, frameon=False, fontsize=7, bbox_to_anchor=(0, -0.2), handletextpad=0.3)
+    fig.text(0.99, 0.02, "All three on the ~1,060 genes both methods can score (flow ↑src M3 has no shared-list ranks "
+             "yet). × Reafect cannot score the gene (placed at the bottom of its list).\nComparisons sorted by walk "
+             "↑src within each collection; the grey line spans best to worst method.", ha="right", fontsize=6.3,
+             color=INK2)
     fig.subplots_adjust(left=0.06, right=0.99, top=0.9, bottom=0.2)
     save(fig, out, "ladders", title, "Each column is one comparison and each mark one method; read across a collection to "
          "see whether a method's wins are broad or rest on a few comparisons, and down a column to see how far apart "
