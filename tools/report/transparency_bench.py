@@ -209,42 +209,107 @@ def paired_slope(u, out):
 
 
 # ---------- 4. coverage strip ----------
+TAN = "#d7b06a"
+# Comparisons that ran but were dropped as "no causal gene in the network" (fate nogene), with the real reason.
+# Read from the papers; the registry rows simply had no causal gene filled in.
+NOGENE_REASON = {
+    "Burrage et al 2019": ("recoverable", "urea-cycle genes (OTC, ASS1, ASL, ARG1 …) not filled in"),
+    "Hou et al 2017": ("recoverable", "FH (fumarase siRNA) not filled in"),
+    "Reisz et al 2023": ("recoverable", "HPRT1 (Lesch-Nyhan, carrier) not filled in"),
+    "Sebaa et al 2023": ("recoverable", "ACADVL (VLCAD deficiency) not filled in"),
+    "Du et al 2023|MNGIE vs Healthy Control": ("recoverable", "TYMP (MNGIE) not filled in"),
+    "Du et al 2023|MELAS vs Healthy Control": ("not testable", "MELAS: mitochondrial tRNA, no nuclear gene"),
+    "Cappuccio et al 2017": ("not testable", "SLC2A1: glucose transporter, not in the network"),
+    "Sidorina et al 2024": ("not testable", "disease vs disease (MMA, PA, CblC): no single gene"),
+}
+
+
+def walk_state(r):
+    if pd.isna(r.walk_up_rank_reported):
+        return "no sources"
+    return "never reached" if r.walk_up_rank == 1096 else "ranked"
+
+
+def reafect_state(r):
+    if r.causal_scored_by_reafect:
+        return "ranked"
+    if r.causal_ec_in_reafect_modules:
+        return "in modules, not scored"
+    return "EC outside modules" if isinstance(r.causal_ecs, str) and r.causal_ecs else "not an enzyme"
+
+
 def coverage_strip(u, cov, out):
-    cov = cov.copy()
-    cov["state"] = np.select([cov.scored_in_unit.astype(bool), cov.ec_in_reafect_modules.astype(bool),
-                              cov.reafect_ecs.notna()], ["scored", "in modules, not scored", "EC outside modules"],
-                             "no EC number")
-    rank = {"scored": 0, "in modules, not scored": 1, "EC outside modules": 2, "no EC number": 3}
-    g = cov.groupby("gene").agg(units=("label", "nunique"), best=("state", lambda s: min(s, key=rank.get)),
-                                worst=("state", lambda s: max(s, key=rank.get)),
-                                ours=("in_our_network", "all"), coll=("collection", "first"))
-    g = g.sort_values(["worst", "best", "gene"], key=lambda s: s.map(rank) if s.name in ("worst", "best") else s)
-    SC = {"scored": GOOD, "in modules, not scored": "#d7b06a", "EC outside modules": THEIRS, "no EC number": BAD}
-    n = len(g)
-    fig, ax = plt.subplots(figsize=(10, 2.3))
-    for i, (gene, r) in enumerate(g.iterrows()):
-        ax.add_patch(Rectangle((i + 0.08, 1.08), 0.84, 0.84, color=GOOD if r.ours else BAD, lw=0))
-        st = cov[cov.gene == gene].state
-        k = st.value_counts()
-        y0 = 0.08
-        for s in rank:                                   # split the cell by unit share when states differ
-            h = 0.84 * k.get(s, 0) / k.sum()
-            if h:
-                ax.add_patch(Rectangle((i + 0.08, y0), 0.84, h, color=SC[s], lw=0)); y0 += h
-        ax.text(i + 0.5, -0.1, gene, rotation=90, ha="center", va="top", fontsize=5.6, style="italic", color=INK)
-    ax.text(-0.4, 1.5, "Our network", ha="right", va="center", fontsize=7.5, color=INK)
-    ax.text(-0.4, 0.5, "Reafect", ha="right", va="center", fontsize=7.5, color=INK)
-    ax.set_xlim(-0.2, n + 0.2); ax.set_ylim(-1.75, 2.0); ax.axis("off")
-    hand = [Rectangle((0, 0), 1, 1, color=c) for c in SC.values()]
-    ax.legend(hand, ["scored", "EC in its modules but not scored in that comparison", "EC outside its KEGG modules",
-                     "no EC number"], loc="upper left", bbox_to_anchor=(0, 0.0), ncol=4, frameon=False, fontsize=7)
-    sc = int(u.causal_scored_by_reafect.sum())
-    fig.suptitle(f"Reafect scores the causal gene in {sc} of {len(u)} comparisons; our network contains all "
-                 f"{n} causal genes", x=0.02, ha="left", fontsize=9, weight="bold", color=INK, y=1.0)
+    v = u.copy()
+    v["w"] = v.apply(walk_state, axis=1)
+    v["r"] = v.apply(reafect_state, axis=1)
+    v["grp"] = np.select([(v.w == "ranked") & (v.r == "ranked"), v.w == "ranked", v.r == "ranked"],
+                         ["both", "walk only", "Reafect only"], "neither")
+    order = {"both": 0, "walk only": 1, "Reafect only": 2, "neither": 3}
+    v["g1"] = v.causal_genes.str.split(";").str[0]
+    v = v.sort_values(["grp", "r", "w", "g1"], key=lambda s: s.map(order) if s.name == "grp" else s).reset_index(drop=True)
+    gap = 1.2
+    xs, x, prev = [], 0.0, None
+    for g in v.grp:
+        if prev is not None and g != prev:
+            x += gap
+        xs.append(x); x += 1; prev = g
+    v["x"] = xs
+    WC = {"ranked": GOOD, "never reached": TAN, "no sources": "white"}
+    RC = {"ranked": GOOD, "in modules, not scored": TAN, "EC outside modules": THEIRS, "not an enzyme": BAD}
+    fig = plt.figure(figsize=(11.5, 4.3))
+    ax = fig.add_axes([0.075, 0.40, 0.915, 0.50])
+    for r in v.itertuples():
+        ax.add_patch(Rectangle((r.x + 0.06, 1.08), 0.88, 0.84, facecolor=WC[r.w], lw=0.6 if r.w == "no sources" else 0,
+                               edgecolor=INK2, hatch="////" if r.w == "no sources" else None))
+        ax.add_patch(Rectangle((r.x + 0.06, 0.08), 0.88, 0.84, facecolor=RC[r.r], lw=0))
+        n_g = len(str(r.causal_genes).split(";"))
+        ax.text(r.x + 0.5, -0.08, r.g1 + (f" +{n_g - 1}" if n_g > 1 else ""), rotation=90, ha="center", va="top",
+                fontsize=4.6, style="italic", color=INK)
+    lab = {"both": "both rank the gene", "walk only": "only the walk", "Reafect only": "only Reafect", "neither": "neither"}
+    for g, d in v.groupby("grp", sort=False):
+        x0, x1 = d.x.min(), d.x.max() + 1
+        ax.plot([x0 + 0.06, x1 - 0.06], [2.12] * 2, color=INK2, lw=0.8)
+        txt = f"{lab[g]}  {len(d)}" if len(d) > 8 else f"{lab[g]}\n{len(d)}".replace("only ", "only\n")
+        ax.text((x0 + x1) / 2, 2.22, txt, ha="center", va="bottom", fontsize=7.2 if len(d) > 8 else 6.4, color=INK,
+                weight="bold" if g == "both" else "normal")
+    ax.text(-0.6, 1.5, "Walk ↑src", ha="right", va="center", fontsize=7.8, color=INK)
+    ax.text(-0.6, 0.5, "Reafect", ha="right", va="center", fontsize=7.8, color=INK)
+    ax.set_xlim(-0.2, v.x.max() + 1.2); ax.set_ylim(-1.0, 3.0); ax.axis("off")
+    hw = [Rectangle((0, 0), 1, 1, color=GOOD), Rectangle((0, 0), 1, 1, color=TAN),
+          Rectangle((0, 0), 1, 1, facecolor="white", hatch="////", edgecolor=INK2),
+          Rectangle((0, 0), 1, 1, color=THEIRS), Rectangle((0, 0), 1, 1, color=BAD)]
+    fig.legend(hw, ["gives the causal gene a real rank",
+                    "data-limited: walk never reaches the reaction / Reafect's module has no measured neighbour",
+                    "walk has no sources (no increased metabolites)",
+                    "method limit: EC number outside Reafect's KEGG modules",
+                    "method limit: not an enzyme (no EC number), so Reafect cannot represent it"],
+               loc="upper left", bbox_to_anchor=(0.075, 0.33), ncol=2, frameon=False, fontsize=6.6, handlelength=1.3,
+               columnspacing=1.6)
+    # comparisons dropped before the head-to-head: the network filter, with the real reasons
+    reg = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
+    ng = reg[reg.fate == "nogene"]
+    rows = []
+    for r in ng.itertuples():
+        k = f"{r.study}|{r.sub_unit}"
+        rows.append(NOGENE_REASON.get(k) or NOGENE_REASON.get(r.study) or ("unknown", r.study))
+    t = pd.DataFrame(rows, columns=["kind", "why"]).groupby(["kind", "why"]).size().reset_index(name="n")
+    rec = t[t.kind == "recoverable"]; nt = t[t.kind != "recoverable"]
+    fig.text(0.075, 0.115, f"Not in this figure: {len(ng)} comparisons dropped earlier as \"no causal gene in the network\"."
+             f"  {int(rec.n.sum())} are recoverable (the gene is in the network but was never filled in): " +
+             "; ".join(f"{w} ×{n}" if n > 1 else w for w, n in zip(rec.why, rec.n)) + ".",
+             fontsize=6.4, color=INK2, wrap=True)
+    fig.text(0.075, 0.06, f"{int(nt.n.sum())} are genuinely untestable: " +
+             "; ".join(f"{w} ×{n}" if n > 1 else w for w, n in zip(nt.why, nt.n)) +
+             ".  One column per comparison (+n: further causal genes; Reafect counts as ranking if it scores any of them).",
+             fontsize=6.4, color=INK2)
+    nw, nr = int((v.w == "ranked").sum()), int((v.r == "ranked").sum())
+    nm = int(v.r.isin(["EC outside modules", "not an enzyme"]).sum())
+    fig.suptitle(f"A real rank for the causal gene: walk {nw} of {len(v)} comparisons, Reafect {nr}. Both are sometimes "
+                 f"data-limited; {nm} of Reafect's gaps are built into an EC/KEGG-module method", x=0.02, ha="left",
+                 fontsize=9, weight="bold", color=INK, y=0.985)
     save(fig, out, "coverage_strip")
 
 
-# ---------- 5. input fidelity ----------
 ROUTES = [("kegg_from_table KEGG", "KEGG id in the table", "#126b63"),
           ("kegg_from_Human-GEM (published mapping)", "Human-GEM (published id)", "#3d8a82"),
           ("kegg_from_Human-GEM via HMDB", "Human-GEM via HMDB", "#5ea39b"),
