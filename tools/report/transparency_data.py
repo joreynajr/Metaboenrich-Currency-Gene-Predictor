@@ -14,7 +14,7 @@ Figures (png + pdf):
   drop_funnel        every registered comparison -> testable -> primary, every drop with its reason and rule
   contrast_table     all C/D contrasts: what separates case from control, what is matched, groups pooled
   contrast_diagrams  four worked examples: every deposited group, case and control marked, unused arms grey
-  quality_flags      green / amber / red per testable unit, with the rule that set it
+  inclusion_margin   each testable unit's distance above the two inclusion floors (D26/D28, D29)
   daa_recheck        every metabolite of every C/D comparison re-tested row by row vs the DAA output
 JSON: cards.json (one card per comparison), contrasts.json (contrast_table's rows), candidates.json (top sweep candidates with evidence
 and cache receipts), figures.json (file, title, caption).
@@ -576,18 +576,24 @@ def contrast_diagrams(u, groups, rows, out, figs):
          "light = control, grey = deposited but not used; the green line says what separates them.")
 
 
-# ---- quality flags -----------------------------------------------------------------
-def rag(r, g):
-    """Only the written rules: red fails D26 (>= 3 samples per side; D28 applies it to every unit) or D29 (>= 3
-    significantly changed metabolites in the network), amber meets them with a documented caveat, green meets them."""
+# ---- inclusion margin --------------------------------------------------------------
+def margins(r, g):
+    """Samples per side (the smaller arm; collection A: patients against a reference population) and significantly
+    changed metabolites in the network, the two quantities the inclusion rules (D26/D28, D29) put a floor on."""
     n = pd.to_numeric(r.n_samples, errors="coerce")
     if g is not None:
         npg = min(len(g["case"]), len(g["control"]))
     elif r.collection.startswith("A"):
-        npg = n                                         # patients against a reference population
+        npg = n
     else:
         npg = (n / 2) if pd.notna(n) and n else np.nan
-    ch = int(r.n_inc or 0) + int(r.n_dec or 0)
+    return npg, int(r.n_inc or 0) + int(r.n_dec or 0)
+
+
+def rag(r, g):
+    """Only the written rules: red fails D26 (>= 3 samples per side; D28 applies it to every unit) or D29 (>= 3
+    significantly changed metabolites in the network), amber meets them with a documented caveat, green meets them."""
+    npg, ch = margins(r, g)
     why = []
     if pd.notna(npg) and npg < 3:
         why.append(f"{int(npg)} per side, under 3 (D26)")
@@ -605,58 +611,70 @@ def rag(r, g):
     return "green", f"{int(npg)} per side, {ch} changed metabolites in the network"
 
 
-def quality_flags(u, groups, out, figs):
-    ts = u[u.testable == "True"].copy()
+def inclusion_margin(u, groups, out, figs):
+    """Where each testable comparison sits above the two inclusion floors. Only the written rules are drawn."""
+    ts = u[u.testable == "True"].drop_duplicates("label").copy()
     res = [rag(r, groups.get(r.label)) for r in ts.itertuples()]
     ts["rag"], ts["rag_why"] = [x[0] for x in res], [x[1] for x in res]
+    mg = [margins(r, groups.get(r.label)) for r in ts.itertuples()]
+    ts["npg"], ts["ch"] = [m[0] for m in mg], [m[1] for m in mg]
     ts["c"] = ts.collection.str[0]
-    order = ["green", "amber", "red"]
-    fig, axs = plt.subplots(1, 2, figsize=(8.2, 2.6), gridspec_kw={"width_ratios": [1.15, 1]})
-    ax = axs[0]
-    ax.axis("off")
-    y = 0
+    rng = np.random.default_rng(26)
+    fig, ax = plt.subplots(figsize=(7.4, 3.6))
     for c in "ABCD":
-        g = ts[ts.c == c].sort_values("rag", key=lambda s: s.map(order.index))
-        if not len(g):
+        d = ts[ts.c == c]
+        if not len(d):
             continue
-        ax.text(-0.5, -y, B.COLL[c].split(" — ")[0] + " " + B.COLL[c].split(" — ")[1], fontsize=6.4, va="center",
-                ha="right", color=INK)
-        for i, r in enumerate(g.itertuples()):
-            col, icon = RAG[r.rag]
-            ax.add_patch(Rectangle((i * 1.0, -y - 0.42), 0.86, 0.84, color=col, lw=0))
-            ax.text(i + 0.43, -y, icon, fontsize=4.6, ha="center", va="center",
-                    color="#0b0b0b" if r.rag == "amber" else "white")
-        y += 1.2
-    ax.set_xlim(-0.6, 58); ax.set_ylim(-y + 0.5, 0.8)
-    ax.set_title("One square per testable comparison", loc="left", fontsize=7.5, color=INK)
-    ax = axs[1]
-    reasons = []
-    for st in ("amber", "red"):
-        for w in ts[ts.rag == st].rag_why:
-            for part in w.split("; "):
-                key = re.sub(r"^\d+ ", "n ", part)
-                reasons.append((st, key))
-    rc = pd.Series([f"{s}|{k}" for s, k in reasons], dtype=str).value_counts()
-    rows = sorted(rc.items(), key=lambda kv: (order.index(kv[0].split("|")[0]) * -1, -kv[1]))
-    for i, (k, n) in enumerate(rows):
-        st, lab = k.split("|")
-        ax.barh(i, n, color=RAG[st][0], height=0.6, lw=0)
-        ax.text(n + 0.5, i, f"{n}  {lab}", va="center", fontsize=6.4, color=INK)
-    ax.set_ylim(max(len(rows), 6) - 0.4, -0.8); ax.set_xlim(0, max(rc.max() * 2.4 if len(rc) else 0, 10))
-    ax.axis("off")
-    ax.set_title("Why a square is not green", loc="left", fontsize=7.5, color=INK)
+        jx = np.exp(rng.uniform(0, 0.12, len(d)))            # spread ties right/up only, never below a floor
+        jy = np.exp(rng.uniform(0, 0.12, len(d)))
+        prim = d.primary.astype(str).eq("True").to_numpy()
+        for mask, mk in ((prim, "o"), (~prim, "^")):
+            ax.scatter(d.npg.to_numpy(float)[mask] * jx[mask], d.ch.to_numpy(float)[mask] * jy[mask], s=26, marker=mk,
+                       color=CC[c], edgecolor="white", lw=0.6, zorder=3)
+        amb = d[d.rag == "amber"]
+        ax.scatter(amb.npg.astype(float), amb.ch.astype(float), s=110, facecolor="none", edgecolor=WARN, lw=1.4,
+                   zorder=4)
+    for v in (3,):
+        ax.axvline(v, color=CRIT, lw=1, ls=(0, (3, 2)))
+        ax.axhline(v, color=CRIT, lw=1, ls=(0, (3, 2)))
+    ax.text(3.05, ts.ch.max() * 1.25, "3 per side (D26, D28)", fontsize=6.2, color=CRIT, va="top")
+    ax.text(ts.npg.max() * 1.1, 3.1, "3 changed (D29)", fontsize=6.2, color=CRIT, ha="right", va="bottom")
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlim(2.4, ts.npg.max() * 1.4); ax.set_ylim(2.4, ts.ch.max() * 1.5)
+    for axis in (ax.xaxis, ax.yaxis):
+        axis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v:g}"))
+        axis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    ax.set_xticks([t for t in (3, 5, 10, 20, 50, 100) if t <= ts.npg.max() * 1.4])
+    ax.set_yticks([t for t in (3, 5, 10, 20, 50, 100) if t <= ts.ch.max() * 1.5])
+    ax.set_xlabel("samples per side (smaller arm; patients for A)", fontsize=7)
+    ax.set_ylabel("significantly changed metabolites\nin the network", fontsize=7)
+    ax.tick_params(labelsize=6.5)
+    h = [plt.Line2D([], [], ls="", marker="o", color=CC[c], ms=5, label=B.COLL[c].split(" — ")[1])
+         for c in "ACD" if (ts.c == c).any()]
+    h += [plt.Line2D([], [], ls="", marker="o", color=INK2, ms=5, label="gene loss"),
+          plt.Line2D([], [], ls="", marker="^", color=INK2, ms=5, label="inhibitor or gain"),
+          plt.Line2D([], [], ls="", marker="o", mfc="none", mec=WARN, mew=1.4, ms=9,
+                     label="caveat: controls are\nother patients")]
+    ax.legend(handles=h, fontsize=6, frameon=False, loc="upper left", bbox_to_anchor=(1.01, 1.0))
+    at3 = int((ts.npg == 3).sum())
+    low = int((ts.ch < 6).sum())
     cnt = ts.rag.value_counts()
-    title = (f"{cnt.get('green', 0)} of {len(ts)} testable comparisons meet the inclusion rules, "
-             f"{cnt.get('amber', 0)} with a documented caveat, {cnt.get('red', 0)} fail them")
+    title = (f"All {len(ts)} testable comparisons clear both floors;\n{at3} sit at exactly 3 per side, "
+             f"{low} have fewer than 6 changed metabolites")
     fig.suptitle(title, x=0.012, ha="left", fontsize=9, weight="bold")
-    fig.text(0.012, 0.01, "Rules: >= 3 samples per side (D26, every unit by D28); >= 3 significantly changed metabolites in "
-             "the network (D29). "
-             "Green: meets both. Amber: meets both, with a documented caveat. Red: fails one.", fontsize=5.8, color=INK2)
-    fig.tight_layout(rect=(0, 0.04, 1, 0.94))
-    save(fig, out, "quality_flags", figs, title,
-         "One square per testable comparison, judged only against the written inclusion rules (D26, D28, D29); the bars "
-         "name each documented caveat or failure.")
-    return dict(zip(ts.label, zip(ts.rag, ts.rag_why)))
+    fig.text(0.012, 0.005, "Dashed lines are the only thresholds: >= 3 samples per side (D26, every unit by D28) and >= 3 "
+             "significantly changed metabolites\nin the network (D29). Points are nudged up/right so ties stay visible. "
+             f"{cnt.get('amber', 0)} documented caveat(s), {cnt.get('red', 0)} below a floor.",
+             fontsize=5.8, color=INK2)
+    fig.subplots_adjust(left=0.1, right=0.72, top=0.84, bottom=0.22)
+    save(fig, out, "inclusion_margin", figs, title,
+         "One dot per testable comparison: how far it sits above each inclusion floor. Dots near the dashed lines are "
+         "the thinnest evidence in the set; the ringed ones carry a documented caveat.")
+    return dict(zip(ts.label, zip(ts.rag, ts.rag_why))), {
+        "testable": len(ts), "pass": int(cnt.get("green", 0)), "caveat": int(cnt.get("amber", 0)),
+        "fail": int(cnt.get("red", 0)),
+        "caveats": [f"{r.label}: {r.rag_why}" for r in ts[ts.rag == "amber"].itertuples()],
+        "fails": [f"{r.label}: {r.rag_why}" for r in ts[ts.rag == "red"].itertuples()]}
 
 
 # ---- DAA recheck -------------------------------------------------------------------
@@ -882,7 +900,7 @@ def main(argv=None):
     groups = {row.label: contrast_of(row) for row in u.itertuples()}
     crow = contrast_table(u, groups, out, figs)
     contrast_diagrams(u, groups, crow, out, figs)
-    flags = quality_flags(u, groups, out, figs)
+    flags, incl = inclusion_margin(u, groups, out, figs)
     (out / "contrasts.json").write_text(json.dumps(crow, indent=1, ensure_ascii=False), encoding="utf-8")
     audit = daa_recheck(u, groups, out, figs)
     cards = unit_cards(u, groups, flags, D, audit)
@@ -891,7 +909,8 @@ def main(argv=None):
     (out / "figures.json").write_text(json.dumps(figs, indent=1), encoding="utf-8")
     (out / "summary.json").write_text(json.dumps({"recall": rec, "overlap": ov, "failure_ledger": ledger,
                                                   "failed_fetches": failed, "drops": drops,
-                                                  "daa_recheck": {k: v for k, v in audit.items()}},
+                                                  "daa_recheck": {k: v for k, v in audit.items()},
+                                                  "inclusion_check": incl},
                                                  indent=1, default=str), encoding="utf-8")
     for f in figs:
         print(f"{f['file']}: {f['title']}")

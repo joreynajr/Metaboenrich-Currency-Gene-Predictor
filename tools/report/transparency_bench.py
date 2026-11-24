@@ -561,6 +561,17 @@ def ledger(u, rep, man, up, mx, paired, fid, ties):
     inm = int(man.label.isin(u.label).sum())
     add(G2, "KEGG manifest covers every comparison, no over-counts", "all, 0 over-counts",
         f"{inm} of {len(u)}; {bad} over-counts", "pass" if inm == len(u) and bad == 0 else "fail")
+    sj = ROOT / "results/transparency/data/summary.json"
+    inc = json.loads(sj.read_text(encoding="utf-8")).get("inclusion_check") if sj.exists() else None
+    if inc:
+        cav = sorted({c.split(":")[0].split("_")[0] for c in inc["caveats"]})
+        add(G2, "Every testable comparison meets the inclusion rules (D26/D28 sample size, D29 signal)",
+            "0 below a floor", f"{inc['testable'] - inc['fail']} of {inc['testable']}; {inc['caveat']} with a documented "
+            f"caveat ({', '.join(cav)}: controls are other patients)" if cav else
+            f"{inc['testable'] - inc['fail']} of {inc['testable']}", "pass" if inc["fail"] == 0 else "fail")
+    else:
+        add(G2, "Every testable comparison meets the inclusion rules (D26/D28 sample size, D29 signal)",
+            "0 below a floor", "not checked: run transparency_data.py first", "caveat")
     add(G2, "No method is given the causal gene", "absent from every input",
         "ours: metabolites only; Reafect: EC only labels its output (Reafect.py:684; code read)", "pass")
     rnd = mx[(mx.ranking == "random") & (mx.subset == "all")].median_cluster_pct.iloc[0]
@@ -578,9 +589,8 @@ def ledger(u, rep, man, up, mx, paired, fid, ties):
         ", ".join(f"{c} {v:.0f}%" for c, v in nm.items()), "caveat")
     n_out = int(u.label.str.match(r"^0*0?5_Adam2013_Tumor|^100_Kennedy2019_patient").sum())
     add(G3, "Test set changed after first results", "—",
-        "D26 item 5 relabelled Adam 2013 and Kennedy 2019 (" + ("both since dropped, D28 and D29" if n_out == 0 else
-        f"{n_out} still in the set") + "); D28 and D29 set the inclusion rules after first results (sample size, signal)",
-        "caveat")
+        "rules D28/D29 set after first results; 2 relabels (D26.5) " + ("since dropped" if n_out == 0 else
+        f"{n_out} still in"), "caveat")
     reg = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
     ng = reg[reg.fate == "nogene"]
     kinds = [(NOGENE_REASON.get(f"{x.study}|{x.sub_unit}") or NOGENE_REASON.get(x.study) or ("unknown",))[0]
