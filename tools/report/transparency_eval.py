@@ -263,20 +263,26 @@ def ladders(units, pct, out, figs):
 
 
 # ---------------------------------------------------------------- win / loss strips
-PAIRS = [(WALK_UP, "neighbour", "Walk ↑src vs one-hop"),
-         (WALK_UP, "Reafect", "Walk ↑src vs Reafect"),
-         (WALK_UP, "Walk, sources = decreased | M0", "Walk ↑src vs walk ↓src"),
-         ("Walk, sources = increased | M3", WALK_UP, "Walk ↑src: M3 vs none"),
-         (FLOW_UP_M3, "Current flow, sources = increased | M0", "Flow ↑src: M3 vs none"),
-         (FLOW_UP_M3, "Reafect", "Flow ↑src M3 vs Reafect")]
+# (first, second, label, list): "own" = our 2,191-gene list (fair between our methods); "shared" = the ~1,060 genes
+# both ours and Reafect can score (reafect_bench per_unit.tsv), required whenever Reafect is one of the pair
+PAIRS = [(WALK_UP, "neighbour", "Walk ↑src vs one-hop", "own"),
+         ("walk_up_common_pct", "reafect_common_pct", "Walk ↑src vs Reafect", "shared"),
+         (WALK_UP, "Walk, sources = decreased | M0", "Walk ↑src vs walk ↓src", "own"),
+         ("Walk, sources = increased | M3", WALK_UP, "Walk ↑src: M3 vs none", "own"),
+         (FLOW_UP_M3, "Current flow, sources = increased | M0", "Flow ↑src: M3 vs none", "own"),
+         ("flow_common_pct", "reafect_common_pct", "Current flow vs Reafect", "shared")]
 
 
 def winloss(units, pct, out, figs, cards):
-    clu = pct.groupby(units.cluster).median()
+    pu = pd.read_csv(R / "reafect_bench/units/per_unit.tsv", sep="\t").set_index("label").reindex(units.index)
+    clus = {"own": pct.groupby(units.cluster).median(),
+            "shared": pu.select_dtypes("number").groupby(units.cluster).median()}
+    clu = clus["own"]
     fig, axs = plt.subplots(len(PAIRS), 1, figsize=(10.5, 0.52 * len(PAIRS) + 1.0))
     rows = []
-    for ax, (a, b, name) in zip(axs, PAIRS):
-        d = (clu[a] - clu[b]).sort_values()           # negative: a ranks the gene higher
+    for ax, (a, b, name, lst) in zip(axs, PAIRS):
+        c_ = clus[lst]
+        d = (c_[a] - c_[b]).sort_values()             # negative: a ranks the gene higher
         w, l, t = int((d < 0).sum()), int((d > 0).sum()), int((d == 0).sum())
         p = binomtest(w, w + l).pvalue if w + l else 1.0
         p3 = binomtest(max(w - 3, 0), max(w - 3, 0) + l).pvalue if w > l else binomtest(w, w + max(l - 3, 0)).pvalue
@@ -284,22 +290,27 @@ def winloss(units, pct, out, figs, cards):
         for i, c in enumerate(cols):
             ax.add_patch(Rectangle((i + 0.06, 0.1), 0.88, 0.8, color=c, lw=0))
         ax.set_xlim(-0.2, len(d) + 0.2); ax.set_ylim(0, 1); ax.axis("off")
-        ax.text(-0.8, 0.5, name, ha="right", va="center", fontsize=7.5, color=INK)
+        ax.text(-0.8, 0.5, name + (" (shared list)" if lst == "shared" else ""), ha="right", va="center",
+                fontsize=7.5, color=INK)
         star = "*" if p < 0.05 else ""
         ax.text(len(d) + 0.8, 0.5, f"{w}–{l}" + (f" · {t} tied" if t else "") + f" · p {p:.2g}{star}"
                 f" · drop 3 best {'wins' if w > l else 'losses'}: {p3:.2g}", va="center", fontsize=7, color=INK2)
         rows.append({"pair": name, "wins": w, "losses": l, "ties": t, "p": p, "p_drop3": p3})
     fig.legend([Rectangle((0, 0), 1, 1, color=c) for c in (GOOD, TIE, BAD)],
                ["first method ranks the gene higher", "tie", "second method ranks it higher"],
-               loc="lower left", bbox_to_anchor=(0.2, 0.0), ncol=3, frameon=False, fontsize=7)
+               loc="lower left", bbox_to_anchor=(0.22, 0.035), ncol=3, frameon=False, fontsize=7)
+    fig.text(0.225, 0.005, "Our methods against each other: our 2,191-gene list. Pairs with Reafect: the ~1,060 genes "
+             "both can score.", ha="left", fontsize=6.3, color=INK2)
     r0 = rows[0]
     title = (f"One square per cluster ({len(clu)}): walk ↑src beats one-hop in {r0['wins']} of "
-             f"{r0['wins'] + r0['losses'] + r0['ties']} clusters, and the result does not hinge on a few")
+             f"{r0['wins'] + r0['losses'] + r0['ties']} clusters, " +
+             ("and the result does not hinge on a few" if r0["p_drop3"] < 0.05 else "but it rests on a few"))
     fig.suptitle(title, x=0.01, ha="left", fontsize=9, weight="bold")
-    fig.subplots_adjust(left=0.18, right=0.64, top=0.88, bottom=0.12, hspace=0.25)
+    fig.subplots_adjust(left=0.22, right=0.66, top=0.88, bottom=0.16, hspace=0.25)
     save(fig, out, "winloss", title, "Each square is one cluster, sorted by margin; a long unbroken blue run with p still "
          "small after the three biggest wins are removed means the advantage is broad, not three lucky studies "
-         "(percentiles in each method's own gene universe, as in the benchmark matrix).", figs)
+         "(our methods against each other on our 2,191-gene list; any pair with Reafect on the ~1,060 shared genes).",
+         figs)
     cards["_winloss"] = rows
 
 
