@@ -73,8 +73,25 @@ def load():
     return units, pct, rk
 
 
+AUDIT_STRATA = (("inborn errors (A)", 2), ("other gene loss", 2), ("inhibitor or gain", 1))
+
+
+def audit_stratum(r):
+    if str(r.collection).startswith("A"):
+        return "inborn errors (A)"
+    return "other gene loss" if bool(r.primary) else "inhibitor or gain"
+
+
 def audit_labels(units):
-    return random.Random(SEED).sample(sorted(units.index), N_AUDIT)
+    """One comparison per cluster, clusters drawn by a fixed seed within each stratum (2 + 2 + 1)."""
+    rng = random.Random(SEED)
+    st = units.apply(audit_stratum, axis=1)
+    out = []
+    for name, k in AUDIT_STRATA:
+        cl = sorted(units[st == name].cluster.unique())
+        for c in rng.sample(cl, min(k, len(cl))):
+            out.append(rng.choice(sorted(units.index[units.cluster == c])))
+    return out
 
 
 # ---------------------------------------------------------------- reproduction badge
@@ -343,6 +360,13 @@ def model_figs(units, rk, perms=1000):
         nodes, ranks, _ = ev.reference(u)
         cond = nodes.conductivity.to_numpy()
         best = max(crx, key=lambda r: cond[r])
+        rxn_idx = np.array(sorted(graph.reaction_genes))
+        rc = cond[rxn_idx]
+        order = rxn_idx[np.argsort(-rc, kind="stable")]
+        gene_rx = {}
+        for r_, gs in graph.reaction_genes.items():
+            for g_ in gs:
+                gene_rx.setdefault(g_, []).append(r_)
         rank = float(ranks[list(ens & set(ranks.index))].min())
         eff_t, prep = cal.prepare(src, tgt, phi, ground)
         obs = float(cal.score(src, tgt, phi, ground, prep).conductivity[best])
@@ -361,9 +385,16 @@ def model_figs(units, rk, perms=1000):
             "causal_reaction_name": model.reactions[rid].name if rid in model.reactions else graph.node_names[best],
             "path": [("R " if graph.is_reaction[x] else "M ") + graph.node_names[x]
                      for x in path_to(graph, list(src), best)],
-            "top10": [{"rank": float(r), "gene": model.genes.get(e, e), "causal": e in ens}
+            "top10": [{"rank": float(r), "gene": model.genes.get(e, e), "causal": e in ens,
+                       "best_reaction": graph.node_ids[max(gene_rx.get(e, [best]), key=lambda x: cond[x])]}
                       for e, r in ranks.sort_values().head(10).items()],
             "causal_rank_recomputed": rank, "causal_rank_benchmark": float(walk_rk.get(lab, float("nan"))),
+            "stratum": audit_stratum(units.loc[lab]),
+            "why": {"reaction_pct": float(100 * (rc < cond[best]).mean()), "reaction_rank": int((rc > cond[best]).sum() + 1),
+                    "n_reactions": int(len(rc)), "causal_reaction_genes": len(graph.reaction_genes[best]),
+                    "carries_flow": bool(cond[best] > 0),
+                    "top_reactions": [{"name": graph.node_names[x], "genes": len(graph.reaction_genes[x])}
+                                      for x in order if graph.reaction_genes[x]][:3]},
             "null": {"reaction": rid, "observed": obs, "values": null, "fresh_exceed": int(sum(v >= obs for v in null)),
                      "fresh_perms": perms, "stored_perms": 1000,
                      "stored_exceed": int(st.n_null_ge_observed_conductivity.iloc[0]) if len(st) else None}}
@@ -410,6 +441,7 @@ def audit_fig(audits, labels, out, figs):
         ax.add_patch(Rectangle((0, 0.2), 100, 9.6, facecolor="#f6f7f9", lw=0))
         ax.text(0.8, 9.0, f"{lab}  ·  causal gene {', '.join(a['genes'])}", fontsize=8, weight="bold", va="top",
                 color=INK)
+        ax.text(99.2, 9.0, a.get("stratum", ""), fontsize=6.5, va="top", ha="right", color=INK2, style="italic")
         ax.text(0.8, 6.6, "① significant metabolites", fontsize=6.5, color=INK2)
         for i, (n, c, s) in enumerate(((a["n_decreased"], DEC, "decreased"), (a["n_increased"], INC, "increased"))):
             w = min(n, 60) / 60 * 10
@@ -421,44 +453,50 @@ def audit_fig(audits, labels, out, figs):
         exs = ", ".join(a["sources"][:3])
         ax.text(15, 3.9, (exs[:44] + "…") if len(exs) > 44 else exs, fontsize=5.8, color=INK2, va="center",
                 style="italic")
-        ax.text(34, 6.6, "③ shortest route from a source to the causal reaction", fontsize=6.5, color=INK2)
-        p = a["path"]
-        if p:
-            steps = (len(p) - 1) // 2 + 1
-            show = [p[0], p[1], "…", p[-2], p[-1]] if len(p) > 5 else p
-            xs = np.linspace(37, 68, len(show))
-            for j, (x, s) in enumerate(zip(xs, show)):
-                last, is_r = j == len(show) - 1, s.startswith("R ")
-                txt = s if s == "…" else s[2:]
-                txt = txt if len(txt) <= 15 else txt[:14] + "…"
-                col = "#126b63" if last else (INK2 if is_r else INK)
-                ax.text(x, 4.6, txt, fontsize=5.7, va="center", ha="center", color=col,
-                        weight="bold" if last else "normal",
-                        bbox=None if s == "…" else dict(boxstyle="round,pad=0.25", fc="white",
-                                                         ec=col if is_r or last else RULE, lw=0.6))
-                if not last:
-                    ax.text((x + xs[j + 1]) / 2, 4.6, "→", fontsize=6, va="center", ha="center", color=INK2)
-            ax.text(34, 2.6, f"{steps} reaction step{'s' if steps > 1 else ''}; ends at {a['causal_reaction']} "
-                    f"({a['causal_reaction_name'][:45]})", fontsize=5.8, color=INK2)
-        else:
-            ax.text(34, 4.6, "no directed route from any source: the walk never reaches the causal reaction",
-                    fontsize=6.3, color=INK2)
-        ax.text(77, 6.6, f"④ top 10 genes · causal at #{a['causal_rank_recomputed']:.0f} "
-                f"(benchmark #{a['causal_rank_benchmark']:.0f})", fontsize=6.5, color=INK2)
+        w = a.get("why")
+        ax.text(34, 6.6, "③ why the causal gene ranks where it does", fontsize=6.5, color=INK2)
+        if w:
+            def genes(n):
+                return f"{n} gene{'s' if n != 1 else ''}"
+            ax.add_patch(Rectangle((34, 5.0), 40, 0.55, facecolor="#e6e8eb", lw=0))
+            ax.add_patch(Rectangle((34 + 40 * w["reaction_pct"] / 100 - 0.25, 4.7), 0.5, 1.15, color="#126b63", lw=0))
+            ax.text(34, 4.5, "lowest reaction score", fontsize=5, color=INK2, va="top")
+            ax.text(74, 4.5, "highest", fontsize=5, color=INK2, va="top", ha="right")
+            nm = a["causal_reaction_name"]
+            nm = nm if len(nm) <= 60 else nm[:59] + "…"
+            msg = (f"its best reaction is #{w['reaction_rank']:,} of {w['n_reactions']:,} by score "
+                   f"(top {100 * w['reaction_rank'] / w['n_reactions']:.1f}%)" if w["carries_flow"]
+                   else "the walk sends no flow through its reactions")
+            ax.text(34, 3.2, msg, fontsize=5.9, color=INK, va="center")
+            ax.text(34, 2.15, f"{nm} · {genes(w['causal_reaction_genes'])}"
+                    + (" · generic protein reaction" if "protein" in a["causal_reaction_name"].lower() else ""),
+                    fontsize=5.4, color=INK2, va="center")
+            tops = "; ".join(f"{t['name'][:28]} ({genes(t['genes'])})" for t in w["top_reactions"][:2])
+            ax.text(34, 1.1, "highest-scoring: " + tops, fontsize=5.4, color=INK2, va="center")
+        fam = {}
+        for t in a["top10"]:
+            fam.setdefault(t.get("best_reaction"), []).append(t["gene"])
+        tag = {r: chr(97 + i) for i, r in enumerate(r for r, g in fam.items() if len(g) > 1)}
+        ax.text(77, 6.6, f"④ top 10 genes · causal at #{a['causal_rank_recomputed']:.0f} · "
+                f"{len(fam)} distinct reaction{'s' if len(fam) != 1 else ''}", fontsize=6.5, color=INK2)
         if len({t["rank"] for t in a["top10"]}) == 1:
             ax.text(77, 4.6, "no gene scored: every gene tied at the mid-rank", fontsize=6.3, color=INK2)
             continue
         for j, t in enumerate(a["top10"]):
             c, r = j // 5, j % 5
-            ax.text(77 + c * 11, 5.3 - r * 1.15, f"{t['rank']:>3.0f}  {t['gene']}", fontsize=6, va="center",
-                    color="#126b63" if t["causal"] else INK, weight="bold" if t["causal"] else "normal")
-    title = "Random audit (seed 26): five comparisons followed from the data to the causal gene's rank"
+            lt = tag.get(t.get("best_reaction"))
+            ax.text(77 + c * 11, 5.3 - r * 1.15, f"{t['rank']:>3.0f}  {t['gene']}" + (f"  [{lt}]" if lt else ""),
+                    fontsize=6, va="center", color="#126b63" if t["causal"] else INK,
+                    weight="bold" if t["causal"] else "normal")
+    title = ("Audit (seed 26, one comparison per cluster: 2 inborn errors, 2 other gene loss, 1 inhibitor): "
+             "from the data to the causal gene's rank")
     fig.suptitle(title, x=0.01, ha="left", fontsize=9, weight="bold")
-    fig.subplots_adjust(left=0.01, right=0.99, top=0.93, bottom=0.01, hspace=0.12)
-    save(fig, out, "audit", title, "Five comparisons picked by a fixed random seed, not by us; each row can be checked "
-         "against the deposit: the counts, which metabolites start the walk, a concrete route to the causal reaction, "
-         "and the rank recomputed now next to the benchmark's (small differences are the float ties in the badge).",
-         figs)
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.93, bottom=0.035, hspace=0.12)
+    fig.text(0.01, 0.003, "④ genes with the same letter share their best-scoring reaction, so they tie: one strong "
+             "reaction can fill several places in the top 10.", fontsize=6, color=INK2)
+    save(fig, out, "audit", title, "Five comparisons drawn by a fixed seed, one per cluster across three kinds of "
+         "comparison; each row shows what the walk starts from, where the causal gene's best reaction falls among all "
+         "reaction scores and why, and which reactions fill the top 10.", figs)
 
 
 # ---------------------------------------------------------------- cards
