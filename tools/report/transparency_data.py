@@ -520,49 +520,58 @@ def contrast_table(u, groups, out, figs):
     return rows
 
 
-def contrast_diagrams(u, groups, out, figs, studies=("ST004410", "ST003551", "ST003412", "ST003499")):
+def contrast_diagrams(u, groups, rows, out, figs):
+    """Every contrast the table does not mark clean (case and control differ in more than one factor), one study
+    per panel, with all its deposited groups."""
+    studies = list(dict.fromkeys(x["study"] for x in rows if x["status"] != "one factor"))
     ts = u[(u.testable == "True")].drop_duplicates("label")
     panels = []
     for s in studies:
         r = next((r for r in ts.itertuples() if r.study == s and groups.get(r.label)), None)
         if r is not None:
             panels.append((r, groups[r.label], contrast_summary(r, groups[r.label])))
-    fig, axs = plt.subplots(2, 2, figsize=(10.4, 5.0))
-    nshow, h = 7, 0.092
-    for ax in np.ravel(axs):
-        ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-    for ax, (r, g, cs) in zip(np.ravel(axs), panels):
+    import textwrap
+    nshow, LH = 7, 0.19                                     # groups shown per panel; inches per line
+    lay = []
+    for r, g, cs in panels:
         gs = sorted(g["groups"], key=lambda x: ["case", "control", "not used", "QC / blank"].index(x["role"]))
+        note = textwrap.wrap(cs["note"], 220)
+        lay.append((gs, note, 2 + len(note) + min(len(gs), nshow) + (len(gs) > nshow) + 0.6))
+    H = sum(n for *_, n in lay) * LH + 0.45
+    fig, axs = plt.subplots(len(panels), 1, figsize=(10.4, H), squeeze=False,
+                            gridspec_kw={"height_ratios": [n for *_, n in lay], "hspace": 0.0})
+    for ax, (r, g, cs), (gs, note, n) in zip(np.ravel(axs), panels, lay):
+        ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(n, 0)
         parsed = [factors(x["group"].replace(" | ", "|")) if ":" in x["group"] else {"group": x["group"]} for x in gs]
         vary = [k for k in sorted({k for d in parsed for k in d}) if len({d.get(k, "") for d in parsed}) > 1]
-        ax.text(0, 1.0, f"{r.study} · {cs['gene']}", fontsize=7.4, weight="bold", va="top", color=INK)
-        ax.text(1.0, 1.0, f"{len(gs)} groups deposited", fontsize=6, va="top", ha="right", color=INK2)
+        ax.text(0, 0.5, f"{r.study} · {cs['gene']}", fontsize=7.4, weight="bold", va="center", color=INK)
+        ax.text(1.0, 0.5, f"{len(gs)} groups deposited", fontsize=6, va="center", ha="right", color=INK2)
         dif = "; ".join(f"{e['factor']}: {'/'.join(e['case'])} → {'/'.join(e['control'])}" for e in cs["differ"])
-        ax.text(0, 0.915, "differs: " + short(dif, 86), fontsize=6, va="top", color="#126b63", weight="bold")
-        import textwrap
-        note = textwrap.wrap(cs["note"], 115)
+        ax.text(0, 1.5, "differs: " + short(dif, 175), fontsize=6, va="center", color="#126b63", weight="bold")
         for j, line in enumerate(note):
-            ax.text(0, 0.86 - 0.05 * j, line, fontsize=5.6, va="top", color=INK2, style="italic")
-        top = 0.81 - 0.05 * max(0, len(note) - 1)
+            ax.text(0, 2.45 + j, line, fontsize=5.6, va="center", color=INK2, style="italic")
+        top = 2 + len(note)
         dk = {e["factor"] for e in cs["differ"]}
         for i, (x, d) in enumerate(zip(gs[:nshow], parsed[:nshow])):
-            y = top - (i + 1) * h
+            y = top + i
             fc, tc = ROLE[x["role"]]
-            ax.add_patch(FancyBboxPatch((0.0, y + 0.01), 0.99, h - 0.02, boxstyle="round,pad=0,rounding_size=0.012",
+            ax.add_patch(FancyBboxPatch((0.0, y + 0.1), 0.99, 0.8, boxstyle="round,pad=0,rounding_size=0.012",
                                         fc=fc, ec=INK2 if x["role"] == "QC / blank" else "none", lw=0.5, ls=(0, (2, 2))))
             lab = "  ·  ".join(f"{k}: {d[k]}" for k in sorted(vary, key=lambda k: k not in dk) if k in d) or x["group"]
-            ax.text(0.015, y + h / 2, f"{x['role']} · n={x['n']}", fontsize=5.5, va="center", color=tc,
+            ax.text(0.015, y + 0.5, f"{x['role']} · n={x['n']}", fontsize=5.5, va="center", color=tc,
                     weight="bold" if x["role"] in ("case", "control") else "normal")
-            ax.text(0.15, y + h / 2, short(lab, 98), fontsize=5.5, va="center", color=tc)
+            ax.text(0.085, y + 0.5, short(lab, 190), fontsize=5.5, va="center", color=tc)
         if len(gs) > nshow:
-            ax.text(0.015, top - (nshow + 1) * h + h / 2, f"+ {len(gs) - nshow} more unused groups", fontsize=5.5,
+            ax.text(0.015, top + nshow + 0.5, f"+ {len(gs) - nshow} more unused groups", fontsize=5.5,
                     color=INK2, va="center")
-    title = "Worked examples: every deposited group, with the factor that separates case from control first"
+    nrow = sum(x["status"] != "one factor" for x in rows)
+    title = (f"The {nrow} contrasts where case and control differ in more than one factor ({len(panels)} studies), "
+             "with every deposited group")
     fig.suptitle(title, x=0.012, ha="left", fontsize=9.5, weight="bold")
-    fig.subplots_adjust(left=0.012, right=0.988, top=0.9, bottom=0.02, wspace=0.06, hspace=0.18)
+    fig.subplots_adjust(left=0.012, right=0.988, top=1 - 0.4 / H, bottom=0.01)
     save(fig, out, "contrast_diagrams", figs, title,
-         "Four contrasts worth reading closely (DHODH's rescue design, ALDH7A1's matched treatments, FASN's two drug "
-         "columns, a patient study): dark = case, light = control, grey = deposited but not used.")
+         "Chosen by rule, not by hand: every study with a contrast the table does not mark clean. Dark = case, "
+         "light = control, grey = deposited but not used; the green line says what separates them.")
 
 
 # ---- quality flags -----------------------------------------------------------------
@@ -878,7 +887,7 @@ def main(argv=None):
     drops = drop_funnel(u, D, out, figs)
     groups = {row.label: contrast_of(row) for row in u.itertuples()}
     crow = contrast_table(u, groups, out, figs)
-    contrast_diagrams(u, groups, out, figs)
+    contrast_diagrams(u, groups, crow, out, figs)
     flags = quality_flags(u, groups, out, figs)
     (out / "contrasts.json").write_text(json.dumps(crow, indent=1, ensure_ascii=False), encoding="utf-8")
     audit = daa_recheck(u, groups, out, figs)
