@@ -53,7 +53,8 @@ FATE = [("primary", "testable, gene lost (primary)", "#126b63"),
         ("norun", "no significant metabolites in the network", "#d1670a"),
         ("single", "single subject, no group", "#e8cf9a"),
         ("mouse", "mouse (human only, D25)", "#8c7b6b"),
-        ("panel", "targeted panel, under 15 metabolites", "#6f7276"),
+        ("panel", "under 20 named metabolites", "#6f7276"),
+        ("fewsamples", "under 3 samples per side", "#7d8087"),
         ("lt3", "under 3 metabolites in the network", "#9a9da1"),
         ("raw", "raw data only / table not loaded", "#c6cad0"),
         ("novalues", "deposit has no values", "#a99a8a"),
@@ -119,7 +120,8 @@ def unit_table(down, up):
     t["n_inc"] = num(t.n_sources_up)                       # sources with sources = increased
     t["viable_down"] = t.viable.eq("True")
     t["viable_up"] = t.viable_up_s.eq("True")
-    t["runs"] = t.status_down.eq("run") | t.status_up.eq("run")
+    # the registry decides membership (D28): a unit dropped there is out even if an older null-calibration run has it
+    t["runs"] = (t.status_down.eq("run") | t.status_up.eq("run")) & t.reg_status.eq("active")
     subsys, net = gene_subsystems()
     t["genes_in_net"] = [";".join(g for g in c.split(";") if g in net) for c in t.causal_genes]
     t["primary"] = t.perturbation.isin(["inherited defect", "gene removed or lost"])
@@ -139,7 +141,9 @@ def unit_table(down, up):
             return "single"
         if "mouse" in why:
             return "mouse"
-        if "<15" in why or "panel" in why:
+        if "minimum of 3 per side" in why:
+            return "fewsamples"
+        if "<15" in why or "panel" in why or "minimum of 20" in why:
             return "panel"
         if "fewer than 3" in why or "lt3" in why:
             return "lt3"

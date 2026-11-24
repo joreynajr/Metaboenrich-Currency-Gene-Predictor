@@ -11,7 +11,7 @@ Figures (png + pdf):
   source_flow        sweep source -> what the hit is -> what happened to it
   overlap            hand search vs repository sweep, at study level
   failure_ledger     every swept study has its raw response cached; failed fetches per source
-  drop_funnel        176 comparisons -> 95 testable -> 65 primary, every drop with its reason and rule
+  drop_funnel        every registered comparison -> testable -> primary, every drop with its reason and rule
   contrast_table     all C/D contrasts: what separates case from control, what is matched, groups pooled
   contrast_diagrams  four worked examples: every deposited group, case and control marked, unused arms grey
   quality_flags      green / amber / red per testable unit, with the rule that set it
@@ -67,6 +67,7 @@ FATE_RULE = {"primary": ("D26", "loss of function of one network gene"),
              "single": ("D21", "group level only, no single subjects"),
              "mouse": ("D25", "human only"),
              "panel": ("D26", ">= 20 named metabolites per assay"),
+             "fewsamples": ("D26", ">= 3 samples per side"),
              "lt3": ("D22", "too few metabolites in the network to score"),
              "raw": ("D26", "needs per-sample values, not raw spectra"),
              "novalues": ("D26", "deposit must contain values"),
@@ -576,6 +577,8 @@ def contrast_diagrams(u, groups, rows, out, figs):
 
 # ---- quality flags -----------------------------------------------------------------
 def rag(r, g):
+    """Only the written rules: red fails D26 (>= 3 per side, >= 20 named metabolites; D28 applies it to every unit),
+    amber meets them with a documented caveat, green meets them on recorded numbers."""
     n = pd.to_numeric(r.n_samples, errors="coerce")
     if g is not None:
         npg = min(len(g["case"]), len(g["control"]))
@@ -585,28 +588,20 @@ def rag(r, g):
         npg = (n / 2) if pd.notna(n) and n else np.nan
     m = pd.to_numeric(r.n_metabolites, errors="coerce")
     why = []
-    if pd.isna(npg):
-        why.append("group size not recorded")
-    elif npg < 3:
-        why.append(f"{int(npg)} per group (< 3, patient group mean, D21)")
+    if pd.notna(npg) and npg < 3:
+        why.append(f"{int(npg)} per side, under 3 (D26)")
     if pd.notna(m) and m < 20:
-        why.append(f"{int(m)} metabolites (< 20)")
-    if why and not (pd.isna(npg) and len(why) == 1):
-        return "red", "kept by exception: " + "; ".join(why)
+        why.append(f"{int(m)} metabolites, under 20 (D26)")
+    if why:
+        return "red", "; ".join(why)
     amb = []
-    if pd.notna(npg) and npg < 5:
-        amb.append(f"{int(npg)} per group")
-    if pd.notna(m) and m < 50:
-        amb.append(f"{int(m)} metabolites")
-    if r.primary != "True":
-        amb.append("inhibitor or gain, not loss")
-    if "other mitochondrial" in (g or {}).get("reason", "") or r.study == "ST001441":
-        amb.append("controls are other patients")
     if pd.isna(npg):
-        amb.append("group size not recorded")
+        amb.append("sample size not recorded, rule cannot be checked")
+    if "other mitochondrial" in (g or {}).get("reason", "") or r.study == "ST001441":
+        amb.append("controls are patients with other diseases (D26)")
     if amb:
         return "amber", "; ".join(amb)
-    return "green", f">= 5 per group, {int(m) if pd.notna(m) else '?'} metabolites, gene lost"
+    return "green", f"{int(npg)} per side, {int(m) if pd.notna(m) else '?'} metabolites"
 
 
 def quality_flags(u, groups, out, figs):
@@ -637,31 +632,28 @@ def quality_flags(u, groups, out, figs):
     reasons = []
     for st in ("amber", "red"):
         for w in ts[ts.rag == st].rag_why:
-            for part in re.sub(r"^kept by exception: ", "", w).split("; "):
+            for part in w.split("; "):
                 key = re.sub(r"^\d+ ", "n ", part)
-                key = {"n per group": "3–4 per group", "n metabolites": "20–49 metabolites",
-                       "n metabolites (< 20)": "< 20 metabolites",
-                       "n per group (< 3, patient group mean, D21)": "< 3 per group (patient group mean, D21)"
-                       }.get(key, key)
                 reasons.append((st, key))
-    rc = pd.Series([f"{s}|{k}" for s, k in reasons]).value_counts()
+    rc = pd.Series([f"{s}|{k}" for s, k in reasons], dtype=str).value_counts()
     rows = sorted(rc.items(), key=lambda kv: (order.index(kv[0].split("|")[0]) * -1, -kv[1]))
     for i, (k, n) in enumerate(rows):
         st, lab = k.split("|")
         ax.barh(i, n, color=RAG[st][0], height=0.6, lw=0)
         ax.text(n + 0.5, i, f"{n}  {lab}", va="center", fontsize=6.4, color=INK)
-    ax.set_ylim(len(rows) - 0.4, -0.8); ax.set_xlim(0, max(rc.max() * 2.4, 10)); ax.axis("off")
-    ax.set_title("Why a square is not green (a square can have several)", loc="left", fontsize=7.5, color=INK)
+    ax.set_ylim(max(len(rows), 6) - 0.4, -0.8); ax.set_xlim(0, max(rc.max() * 2.4 if len(rc) else 0, 10))
+    ax.axis("off")
+    ax.set_title("Why a square is not green", loc="left", fontsize=7.5, color=INK)
     cnt = ts.rag.value_counts()
-    title = (f"{cnt.get('green', 0)} green ✓, {cnt.get('amber', 0)} amber !, {cnt.get('red', 0)} red ✕: "
-             "most comparisons are small but rule-compliant")
+    title = (f"{cnt.get('green', 0)} of {len(ts)} testable comparisons meet the inclusion rule on recorded numbers, "
+             f"{cnt.get('amber', 0)} with a documented caveat, {cnt.get('red', 0)} fail it")
     fig.suptitle(title, x=0.012, ha="left", fontsize=9, weight="bold")
-    fig.text(0.012, 0.01, "Green: >= 5 per group, >= 50 metabolites, gene lost. Amber: 3–4 per group, 20–49 metabolites, "
-             "inhibitor or gain, or other-patient controls. Red: kept by exception.", fontsize=5.8, color=INK2)
+    fig.text(0.012, 0.01, "Rule (D26, applied to every unit by D28): >= 3 samples per side and >= 20 named metabolites. "
+             "Green: meets it. Amber: meets it with a documented caveat. Red: fails it.", fontsize=5.8, color=INK2)
     fig.tight_layout(rect=(0, 0.04, 1, 0.94))
     save(fig, out, "quality_flags", figs, title,
-         "A traffic light per testable comparison shows how much each result can carry; the bars list exactly which "
-         "rule pushed a comparison to amber or red.")
+         "One square per testable comparison, judged only against the written inclusion rule (D26/D28); the bars "
+         "name each documented caveat or failure.")
     return dict(zip(ts.label, zip(ts.rag, ts.rag_why)))
 
 

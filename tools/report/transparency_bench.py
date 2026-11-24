@@ -453,7 +453,7 @@ def where_wins(u, own, out):
             ("Inborn errors (A)", (u.c == "A").values, "By collection"), ("Other studies (B–D)", (u.c != "A").values, None)]
     fig, ax = plt.subplots(figsize=(7.6, 3.1))
     tr = matplotlib.transforms.blended_transform_factory(ax.transAxes, ax.transData)
-    y, ylab, yt = 0.0, [], []
+    y, ylab, yt, verdicts = 0.0, [], [], []
     for name, m, head in rows:
         if head:
             y += 0.55
@@ -474,6 +474,7 @@ def where_wins(u, own, out):
                 transform=tr)
         ax.text(1.03, y + 0.26, f"walk {w} – Reafect {r} clusters, p = {p:.2g}", va="center", fontsize=6, color=INK2,
                 transform=tr)
+        verdicts.append((name, lead, p))
         ylab.append(f"{name}\n{len(g)} clusters"); yt.append(y)
         y += 1
     ax.set_xscale("log"); ax.set_xlim(0.35, 75)
@@ -496,7 +497,10 @@ def where_wins(u, own, out):
              f"{ow['Reafect']:.1f}%) only because its list is padded.\nCurrent flow ↑src and the degree corrections "
              "(M3) have no shared-list ranks yet and are left out. Sign test on cluster medians, ties dropped.",
              fontsize=6.3, color=INK2)
-    fig.suptitle("Reafect wins on inhibitors and on studies B–D; the walk leads on inborn errors, not significantly",
+    wins = [f"{'the walk' if lead == 'walk' else lead} wins on {n.split(' (')[0].lower()}" for n, lead, p in verdicts
+            if p < 0.05]
+    title = "; ".join(wins + ["no other difference is significant" if wins else "no difference is significant"])
+    fig.suptitle(title[0].upper() + title[1:],
                  x=0.02, ha="left", fontsize=9, weight="bold", color=INK, y=1.02)
     fig.subplots_adjust(right=0.72)
     save(fig, out, "where_wins")
@@ -572,9 +576,10 @@ def ledger(u, rep, man, up, mx, paired, fid, ties):
     nm = tot[["kegg_from_id_translation name", "kegg_from_Human-GEM via loose name"]].sum(axis=1)
     add(G3, "KEGG ids found by name matching, not verified by hand", "—",
         ", ".join(f"{c} {v:.0f}%" for c, v in nm.items()), "caveat")
-    add(G3, "Test-set labels changed after first results", "—",
-        "2 comparisons relabelled inherited defect (Adam 2013 FH, Kennedy 2019 ABAT; D26 item 5); ranks unchanged",
-        "caveat")
+    n_out = int(u.label.str.match(r"^0*0?5_Adam2013_Tumor|^100_Kennedy2019_patient").sum())
+    add(G3, "Test set changed after first results", "—",
+        "D26 item 5 relabelled Adam 2013 and Kennedy 2019 (" + ("both since dropped by D28" if n_out == 0 else
+        f"{n_out} still in the set") + "); D28 dropped 13 units that failed the D26 minimums", "caveat")
     reg = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
     ng = reg[reg.fate == "nogene"]
     kinds = [(NOGENE_REASON.get(f"{x.study}|{x.sub_unit}") or NOGENE_REASON.get(x.study) or ("unknown",))[0]

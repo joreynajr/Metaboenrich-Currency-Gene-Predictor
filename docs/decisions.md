@@ -420,6 +420,27 @@ not before it; they apply unchanged to every rerun.
 6. Known limits with no threshold (coverage, input asymmetry, name-matched KEGG ids, the
    D26 relabel, comparisons dropped for no causal gene) are listed as caveats.
 
+### D28. The D26 inclusion rule applies to every unit, not only new ones (2026-11-24, DM)
+D26's minimums (>= 3 samples per side, >= 20 named metabolites) had been applied when
+screening new candidates, but units registered earlier were never checked against them;
+12 of the 95 testable units failed, plus Adam 2013 Tumor vs Normal once its sample size
+was read from the paper (2 normal kidney vs 3 tumours from two HLRCC patients, CE-TOFMS;
+Adam et al 2013, Cell Rep, PMC3675675). All 27 active registry rows that fail on recorded
+numbers are now dropped, reason "D28: ...":
+1. Fewer than 3 per side: Miller2015 hmgcl, hcu, iva, tp (2 patients each), hlcs (1);
+   Adam 2013 Tumor vs Normal.
+2. Under 20 metabolites: Workbench ST000276_AN000441 (9), ST000687_AN001060 (17),
+   ST003486_AN005724 (18), ST003487_AN005725 (18), ST003488_AN005726 (15),
+   ST003544_AN005821 (16); Kennedy 2019 patient vs reference population (11) and its eight
+   plasma sub-groups (1-4); Cappuccio 2017 (9, 18); Glinton 2024 (6); Reisz 2023 (15, 19);
+   Wangler 2018 raw concentrations (1). Only the first 13 listed here were testable.
+The testable set goes from 95 units (67 primary, 66 clusters) to 82 (56 primary, 26
+non-primary, 54 clusters). `build_data_figures` now takes registry status as the source of
+membership. Results on the 95-unit set are kept for comparison in
+`results/_sensitivity_95_units_2026-11-24/`. Seven B rows with no recorded sample size
+(Du 2023 ×2, Hou 2017, Sebaa 2023, Sidorina 2024 ×3, Wangler 2018 group mean) cannot be
+checked; none is testable today.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
