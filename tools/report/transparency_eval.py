@@ -148,13 +148,15 @@ def tile(ax, ok, big, small, head, note):
 
 # ---------------------------------------------------------------- shuffle control
 def shuffle(units, out, figs, cards, perms=1000):
-    o = pd.read_csv(R / "reafect_bench/units/ours_ranks.tsv.gz", sep="\t", index_col=0)
+    """Every method on the gene list both ours and Reafect can score (reafect_bench common_ranks.tsv.gz)."""
+    o = pd.read_csv(R / "reafect_bench/units/common_ranks.tsv.gz", sep="\t", index_col=0)
     U = len(o)
-    sym = o.symbol
+    sym = pd.read_csv(R / "reafect_bench/units/ours_ranks.tsv.gz", sep="\t", index_col=0,
+                      usecols=["ensembl_id", "symbol"]).symbol.reindex(o.index)
     genes = {u: [g for g in str(units.at[u, "genes_in_net"]).split(";") if g] for u in units.index}
     rows = {u: sym.index[sym.isin(genes[u])] for u in units.index}
-    meths = [("walk_up", "Walk ↑src (M0)"), ("flow", "Current flow (M0)"), ("walk_down", "Walk ↓src (M0)"),
-             ("neighbour", "One-hop")]
+    meths = [("walk_up", "Walk ↑src (M0)"), ("reafect", "Reafect"), ("flow", "Current flow (M0)"),
+             ("walk_down", "Walk ↓src (M0)"), ("neighbour", "One-hop")]
     labels = [u for u in units.index if len(rows[u])]
     rng = np.random.default_rng(SEED)
     res = []
@@ -175,7 +177,7 @@ def shuffle(units, out, figs, cards, perms=1000):
             null.append(med(p))
         null = np.array(null)
         res.append((name, obs, null, (null <= obs).mean()))
-    fig, ax = plt.subplots(figsize=(7.6, 2.6))
+    fig, ax = plt.subplots(figsize=(7.6, 3.0))
     for i, (name, obs, null, p) in enumerate(res):
         lo, hi = np.percentile(null, [2.5, 97.5])
         ax.plot([lo, hi], [i, i], color=TIE, lw=7, solid_capstyle="round", zorder=1)
@@ -188,12 +190,14 @@ def shuffle(units, out, figs, cards, perms=1000):
     ax.set_yticks(range(len(res)), [r[0] for r in res])
     ax.set_ylim(len(res) - 0.3, -0.7)
     ax.set_xlim(-8, 75)
-    ax.set_xlabel("median causal-gene percentile over comparisons (0 = top)")
+    ax.set_xlabel(f"median causal-gene percentile over comparisons, among the {U:,} shared genes (0 = top)")
     ax.spines["left"].set_visible(False); ax.tick_params(axis="y", length=0)
-    w, d = res[0], res[2]
-    title = (f"Negative control: with another comparison's causal gene, walk ↑src falls from {w[1]:.0f}% to "
-             f"{np.median(w[2]):.0f}%" + "\n" + f"so it finds the specific gene; walk ↓src barely beats its shuffle "
-             f"({d[1]:.0f}% vs {np.median(d[2]):.0f}%)")
+    w, r, d = res[0], res[1], res[3]
+    title = (f"Negative control, shared gene list: walk ↑src {w[1]:.0f}% real vs {np.median(w[2]):.0f}% shuffled, "
+             f"Reafect {r[1]:.0f}% vs {np.median(r[2]):.0f}%" + "\n" +
+             ("Both find the specific gene" if max(w[3], r[3]) < 0.05 else "Not both beat their shuffle") +
+             f"; walk ↓src {'does' if d[3] < 0.05 else 'does not'} ({d[1]:.0f}% vs {np.median(d[2]):.0f}%, "
+             f"p = {d[3]:.2g})")
     ax.set_title(title, loc="left", fontsize=9, weight="bold", pad=10)
     fig.tight_layout()
     save(fig, out, "shuffle", title, "Grey bands are 95% of 1,000 shuffles of causal genes across comparisons, dots are "

@@ -38,7 +38,7 @@ rankings on every unit; z per metabolite from each unit's data (units-input docu
     python tools/reafect_bench.py ours-units    --reafect R --workers 3          # repo Python
     python tools/reafect_bench.py units-compare --reafect R --work W           # repo Python
 
-Writes results/reafect_bench/units/: ours_ranks.tsv.gz, per_unit.tsv, coverage.tsv, summary.tsv,
+Writes results/reafect_bench/units/: ours_ranks.tsv.gz, per_unit.tsv, common_ranks.tsv.gz, coverage.tsv, summary.tsv,
 paired.tsv, report.md.
 """
 import argparse
@@ -769,7 +769,7 @@ def run_units_compare(args):
         v = pd.Series(values, dtype=float).reindex(common).fillna(np.inf)
         return pd.Series(rankdata(v.values, method="average"), index=common)
 
-    rows, cov = [], []
+    rows, cov, shared = [], [], {}                      # shared: every gene's rank on the common list, per unit
     for r in units.itertuples():
         mm = man.loc[r.label]
         cs = [s for s in str(r.genes_in_net).split(";") if s]
@@ -789,6 +789,7 @@ def run_units_compare(args):
         row["reafect_causal_ec_rank"] = er
         row["reafect_own_pct"] = 100 * er / x["max_rank"] if er is not None else 100.0
         gr = rerank(x["gene_rank"] if x else {})
+        shared[f"{r.label}|reafect"] = gr
         row["reafect_common_rank"] = min(gr[e] for e in ce) if ce else np.nan
         for m in ["walk_up", "walk_down", "flow", "neighbour"]:
             s = ours[f"{r.label}|{m}"]
@@ -796,7 +797,8 @@ def run_units_compare(args):
             row[f"{m}_rank"] = own
             row[f"{m}_rank_reported"] = ref[m].get(r.label, np.nan)
             row[f"{m}_own_pct"] = 100 * own / U
-            row[f"{m}_common_rank"] = min(rerank(s.reindex(common))[e] for e in ce)
+            shared[f"{r.label}|{m}"] = rerank(s.reindex(common))
+            row[f"{m}_common_rank"] = min(shared[f"{r.label}|{m}"][e] for e in ce)
         for m in METHODS:
             row[f"{m}_common_pct"] = 100 * row[f"{m}_common_rank"] / N
         rows.append(row)
@@ -810,6 +812,7 @@ def run_units_compare(args):
                         "n_kegg_in_reafect_network": row["n_kegg_in_reafect_network"]})
     pu = pd.DataFrame(rows)
     pu.to_csv(out / "per_unit.tsv", sep="\t", index=False)
+    pd.DataFrame(shared).rename_axis("ensembl_id").to_csv(out / "common_ranks.tsv.gz", sep="\t")
     pd.DataFrame(cov).to_csv(out / "coverage.tsv", sep="\t", index=False)
 
     subsets = {"all": lambda d: d, "primary": lambda d: d[d.primary], "non-primary": lambda d: d[~d.primary],
