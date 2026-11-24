@@ -436,7 +436,7 @@ def input_fidelity(u, man, out, mdir):
                  "uses (group z grows with patient count)", x=0.02, ha="left", fontsize=9, weight="bold", color=INK,
                  y=0.985)
     save(fig, out, "input_fidelity")
-    return d
+    return d, tot
 
 
 # ---------- 6. where each method wins ----------
@@ -472,60 +472,115 @@ def where_wins(mx, out):
 
 
 # ---------- 7. verification ledger ----------
-def ledger(u, rep, gap, man, up, mx, paired):
+# Thresholds are recorded in docs/decisions.md D27. state: pass / caveat / fail; "caveat" rows are known limits that
+# no threshold can clear, listed so the reader weighs them.
+def rank_check(u, m, ties):
+    d = (u[f"{m}_rank"] - u[f"{m}_rank_reported"]).abs().dropna()
+    moved = u.loc[d[d > 0].index, "label"]
+    if not len(moved):
+        return f"all {len(d)} identical", "pass"
+    t = ties[ties.method == m].set_index("label").reindex(moved) if ties is not None else None
+    if t is None or t.tie.isna().any():
+        return f"{len(moved)} of {len(d)} differ, by up to {d.max():.0f} ranks; tie test not run", "caveat"
+    nt = int(t.tie.astype(bool).sum())
+    if nt == len(moved):
+        return f"{len(moved)} of {len(d)} differ, by up to {d.max():.0f} ranks; all exact score ties", "pass"
+    rel = t[~t.tie.astype(bool)].max_rel_score_diff.max()
+    return (f"{len(moved)} of {len(d)} differ, by up to {d.max():.0f} ranks; {nt} exact ties, {len(moved) - nt} "
+            f"scores differ by up to {100 * rel:.2f}% (unexplained)", "caveat" if d.max() <= 5 else "fail")
+
+
+def ledger(u, rep, man, up, mx, paired, fid, ties):
+    d, tot = fid
     L = []
-    for cohort, d in rep.items():
-        g = max(abs(a - b) for a, b in zip(d["ours"], d["published"]))
-        L.append({"check": f"Reafect reproduces its published {cohort} rates (top 2.5/5/10%)",
-                  "result": f"ours {'/'.join(f'{v:.0f}' for v in d['ours'])} vs published "
-                            f"{'/'.join(f'{v:.0f}' for v in d['published'])}; largest gap {g:.0f} points",
-                  "pass": bool(g <= 5)})
-    L.append({"check": "Reafect ran on every testable comparison", "result": f"{int(u.reafect_ran.sum())} of {len(u)}",
-              "pass": bool(u.reafect_ran.all())})
-    for m, lab in (("walk_up", "walk ↑src"), ("walk_down", "walk ↓src"), ("flow", "current flow"), ("neighbour", "one-hop")):
-        d = (u[f"{m}_rank"] - u[f"{m}_rank_reported"]).abs().dropna()
-        L.append({"check": f"Recomputed {lab} causal ranks match the correction_eval run",
-                  "result": f"{int((d > 0).sum())} of {len(d)} differ, largest by {d.max():.0f} ranks "
-                            "(floating-point ties)" if (d > 0).any() else f"all {len(d)} identical",
-                  "pass": bool(d.max() <= 5)})
-    miss = int(u[[c for c in u.columns if c.endswith("_common_pct")]].isna().any(axis=1).sum())
-    L.append({"check": "Every method has a value for every comparison (same units compared)",
-              "result": f"{miss} comparisons missing a value", "pass": miss == 0})
+
+    def add(group, check, threshold, result, state):
+        L.append({"group": group, "check": check, "threshold": threshold, "result": result, "state": state,
+                  "pass": state == "pass"})
+
+    G1, G2, G3 = "Matches outside evidence", "Internal consistency", "Known caveats"
+    for cohort, r in rep.items():
+        g = max(abs(a - b) for a, b in zip(r["ours"], r["published"]))
+        add(G1, f"Reafect reproduces its published {cohort} rates (top 2.5/5/10%)", "gap ≤ 5 points",
+            f"ours {'/'.join(f'{v:.0f}' for v in r['ours'])} vs paper "
+            f"{'/'.join(f'{v:.0f}' for v in r['published'])}; largest gap {g:.0f}", "pass" if g <= 5 else "fail")
+    for m, lab in (("walk_up", "walk ↑src"), ("walk_down", "walk ↓src"), ("flow", "current flow"),
+                   ("neighbour", "one-hop")):
+        res, st = rank_check(u, m, ties)
+        n = int(u[f"{m}_rank_reported"].notna().sum())
+        add(G2, f"Recomputed {lab} ranks match the correction_eval run ({n} with a reported rank)",
+            "differences are exact ties", res, st)
     a = up.Reafect.reindex(u.label).values
     b = u.reafect_own_pct.fillna(100).values
-    L.append({"check": "Benchmark matrix uses the same Reafect percentiles as the head-to-head",
-              "result": f"largest difference {np.nanmax(np.abs(a - b)):.3f} points", "pass": bool(np.nanmax(np.abs(a - b)) < 0.01)})
+    dm = np.nanmax(np.abs(a - b))
+    add(G2, "Benchmark matrix uses the same Reafect percentiles as the head-to-head", "< 0.01 points",
+        f"largest difference {dm:.3f}", "pass" if dm < 0.01 else "fail")
     g = clusters(u)
     w, r = int((g.winner == "Walk").sum()), int((g.winner == "Reafect").sum())
     pt = paired[(paired.rows == "all units") & (paired.subset == "all") & (paired.level == "cluster")
                 & (paired.versus == "Walk, sources = increased")].iloc[0]
-    L.append({"check": "Cluster win counts recomputed from per-unit data match paired.tsv",
-              "result": f"recomputed {r} Reafect – {w} walk; paired.tsv {pt.reafect_better} – {pt.ours_better}",
-              "pass": (r, w) == (int(pt.reafect_better), int(pt.ours_better))})
+    ok = (r, w) == (int(pt.reafect_better), int(pt.ours_better))
+    add(G2, "Cluster win counts recomputed from per-comparison data match paired.tsv", "equal",
+        f"{r} Reafect – {w} walk both ways", "pass" if ok else "fail")
     bad = int((man.n_with_kegg > man.n_measured).sum())
-    L.append({"check": "KEGG manifest covers every comparison, no over-counts",
-              "result": f"{man.label.isin(u.label).sum()} of {len(u)} in the manifest; {bad} over-counts",
-              "pass": bool(man.label.isin(u.label).sum() == len(u) and bad == 0)})
+    inm = int(man.label.isin(u.label).sum())
+    add(G2, "KEGG manifest covers every comparison, no over-counts", "all, 0 over-counts",
+        f"{inm} of {len(u)}; {bad} over-counts", "pass" if inm == len(u) and bad == 0 else "fail")
+    add(G2, "No method is given the causal gene", "absent from every input",
+        "ours: metabolites only; Reafect: EC only labels its output (Reafect.py:684; code read)", "pass")
     rnd = mx[(mx.ranking == "random") & (mx.subset == "all")].median_cluster_pct.iloc[0]
-    L.append({"check": "Random ranking sits at the 50th percentile (no built-in advantage)",
-              "result": f"cluster median {rnd:.1f}", "pass": bool(abs(rnd - 50) < 1)})
+    add(G2, "Random ranking scores 50% (sanity check of the scoring code)", "|median − 50| < 1",
+        f"cluster median {rnd:.1f}", "pass" if abs(rnd - 50) < 1 else "fail")
+    ws, rs = u.apply(walk_state, axis=1), u.apply(reafect_state, axis=1)
+    add(G3, "Causal gene given a real rank (others are filled in: walk 50%, Reafect end of list)", "—",
+        f"walk {int((ws == 'ranked').sum())} of {len(u)}, Reafect {int((rs == 'ranked').sum())} of {len(u)}", "caveat")
+    A = d[d.c == "A"]
+    add(G3, "Signal metabolites handed to each method, inborn errors (A)", "—",
+        f"median: Reafect {A.rea_sig.median():.0f}, walk {A.ours_sig.median():.0f} (group z grows with patient count)",
+        "caveat")
+    nm = tot[["kegg_from_id_translation name", "kegg_from_Human-GEM via loose name"]].sum(axis=1)
+    add(G3, "KEGG ids found by name matching, not verified by hand", "—",
+        ", ".join(f"{c} {v:.0f}%" for c, v in nm.items()), "caveat")
+    add(G3, "Test-set labels changed after first results", "—",
+        "2 comparisons relabelled inherited defect (Adam 2013 FH, Kennedy 2019 ABAT; D26 item 5); ranks unchanged",
+        "caveat")
+    reg = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
+    ng = reg[reg.fate == "nogene"]
+    kinds = [(NOGENE_REASON.get(f"{x.study}|{x.sub_unit}") or NOGENE_REASON.get(x.study) or ("unknown",))[0]
+             for x in ng.itertuples()]
+    add(G3, "Comparisons dropped as \"no causal gene in the network\"", "—",
+        f"{len(ng)} dropped; {kinds.count('recoverable')} recoverable (gene annotation never filled in)", "caveat")
     return L
 
 
 def ledger_figure(L, out):
-    fig = plt.figure(figsize=(9.6, 0.3 * len(L) + 0.5))
-    ax = fig.add_axes([0.01, 0.0, 0.98, 0.9])
-    ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(len(L), 0)
-    for i, c in enumerate(L):
-        col = GOOD if c["pass"] else BAD
-        ax.add_patch(Rectangle((0, i + 0.12), 0.055, 0.76, color=col, lw=0))
-        ax.text(0.0275, i + 0.5, "✓ pass" if c["pass"] else "✗ fail", ha="center", va="center", fontsize=6.5,
-                color="white", weight="bold")
-        ax.text(0.07, i + 0.5, c["check"], va="center", fontsize=7.3, color=INK)
-        ax.text(0.6, i + 0.5, c["result"], va="center", fontsize=6.8, color=INK2)
+    groups = list(dict.fromkeys(c["group"] for c in L))
+    rows = []
+    for gname in groups:
+        rows.append(("head", gname)); rows += [("row", c) for c in L if c["group"] == gname]
+    fig = plt.figure(figsize=(11.2, 0.29 * len(rows) + 0.5))
+    ax = fig.add_axes([0.01, 0.0, 0.98, 0.95])
+    ax.axis("off"); ax.set_xlim(0, 1); ax.set_ylim(len(rows), 0)
+    COL = {"pass": (GOOD, "✓ pass"), "caveat": ("#b7791f", "! caveat"), "fail": (BAD, "✗ fail")}
+    for i, (kind, c) in enumerate(rows):
+        if kind == "head":
+            ax.text(0, i + 0.62, c, fontsize=7.6, weight="bold", color=INK)
+            if i == 0:
+                ax.text(0.47, i + 0.62, "threshold", fontsize=6.6, color=INK2)
+                ax.text(0.6, i + 0.62, "result", fontsize=6.6, color=INK2)
+            continue
+        col, txt = COL[c["state"]]
+        ax.add_patch(Rectangle((0, i + 0.14), 0.058, 0.72, color=col, lw=0))
+        ax.text(0.029, i + 0.5, txt, ha="center", va="center", fontsize=6.2, color="white", weight="bold")
+        ax.text(0.068, i + 0.5, c["check"], va="center", fontsize=6.7, color=INK)
+        ax.text(0.47, i + 0.5, c["threshold"], va="center", fontsize=6.3, color=INK2)
+        ax.text(0.6, i + 0.5, c["result"], va="center", fontsize=6.3, color=INK2 if c["state"] == "pass" else INK)
         ax.axhline(i + 1, color=RULE, lw=0.6)
-    n = sum(c["pass"] for c in L)
-    fig.suptitle(f"Verification ledger: {n} of {len(L)} checks pass", x=0.02, ha="left", fontsize=9,
+    chk = [c for c in L if c["threshold"] != "—"]
+    n = {k: sum(c["state"] == k for c in chk) for k in COL}
+    known = len(L) - len(chk)
+    fig.suptitle(f"Verification ledger: {n['pass']} of {len(chk)} checks pass, {n['caveat']} with a caveat, "
+                 f"{n['fail']} fail; plus {known} known caveats to weigh", x=0.01, ha="left", fontsize=9,
                  weight="bold", color=INK, y=1.0)
     save(fig, out, "verification_ledger")
 
@@ -584,9 +639,11 @@ def main(argv=None):
     cluster_scoreboard(u, out)
     paired_slope(u, out)
     coverage_strip(u, cov, out)
-    input_fidelity(u, man, out, Path(args.manifest).parent)
+    fid = input_fidelity(u, man, out, Path(args.manifest).parent)
     where_wins(mx, out)
-    L = ledger(u, rep, gap, man, up, mx, pd.read_csv(Path(args.units) / "paired.tsv", sep="	"))
+    tf = out / "tie_check.tsv"
+    L = ledger(u, rep, man, up, mx, pd.read_csv(Path(args.units) / "paired.tsv", sep="\t"), fid,
+               pd.read_csv(tf, sep="\t") if tf.exists() else None)
     ledger_figure(L, out)
     (out / "ledger.json").write_text(json.dumps(L, indent=1, ensure_ascii=False), encoding="utf-8")
     (out / "cards.json").write_text(json.dumps(cards(u, man, up), indent=1, ensure_ascii=False), encoding="utf-8")
@@ -609,13 +666,14 @@ def main(argv=None):
          ("where_wins", "Which method is best where",
           "Read down each column to the boxed cell to see the best method for that kind of comparison; the boxes "
           "move between columns, which is the honest answer."),
-         ("verification_ledger", "Checks that must pass",
-          "Every row is a test the pipeline ran on itself; a red row would mean the results above should not be "
+         ("verification_ledger", "Checks that must pass, and caveats to weigh",
+          "Green rows met a threshold fixed in decisions.md D27; amber rows are differences the checks cannot "
+          "explain, or known limits no threshold can clear; a red row would mean the results above should not be "
           "trusted until fixed.")]
     (out / "figures.json").write_text(json.dumps([{"file": f"{n}.png", "title": t, "caption": c} for n, t, c in F],
                                                  indent=1), encoding="utf-8")
     for c in L:
-        print("PASS" if c["pass"] else "FAIL", c["check"], "|", c["result"])
+        print(c["state"].upper(), c["check"], "|", c["result"])
 
 
 if __name__ == "__main__":

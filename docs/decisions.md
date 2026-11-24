@@ -399,6 +399,27 @@ each contrast was then checked against the deposited sample groups.
    transaminase deficiency patients, ABAT). Ranks are unchanged; only the primary label
    moves (primary 65 -> 67 units, non-primary 30 -> 28).
 
+### D27. Verification ledger thresholds (2026-11-24, DM)
+
+The head-to-head ledger (`tools/report/transparency_bench.py`) marks each row pass,
+caveat or fail against these thresholds. They were written down after the first run,
+not before it; they apply unchanged to every rerun.
+
+1. Reafect reproduction: largest gap to the paper's top 2.5/5/10% rates <= 5 points
+   per cohort.
+2. Recomputed causal ranks vs the correction_eval run: pass if every difference is an
+   exact score tie (`tools/report/tie_check.py`, relative score difference <= 1e-9 across
+   the swapped genes); caveat if some are not ties but none moves more than 5 ranks;
+   fail otherwise. First run: walk sources = increased has 3 non-tie moves of <= 5 ranks
+   (scores differ by <= 0.09%), a caveat.
+3. Benchmark matrix vs head-to-head Reafect percentiles: < 0.01 points. Cluster win
+   counts: equal. KEGG manifest: every comparison present, no over-counts.
+4. Random ranking: cluster median within 1 point of 50 (a check on the scoring code).
+5. No method is given the causal gene: checked by reading the code (Reafect stores the
+   disease EC as an output label only).
+6. Known limits with no threshold (coverage, input asymmetry, name-matched KEGG ids, the
+   D26 relabel, comparisons dropped for no causal gene) are listed as caveats.
+
 ## Open
 
 - Final score: mean of percentile ranks is a placeholder.
