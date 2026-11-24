@@ -10,7 +10,8 @@ rules need before a unit can be registered:
     contrast: case = groups naming the gene or a loss word (KO, deficient, patient,
     siRNA ...), control = groups naming wild type, control, vehicle, scramble ...,
     restricted to the untreated or vehicle arm when another factor varies
-  - at least 3 samples per group and 20 named metabolites in the best assay
+  - at least 3 samples per group and 3 named metabolites in the best assay (the D29 signal rule,
+    >= 3 significantly changed metabolites in the network, is checked after the DAA)
 The verdict is a proposal: "usable" rows still need a person to confirm the contrast
 before they go into benchmarks/data_registry.tsv and the DAA scripts.
 
@@ -32,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from find_test_data import FAILED, ML, MW, OUT, fetch, pmap, trust_windows_roots   # noqa: E402
 
 ML_FTP = "https://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public"
-MIN_PER_GROUP, MIN_METABOLITES = 3, 20
+MIN_PER_GROUP, MIN_METABOLITES = 3, 3        # D26 sample size; D29 needs >= 3 changed, so >= 3 measured
 CASE = r"\bKO\b|knock-?out|knock-?down|\bKD\b|deficien|patient|mutant|mutation|\bnull\b|-/-|crispr|\bsg|\bsh|\bsi|" \
        r"loss|deleted|deletion|disease|CDG|affected"
 CTRL = r"\bWT\b|wild[- ]?type|control|\bctrl\b|vehicle|scrambl|\bscr\b|non[- ]?target|\bNT\b|healthy|normal|parental|" \
@@ -164,7 +165,8 @@ def main(argv=None):
          f"{len(res)} study x gene rows from {res.id.nunique()} studies: " +
          ", ".join(f"{v} {n}" for v, n in res.verdict.value_counts().items()) + ".",
          f"Usable = >= {MIN_METABOLITES} named metabolites with values in one assay, a genotype factor with a perturbed "
-         f"and a control level, >= {MIN_PER_GROUP} samples per side. Proposed contrasts need a person's check.", "",
+         f"and a control level, >= {MIN_PER_GROUP} samples per side. Proposed contrasts need a person's check; "
+         "after the DAA a unit also needs >= 3 significantly changed metabolites in the network (D29).", "",
          "| verdict | id | gene | metabolites | case (n) | control (n) | note / reason |", "|---|---|---|---|---|---|---|"]
     for r in res[res.verdict != "not usable"].itertuples():
         L.append(f"| {r.verdict} | [{r.id}]({r.url}) | {r.gene} | {r.best_assay_named_metabolites} | "

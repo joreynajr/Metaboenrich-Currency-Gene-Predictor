@@ -578,8 +578,9 @@ def ledger(u, rep, man, up, mx, paired, fid, ties):
         ", ".join(f"{c} {v:.0f}%" for c, v in nm.items()), "caveat")
     n_out = int(u.label.str.match(r"^0*0?5_Adam2013_Tumor|^100_Kennedy2019_patient").sum())
     add(G3, "Test set changed after first results", "—",
-        "D26 item 5 relabelled Adam 2013 and Kennedy 2019 (" + ("both since dropped by D28" if n_out == 0 else
-        f"{n_out} still in the set") + "); D28 dropped 13 units that failed the D26 minimums", "caveat")
+        "D26 item 5 relabelled Adam 2013 and Kennedy 2019 (" + ("both since dropped, D28 and D29" if n_out == 0 else
+        f"{n_out} still in the set") + "); D28 and D29 set the inclusion rules after first results (sample size, signal)",
+        "caveat")
     reg = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
     ng = reg[reg.fate == "nogene"]
     kinds = [(NOGENE_REASON.get(f"{x.study}|{x.sub_unit}") or NOGENE_REASON.get(x.study) or ("unknown",))[0]

@@ -53,7 +53,8 @@ FATE = [("primary", "testable, gene lost (primary)", "#126b63"),
         ("norun", "no significant metabolites in the network", "#d1670a"),
         ("single", "single subject, no group", "#e8cf9a"),
         ("mouse", "mouse (human only, D25)", "#8c7b6b"),
-        ("panel", "under 20 named metabolites", "#6f7276"),
+        ("lowsignal", "under 3 changed metabolites in the network", "#d1670a"),
+        ("panel", "targeted panel, not processed (recheck, D29)", "#6f7276"),
         ("fewsamples", "under 3 samples per side", "#7d8087"),
         ("lt3", "under 3 metabolites in the network", "#9a9da1"),
         ("raw", "raw data only / table not loaded", "#c6cad0"),
@@ -141,9 +142,11 @@ def unit_table(down, up):
             return "single"
         if "mouse" in why:
             return "mouse"
+        if why.startswith("d29:"):
+            return "lowsignal"
         if "minimum of 3 per side" in why:
             return "fewsamples"
-        if "<15" in why or "panel" in why or "minimum of 20" in why:
+        if ("<15" in why or "panel" in why) and "lipid" not in why:
             return "panel"
         if "fewer than 3" in why or "lt3" in why:
             return "lt3"

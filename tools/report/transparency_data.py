@@ -66,7 +66,8 @@ FATE_RULE = {"primary": ("D26", "loss of function of one network gene"),
              "norun": ("D22", "needs significant metabolites in the network (raw p < 0.05)"),
              "single": ("D21", "group level only, no single subjects"),
              "mouse": ("D25", "human only"),
-             "panel": ("D26", ">= 20 named metabolites per assay"),
+             "lowsignal": ("D29", ">= 3 significantly changed metabolites in the network"),
+             "panel": ("D29", "targeted panel never processed; recheck its signal"),
              "fewsamples": ("D26", ">= 3 samples per side"),
              "lt3": ("D22", "too few metabolites in the network to score"),
              "raw": ("D26", "needs per-sample values, not raw spectra"),
@@ -577,8 +578,8 @@ def contrast_diagrams(u, groups, rows, out, figs):
 
 # ---- quality flags -----------------------------------------------------------------
 def rag(r, g):
-    """Only the written rules: red fails D26 (>= 3 per side, >= 20 named metabolites; D28 applies it to every unit),
-    amber meets them with a documented caveat, green meets them on recorded numbers."""
+    """Only the written rules: red fails D26 (>= 3 samples per side; D28 applies it to every unit) or D29 (>= 3
+    significantly changed metabolites in the network), amber meets them with a documented caveat, green meets them."""
     n = pd.to_numeric(r.n_samples, errors="coerce")
     if g is not None:
         npg = min(len(g["case"]), len(g["control"]))
@@ -586,12 +587,12 @@ def rag(r, g):
         npg = n                                         # patients against a reference population
     else:
         npg = (n / 2) if pd.notna(n) and n else np.nan
-    m = pd.to_numeric(r.n_metabolites, errors="coerce")
+    ch = int(r.n_inc or 0) + int(r.n_dec or 0)
     why = []
     if pd.notna(npg) and npg < 3:
         why.append(f"{int(npg)} per side, under 3 (D26)")
-    if pd.notna(m) and m < 20:
-        why.append(f"{int(m)} metabolites, under 20 (D26)")
+    if ch < 3:
+        why.append(f"{ch} changed metabolites in the network, under 3 (D29)")
     if why:
         return "red", "; ".join(why)
     amb = []
@@ -601,7 +602,7 @@ def rag(r, g):
         amb.append("controls are patients with other diseases (D26)")
     if amb:
         return "amber", "; ".join(amb)
-    return "green", f"{int(npg)} per side, {int(m) if pd.notna(m) else '?'} metabolites"
+    return "green", f"{int(npg)} per side, {ch} changed metabolites in the network"
 
 
 def quality_flags(u, groups, out, figs):
@@ -645,14 +646,15 @@ def quality_flags(u, groups, out, figs):
     ax.axis("off")
     ax.set_title("Why a square is not green", loc="left", fontsize=7.5, color=INK)
     cnt = ts.rag.value_counts()
-    title = (f"{cnt.get('green', 0)} of {len(ts)} testable comparisons meet the inclusion rule on recorded numbers, "
-             f"{cnt.get('amber', 0)} with a documented caveat, {cnt.get('red', 0)} fail it")
+    title = (f"{cnt.get('green', 0)} of {len(ts)} testable comparisons meet the inclusion rules, "
+             f"{cnt.get('amber', 0)} with a documented caveat, {cnt.get('red', 0)} fail them")
     fig.suptitle(title, x=0.012, ha="left", fontsize=9, weight="bold")
-    fig.text(0.012, 0.01, "Rule (D26, applied to every unit by D28): >= 3 samples per side and >= 20 named metabolites. "
-             "Green: meets it. Amber: meets it with a documented caveat. Red: fails it.", fontsize=5.8, color=INK2)
+    fig.text(0.012, 0.01, "Rules: >= 3 samples per side (D26, every unit by D28); >= 3 significantly changed metabolites in "
+             "the network (D29). "
+             "Green: meets both. Amber: meets both, with a documented caveat. Red: fails one.", fontsize=5.8, color=INK2)
     fig.tight_layout(rect=(0, 0.04, 1, 0.94))
     save(fig, out, "quality_flags", figs, title,
-         "One square per testable comparison, judged only against the written inclusion rule (D26/D28); the bars "
+         "One square per testable comparison, judged only against the written inclusion rules (D26, D28, D29); the bars "
          "name each documented caveat or failure.")
     return dict(zip(ts.label, zip(ts.rag, ts.rag_why)))
 

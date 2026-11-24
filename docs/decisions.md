@@ -349,7 +349,7 @@ mwTab SUBJECT_SPECIES, MTBLS3628 sample sheet, published unit metadata).
 Rule: include every comparison that makes a clear, testable prediction, i.e. one named
 human gene in the three_rule network was perturbed, so its rank can be scored. Human;
 group level with >= 3 samples per side; >= 20 named metabolites with per-sample values in
-the assay; polar abundance data (not isotope tracing, not lipid-only); one specific target
+the assay (replaced by D29: >= 3 changed metabolites in the network); polar abundance data (not isotope tracing, not lipid-only); one specific target
 gene in the network. Loss of function (knockout, knockdown, sh/si/sgRNA, patient loss of
 function, targeted degradation) is primary; chemical inhibition of one specific enzyme and
 overexpression or gain of function of one gene are included as non-primary. Excluded:
@@ -440,6 +440,37 @@ membership. Results on the 95-unit set are kept for comparison in
 `results/_sensitivity_95_units_2026-11-24/`. Seven B rows with no recorded sample size
 (Du 2023 ×2, Hou 2017, Sebaa 2023, Sidorina 2024 ×3, Wangler 2018 group mean) cannot be
 checked; none is testable today.
+Item 2 (the metabolite minimum) is superseded by D29 the same day; item 1 stands.
+
+### D29. Signal, not panel size: >= 3 changed metabolites in the network (2026-11-24, DM)
+D26's ">= 20 named metabolites" replaces nothing principled: an earlier working rule dropped
+panels under 15 (registry reasons since 2026-11-11), the null calibration's "viable" flag
+uses 20 for a different purpose, and panel size did not predict a method's result
+(input_fidelity, Spearman 0.12). What the floor stood for is whether a comparison gives the
+methods anything to work from. New rule, outcome-blind (no causal gene, no method's rank):
+a unit needs >= 3 significantly changed metabolites in the network, in either direction
+(n_inc + n_dec from the null-calibration runs; significance as D22). Requiring >= 3 up
+and >= 3 down was considered and rejected: it drops 43 of 89 units, including PKU (15 up,
+0 down) and other one-sided substrate build-ups, and fits the walk's two-ended design but
+not Reafect's.
+1. Registry: the 21 rows D28 dropped only for the metabolite minimum are reactivated; then
+   every active row with fewer than 3 changed metabolites is dropped, reason "D29: ...".
+   Two rows the rule would have caught keep their real reason (Alaimo 2020, single
+   subjects; ST004985, no gene-loss contrast). The nine Workbench studies dropped in
+   November as "<15 metabolites (targeted panel)" were never processed; they are marked
+   recoverable (run the DAA, keep if the rule holds).
+2. Testable units: 82 -> 75 (48 primary, 27 non-primary, 52 clusters). Back in:
+   ST000276_AN000441, ST003486_AN005724, ST003487_AN005725, ST003488_AN005726,
+   ST003544_AN005821. Out: Miller abat, ST000276_AN000440, ST000458_AN000000,
+   ST003033_AN004973/AN004974, ST003121_AN005115, ST003490_AN005729, MTBLS11858 (2 assays),
+   MTBLS405 (noGly HILIC, noGly RP, withGly RP).
+3. Sensitivity: `results/rule_sensitivity.md` (`tools/report/rule_sensitivity.py`) reports
+   the main comparisons under metabolite floors 0-100 and under this rule. From 0 to 50 the
+   conclusions do not change (walk vs Reafect overall not significant; Reafect ahead on
+   inhibitors; the walk ahead of one-hop on gene loss).
+4. Not changed: the null calibration's `viable` subset (n_sources >= 3, n_metabolites >= 20,
+   `tools/null_calibration.py` MIN_METABOLITES) is a reporting subset about null reliability,
+   not an inclusion rule; changing it needs a new null run.
 
 ## Open
 
