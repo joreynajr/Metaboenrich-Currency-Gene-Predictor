@@ -164,16 +164,15 @@ def what(row):
     return "network gene, no perturbation word"
 
 
-def fate_of(row, scr, cur):
-    if row.in_registry == "active":
+def fate_of(row, scr, cur, testable, registered):
+    """Endpoint of one hit, read from the current test set and registry (not the flag saved at sweep time)."""
+    if row.id in testable:
         return "in the test set"
-    if row.in_registry:
+    if row.id in registered:
         return "registered, dropped with reason"
     if row.source == "literature":
         return "paper lead (needs a deposit)"
     v = cur.get(row.id, "")
-    if v in ("register",):
-        return "in the test set"
     if v in ("reject", "maybe") or scr.get((row.id, row.gene), "") in ("not usable",):
         return "screened out with reason"
     if (row.id, row.gene) in scr:
@@ -228,9 +227,13 @@ def alluvial(ax, cols, flows, colors, gap=0.012, width=0.035):
 def source_flow(c, s, k, out, figs):
     scr = {(r.id, r.gene): r.verdict for r in s.itertuples()}
     cur = {r.id: r.verdict for r in k.itertuples()}
+    units = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t", dtype=str).fillna("")
+    testable = set(units.study[units.testable == "True"])
+    registered = set(pd.read_csv(ROOT / "benchmarks/data_registry.tsv", sep="\t", dtype=str).study)
     d = c.assign(src=c.source.map({"workbench": "Workbench", "metabolights": "MetaboLights",
                                    "literature": "Literature"}),
-                 what=[what(r) for r in c.itertuples()], fate=[fate_of(r, scr, cur) for r in c.itertuples()])
+                 what=[what(r) for r in c.itertuples()],
+                 fate=[fate_of(r, scr, cur, testable, registered) for r in c.itertuples()])
     A = ["Workbench", "MetaboLights", "Literature"]
     Bn = ["network gene, lost", "network gene, inhibitor or gain", "network gene, no perturbation word",
           "tracing or lipid-only", "gene not in network"]
@@ -249,9 +252,10 @@ def source_flow(c, s, k, out, figs):
     for x, h in ((0.02, "Source (study or paper × gene)"), (0.38, "What the hit is"), (0.74, "What happened")):
         ax.text(x, 1.045, h, ha="left", fontsize=7, weight="bold", color=INK)
     nt = (d.fate == "in the test set").sum()
+    ns = d[d.fate == "in the test set"].id.nunique()
     lost = (d.what == "network gene, lost").sum()
-    title = (f"{len(d)} hits: {lost} name a lost network gene; {nt} became test-set studies, "
-             "the rest left with a reason")
+    title = (f"{len(d)} hits (study × gene), {lost} naming a lost network gene: {ns} studies ({nt} hits) are in the "
+             "test set")
     ax.set_title(title, loc="left", fontsize=9, weight="bold", pad=18)
     fig.tight_layout()
     save(fig, out, "source_flow", figs, title,
