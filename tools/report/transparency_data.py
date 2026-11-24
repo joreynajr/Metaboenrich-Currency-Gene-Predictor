@@ -14,7 +14,7 @@ Figures (png + pdf):
   drop_funnel        176 comparisons -> 95 testable -> 65 primary, every drop with its reason and rule
   contrast_diagrams  deposited sample groups per study, case and control marked, unused arms grey
   quality_flags      green / amber / red per testable unit, with the rule that set it
-  audit_sampler      5 seeded units: raw sample values -> Welch t-test recomputed here vs the DAA output
+  daa_recheck        every metabolite of every C/D comparison re-tested row by row vs the DAA output
 JSON: cards.json (one card per comparison), candidates.json (top sweep candidates with evidence
 and cache receipts), figures.json (file, title, caption).
 
@@ -581,69 +581,110 @@ def quality_flags(u, groups, out, figs):
     return dict(zip(ts.label, zip(ts.rag, ts.rag_why)))
 
 
-# ---- audit sampler -----------------------------------------------------------------
-def audit_unit(r, g):
-    """Recompute the top DAA row from the raw per-sample table, independently of the DAA script."""
+# ---- DAA recheck -------------------------------------------------------------------
+TOL = 1e-9
+
+
+def recheck_unit(r, g):
+    """Every metabolite of one comparison, re-tested one row at a time (a loop of scipy Welch tests, not the DAA
+    scripts' code) and reconciled with the DAA output: same rows, same p, same log2FC."""
     if g["kind"] == "workbench":
         import workbench_daa as W
-        daa = pd.read_csv(ROOT / "results" / "workbench_daa" / f"{r.study}_{r.sub_unit}.csv")
         raw = g["raw"]
-        body = raw[~raw.iloc[:, 0].astype(str).str.startswith("#")].copy()
-        body["name"] = body.iloc[:, 0].astype(str).map(W.clean_name)
-        namecol = "name"
+        body = raw[~raw.iloc[:, 0].astype(str).str.startswith("#")]
+        names = body.iloc[:, 0].astype(str).map(W.clean_name)
+        vals = body.iloc[:, 1:].apply(pd.to_numeric, errors="coerce")
+        named = ~names.str.fullmatch(r"(?i)istd|internal standard.*|")
+        key = names.str.lower()
+        daa = pd.read_csv(ROOT / "results" / "workbench_daa" / f"{r.study}_{r.sub_unit}.csv")
     else:
+        raw = g["raw"]
+        body = raw.iloc[1:]
+        names = body["metabolite"].astype(str)
+        vals = body.iloc[:, 2:].apply(pd.to_numeric, errors="coerce")
+        named = pd.Series(True, index=body.index)
+        key = names
         daa = pd.read_csv(ROOT / "results" / "metabolights_daa" / f"{r.study}_{r.sub_unit}.csv")
-        body = g["raw"].iloc[1:].copy()
-        body["name"] = body["metabolite"]
-        namecol = "name"
-    top = daa.sort_values("p").iloc[0]
-    rows = body[body[namecol] == top["name"]]
-    vals = rows[g["case"] + g["control"]].apply(pd.to_numeric, errors="coerce")
-    best = vals.where(vals > 0).median(axis=1).fillna(-np.inf).idxmax()   # duplicate names: highest median row
-    v = vals.loc[best]
-    a, b = v[g["case"]], v[g["control"]]
-    la, lb = np.log2(a[a > 0]), np.log2(b[b > 0])
-    t = stats.ttest_ind(la, lb, equal_var=False)
-    return {"metabolite": top["name"], "case_values": [float(x) for x in a], "control_values": [float(x) for x in b],
-            "case_ids": list(a.index), "control_ids": list(b.index),
-            "log2FC_here": float(la.mean() - lb.mean()), "p_here": float(t.pvalue),
-            "log2FC_daa": float(top["log2FC"]), "p_daa": float(top["p"]),
-            "match": bool(np.isclose(t.pvalue, top["p"], rtol=1e-6) and np.isclose(la.mean() - lb.mean(),
-                                                                                     top["log2FC"], rtol=1e-6)),
-            "per_sample_file": str(g["file"]), "daa_file": f"results/{'workbench' if g['kind'] == 'workbench' else 'metabolights'}_daa/{r.study}_{r.sub_unit}.csv"}
+    vals = vals.where(vals > 0)
+    med = vals.median(axis=1).fillna(-np.inf)
+    here, n_short, n_dup, tied = {}, 0, 0, set()
+    for k in key[named].unique():
+        idx = key.index[(key == k) & named]
+        n_dup += len(idx) - 1
+        if len(idx) > 1 and (med.loc[idx] == med.loc[idx].max()).sum() > 1:
+            tied.add(names.loc[idx[0]])                     # the duplicate rule has no unique answer
+        i = med.loc[idx].idxmax()                            # a name listed twice: the higher-median row
+        x = np.log2(vals.loc[i, g["case"]].dropna().astype(float))
+        y = np.log2(vals.loc[i, g["control"]].dropna().astype(float))
+        if len(x) < 2 or len(y) < 2:
+            n_short += 1
+            continue
+        here[names.loc[i]] = (x.mean() - y.mean(), stats.ttest_ind(x, y, equal_var=False).pvalue)
+    d = daa.set_index("name")
+    both = [n for n in here if n in d.index]
+    dfc = np.array([abs(here[n][0] - d.at[n, "log2FC"]) for n in both])
+    p_h = np.array([here[n][1] for n in both]); p_d = d.loc[both, "p"].to_numpy(float)
+    same_p = np.isclose(p_h, p_d, rtol=TOL, atol=0) | (np.isnan(p_h) & np.isnan(p_d))
+    same_fc = dfc <= TOL * np.maximum(1, np.abs(d.loc[both, "log2FC"].to_numpy(float)))
+    ok = same_p & same_fc
+    differ = [{"name": n, "p_here": here[n][1], "p_daa": float(d.at[n, "p"]), "tied_duplicates": n in tied}
+              for n, o in zip(both, ok) if not o]
+    only_here = [n for n in here if n not in d.index and np.isfinite(here[n][1])]
+    only_daa = [n for n in d.index if n not in here]
+    return {"n_table": int(named.sum()), "n_dup_merged": n_dup, "n_too_few": n_short, "n_daa": len(d),
+            "n_checked": len(both), "n_match": int(ok.sum()), "differ": differ, "ok": ok.tolist(),
+            "only_here": only_here, "only_daa": only_daa,
+            "p_here": p_h.tolist(), "p_daa": p_d.tolist(),
+            "fc_here": [here[n][0] for n in both], "fc_daa": d.loc[both, "log2FC"].astype(float).tolist(),
+            "max_rel_p_diff": float(np.nanmax(np.abs(p_h - p_d) / np.maximum(p_d, 1e-300))) if len(both) else 0.0,
+            "max_fc_diff": float(dfc.max()) if len(dfc) else 0.0}
 
 
-def audit_sampler(u, groups, seed, out, figs):
-    ts = u[(u.testable == "True") & u.label.isin([k for k, v in groups.items() if v is not None])]
-    pick = ts.sample(5, random_state=seed)
-    res = {}
-    fig, axs = plt.subplots(1, 5, figsize=(9.6, 3.1), sharey=False)
-    for ax, r in zip(axs, pick.itertuples()):
-        a = audit_unit(r, groups[r.label])
-        res[r.label] = a
-        la, lb = np.log2(np.array(a["case_values"])), np.log2(np.array(a["control_values"]))
-        rng = np.random.default_rng(1)
-        for x, vals, colr in ((0, la, "#126b63"), (1, lb, "#8fc4bf")):
-            vals = vals[np.isfinite(vals)]
-            ax.scatter(x + rng.uniform(-0.12, 0.12, len(vals)), vals, s=14, color=colr, ec="white", lw=0.6, zorder=3)
-            ax.plot([x - 0.25, x + 0.25], [vals.mean()] * 2, color=INK, lw=1.2)
-        ax.set_xticks([0, 1], [f"case n={len(la)}", f"ctrl n={len(lb)}"], fontsize=6.2)
-        ax.set_xlim(-0.6, 1.6)
-        ax.tick_params(axis="y", labelsize=6)
-        ok = "✓ matches" if a["match"] else "✕ differs"
-        ax.set_title(f"{r.study} {r.sub_unit}\n{a['metabolite'][:26]}", fontsize=6.6, loc="left")
-        ax.text(0.0, -0.22, f"here: p={a['p_here']:.2g}, log2FC={a['log2FC_here']:.2f}\n"
-                f"DAA:  p={a['p_daa']:.2g}, log2FC={a['log2FC_daa']:.2f}\n{ok}", transform=ax.transAxes, fontsize=5.9,
-                va="top", color=INK, family="DejaVu Sans Mono")
-    axs[0].set_ylabel("log2 raw abundance", fontsize=6.6)
-    n_ok = sum(v["match"] for v in res.values())
-    title = f"Recomputed from raw deposit values, {n_ok} of 5 random audit rows match the pipeline exactly"
-    fig.suptitle(title, x=0.012, ha="left", fontsize=9, weight="bold")
-    fig.subplots_adjust(left=0.06, right=0.95, top=0.76, bottom=0.27, wspace=0.55)
-    save(fig, out, "audit_sampler", figs, title,
-         f"Five comparisons drawn at random (seed {seed}); for each, the most significant metabolite's raw sample values "
-         "are re-read from the deposited table and the Welch t-test redone here, independent of the DAA script.")
-    return res
+def daa_recheck(u, groups, out, figs):
+    ts = u[(u.testable == "True") & u.collection.str[0].isin(["C", "D"])].drop_duplicates("label")
+    res = {r.label: recheck_unit(r, groups[r.label]) for r in ts.itertuples() if groups.get(r.label)}
+    n_units = len(res)
+    n_rows = sum(v["n_checked"] for v in res.values())
+    n_ok = sum(v["n_match"] for v in res.values())
+    n_miss = sum(len(v["only_here"]) + len(v["only_daa"]) for v in res.values())
+
+    fig, axs = plt.subplots(1, 2, figsize=(7.4, 4.0))
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.84, bottom=0.37, wspace=0.3)
+    ph = np.concatenate([v["p_here"] for v in res.values()]); pd_ = np.concatenate([v["p_daa"] for v in res.values()])
+    fh = np.concatenate([v["fc_here"] for v in res.values()]); fd = np.concatenate([v["fc_daa"] for v in res.values()])
+    okm = np.concatenate([v["ok"] for v in res.values()]).astype(bool)
+    for ax, xh, xd, lab in ((axs[0], -np.log10(np.clip(pd_, 1e-300, 1)), -np.log10(np.clip(ph, 1e-300, 1)),
+                             "−log10 p"), (axs[1], fd, fh, "log2 fold change")):
+        lim = (np.nanmin([xh.min(), xd.min()]), np.nanmax([xh.max(), xd.max()]))
+        ax.plot(lim, lim, color=RULE, lw=3, zorder=1)
+        ax.scatter(xh[okm], xd[okm], s=3, color="#126b63", lw=0, alpha=0.5, zorder=2, rasterized=True)
+        ax.scatter(xh[~okm], xd[~okm], s=26, facecolor="none", edgecolor="#b3261e", lw=1.2, zorder=3)
+        ax.set_xlabel(f"{lab}, pipeline (DAA output file)", fontsize=7)
+        ax.set_ylabel(f"{lab}, recomputed", fontsize=7)
+        ax.tick_params(labelsize=6)
+    axs[0].set_title("a  p-values", loc="left", fontsize=8)
+    axs[1].set_title("b  fold changes", loc="left", fontsize=8)
+    dif = [(k, x) for k, v in res.items() for x in v["differ"]]
+    nt = sum(x["tied_duplicates"] for _, x in dif)
+    title = (f"Every metabolite re-tested: {n_ok:,} of {n_rows:,} tests in {n_units} comparisons match the pipeline"
+             + (f",\n{len(dif)} differ" + (" only where two duplicate rows tie" if nt == len(dif) else "") if dif else "")
+             + (f"; {n_miss} rows missing on one side" if n_miss else "; none missing"))
+    fig.suptitle(title, x=0.012, y=0.985, ha="left", va="top", fontsize=9, weight="bold")
+    foot = ("Each dot is one metabolite in one comparison; on the grey line = identical to 1e-9; red rings = differ. "
+            "Recomputed row by row from the per-sample tables\n(Workbench C, MetaboLights D) with the DAA's rules: "
+            "log2 of positive values, >= 2 per group, Welch t-test, duplicate names keep the higher-median row.\n"
+            "The case/control split is the pipeline's own (checked by eye in contrast_diagrams). "
+            "Not covered: inborn errors (A) and B, which start from published z-scores or tables.")
+    if dif:
+        foot += "\nDiffering (the pipeline's pick between tied rows is arbitrary): " + ";\n".join(f"{x['name']} in {k}: p {x['p_daa']:.2g} (pipeline) vs {x['p_here']:.2g} "
+                                           "(the other tied row)" for k, x in dif) + "."
+    fig.text(0.012, 0.02, foot, fontsize=6.1, color=INK2, va="bottom")
+    save(fig, out, "daa_recheck", figs, title.replace("\n", " "),
+         "Each dot is a metabolite: if every one sits on the diagonal, the p-values and fold changes the rankings start "
+         "from are exactly what the sample values give; red rings and rows missing on either side are counted in the "
+         "title.")
+    return {k: {f: v[f] for f in ("n_table", "n_dup_merged", "n_too_few", "n_daa", "n_checked", "n_match", "differ",
+                                  "only_here", "only_daa", "max_rel_p_diff", "max_fc_diff")} for k, v in res.items()}
 
 
 # ---- cards -------------------------------------------------------------------------
@@ -763,14 +804,14 @@ def main(argv=None):
     groups = {row.label: contrast_of(row) for row in u.itertuples()}
     contrast_diagrams(u, out, figs)
     flags = quality_flags(u, groups, out, figs)
-    audit = audit_sampler(u, groups, args.seed, out, figs)
+    audit = daa_recheck(u, groups, out, figs)
     cards = unit_cards(u, groups, flags, D, audit)
     (out / "cards.json").write_text(json.dumps(cards, indent=1, default=str), encoding="utf-8")
     (out / "candidates.json").write_text(json.dumps(candidate_cards(c, s, k), indent=1, default=str), encoding="utf-8")
     (out / "figures.json").write_text(json.dumps(figs, indent=1), encoding="utf-8")
     (out / "summary.json").write_text(json.dumps({"recall": rec, "overlap": ov, "failure_ledger": ledger,
                                                   "failed_fetches": failed, "drops": drops,
-                                                  "audit_seed": args.seed, "audit_units": list(audit)},
+                                                  "daa_recheck": {k: v for k, v in audit.items()}},
                                                  indent=1, default=str), encoding="utf-8")
     for f in figs:
         print(f"{f['file']}: {f['title']}")
