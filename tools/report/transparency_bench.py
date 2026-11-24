@@ -71,28 +71,58 @@ def reproduction(report):
     return out
 
 
-def reproduction_badge(rep, out):
-    th = ["top 2.5%", "top 5%", "top 10%"]
-    fig, axs = plt.subplots(1, 2, figsize=(7.2, 2.5), sharey=True)
+def reproduction_badge(rep, pp, out):
+    """Top block: published rate vs our rerun, gaps in patients. Bottom block: Reafect vs the walk on the same patients,
+    ranked within the ~1,060 genes both can score."""
+    th = [2.5, 5, 10]
+    pat = pp[pp.level == "patient"]
+    fig, axs = plt.subplots(1, 2, figsize=(7.6, 2.9), sharey=True, gridspec_kw={"wspace": 0.22})
     for ax, (cohort, d) in zip(axs, rep.items()):
-        x = np.arange(3)
-        ax.bar(x - 0.19, d["published"], 0.36, color="#c6cad0", label="published")
-        ax.bar(x + 0.19, d["ours"], 0.36, color=THEIRS, label="our rerun")
-        for i in range(3):
-            ax.text(x[i] - 0.19, d["published"][i] + 2, f"{d['published'][i]:.0f}", ha="center", fontsize=7, color=INK2)
-            ax.text(x[i] + 0.19, d["ours"][i] + 2, f"{d['ours'][i]:.0f}", ha="center", fontsize=7, color=INK)
-        ax.set_xticks(x, th); ax.set_ylim(0, 105); ax.set_title(cohort, loc="left", fontsize=8.5)
-        ax.tick_params(axis="x", length=0)
-        gap = max(abs(a - b) for a, b in zip(d["ours"], d["published"]))
-        ax.text(1, -24, f"largest gap {gap:.0f} points", ha="center", fontsize=7, color=INK2)
-    axs[0].set_ylabel("% of patients with the\ndisease enzyme ranked in")
-    axs[1].legend(frameon=False, loc="upper left", fontsize=7)
-    b, m = rep["Bongaerts"], rep["Miller"]
-    fig.suptitle(f"Reafect reproduces its paper: top 5% in {b['ours'][1]:.0f}% vs {b['published'][1]:.0f}% published "
-                 f"(Bongaerts), {m['ours'][1]:.0f}% vs {m['published'][1]:.0f}% (Miller)", x=0.02, ha="left",
-                 fontsize=9, weight="bold", color=INK, y=1.04)
-    save(fig, out, "reproduction_badge")
+        own = pat[(pat.dataset == cohort)].reafect_own_pct.dropna()
+        n = len(own)
+        com = pat[(pat.dataset == cohort) & pat.causal_in_common].dropna(
+            subset=["reafect_common_pct", "walk_up_common_pct"])
+        for i, t in enumerate(th):
+            y = i
+            k = int((own <= t).sum())
+            pub = d["published"][i]
+            dk = k - round(pub * n / 100)
+            ours = 100 * k / n
+            ax.plot([pub, ours], [y, y], color=RULE, lw=2, zorder=1)
+            ax.scatter(pub, y, s=46, facecolor="white", edgecolor=INK2, lw=1.4, zorder=3)
+            ax.scatter(ours, y, s=46, color=THEIRS, edgecolor="white", lw=1, zorder=4)
+            ax.text(103, y, f"{dk:+d}" if dk else "0",
+                    va="center", fontsize=6.6, color=INK2)
+            y = i + 4
+            r = 100 * (com.reafect_common_pct <= t).mean()
+            w = 100 * (com.walk_up_common_pct <= t).mean()
+            dr = int((com.reafect_common_pct <= t).sum() - (com.walk_up_common_pct <= t).sum())
+            ax.plot([w, r], [y, y], color=RULE, lw=2, zorder=1)
+            ax.scatter(w, y, s=46, color=OURS, edgecolor="white", lw=1, zorder=3)
+            ax.scatter(r, y, s=46, color=THEIRS, edgecolor="white", lw=1, zorder=4)
+            ax.text(103, y, f"{dr:+d}", va="center", fontsize=6.6, color=INK2)
+        ax.text(30, -0.85, f"Paper vs our rerun · {n} patients", fontsize=6.8, color=INK, weight="bold")
+        ax.text(30, 3.15, f"Reafect vs walk · same {len(com)} patients", fontsize=6.8, color=INK, weight="bold")
+        ax.text(103, -0.85, "Δ patients", fontsize=6.2, color=INK2)
+        ax.set_title(cohort, loc="left", fontsize=8.5, pad=14)
+        ax.set_xlim(30, 100); ax.set_ylim(6.6, -1.4)
+        ax.set_xticks([40, 60, 80, 100]); ax.grid(axis="x", color=RULE, lw=0.5); ax.set_axisbelow(True)
+        ax.spines[["left"]].set_visible(False); ax.tick_params(axis="y", length=0)
+        ax.set_xlabel("% of patients whose disease gene is in the top x%", fontsize=7)
+    axs[0].set_yticks([0, 1, 2, 4, 5, 6], ["top 2.5%", "top 5%", "top 10%"] * 2, fontsize=7)
+    h = [plt.Line2D([], [], ls="", marker="o", mfc="white", mec=INK2, ms=6, label="paper (notebook's saved run)"),
+         plt.Line2D([], [], ls="", marker="o", color=THEIRS, ms=6, label="Reafect, our rerun"),
+         plt.Line2D([], [], ls="", marker="o", color=OURS, ms=6, label="walk ↑src")]
+    fig.legend(handles=h, loc="lower left", bbox_to_anchor=(0.06, -0.13), ncol=3, frameon=False, fontsize=7)
     gap = max(abs(a - b) for d in rep.values() for a, b in zip(d["ours"], d["published"]))
+    fig.suptitle(f"Our Reafect run matches the paper to within {gap:.0f} points; on its own data it beats the walk",
+                 x=0.02, ha="left", fontsize=9, weight="bold", color=INK, y=1.07)
+    fig.text(0.02, -0.25, "Only totals can be matched: the paper's notebook saved figures, not per-patient ranks. "
+             "Likely cause of the small gaps: KEGG downloaded now, not Jan 2021\n(5 of 184 modules gone). "
+             "Upper block ranks among Reafect's ~570 scored enzymes, as published; lower block among the ~1,060 genes "
+             "both methods can score.\nPatients whose gene is outside our network (HGD, PAH, MCCC1) are left out of "
+             "the lower block.", fontsize=6.3, color=INK2)
+    save(fig, out, "reproduction_badge")
     return gap
 
 
@@ -550,7 +580,7 @@ def main(argv=None):
     mx = pd.read_csv(Path(args.matrix) / "matrix.tsv", sep="\t")
     up = pd.read_csv(Path(args.matrix) / "unit_percentiles.tsv", sep="\t", index_col=0)
     rep = reproduction(args.own)
-    gap = reproduction_badge(rep, out)
+    gap = reproduction_badge(rep, pd.read_csv(Path(args.own).parent / "per_patient.tsv", sep="\t"), out)
     cluster_scoreboard(u, out)
     paired_slope(u, out)
     coverage_strip(u, cov, out)
@@ -561,8 +591,9 @@ def main(argv=None):
     (out / "ledger.json").write_text(json.dumps(L, indent=1, ensure_ascii=False), encoding="utf-8")
     (out / "cards.json").write_text(json.dumps(cards(u, man, up), indent=1, ensure_ascii=False), encoding="utf-8")
     F = [("reproduction_badge", "Reafect reproduces its own paper",
-          "Compare the orange bars (our rerun) with the grey (published): they agree within a few points, so the "
-          "Reafect we benchmark against is the real method, not a broken copy."),
+          "Top: hollow dot is the paper, orange our rerun; they sit within a few patients, so the Reafect we "
+          "benchmark is the real method. Bottom: on the same patients, Reafect (orange) ranks the disease gene "
+          "higher than the walk (blue), its home ground."),
          ("cluster_scoreboard", "Who wins, cluster by cluster",
           "Each square is one cluster; deeper colour means a bigger gap, hatching or an x means one method could not "
           "run, and each panel is re-scored with only clusters where both ran and with repeated genes merged."),
