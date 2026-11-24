@@ -319,40 +319,94 @@ ROUTES = [("kegg_from_table KEGG", "KEGG id in the table", "#126b63"),
           ("kegg_from_Human-GEM via loose name", "loose name match", "#e8cf9a")]
 
 
-def input_fidelity(u, man, out):
+def input_fidelity(u, man, out, mdir):
+    """Both methods' inputs side by side: share of measured metabolites each can use, and signal each receives."""
+    from scipy.stats import spearmanr
+    t = pd.read_csv(ROOT / "results/data_figures/units.tsv", sep="\t")
+    t = t[t.testable.astype(str) == "True"].drop_duplicates("label").set_index("label")
     m = man.set_index("label").reindex(u.label)
-    m["c"] = u.set_index("label").c
-    m["frac"] = m.n_with_kegg / m.n_measured
-    m = m.sort_values(["c", "frac"], ascending=[True, False])
-    fig, ax = plt.subplots(figsize=(10, 3.0))
-    x, xs, prev = 0, [], None
-    for lab, r in m.iterrows():
-        if prev is not None and r.c != prev:
-            x += 1.2
-        prev = r.c
-        y = 0
-        for col, _, c in ROUTES:
-            v = (r.get(col, 0) or 0) / r.n_measured * 100
-            ax.bar(x, v, 0.82, bottom=y, color=c, lw=0); y += v
-        ax.bar(x, 100 - y, 0.82, bottom=y, color="#eef0f2", lw=0)
-        xs.append((x, r.c)); x += 1
+    d = u.set_index("label")[["c", "n_measured", "n_with_kegg", "n_kegg_in_reafect_network", "reafect_common_pct"]].copy()
+    d["ours"] = (t.n_in_network / t.n_metabolites).reindex(d.index) * 100
+    d["rea_mod"] = d.n_kegg_in_reafect_network / d.n_measured * 100
+    d["rea_kegg"] = d.n_with_kegg / d.n_measured * 100
+    d["ours_sig"] = (t.n_dec + t.n_inc).reindex(d.index)
+    d["rea_sig"] = [(pd.read_csv(Path(mdir) / f"{m.loc[k, 'file']}.csv").Z_score.abs() >= 1.96).sum() for k in d.index]
+    d = d.sort_values(["c", "ours"], ascending=[True, False])
+    x, xs, prev = 0.0, [], None
+    for c in d.c:
+        if prev is not None and c != prev:
+            x += 2.0
+        xs.append(x); x += 1; prev = c
+    d["x"] = xs
+    fig = plt.figure(figsize=(11.5, 5.4))
+    gs = fig.add_gridspec(2, 2, width_ratios=[3.3, 1], height_ratios=[1.35, 1], hspace=0.62, wspace=0.16,
+                          left=0.07, right=0.985, top=0.86, bottom=0.17)
+    a1, a2 = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[1, 0])
+    a3, a4 = fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, 1])
+    w = 0.42
+    a1.bar(d.x - w / 2, d.ours, w, color=OURS, lw=0, label="ours: in our network")
+    a1.bar(d.x + w / 2, d.rea_kegg, w, color="#f3d9c2", lw=0, label="Reafect: KEGG id, but outside its modules")
+    a1.bar(d.x + w / 2, d.rea_mod, w, color=THEIRS, lw=0, label="Reafect: inside its KEGG modules (used)")
     for c in "ABCD":
-        p = [a for a, cc in xs if cc == c]
-        if p:
-            f = m[m.c == c].frac.median() * 100
-            ax.text(np.mean(p), 104, f"{c}  ·  median {f:.0f}%", ha="center", fontsize=7, color=INK)
-    ax.set_ylim(0, 112); ax.set_xlim(-1, x); ax.set_xticks([])
-    ax.set_ylabel("% of measured metabolites\nwith a KEGG id")
-    ax.spines["bottom"].set_visible(False)
-    hand = [Rectangle((0, 0), 1, 1, color=c) for _, _, c in ROUTES] + [Rectangle((0, 0), 1, 1, color="#eef0f2")]
-    ax.legend(hand, [l for _, l, _ in ROUTES] + ["no KEGG id: Reafect never sees it"], loc="upper left",
-              bbox_to_anchor=(0, -0.03), ncol=4, frameon=False, fontsize=7)
-    lo = m[m.frac < 0.4]
-    fig.suptitle(f"Median {m.frac.median() * 100:.0f}% of measured metabolites reach Reafect; "
-                 f"{len(lo)} comparisons pass on under 40%", x=0.02, ha="left", fontsize=9, weight="bold",
-                 color=INK, y=1.02)
+        s = d[d.c == c]
+        if len(s):
+            a1.text(s.x.mean(), 103, c if len(s) < 5 else
+                    f"{c}  ·  median ours {s.ours.median():.0f}%, Reafect {s.rea_mod.median():.0f}%",
+                    ha="center", fontsize=6.6, color=INK)
+    a1.set_ylim(0, 112); a1.set_xlim(-1, x); a1.set_xticks([]); a1.spines["bottom"].set_visible(False)
+    a1.set_ylabel("% of measured\nmetabolites usable", fontsize=7.5)
+    a1.legend(loc="upper left", bbox_to_anchor=(0, -0.01), ncol=3, frameon=False, fontsize=6.6, handlelength=1.2)
+    a1.set_title("a  How much of each comparison's data each method can use", loc="left", fontsize=8, color=INK)
+    a2.vlines(d.x, d.ours_sig.clip(lower=0.8), d.rea_sig.clip(lower=0.8), color=RULE, lw=0.8)
+    a2.scatter(d.x, d.ours_sig.clip(lower=0.8), s=9, color=OURS, zorder=3, label="ours: significant sources + targets")
+    a2.scatter(d.x, d.rea_sig.clip(lower=0.8), s=9, color=THEIRS, zorder=3, label="Reafect: |z| ≥ 1.96 with a KEGG id")
+    a2.set_yscale("log"); a2.set_xlim(-1, x); a2.set_xticks([]); a2.spines["bottom"].set_visible(False)
+    a2.set_ylabel("signal metabolites\n(log; 0 drawn at 1)", fontsize=7.5)
+    for c in "ABCD":
+        s = d[d.c == c]
+        if len(s):
+            a2.text(s.x.mean(), 0.42, f"{c}: {s.ours_sig.median():.0f} vs {s.rea_sig.median():.0f}", ha="center",
+                    fontsize=6.6, color=INK, transform=a2.get_xaxis_transform() if False else a2.transData)
+    a2.set_ylim(0.35, max(d.rea_sig.max(), d.ours_sig.max()) * 1.6)
+    a2.legend(loc="upper right", ncol=2, frameon=False, fontsize=6.6, handlelength=1.0)
+    a2.set_title("b  How many signal metabolites each method is given (median per collection: ours vs Reafect)",
+                 loc="left", fontsize=8, color=INK)
+    rho, p = spearmanr(d.rea_mod, d.reafect_common_pct)
+    CCOL = {"A": "#2f5c8f", "B": "#8a8f96", "C": "#8fc4bf", "D": "#1b3550"}
+    for c in "ABCD":
+        s = d[d.c == c]
+        a3.scatter(s.rea_mod, s.reafect_common_pct.clip(lower=0.05), s=12, color=CCOL[c], label=c, lw=0)
+    a3.set_yscale("log"); a3.invert_yaxis()
+    a3.set_yticks([0.1, 1, 10, 100], ["0.1", "1", "10", "100"])
+    a3.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    a3.set_xlabel("% of metabolites inside Reafect's modules", fontsize=7)
+    a3.set_ylabel("Reafect causal-gene percentile\n(log; top = better)", fontsize=7)
+    a3.legend(fontsize=6.2, frameon=False, loc="upper left", bbox_to_anchor=(0, -0.22), ncol=4,
+              handletextpad=0.1, columnspacing=0.8, title="collection", title_fontsize=6.2)
+    a3.set_title(f"c  Mapping share does not predict Reafect's result\n    (Spearman ρ = {rho:.2f}, p = {p:.2f})",
+                 loc="left", fontsize=8, color=INK)
+    tot = m.groupby(u.set_index("label").c.reindex(m.index).values)[[r for r, _, _ in ROUTES]].sum()
+    tot = tot.div(tot.sum(axis=1), axis=0) * 100
+    for i, c in enumerate(tot.index):
+        left = 0
+        for col, _, colr in ROUTES:
+            v = tot.loc[c, col]
+            a4.barh(i, v, left=left, color=colr, lw=0, height=0.62); left += v
+        name = tot.loc[c, ["kegg_from_id_translation name", "kegg_from_Human-GEM via loose name"]].sum()
+        a4.text(101, i, f"{name:.0f}%", va="center", fontsize=6.6, color=INK)
+    a4.set_yticks(range(len(tot)), tot.index, fontsize=7); a4.invert_yaxis(); a4.set_xlim(0, 112)
+    a4.set_xlabel("% of KEGG ids, by how they were found", fontsize=7)
+    a4.set_title("d  Name-based ids (tan, right: share) are unverified", loc="left", fontsize=8, color=INK)
+    a4.legend([Rectangle((0, 0), 1, 1, color=c) for _, _, c in ROUTES], [l for _, l, _ in ROUTES],
+              loc="upper left", bbox_to_anchor=(-0.05, -0.32), ncol=2, frameon=False, fontsize=5.9, handlelength=1.0)
+    A = d[d.c == "A"]
+    fig.suptitle(f"Both methods can use about the same share of the data (ours {d.ours.median():.0f}%, Reafect "
+                 f"{d.rea_mod.median():.0f}%), Reafect's result does not track its mapping, and on inborn errors\n"
+                 f"Reafect is handed {A.rea_sig.median() / A.ours_sig.median():.0f}× the signal metabolites the walk "
+                 "uses (group z grows with patient count)", x=0.02, ha="left", fontsize=9, weight="bold", color=INK,
+                 y=0.985)
     save(fig, out, "input_fidelity")
-    return m
+    return d
 
 
 # ---------- 6. where each method wins ----------
@@ -500,7 +554,7 @@ def main(argv=None):
     cluster_scoreboard(u, out)
     paired_slope(u, out)
     coverage_strip(u, cov, out)
-    input_fidelity(u, man, out)
+    input_fidelity(u, man, out, Path(args.manifest).parent)
     where_wins(mx, out)
     L = ledger(u, rep, gap, man, up, mx, pd.read_csv(Path(args.units) / "paired.tsv", sep="	"))
     ledger_figure(L, out)
@@ -510,17 +564,17 @@ def main(argv=None):
           "Compare the orange bars (our rerun) with the grey (published): they agree within a few points, so the "
           "Reafect we benchmark against is the real method, not a broken copy."),
          ("cluster_scoreboard", "Who wins, cluster by cluster",
-          "Each square is one cluster named by its causal gene; count the colours per panel to see that the walk "
-          "wins gene-loss comparisons and Reafect wins inhibitor comparisons, with no cherry-picking possible."),
+          "Each square is one cluster; deeper colour means a bigger gap, hatching or an x means one method could not "
+          "run, and each panel is re-scored with only clusters where both ran and with repeated genes merged."),
          ("paired_slope", "How far apart the two ranks are",
           "Each line joins Reafect's and the walk's rank of the same causal gene; steep lines are big disagreements "
           "worth opening in the drill-down cards."),
-         ("coverage_strip", "Which causal genes each method can see",
-          "Top row is our network, bottom row Reafect; any non-green cell is a gene a method could never rank, "
-          "which the comparison counts against it rather than hiding."),
-         ("input_fidelity", "How much data reached Reafect",
-          "Taller coloured bars mean more of the comparison's metabolites were translated to KEGG ids for Reafect; "
-          "short bars flag comparisons where Reafect was working half-blind."),
+         ("coverage_strip", "Which comparisons each method can actually rank",
+          "Both rows ask the same question, did the method give the causal gene a real rank; tan gaps are data "
+          "limits either method can hit, orange and red are limits built into an EC/KEGG-module method."),
+         ("input_fidelity", "How much data each method can use",
+          "Blue and orange bars side by side show both methods lose a similar share of metabolites; the scatter "
+          "shows Reafect's result does not depend on our mapping, and panel b shows the extra signal it gets on A."),
          ("where_wins", "Which method is best where",
           "Read down each column to the boxed cell to see the best method for that kind of comparison; the boxes "
           "move between columns, which is the honest answer."),
