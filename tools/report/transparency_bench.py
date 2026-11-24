@@ -440,34 +440,65 @@ def input_fidelity(u, man, out, mdir):
 
 
 # ---------- 6. where each method wins ----------
-def where_wins(mx, out):
-    subs = [("all", "All"), ("primary", "Gene loss\n(primary)"), ("viable primary", "Viable\nprimary"),
-            ("A inborn errors", "Inborn\nerrors (A)"), ("B-D", "Other\n(B–D)"), ("non-primary", "Inhibitor\n/ gain")]
-    t = mx.pivot(index="ranking", columns="subset", values="median_cluster_pct")
-    t = t.loc[[k for k, _ in METHODS], [s for s, _ in subs]]
-    n = mx.drop_duplicates("subset").set_index("subset").clusters
-    fig, ax = plt.subplots(figsize=(7.4, 3.0))
-    cmap = plt.get_cmap("Blues_r")
-    for j, (s, _) in enumerate(subs):
-        best = t[s].idxmin()
-        for i, (k, _) in enumerate(METHODS):
-            v = t.at[k, s]
-            x = min(1, np.log10(max(v, 0.5) / 0.5) / np.log10(100))
-            ax.add_patch(Rectangle((j + 0.04, i + 0.06), 0.92, 0.88, color=cmap(0.08 + 0.85 * x), lw=0))
-            ax.text(j + 0.5, i + 0.5, f"{v:.1f}", ha="center", va="center", fontsize=7.5,
-                    color="white" if v < 6 else INK, weight="bold" if k == best else "normal")
-            if k == best:
-                ax.add_patch(Rectangle((j + 0.04, i + 0.06), 0.92, 0.88, fill=False, ec=INK, lw=1.6))
-    ax.set_xlim(0, len(subs)); ax.set_ylim(len(METHODS), 0)
-    ax.set_xticks(np.arange(len(subs)) + 0.5, [f"{l}\n{n[s]} clusters" for s, l in subs], fontsize=7)
-    ax.set_yticks(np.arange(len(METHODS)) + 0.5, [l for _, l in METHODS], fontsize=7.5)
-    ax.xaxis.tick_top(); ax.tick_params(length=0)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
-    fig.text(0.02, -0.03, "Cell: median over clusters of the causal gene's percentile (0 = top; own universe; "
-             "darker = better). Box: best in that column.", fontsize=7, color=INK2)
-    fig.suptitle("No single winner: the walk leads on gene loss and inborn errors, Reafect on inhibitors",
-                 x=0.02, ha="left", fontsize=9, weight="bold", color=INK, y=1.1)
+WIN_METHODS = [("reafect", "Reafect", THEIRS, "o"), ("walk_up", "Walk ↑src", OURS, "o"),
+               ("flow", "Current flow ↓src", "#7a9cc0", "s"), ("walk_down", "Walk ↓src", "#9aa3ad", "D"),
+               ("neighbour", "One-hop", "#c6cad0", "^")]
+
+
+def where_wins(u, own, out):
+    """One row per kind of comparison: each method's median causal-gene percentile among the ~1,060 genes both
+    methods can score (clusters, then median), and the paired cluster sign test, walk vs Reafect."""
+    rows = [("All comparisons", np.ones(len(u), bool), None),
+            ("Gene loss", u.primary.values, "By perturbation"), ("Inhibitor / gain", ~u.primary.values, None),
+            ("Inborn errors (A)", (u.c == "A").values, "By collection"), ("Other studies (B–D)", (u.c != "A").values, None)]
+    fig, ax = plt.subplots(figsize=(7.6, 3.1))
+    tr = matplotlib.transforms.blended_transform_factory(ax.transAxes, ax.transData)
+    y, ylab, yt = 0.0, [], []
+    for name, m, head in rows:
+        if head:
+            y += 0.55
+            ax.text(-0.3, y - 0.62, head, fontsize=7, color=INK2, style="italic", transform=tr)
+        g = u[m].groupby("cluster")[[f"{k}_common_pct" for k, *_ in WIN_METHODS]].median()
+        med = {k: g[f"{k}_common_pct"].median() for k, *_ in WIN_METHODS}
+        ax.plot([min(med.values()), max(med.values())], [y, y], color=RULE, lw=1.6, zorder=1)
+        for k, lab, col, mk in WIN_METHODS[::-1]:
+            ax.scatter(max(med[k], 0.4), y, s=58 if k in ("reafect", "walk_up") else 34, color=col, marker=mk,
+                       edgecolor="white", lw=0.9, zorder=4 if k in ("reafect", "walk_up") else 3)
+        w = int((g.walk_up_common_pct < g.reafect_common_pct).sum())
+        r = int((g.walk_up_common_pct > g.reafect_common_pct).sum())
+        p = binomtest(w, w + r).pvalue
+        lead = "walk" if w > r else "Reafect"
+        verdict = f"{lead} wins" if p < 0.05 else f"{lead} ahead, not significant" if w != r else "even"
+        col = (OURS if w > r else THEIRS) if p < 0.05 else INK2
+        ax.text(1.03, y - 0.08, verdict, va="center", fontsize=7.4, color=col, weight="bold" if p < 0.05 else "normal",
+                transform=tr)
+        ax.text(1.03, y + 0.26, f"walk {w} – Reafect {r} clusters, p = {p:.2g}", va="center", fontsize=6, color=INK2,
+                transform=tr)
+        ylab.append(f"{name}\n{len(g)} clusters"); yt.append(y)
+        y += 1
+    ax.set_xscale("log"); ax.set_xlim(0.35, 75)
+    ticks = [0.5, 1, 3, 10, 30]
+    ax.set_xticks(ticks, [f"{t:g}%\n≈ rank {max(1, round(t * 10.6))}" for t in ticks], fontsize=6.6)
+    ax.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    ax.invert_xaxis()
+    ax.set_yticks(yt, ylab, fontsize=7.2); ax.set_ylim(y - 0.4, -0.7)
+    ax.grid(axis="x", color=RULE, lw=0.5); ax.set_axisbelow(True)
+    ax.spines[["left"]].set_visible(False); ax.tick_params(axis="y", length=0)
+    ax.set_xlabel("median percentile of the causal gene among ~1,060 shared genes  (right = better)", fontsize=7)
+    ax.text(1.03, -0.55, "walk ↑src vs Reafect", fontsize=6.6, color=INK, weight="bold", transform=tr)
+    h = [plt.Line2D([], [], ls="", marker=mk, color=col, ms=6 if k in ("reafect", "walk_up") else 5, label=lab)
+         for k, lab, col, mk in WIN_METHODS]
+    fig.legend(handles=h, loc="lower left", bbox_to_anchor=(0.12, -0.2), ncol=5, frameon=False, fontsize=6.8)
+    ow = own[(own.ranking.isin(["Reafect", "Walk, sources = increased | M0"])) & (own.subset == "all")]
+    ow = ow.set_index("ranking").median_cluster_pct
+    fig.text(0.02, -0.27, "Why the shared list: on each method's own list (Reafect ~570 enzymes, ours 2,191 genes, many "
+             f"unreachable) the walk looks better overall ({ow['Walk, sources = increased | M0']:.1f}% vs "
+             f"{ow['Reafect']:.1f}%) only because its list is padded.\nCurrent flow ↑src and the degree corrections "
+             "(M3) have no shared-list ranks yet and are left out. Sign test on cluster medians, ties dropped.",
+             fontsize=6.3, color=INK2)
+    fig.suptitle("Reafect wins on inhibitors and on studies B–D; the walk leads on inborn errors, not significantly",
+                 x=0.02, ha="left", fontsize=9, weight="bold", color=INK, y=1.02)
+    fig.subplots_adjust(right=0.72)
     save(fig, out, "where_wins")
 
 
@@ -640,7 +671,7 @@ def main(argv=None):
     paired_slope(u, out)
     coverage_strip(u, cov, out)
     fid = input_fidelity(u, man, out, Path(args.manifest).parent)
-    where_wins(mx, out)
+    where_wins(u, mx, out)
     tf = out / "tie_check.tsv"
     L = ledger(u, rep, man, up, mx, pd.read_csv(Path(args.units) / "paired.tsv", sep="\t"), fid,
                pd.read_csv(tf, sep="\t") if tf.exists() else None)
@@ -664,8 +695,8 @@ def main(argv=None):
           "Blue and orange bars side by side show both methods lose a similar share of metabolites; the scatter "
           "shows Reafect's result does not depend on our mapping, and panel b shows the extra signal it gets on A."),
          ("where_wins", "Which method is best where",
-          "Read down each column to the boxed cell to see the best method for that kind of comparison; the boxes "
-          "move between columns, which is the honest answer."),
+          "Each row is a kind of comparison; dots further right rank the causal gene higher, all on the same "
+          "~1,060-gene list. The right-hand verdict is the paired cluster test of walk vs Reafect."),
          ("verification_ledger", "Checks that must pass, and caveats to weigh",
           "Green rows met a threshold fixed in decisions.md D27; amber rows are differences the checks cannot "
           "explain, or known limits no threshold can clear; a red row would mean the results above should not be "
